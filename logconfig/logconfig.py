@@ -49,6 +49,10 @@ def initialize_logging(syslog_tag, syslog_facility, loggers,
 
     base_fmt = ('%(name)s:%(levelname)s %(message)s:%(pathname)s:%(lineno)s')
 
+    # cfg->formatters->tornado->color was originally True but was raising
+    # errors, and we should investigate why that was happening. in the
+    # meantime, pretty logging will not be happening.
+
     cfg = {
         'version': 1,
         'filters': {},
@@ -65,7 +69,7 @@ def initialize_logging(syslog_tag, syslog_facility, loggers,
             },
             'tornado': {
                 '()': TornadoLogFormatter,
-                'color': True
+                'color': False
             },
         },
         'handlers': {
