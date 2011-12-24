@@ -237,6 +237,7 @@ class BaseConfigurator(object):
     
     def configure_custom(self, config):
         """Configure an object with a user-supplied factory."""
+
         c = config.pop('()')
         if not hasattr(c, '__call__') and hasattr(types, 'ClassType') and type(c) != types.ClassType:
             c = self.resolve(c)
