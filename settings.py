@@ -49,8 +49,14 @@ else:
 settings = {}
 settings['debug'] = DEPLOYMENT != DeploymentType.PRODUCTION or options.debug
 settings['static_path'] = MEDIA_ROOT
-settings['cookie_secret'] = "orangebeansproutcamps"
-settings['xsrf_cookies'] = False
+
+# FIXME put in actual cookie secret
+settings['cookie_secret'] = "\xee\x0ec\x9bl\x02\xeb/.\xd4\xeb\xc2(\xb0\xb1\x8a\x0b\xb5[^Tq\xecy"
+settings['xsrf_cookies'] = True
+settings['login_url'] = "/"
+settings['facebook_api_key'] = "184725354981659"
+settings['facebook_secret'] = "06a89856418cad1d4ce484c159cbdafc"
+
 settings['template_loader'] = tornado.template.Loader(TEMPLATE_ROOT)
 settings['ui_modules'] = {
         'UIAppHeader' : UIAppHeader,

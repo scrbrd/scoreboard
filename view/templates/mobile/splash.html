@@ -1,29 +1,39 @@
-{% extends ../base.html %}
+{% extends body.html %}
 
+{% block header_section %}{% end %}
 
-{% block body %}
-    <div data-role="page" id="splash">
-        <div data-role="content" data-theme="sq-content">
-            <h1>SPLASH!</h1>
-            <br />
-            <br />
-            <br />
-            <br />
-            <br />
-            <br />
-            <br />
-            <h2>Welcome to Sqoreboard. Our awesome engineers designed this site.</h2>
-            <br />
-            <br />
-            <br />
-            <br />
-            <br />
-            <br />
-            <br />
-            <br />
-            <br />
-            I know, I'm impressed too. 
-        </div>
+{% block content_section %}
+
+    Hi world
+    <fb:login-button
+        registration-url="https://developers.facebook.com/docs/plugins/registration"
+        on-login="console.log(arguments)"
+        />
+    <div 
+        class="fb-registration" 
+        data-fields="[
+            {'name':'name'},
+            {'name':'email'},
+            {'name':'heads_or_tails',
+                'description': 'Heads or Tails?',
+                'type':'text'
+            }]" 
+        data-redirect-uri="http://hammer.sqoreboard.com/rankings">
+    </div> 
+
+    <!-- <div class="fb-login-button" scope="email,user_interests">
+        Login with Facebook
+    </div> -->
+
+    <!-- <div id="login">
+        <p><button onClick="loginUser();">Login</button></p>
     </div>
+    <div id="logout">
+        <p><button  onClick="FB.logout();">Logout</button></p>
+    </div> -->
+    <!-- <script type="text/javascript"
+    src="/static/js/facebook_auth.js"></script> -->
+
 {% end %}
 
+{% block footer_section %}{% end %}

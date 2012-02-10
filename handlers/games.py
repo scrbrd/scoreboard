@@ -5,7 +5,7 @@
 
 import logging
 
-from handlers.base import BaseHandler
+from handlers.query import QueryHandler
 
 from model.app import catchers
 
@@ -13,14 +13,14 @@ from model.app import catchers
 logger = logging.getLogger('boilerplate.' + __name__)
 
 
-class GamesHandler(BaseHandler):
-
+class GamesHandler(QueryHandler):
+   
     """ Render Games List Page. """
 
-
-    def get(self):
-        """ Overload BaseHandler's HTTP GET responder. """
-
+    def process_request(self):
+        """ Handle processing of Games request. Inherited from BaseHandler.
+        """
+        
         # check for ajax request or not
         is_asynch = self.get_argument("asynch", False)
         

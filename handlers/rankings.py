@@ -5,7 +5,7 @@
 
 import logging
 
-from handlers.base import BaseHandler
+from handlers.query import QueryHandler
 
 from model.app import catchers
 
@@ -13,14 +13,14 @@ from model.app import catchers
 logger = logging.getLogger('boilerplate.' + __name__)
 
 
-class RankingsHandler(BaseHandler):
+class RankingsHandler(QueryHandler):
     
     """ Render Rankings Page. """
 
-
-    def get(self):
-        """ Overload BaseHandler's HTTP GET responder. """
-
+    def process_request(self):
+        """ Handle processing of Rankings request. Inherited from BaseHandler.
+        """
+        
         # check for ajax request or not
         is_asynch = bool(self.get_argument("asynch", False))
 

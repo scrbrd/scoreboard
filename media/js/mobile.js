@@ -20,17 +20,20 @@ var dialog_html = header + body + submit + close + footer;
 
 
 // Instantiate iScroll object
+// TODO remove if and put that conditional in the script load
 var scroller;
 $(document).ready(function loaded() {
-    scroller = new iScroll(constants.SCROLLER_ID);
-    document.addEventListener(
-            'touchmove', 
-            function (e) { e.preventDefault(); }, 
-            false);
-    document.addEventListener(
-            'DOMContentLoaded', 
-            function () { setTimeout(loaded, 200); }, 
-            false);
+    if ($('#' + constants.SCROLLER_ID).length) {
+        scroller = new iScroll(constants.SCROLLER_ID);
+        document.addEventListener(
+                'touchmove', 
+                function (e) { e.preventDefault(); }, 
+                false);
+        document.addEventListener(
+                'DOMContentLoaded', 
+                function () { setTimeout(loaded, 200); }, 
+                false);
+    }
 });
 
 
@@ -105,9 +108,10 @@ function initialize_buttons() {
 }
 
 $(document).ready(function() {
-    console.log('ready');
     DomManager.append_dialog(dialog_html);
     initialize_buttons();
+
+    // TODO remove facebook's #_=_ insertion
 });
 
 
