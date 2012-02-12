@@ -1,5 +1,4 @@
-"""
-Module: League
+""" Module: League
 
 ...
 """
@@ -8,8 +7,7 @@ from sqobject import SqObject
 
 class League(SqObject):
 
-    """
-    League is a subclass of SqObject
+    """ League is a subclass of SqObject
 
     Provide access to the attributes of a League, including fields and 
     edges connecting to other nodes.
@@ -20,6 +18,7 @@ class League(SqObject):
     Optional:
     list _opponents Opponents in this League
     list _games     Games played by Opponents in this League
+
     """
 
     _opponents = None
@@ -37,14 +36,10 @@ class League(SqObject):
         self._games = attributes_dict["games"]
 
     def get_opponents(self):
-        """
-        Return a list of Opponent objects
-        """
+        """ Return a list of Opponent objects. """
         return self._opponents
 
     def get_games(self):
-        """
-        Return a list of Game objects
-        """
+        """ Return a list of Game objects. """
         return self._games
 

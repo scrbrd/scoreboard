@@ -9,4 +9,4 @@ from sqobject import SqObject
 from opponent import Opponent
 from player import Player
 from league import League
-
+from game import Game

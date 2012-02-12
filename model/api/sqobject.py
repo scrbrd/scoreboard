@@ -1,13 +1,11 @@
-"""
-Module: SqObject
+""" Module: SqObject
 
 ...
 """
 
 class SqObject(object):
 
-    """
-    SqObject is a subclass of the __new__ python object
+    """ SqObject is a subclass of the __new__ python object.
 
     Provide access to the common attributes of a League, Team, Player,
     User, and Game, including fields and edges connecting to other 
@@ -18,6 +16,7 @@ class SqObject(object):
     timestamp   _created_ts when was this SqObject created
     timestamp   _updated_ts when was this SqObject last updated
     timestamp   _deleted_ts when, if at all, was this SqObject deleted
+    
     """
 
     _id = None
@@ -37,9 +36,7 @@ class SqObject(object):
         self._updated_ts = attributes_dict["updated_ts"]
         self._deleted_ts = attributes_dict["deleted_ts"]
 
-    def get_id():
-        """
-        Return a SqObject node id.
-        """
+    def get_id(self):
+        """ Return a SqObject node id. """
         return self._id
 

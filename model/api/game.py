@@ -2,10 +2,10 @@
 
 ...
 """
+
 from itertools import groupby
 
 from sqobject import SqObject
-#import utils
 
 class Game(SqObject):
 
@@ -19,7 +19,7 @@ class Game(SqObject):
         Actor _creator              who created the game
 
         Optional:
-        list _opponent_score_tuples each entry associates an Opponent 
+        list _opponent_score_pairs  each entry associates an Opponent 
                                     with a score (int)
     
     """
@@ -27,53 +27,62 @@ class Game(SqObject):
     _creator = None
     _opponent_score_pairs = []
 
-    # ALPHA RULE - high score is always the winner, tie scores are ties
-    
-    def __init__(self, game_id, attributes):
-        """ Initializes Game class with attributes
+    def __init__(self, game_id, attributes_dict):
+        """ Initialize Game class with attributes
 
         Arguments:
         int game_id         sent to SqObject
-        dict attributes     a dictionary of attributes
+        dict attributes_dict     a dictionary of attributes
 
         """
-        super(Game, self).__init__(game_id, attributes)
-        self._creator = attributes["creator"]
-        self._opponents_list = attributes["opponent_score_pairs"]
+        super(Game, self).__init__(game_id, attributes_dict)
+        self._creator = attributes_dict["creator"]
+        self._opponent_score_pairs = attributes_dict["opponent_score_pairs"]
 
     def get_creator(self):
-        """  Returns the User who created the game. """
+        """  Return the User who created the game. """
         return self._creator
 
     def get_opponents_by_result(self):
-        """ Provides access to all results with corresponding opponents. 
+        """ Provide access to all results with corresponding opponents. 
         
         If 0 Opponents: {}
         If 1 Opponent: "None"
         If more Opponents: "WIN" (highest score), "LOSS", "TIE (even)
 
-        Returns {"result": Opponents}
+        Currently, the highest score wins.
+
+        Return {"result": Opponents}
         
         """
-        num_of_opponents = len(_opponent_score_pairs)
-        
+        num_of_opponents = len(self._opponent_score_pairs)
+        results_with_opponents_dict = {}
+
+        # if no opponents, then no results
         if num_of_opponents == 0:
-            return {}
+            results_with_opponents_dict = {}
+        # if one opponent, then no win or loss
         elif num_of_opponents == 1:
-            return {"NONE": _opponent_score_pairs[0]}
+            results_with_opponents_dict = {"NONE": self._opponent_score_pairs[0]}
+        # if two or more opponents, then calculate results
         else:
+            # opponent lists grouped by score (high to low)
             opps_by_score = [(score, [o for o,v in val]) for score, val in
-                    groupby(_opponent_score_pairs, lambda x:x[1])]
+                    groupby(self._opponent_score_pairs, lambda x:x[1])]
             opps_by_score.sort(reverse=True)
 
             num_of_results = len(opps_by_score)
+            # if 1 result, then the game was a tie
             if num_of_results == 1:
-                return {"TIE": [opps[0] for opps in _opponent_score_pairs]}
+                results_with_opponents_dict = {"TIE": [opps[0] for opps in 
+                    self._opponent_score_pairs]}
             else:
-                d = {"WIN": opps_by_score[0][1]}
+                # otherwise, win is highest score
+                results_with_opponents_dict = {"WIN": opps_by_score[0][1]}
+                # and loss is all the other scores
                 losers = []
-                for t in opps_by_score[1:]
+                for t in opps_by_score[1:]:
                     losers.append(t[1])
-                d["LOSS"] = losers
-                return d
+                results_with_opponents_dict["LOSS"] = losers
+        return results_with_opponents_dict
 
