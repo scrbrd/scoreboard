@@ -1,10 +1,8 @@
 """
-SqNode module
+Module: SqObject
 
 ...
 """
-
-#import Utils
 
 class SqObject(object):
 

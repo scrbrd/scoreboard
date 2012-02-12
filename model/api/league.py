@@ -1,11 +1,10 @@
 """
-League module
+Module: League
 
 ...
 """
 
-import SqObject
-#import Utils
+from sqobject import SqObject
 
 class League(SqObject):
 
