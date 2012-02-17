@@ -5,7 +5,7 @@
 
 from itertools import groupby
 
-from sqobject import SqObject
+from model.api import SqObject
 
 class Game(SqObject):
 
