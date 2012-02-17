@@ -5,7 +5,7 @@
 
 from itertools import groupby
 
-from model.api import SqObject
+from model.api import Loader, SqObject
 
 class Game(SqObject):
 
@@ -15,12 +15,11 @@ class Game(SqObject):
         relationships, and nearby nodes.
 
         Required:
-        int _id                         super class requirement 
-        Actor _creator                  who created the game
+        int _id             super class requirement 
+        Actor _creator      who created the game
 
         Optional:
-        list _opponent_result_triples   each entry associates an 
-                                        Opponent with a score (int)
+        dict _outcome_dict  {opponent_id: score} 
     
     """
 
@@ -31,20 +30,54 @@ class Game(SqObject):
         """ Initialize Game class with attributes
 
         Arguments:
-        int game_id         sent to SqObject
+        int game_id             sent to SqObject
         dict attributes_dict     a dictionary of attributes
 
         """
         super(Game, self).__init__(game_id, attributes_dict)
         self._creator = attributes_dict["creator"]
-        self._opponent_result_triples = attributes_dict["opponent_result_triples"]
+        self._outcome_dict = attributes_dict["outcome_dict"]
 
-    def get_creator(self):
+    def creator(self):
         """  Return the User who created the game. """
         return self._creator
 
+    def outcome(self):
+        """ Return a dictionary - {opponent_id: score} """
+        return self._outcome_dict
+
     @staticmethod
-    def get_opponents_by_result(opponent_score_pairs):
+    def load_opponents(game_id):
+        """
+        Load the Game's Opponents and attributes into a Game.
+        
+        Required:
+        int game_id     the id of the Game
+
+        Return Game
+        """
+        return Loader.loadPath(
+                game_id, 
+                ["WIN", "LOSS", "TIE", "NONE"], 
+                ["PLAYER", "TEAM"])
+
+    @staticmethod
+    def multiload_opponents(game_ids):
+        """
+        Load multiple Games' Opponents and attributes into a list.
+        
+        Required:
+        list game_ids   the ids of the Games
+
+        Return Games list
+        """
+        games = []
+        for id in game_ids:
+            games.append(load_opponents(id))
+        return games
+
+    @staticmethod
+    def calculate_outcome_from_scores(opponent_score_pairs):
         """ Convert opponents and scores to opponents by result. 
         
         Arguments:
