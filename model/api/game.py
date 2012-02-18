@@ -24,7 +24,7 @@ class Game(SqNode):
         "TIE": [(opponent_ids, score)]
         "NONE": [(opponent_ids, score)]
         "CREATOR": player_id ***REQUIRED***
-        "OPEN_SCHEDULE": [league_ids]
+        "OPEN_SCHEDULE": league_id ***REQUIRED***
         
         dict _opponents     store loaded Opponents
 
@@ -73,7 +73,7 @@ class Game(SqNode):
 
         Return Game
         """
-        return Loader.loadPath(
+        return loader.load_path(
                 game_id, 
                 ["WIN", "LOSS", "TIE", "NONE"], 
                 ["PLAYER", "TEAM"])
@@ -108,6 +108,7 @@ class Game(SqNode):
 
         Return {"result": [(score, Opponents)]}
         
+        TODO - change RETURN type {RESULT: [(opponent_id, score)]
         """
         num_of_opponents = len(opponent_score_pairs)
         results_with_opponents_dict = {}

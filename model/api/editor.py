@@ -1,19 +1,40 @@
-""" Editor Module
+""" Module: editor
 
-Editor 
+... 
 """
 
-from model.api import Game, League, Player
+from model.graph import writer
 
-def load_path(node_id, path_filters, return_filters, depth=1):
-    """
-    """
+def create_and_connect_node(type, properties_dict, edges_dict):
+    """ Create a Node for this SqObject and create its edges.
 
-def load_node(node_id):
-    """
-    """
+    Required:
+    str type                the type/class of the node
+    dict properties_dict    the properties of the node {PROP: VALUE}
+    dict edges_dict         the edges of the node {TYPE: {PROP: VALUE}}
 
-def load_edges(node_id):
+    Return bool for success/failure
+
     """
+    is_success = false
+    new_node_id = create_node(type, properties_dict)
+    if (new_node is not None):
+        is_success = true
+        new_edges_ids = create_edges(new_node_id, edges_dict)
+        if new_edges is None:
+            is_success = false
+    return is_success
+
+def create_node(type, properties_dict):
+    """ Create a Node with the specified properties. 
+
+    Return new node's id or None for failure.
+
     """
-     
+   
+def create_edges(from_node_id, edges_dict):
+    """ Create all Edges from specified node.
+
+    Return new edges' ids or None for failure.
+
+    """
