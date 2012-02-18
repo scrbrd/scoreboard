@@ -5,9 +5,9 @@
 
 from itertools import groupby
 
-from model.api import Loader, SqObject
+from model.api import Loader, SqNode
 
-class Game(SqObject):
+class Game(SqNode):
 
     """ Game is a subclass of SqObject for representing games. 
 
