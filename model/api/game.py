@@ -1,11 +1,12 @@
-""" Game Module
+""" Module: game
 
 ...
 """
 
 from itertools import groupby
 
-from model.api import Loader, SqNode
+from model.api import SqNode
+from model.api import loader
 
 class Game(SqNode):
 
@@ -16,35 +17,51 @@ class Game(SqNode):
 
         Required:
         int _id             super class requirement 
-        Actor _creator      who created the game
+        
+        Edges Dict: 
+        "WIN": [(opponent_ids, score)]
+        "LOSS": [(opponent_ids, score)]
+        "TIE": [(opponent_ids, score)]
+        "NONE": [(opponent_ids, score)]
+        "CREATOR": player_id ***REQUIRED***
+        "OPEN_SCHEDULE": [league_ids]
+        
+        dict _opponents     store loaded Opponents
 
-        Optional:
-        dict _outcome_dict  {opponent_id: score} 
-    
     """
 
-    _creator = None
-    _opponent_result_triples = []
+    _opponents = None
 
     def __init__(self, game_id, attributes_dict):
         """ Initialize Game class with attributes
 
         Arguments:
         int game_id             sent to SqObject
-        dict attributes_dict     a dictionary of attributes
+        dict attributes_dict    a dictionary of attributes
 
         """
         super(Game, self).__init__(game_id, attributes_dict)
-        self._creator = attributes_dict["creator"]
-        self._outcome_dict = attributes_dict["outcome_dict"]
 
-    def creator(self):
-        """  Return the User who created the game. """
-        return self._creator
+    def creator_id(self):
+        """  Return the Player who created the game. """
+        return SqNode._edge_ids_dict["CREATOR"]
 
     def outcome(self):
         """ Return a dictionary - {opponent_id: score} """
-        return self._outcome_dict
+        outcome_dict = {}
+        results_list = ["WIN", "LOSS", "TIE", "NONE"]
+        for r in results_list:
+            for i, s in SqNode._edge_ids_dict[r]
+                outcome_dict[i] = s
+        return outcome_dict
+
+    def get_opponents(self):
+        """ Return a dict of Opponents. """
+        return self.assert_loaded(self._opponents) ? self._opponents : {}
+
+    def set_opponents(self, opponents):
+        """ Set a Game's loaded Opponents from a dict. """
+        self._opponents = opponents
 
     @staticmethod
     def load_opponents(game_id):

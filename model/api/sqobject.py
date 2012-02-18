@@ -18,7 +18,7 @@ class SqObject(object):
     ts   _created_ts    when was this SqObject created
     ts   _updated_ts    when was this SqObject last updated
     ts   _deleted_ts    when, if at all, was this SqObject deleted
-
+    
     """
 
     _id = None
@@ -80,12 +80,16 @@ class SqNode(SqObject):
 
     SqNode's only requirement is at least one set of SqEdges.
 
+    Required:
+    dict _edge_ids_dict     {edge_type: [SqNode_id]}
+
     """
 
+    _edge_ids_dict = {}
+    
     def __init__(self, id, attributes_dict):
-        """
-        Construct a SqNode extending SqObject.
-        """
+        """ Construct a SqNode extending SqObject. """
+        _edge_ids_dict = attributes_dict["edge_ids_dict"]
         super(SqNode, self).__init__(id, attributes_dict)
 
     def name(self):

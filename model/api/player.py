@@ -16,16 +16,21 @@ class Player(SqNode, Opponent):
     id   _id            Player node id
     str  _first_name    Player node first name
     str  _last_name     Player node last name
-    list _game_ids      IDs of Games played by this Player
 
-    Optional:
+    Edge Dict:
+    "WIN": [(game_ids, score)]
+    "LOSS": [(game_ids, score)]
+    "TIE": [(game_ids, score)]
+    "NONE": [(game_ids, score)]
+    "CREATOR": [game_ids]
+    "LEAGUE_MEMBER": [league_ids]
+ 
     dict _games         Dict of Game lists keyed by win/loss/tie
     
     """
 
     _first_name = None
     _last_name = None
-    _game_ids = None
     
     _games = None
 
@@ -39,7 +44,6 @@ class Player(SqNode, Opponent):
 
         self._first_name = attributes_dict["first_name"]
         self._last_name = attributes_dict["last_name"]
-        self._game_ids = attributes_dict["game_ids"]
 
     def name(self):
         """ Return this Player's name. """
@@ -47,5 +51,5 @@ class Player(SqNode, Opponent):
 
     def count_wins(self):
         """ Return the number of Games this Player has won. """
-        return self.assert_loaded(self._games) ? self._games : {}
+        return len(SqNode._edge_ids_dict["WIN"])
 

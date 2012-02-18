@@ -6,6 +6,8 @@ the Sqoreboard API.
 """
 
 from sqobject import SqObject
+from sqobject import SqNode
+from sqobject import SqEdge
 from opponent import Opponent
 from player import Player
 from league import League

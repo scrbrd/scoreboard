@@ -1,4 +1,4 @@
-""" Module: League
+""" Module: league
 
 ...
 """
@@ -16,18 +16,17 @@ class League(SqNode):
     Required:
     id   _id            League node id
     str  _name          League node name
-    list _opponent_ids  Opponent IDs in this League
-    list _game_ids      IDs of Games played by Opponents in this League
 
-    Optional:
+    Edges Dict:
+    "OPEN_SCHEDULE": [game_ids]
+    "LEAGUE_MEMBER": [opponent_ids]
+
     dict _opponents     Opponents in this League
     dict _games         Games played by Opponents in this League
 
     """
 
     _name = None
-    _opponent_ids = None
-    _game_ids = None
     
     _opponents = None
     _games = None
@@ -40,8 +39,6 @@ class League(SqNode):
         super(League, self).__init__(id, attributes_dict)
 
         self._name = attributes_dict["name"]
-        self._opponent_ids = attributes_dict["opponent_ids"]
-        self._game_ids = attributes_dict["game_ids"]
 
     def name(self):
         """ Return this League's name. """
