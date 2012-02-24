@@ -209,46 +209,37 @@ def read_node_and_edges(node_id):
     except ConnectionError:
         raise DbReadError("Database read failed.")
 
-def read_path(
+def read_nodes_from_immediate_path(
         start_node_id, 
-        node_return_filter,
         edge_pruner,
-        node_pruner,
-        depth):
+        node_return_filter):
     """ Read a pruned path from the database and return a filtered dict.
 
-    Prune the path based on the detph, edges list, and nodes list. 
-    Restrict the returned nodes to the filtered dictionary and the
-    starting node.
+    Prune the path based on the edges list. Restrict the returned nodes 
+    to the filtered dictionary and the starting node.
 
-    No duplicate edges in traversal. Duplicates allowed in depth
-    oriented node dictionary but not in the id based node dictionary.
+    No duplicate edges in traversal. No duplicates in node lists.
 
-    Returns:
-    tuple path  path[0] is a nested dictionary {depth:{type:[id]}}
-                path[1] is a dictionary {node_id: node}
+    Returns path    {depth:{id:node}}
 
     Raises:
+    DbInputError    if parameters are missing or incorrect
     DbReadError     db threw error
 
     """
     required = ((start_node_id, "start_node_id"),
             (node_return_filter, "return_node_filter"),
-            (edge_pruner, "edge_pruner"),
-            (node_pruner, "node_pruner"),
-            (depth, "depth"))
+            (edge_pruner, "edge_pruner"))
     for t in required:
         if t[0] is None:
             raise DbInputError(t[0], t[1], "Required parameter not included.")
 
     try:
-        path_data = connection_manager.read_path(
+        path_data = connection_manager.read_nodes_from_immediate_path(
                 BASE_URL,
                 start_node_id, 
-                node_return_filter,
                 edge_pruner,
-                node_pruner,
-                depth)
+                node_return_filter)
         return path_data
     except ConnectionError:
         raise DbReadError("Database read failed.")
@@ -277,8 +268,10 @@ class DbInputError(Exception):
 
     def __init__(self, param_name, param_value, reason):
         """ Initialize DbInputError. """
-        self.msg = ("DbInputError: " + param_name + " - " + param_value + 
-                ": " + reason)
+        self.msg = "DbInputError: {0} - {1}: {2}".format(
+            param_name, 
+            param_value,
+            reason)
 
 
 class DbWriteError(Exception):
@@ -297,7 +290,7 @@ class DbWriteError(Exception):
 
     def __init__(self, write_type, reason):
         """ Initialize DbWriteError. """
-        self.msg = "DbWriteError: " + write_type + ": " + reason
+        self.msg = "DbWriteError: {0}: {1}".format(write_type, reason)
 
 
 class DbReadError(Exception):
@@ -315,5 +308,5 @@ class DbReadError(Exception):
 
     def __init__(self, reason):
         """ Initialize DbReadError. """
-        self.msg = "DbReadError: " + reason
+        self.msg = "DbReadError: {0}".format(reason)
 
