@@ -46,7 +46,15 @@ class League(SqNode):
 
     def get_opponents(self):
         """ Return a dict of Opponents. """
-        return self.assert_loaded(self._opponents) ? self._opponents : {}
+        try:
+            opponents = self._opponents
+            self.assert_loaded(opponents)
+        except SqObjectNotLoadedError as e:
+            # log error and send app empty data
+            #logger.debug(e.msg)
+            opponents = {}
+        
+        return opponents
 
     def set_opponents(self, opponents):
         """ Set a member variable with a dict of Opponents. """
@@ -54,7 +62,15 @@ class League(SqNode):
 
     def get_games(self):
         """ Return a dict of Games. """
-        return self.assert_loaded(self._games) ? self._games : {}
+        try:
+            games = self._games
+            self.assert_loaded(games)
+        except SqObjectNotLoadedError as e:
+            # log error and send app empty data
+            #logger.debug(e.msg)
+            games = {}
+
+        return games
 
     def set_games(self, games):
         """ Set a member variable with a dict of Games. """

@@ -3,7 +3,7 @@
 ...
 """
 
-from model.api import Game, Opponent, SqNode
+from model.api import SqNode, Game, Opponent
 from model.api import editor
 
 class Player(SqNode, Opponent):
@@ -73,11 +73,7 @@ class Player(SqNode, Opponent):
                 [(o, s) for o, s in opponent_scores_dict])
         # convert output into a format where editor can be blind
         for r, os in outcome:
-            edges_dict[r] = [{"TO_ID": o, "SCORE": s} for o,s in os]
+            edges_dict[r] = [{"TO_ID": o, "SCORE": s} for o, s in os]
  
-        is_success = editor.create_and_connect_node(
-                "GAME",
-                {},
-                edges_dict)
-                
-        return is_success
+        return editor.create_and_connect_node("GAME", {}, edges_dict)
+

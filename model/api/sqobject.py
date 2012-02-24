@@ -1,4 +1,4 @@
-""" Module: SqObject
+""" Module: sqobject
 
 ...
 """
@@ -13,19 +13,13 @@ class SqObject(object):
     subclasses.
 
     Required:
-    id   _id            SqObject node id
-    str  _type          SqObject node type
-    ts   _created_ts    when was this SqObject created
-    ts   _updated_ts    when was this SqObject last updated
-    ts   _deleted_ts    when, if at all, was this SqObject deleted
+    id   _id            SqObject id
+    str  _type          SqObject type
     
     """
 
     _id = None
     _type = None
-    _created_ts = None
-    _updated_ts = None
-    _deleted_ts = None
 
     def __init__(self, id, attributes_dict):
         """
@@ -34,33 +28,24 @@ class SqObject(object):
         """
         self._id = id
 
-        # created_ts/updated_ts/deleted_ts to be defined in Utils constants
         self._type = attributes_dict["type"]
-        self._created_ts = attributes_dict["created_ts"]
-        self._updated_ts = attributes_dict["updated_ts"]
-        self._deleted_ts = attributes_dict["deleted_ts"]
 
     def id(self):
-        """ Return a SqObject node id. """
+        """ Return a SqObject id. """
         return self._id
 
     def type(self):
-        """ Return a SqObject node type. """
+        """ Return a SqObject type. """
         return self._type
 
     def assert_loaded(self, loaded_data):
         """ Return true if data is loaded, otherwise raise an error. """
-        is_loaded = (loaded_data is not None)
-        
-        # make this an AssertError?
-        if is_loaded is None:
-            raise SqObjectNotLoadedError("")
-
-        return is_loaded
+        if loaded_data is None:
+            raise SqObjectNotLoadedError("SqObject member not loaded")
 
 
-class SqObjectNotLoadedError(Exception): pass
-    
+class SqObjectNotLoadedError(Exception):
+
     """ SqObjectNotLoadedError is a subclass of Exception.
 
     Provide an exception to be raised when a member of a SqObject has 
@@ -69,6 +54,10 @@ class SqObjectNotLoadedError(Exception): pass
 
     """
 
+    msg = None
+
+    def __init__(self, msg):
+        self.msg = msg
 
 class SqNode(SqObject):
 
@@ -93,7 +82,7 @@ class SqNode(SqObject):
         super(SqNode, self).__init__(id, attributes_dict)
 
     def name(self):
-        """ Return a SqObject node name. """
+        """ Return a SqNode name. """
         raise NotImplementedError("All SqObject subclasses must override")
 
 
@@ -114,17 +103,15 @@ class SqEdge(SqObject):
 
     _node_id_1 = None
     _node_id_2 = None
-    _is_one_way = None
-    _is_unique = None
+    #_is_one_way = None
+    #_is_unique = None
 
     def __init__(self, id, attributes_dict):
-        """
-        Construct a SqEdge extending SqObject.
-        """
+        """ Construct a SqEdge extending SqObject. """
         super(SqEdge, self).__init__(id, attributes_dict)
 
         self._node_id_1 = attributes_dict["node_id_1"]
         self._node_id_2 = attributes_dict["node_id_2"]
-        self._is_one_way = attributes_dict["is_one_way"]
-        self._is_unique = attributes_dict["is_unique"]
+        #self._is_one_way = attributes_dict["is_one_way"]
+        #self._is_unique = attributes_dict["is_unique"]
 

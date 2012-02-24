@@ -3,10 +3,11 @@
 ...
 """
 
-from itertools import groupby
-
 from model.api import SqNode
 from model.api import loader
+
+from itertools import groupby
+
 
 class Game(SqNode):
 

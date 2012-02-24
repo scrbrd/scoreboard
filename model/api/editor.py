@@ -18,20 +18,21 @@ def create_and_connect_node(type, properties_dict, edges_dict):
     """
     is_success = false
     new_node_id = create_node(type, properties_dict)
-    if (new_node is not None):
+    if new_node_id is not None:
         is_success = true
-        new_edges_ids = create_edges(new_node_id, edges_dict)
-        if new_edges is None:
+        new_edge_ids = create_edges(new_node_id, edges_dict)
+        if new_edge_ids is None:
             is_success = false
     return is_success
 
-def create_node(type, properties_dict):
+def create_node(type, properties):
     """ Create a Node with the specified properties. 
 
     Return new node's id or None for failure.
 
     """
-   
+    return write_node(type, properties)
+
 def create_edges(from_node_id, edges_dict):
     """ Create all Edges from specified node.
 
