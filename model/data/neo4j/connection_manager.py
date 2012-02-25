@@ -1,14 +1,33 @@
 """ Module: connection_manager
 
-...
+Receive database requests, handle neo4j interaction, and
+return parsed and formatted nodes, edges, and sets.
+
+All the functions raise DbConnectionError if they can't connect
+to the db or if the db returns an error, including a bad id error.
+
 """
+
 import urllib, urllib2, json, ast
 
 import response_parser
+from model.data import DbConnectionError
 
 _gremlin_path = "/db/data/ext/GremlinPlugin/graphdb/execute_script"
+_gremlin_err = "javax.script.ScriptException: java.lang.NullPointerException"
 
 def create_node(base_url, type, properties):
+    """ Create a node in the db using gremlin and return created node.
+
+    Required:
+    string base_url     url of db
+    string type         node's 'type'
+    dict properties     node's properties dictionary
+
+    Return node as a dictionary.
+    keys = node_id, type, properties, edges
+    
+    """
     url = base_url + _gremlin_path
 
     # add type to properties dictionary
@@ -23,6 +42,19 @@ def create_node(base_url, type, properties):
     return response_parser.format_node(response_data[0])
     
 def create_edge(base_url, from_node, to_node, type, properties):
+    """ Create an edge in the db using gremlin and return created edge.
+
+    Required:
+    string base_url     url of db
+    int from_node       id of from node
+    int to_node         id of to node
+    string type         edge's 'type'
+    dict properties     edge's properties dictionary
+
+    Return edge as a dictionary.
+    keys = edge_id, from_node_id, to_node_id, type, properties
+    
+    """
     url = base_url + _gremlin_path
    
     data = {}
@@ -42,17 +74,30 @@ def update_node(base_url, id, properties):
 def update_edge(base_url, id, properties):
     return None
 
-def read_node_and_edges(base_url, id):
+def read_node_and_edges(base_url, node_id):
+    """ Read a node and all its edges from the db using gremlin.
+
+    Required:
+    string base_url     url of db
+    int node_id         id of requested node
+
+    Return node as a dictionary.
+    keys = node_id, type, properties, edges
+    
+    """
     url = base_url + _gremlin_path
 
     data = {}
     data["script"] = "g.v(id).transform{[it, it.bothE()]}"
-    data["params"] = {"id":id}
+    data["params"] = {"id":node_id}
     
     response_data = connect(url, json.dumps(data))
-    return response_parser.format_node(response_data[0])
+    if response_data is None:
+        return None
+    else:
+        return response_parser.format_node(response_data[0])
 
-def read_edge(base_url, id):
+def read_edge(base_url, edge_id):
     return None
 
 def read_nodes_from_immediate_path(
@@ -60,6 +105,18 @@ def read_nodes_from_immediate_path(
         start_node_id, 
         edge_pruner,
         node_return_filter): 
+    """ Read a restricted set of nodes of depth 1 using Gremlin.
+
+    Required:
+    string base_url         url of db
+    int start_node_id       id of requested node
+    list edge_pruner        edges that should be traversed ([]=all)
+    list node_return_filter nodes that should be returned ([]=all)
+
+    Return nodes as a dictionary keyed on depth and node_id
+    {depth: {node_id: node}}
+    
+    """
     url = base_url + _gremlin_path
     
     # formatt the pruners and filter
@@ -82,9 +139,22 @@ def read_nodes_from_immediate_path(
     data["params"] = {"id": start_node_id} 
   
     response_data = connect(url, json.dumps(data))
-    return response_parser.format_path(response_data)
+    if response_data is None:
+        return None
+    else:
+        return response_parser.format_path(response_data)
 
 def gremlin(base_url, script, params):
+    """ Read/Write an unrestricted data set using Gremlin.
+    
+    Required:
+    string base_url     url of db
+    string script       gremlin script to run
+    dict params         parameters referenced in the script
+
+    Return unformatted neo4j response.
+
+    """
     url = base_url + _gremlin_path
 
     data = {}
@@ -95,23 +165,29 @@ def gremlin(base_url, script, params):
     return response_data
 
 def connect(url, data):
+    """ POST data the the url as a JSON request.
+
+    Required:
+    string url      url of the connection
+    string data     data to POST
+
+    Return unformatted HTTP response.
+
+    Raises:
+    DbConnectionError     db refused connection or threw error
+    
+    """
     request = urllib2.Request(url, data)
     request.add_header('Content-Type', "application/json")
 
     try:
         response = urllib2.urlopen(request)
         response_data = response.read()
-        return ast.literal_eval(response_data)
+        # object not found
+        if _gremlin_err in response_data:
+            return None
+        else:
+            return ast.literal_eval(response_data)
     except (urllib2.HTTPError, urllib2.URLError) as err:
-        raise ConnectionError(err.read())
-
-class ConnectionError(Exception):
-
-    """ Exception raised when the database connection breaks. """
-
-    msg = None
-
-    def __init__(self, msg):
-        """ Initialize ConnectionError. """
-        self.msg = msg
+        raise DbConnectionError(err.read())
 

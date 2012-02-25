@@ -5,9 +5,11 @@ Manage incoming db requests and pass them to the proper database.
 """
 
 import urllib2, urllib
+from exceptions import NotImplementedError
 
+from model.data import DbInputError, DbReadError, DbWriteError
+from model.data import DbConnectionError
 from neo4j import connection_manager
-from neo4j.connection_manager import ConnectionError
 
 HOST = "localhost"
 PORT = "7474"
@@ -48,7 +50,7 @@ def create_node(type, properties):
                     "create_node", 
                     "No new node returned from database.")
         return new_node
-    except ConnectionError:
+    except DbConnectionError:
         raise DbWriteError("create_node", "Database write failed.")
 
 def create_edge(from_node_id, to_node_id, type, properties):
@@ -102,12 +104,14 @@ def create_edge(from_node_id, to_node_id, type, properties):
                     "create_edge", 
                     "No new edge returned from database.")
         return new_edge
-    except ConnectionError:
+    except DbConnectionError:
         raise DbWriteError("create_edge", "Database write failed.")
 
 
 def update_node(node_id, properties):
     """ Update existing node and return it.
+
+    NOT IMPLEMENTED
 
     Required:
     int node_id         id of node to update
@@ -120,6 +124,8 @@ def update_node(node_id, properties):
     DbWriteError    failed to write to database
 
     """
+    raise NotImplementedError("TODO - Implement update_node.")
+
     if any(k in properties for k in ("type", "node_id")):
         raise DbInputError(
                 k, 
@@ -141,7 +147,7 @@ def update_node(node_id, properties):
                     "update_node", 
                     "No updated node returned from database.")
         return updated_node
-    except ConnectionError:
+    except DbConnectionError:
         raise DbWriteError("update_node", "Database write failed.")
 
 def update_edge(edge_id, properties):
@@ -156,8 +162,10 @@ def update_edge(edge_id, properties):
     Raises:
     DbInputError    bad input
     DbWriteError    failed to write to database
-
+    
     """
+    raise NotImplementedError("TODO - Implement update_edge.")
+    
     if any(k in properties for k in (
         "type", 
         "from_node_id", 
@@ -182,13 +190,15 @@ def update_edge(edge_id, properties):
                     "update_edge", 
                     "No updated edge returned from database.")
         return updated_node
-    except ConnectionError:
+    except DbConnectionError:
         raise DbWriteError("update_edge", "Database write failed.")
 
 def delete_node(node_id, properties):
+    raise NotImplementedError("TODO - Implement delete_node.")
     return None
 
 def delete_edge(edge_id, properties):
+    raise NotImplementedError("TODO - Implement delete_edge.")
     return None
 
 def read_node_and_edges(node_id):
@@ -206,7 +216,7 @@ def read_node_and_edges(node_id):
     try:
         node_data = connection_manager.read_node_and_edges(BASE_URL, node_id)
         return node_data
-    except ConnectionError:
+    except DbConnectionError:
         raise DbReadError("Database read failed.")
 
 def read_nodes_from_immediate_path(
@@ -241,72 +251,15 @@ def read_nodes_from_immediate_path(
                 edge_pruner,
                 node_return_filter)
         return path_data
-    except ConnectionError:
+    except DbConnectionError:
         raise DbReadError("Database read failed.")
 
 def read_node(node_id):
+    raise NotImplementedError("TODO - Implement read_node.")
     return None
 
 def read_edge(edge_id):
+    raise NotImplementedError("TODO - Implement read_edge.")
     return None
 
-
-class DbInputError(Exception):
-    
-    """ Exception raised when the incoming request has bad input.
-
-    Required:
-    string param_name       which param has bad data
-    string param_value      the value of the parameter  
-    string reason           the quality which makes the data bad
-
-    Returns msg
-    
-    """
-    
-    msg = None
-
-    def __init__(self, param_name, param_value, reason):
-        """ Initialize DbInputError. """
-        self.msg = "DbInputError: {0} - {1}: {2}".format(
-            param_name, 
-            param_value,
-            reason)
-
-
-class DbWriteError(Exception):
-
-    """ Exception raised when the database cannot be written to.
-
-    Required:
-    string write_type   type of write that has failed
-    string reason       why/how the write failed
-
-    Returns msg
-
-    """
-    
-    msg = None
-
-    def __init__(self, write_type, reason):
-        """ Initialize DbWriteError. """
-        self.msg = "DbWriteError: {0}: {1}".format(write_type, reason)
-
-
-class DbReadError(Exception):
-     
-    """ Exception raised when the database cannot be read from.
-
-    Required:
-    string reason       why/how the read failed
-
-    Returns msg
-    
-    """
-    
-    msg = None
-
-    def __init__(self, reason):
-        """ Initialize DbReadError. """
-        self.msg = "DbReadError: {0}".format(reason)
 
