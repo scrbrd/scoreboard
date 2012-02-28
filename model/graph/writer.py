@@ -34,9 +34,9 @@ def create_node(type, properties):
 
     """
 
-    try:
-        node = None
+    node = None
 
+    try:
         # make sure callers don't usurp power over the data
         bad_keys = [
                 "node_id",
@@ -67,10 +67,10 @@ def create_node(type, properties):
                 node_dict["properties"])
 
     #except DbInputError as e:
-        #logger.debug(e.msg)
+        #logger.debug(e.reason)
 
     #except DbWriteError as e:
-        #logger.debug(e.msg)
+        #logger.debug(e.reason)
 
     finally:
         return node
@@ -91,9 +91,9 @@ def update_node(node_id, new_properties):
 
     """
 
-    try:
-        node = None
+    node = None
 
+    try:
         # make sure callers don't usurp power over the data
         bad_keys = [
                 "node_id",
@@ -121,10 +121,10 @@ def update_node(node_id, new_properties):
                 node_dict["properties"])
 
     #except DbInputError as e:
-        #logger.debug(e.msg)
+        #logger.debug(e.reason)
 
     #except DbWriteError as e:
-        #logger.debug(e.msg)
+        #logger.debug(e.reason)
 
     finally:
         return node
@@ -141,9 +141,9 @@ def delete_node(node_id):
 
     """
 
-    try:
-        node = None
+    node = None
 
+    try:
         # issue a call to the data layer with the required changes
         node_dict = db.delete_node(node_id, {"deleted_ts" : int(time())})
 
@@ -153,10 +153,10 @@ def delete_node(node_id):
                 node_dict["properties"])
 
     #except DbInputError as e:
-        #logger.debug(e.msg)
+        #logger.debug(e.reason)
 
     #except DbWriteError as e:
-        #logger.debug(e.msg)
+        #logger.debug(e.reason)
 
     finally:
         return node
@@ -187,9 +187,9 @@ def create_edge(
 
     """
 
-    try:
-        edge = None
+    edge = None
 
+    try:
         # make sure callers don't usurp power over the data
         bad_keys = [
                 "edge_id",
@@ -230,10 +230,10 @@ def create_edge(
                 edge_dict["properties"])
 
     #except DbInputError as e:
-        #logger.debug(e.msg)
+        #logger.debug(e.reason)
 
     #except DbWriteError as e:
-        #logger.debug(e.msg)
+        #logger.debug(e.reason)
 
     finally:
         return edge
@@ -254,9 +254,9 @@ def update_edge(edge_id, new_properties):
 
     """
 
-    try:
-        edge = None
+    edge = None
 
+    try:
         # make sure callers don't usurp power over the data
         bad_keys = [
                 "edge_id",
@@ -290,10 +290,10 @@ def update_edge(edge_id, new_properties):
                 edge_dict["properties"])
 
     #except DbInputError as e:
-        #logger.debug(e.msg)
+        #logger.debug(e.reason)
 
     #except DbWriteError as e:
-        #logger.debug(e.msg)
+        #logger.debug(e.reason)
 
     finally:
         return edge
@@ -310,9 +310,9 @@ def delete_edge(edge_id):
 
     """
 
-    try:
-        edge = None
+    edge = None
         
+    try:
         # issue a call to the data layer with the required changes 
         edge_dict = db.delete_edge(edge_id, {"deleted_ts" : int(time())})
 
@@ -324,10 +324,10 @@ def delete_edge(edge_id):
                 edge_dict["properties"])
 
     #except DbInputError as e:
-        #logger.debug(e.msg)
+        #logger.debug(e.reason)
 
     #except DbWriteError as e:
-        #logger.debug(e.msg)
+        #logger.debug(e.reason)
 
     finally:
         return edge

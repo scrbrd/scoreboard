@@ -13,8 +13,11 @@ Provides:
 
 """
 
-from model.graph import GraphEdge, GraphNode, GraphPath, GraphInputError
+from model.graph import GraphEdge, GraphNode, GraphPath, GraphOutputError
 from model.data import db, DbInputError, DbReadError, DbWriteError
+
+# TODO: remove!
+from exceptions import NotImplementedError
 
 
 def get_node(node_id):
@@ -31,13 +34,13 @@ def get_node(node_id):
     }
 
     Required:
-    id  node_id     id of node to fetch
+    id  node_id         id of node to fetch
 
     Returns:
-    GraphNode       single GraphNode instance
+    GraphNode           single GraphNode instance
 
     Raises:
-    GraphInputError bad input
+    GraphOutputError    bad input
 
     """
 
@@ -46,25 +49,54 @@ def get_node(node_id):
     #   2/ id was bad: error raised, execution halted;
     #   3/ db fails: error caught, None assigned here.
 
-    try:
-        node = None
+    node = None
 
+    required_fields = set([
+            "node_id",
+            "type",
+            "properties",
+            "edges"
+            ])
+
+    # TODO: deal with existing bad data. every node and edge should have a
+    # value set for each of these properties.
+    required_properties = set([
+            #"created_ts",
+            #"updated_ts",
+            #"deleted_ts"
+            ])
+
+    try:
         node_dict = db.read_node_and_edges(node_id)
 
-        # halts execution and requires API to resend request
-        if node_dict is None:
-            raise GraphInputError(
-                    "node_id",
-                    node_id,
-                    "Database query failed.")
+        if node_dict:
+            # data layer nodes only have fields explicitly required
+            errors = required_fields.symmetric_difference(set(node_dict))
 
-        node = GraphNode(
-                node_dict["node_id"],
-                node_dict["type"],
-                node_dict["properties"])
+            if "properties" not in errors:
+                # ensure properties the graph layer requires are present too
+                properties = set(node_dict["properties"])
+                property_errors = required_properties.difference(properties)
+                errors = errors.union(property_errors)
 
-    #except DbReadError as e:
-        #logger.debug(e.msg)
+            if errors:
+                raise GraphOutputError(
+                        errors, 
+                        "Required fields or properties missing from GraphNode.")
+
+            node = GraphNode(
+                    node_dict["node_id"],
+                    node_dict["type"],
+                    node_dict["properties"],
+                    node_dict["edges"])
+
+    except DbReadError as e:
+        #logger.debug(e.reason)
+        node = None
+
+    except DbInputError as e:
+        #logger.debug(e.reason)
+        node = None
 
     finally:
         return node
@@ -83,9 +115,6 @@ def multiget_node(node_ids):
     Returns:
     dict                GraphNodes keyed on node id
 
-    Raises:
-    GraphInputError bad input
-
     """
 
     nodes = {}
@@ -103,10 +132,10 @@ def get_edge(edge_id):
 
     {
         "edge_id" : edge_id,
-        "from_node_id" : from_node_id,
-        "to_node_id" : to_node_id,
         "type" : type,
-        "properties" : {"p0" : p0, ..., "pN" : pN}
+        "properties" : {"p0" : p0, ..., "pN" : pN},
+        "from_node_id" : from_node_id,
+        "to_node_id" : to_node_id
     }
 
     Required:
@@ -115,9 +144,6 @@ def get_edge(edge_id):
     Returns:
     GraphEdge       single GraphEdge instance
 
-    Raises:
-    GraphInputError bad input
-
     """
 
     # cases:
@@ -125,27 +151,61 @@ def get_edge(edge_id):
     #   2/ id was bad: error raised, execution halted;
     #   3/ db fails: error caught, None assigned here.
 
-    try:
-        edge = None
+    edge = None
 
+    required_fields = set([
+            "edge_id",
+            "type",
+            "properties",
+            "from_node_id",
+            "to_node_id"
+            ])
+
+    required_properties = set([
+            #"created_ts",
+            #"updated_ts",
+            #"deleted_ts",
+            #"is_one_way",
+            #"is_unique"
+            ])
+
+    try:
         edge_dict = db.read_edge(edge_id)
 
-        # halts execution and requires API to resend request
-        if edge_dict is None:
-            raise GraphInputError(
-                    "edge_id",
-                    edge_id,
-                    "Database query failed.")
+        if edge_dict:
+            # data layer edges only have fields explicitly required
+            errors = required_fields.symmetric_difference(set(edge_dict))
 
-        edge = GraphEdge(
-                edge_dict["edge_id"],
-                edge_dict["from_node_id"],
-                edge_dict["to_node_id"],
-                edge_dict["type"],
-                edge_dict["properties"])
+            if "properties" not in errors:
+                # ensure properties the graph layer requires are present too
+                properties = set(edge_dict["properties"])
+                property_errors = required_properties.difference(properties)
+                errors = errors.union(property_errors)
 
-    #except DbReadError as e:
-        #logger.debug(e.msg)
+            if errors:
+                raise GraphOutputError(
+                        errors, 
+                        "Required fields or properties missing from GraphEdge.")
+
+            edge = GraphEdge(
+                    edge_dict["edge_id"],
+                    edge_dict["type"],
+                    edge_dict["properties"],
+                    edge_dict["from_node_id"],
+                    edge_dict["to_node_id"])
+
+    except DbReadError as e:
+        #logger.debug(e.reason)
+        edge = None
+
+    except DbInputError as e:
+        #logger.debug(e.reason)
+        edge = None
+
+    except NotImplementedError as e:
+        # TODO: remove!
+        print e
+        edge = None
 
     finally:
         return edge
@@ -163,9 +223,6 @@ def multiget_edge(edge_ids):
 
     Returns:
     dict                GraphEdges keyed on edge id
-
-    Raises:
-    GraphInputError bad input
 
     """
 
@@ -204,31 +261,34 @@ def get_path_to_neighbor_nodes(
     Returns:
     GraphPath                    single GraphPath instance
 
-    Raises:
-    GraphInputError bad input
-
     """
 
-    try:
-        path = None
+    path = None
 
+    try:
         # issue a db query to generate a path to neighbors
         path_dict = db.read_nodes_from_immediate_path(
                 start_node_id, 
                 edge_type_pruner,
                 node_type_return_filter)
 
-        # should properties be hard-coded like this?
+        # TODO: do similar checking to get_node() for path_dict[0]
+
         properties = {
-                "edge_types_traversed" : edge_type_pruner, 
-                "node_types_returned" : node_type_return_filter
+                "edge_type_pruner" : edge_type_pruner, 
+                "node_type_return_filter" : node_type_return_filter
                 }
         
         # instantiate all nodes and edges in one fell swoop
         path = GraphPath(start_node_id, path_dict, properties)
 
-    #except DbReadError as e:
-        #logger.debug(e.msg)
+    except DbReadError as e:
+        #logger.debug(e.reason)
+        path = None
+
+    except DbInputError as e:
+        #logger.debug(e.reason)
+        path = None
 
     finally:
         return path
@@ -253,9 +313,6 @@ def multiget_path_to_neighbor_nodes(
 
     Returns:
     dict                            GraphPaths keyed on start node id
-
-    Raises:
-    GraphInputError bad input
 
     """
 

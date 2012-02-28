@@ -15,6 +15,6 @@ Exception
 
 """
 
-from graph_object import GraphObject, GraphInputError
-from graph_object import GraphEdge, GraphNode, GraphPath
+from graph_object import GraphObject, GraphInputError, GraphOutputError
+from graph_object import GraphPrimitive, GraphEdge, GraphNode, GraphPath
 
