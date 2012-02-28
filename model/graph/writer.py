@@ -37,20 +37,20 @@ def create_node(type, properties):
     node = None
 
     try:
-        # make sure callers don't usurp power over the data
-        bad_keys = [
+        # make sure callers don't usurp power over data input
+        bad_properties = [
                 "node_id",
                 "type",
                 "created_ts",
                 "updated_ts",
                 "deleted_ts"]
 
-        input_errors = set(bad_keys).intersect(set(properties))
+        input_errors = set(bad_properties).intersect(set(properties))
 
         if input_errors:
-            key = input_errors.pop()
-            reason = "Invalid input supplied to create_node()."
-            raise GraphInputError(key, properties[key], reason)
+            raise GraphInputError(
+                    input_errors,
+                    "Invalid input supplied to create_node().")
 
         # initialize some required properties
         current_ts = int(time())
@@ -66,14 +66,15 @@ def create_node(type, properties):
                 node_dict["type"],
                 node_dict["properties"])
 
-    #except DbInputError as e:
+    except DbInputError as e:
         #logger.debug(e.reason)
+        node = None
 
-    #except DbWriteError as e:
+    except DbWriteError as e:
         #logger.debug(e.reason)
+        node = None
 
-    finally:
-        return node
+    return node
 
 
 def update_node(node_id, new_properties):
@@ -94,20 +95,20 @@ def update_node(node_id, new_properties):
     node = None
 
     try:
-        # make sure callers don't usurp power over the data
-        bad_keys = [
+        # make sure callers don't usurp power over data input
+        bad_properties = [
                 "node_id",
                 "type",
                 "created_ts",
                 "updated_ts",
                 "deleted_ts"]
         
-        input_errors = set(bad_keys).intersect(set(new_properties))
+        input_errors = set(bad_properties).intersect(set(new_properties))
         
         if input_errors:
-            key = input_errors.pop()
-            reason = "Invalid input supplied to update_node()."
-            raise GraphInputError(key, new_properties[key], reason)
+            raise GraphInputError(
+                    input_errors,
+                    "Invalid input supplied to update_node().")
 
         # make required changes
         new_properties["updated_ts"] = int(time())
@@ -120,14 +121,15 @@ def update_node(node_id, new_properties):
                 node_dict["type"],
                 node_dict["properties"])
 
-    #except DbInputError as e:
+    except DbInputError as e:
         #logger.debug(e.reason)
+        node = None
 
-    #except DbWriteError as e:
+    except DbWriteError as e:
         #logger.debug(e.reason)
+        node = None
 
-    finally:
-        return node
+    return node
 
 
 def delete_node(node_id):
@@ -152,14 +154,15 @@ def delete_node(node_id):
                 node_dict["type"],
                 node_dict["properties"])
 
-    #except DbInputError as e:
+    except DbInputError as e:
         #logger.debug(e.reason)
+        node = None
 
-    #except DbWriteError as e:
+    except DbWriteError as e:
         #logger.debug(e.reason)
+        node = None
 
-    finally:
-        return node
+    return node
 
 
 def create_edge(
@@ -190,8 +193,8 @@ def create_edge(
     edge = None
 
     try:
-        # make sure callers don't usurp power over the data
-        bad_keys = [
+        # make sure callers don't usurp power over data input
+        bad_properties = [
                 "edge_id",
                 "from_node_id",
                 "to_node_id",
@@ -202,12 +205,12 @@ def create_edge(
                 "updated_ts",
                 "deleted_ts"]
 
-        input_errors = set(bad_keys).intersect(set(properties))
+        input_errors = set(bad_properties).intersect(set(properties))
 
         if input_errors:
-            key = input_errors.pop()
-            reason = "Invalid input supplied to create_edge()."
-            raise GraphInputError(key, properties[key], reason)
+            raise GraphInputError(
+                    input_errors,
+                    "Invalid input supplied to create_edge().")
 
         # initialize some required properties
 
@@ -229,14 +232,15 @@ def create_edge(
                 edge_dict["type"],
                 edge_dict["properties"])
 
-    #except DbInputError as e:
+    except DbInputError as e:
         #logger.debug(e.reason)
+        edge = None
 
-    #except DbWriteError as e:
+    except DbWriteError as e:
         #logger.debug(e.reason)
+        edge = None
 
-    finally:
-        return edge
+    return edge
 
 
 def update_edge(edge_id, new_properties):
@@ -257,8 +261,8 @@ def update_edge(edge_id, new_properties):
     edge = None
 
     try:
-        # make sure callers don't usurp power over the data
-        bad_keys = [
+        # make sure callers don't usurp power over data input
+        bad_properties = [
                 "edge_id",
                 "from_node_id",
                 "to_node_id",
@@ -269,12 +273,12 @@ def update_edge(edge_id, new_properties):
                 "updated_ts",
                 "deleted_ts"]
 
-        input_errors = set(bad_keys).intersect(set(new_properties))
+        input_errors = set(bad_properties).intersect(set(new_properties))
 
         if input_errors:
-            key = input_errors.pop()
-            reason = "Invalid input supplied to update_edge()."
-            raise GraphInputError(key, new_properties[key], reason)
+            raise GraphInputError(
+                    input_errors,
+                    "Invalid input supplied to update_edge().")
 
         # make required changes
         new_properties["updated_ts"] = int(time())
@@ -289,14 +293,15 @@ def update_edge(edge_id, new_properties):
                 edge_dict["type"],
                 edge_dict["properties"])
 
-    #except DbInputError as e:
+    except DbInputError as e:
         #logger.debug(e.reason)
+        edge = None
 
-    #except DbWriteError as e:
+    except DbWriteError as e:
         #logger.debug(e.reason)
+        edge = None
 
-    finally:
-        return edge
+    return edge
 
 
 def delete_edge(edge_id):
@@ -323,12 +328,13 @@ def delete_edge(edge_id):
                 edge_dict["type"],
                 edge_dict["properties"])
 
-    #except DbInputError as e:
+    except DbInputError as e:
         #logger.debug(e.reason)
+        edge = None
 
-    #except DbWriteError as e:
+    except DbWriteError as e:
         #logger.debug(e.reason)
+        edge = None
 
-    finally:
-        return edge
+    return edge
 

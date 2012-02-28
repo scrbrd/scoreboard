@@ -37,10 +37,7 @@ class GraphObject(object):
 
     def __init__(self, id, properties):
         """ Construct an abstract GraphObject. """
-
-        # TODO: remove int() when data layer returns the right type!
-
-        self._id = int(id)
+        self._id = id
         self._properties = properties
 
     def id(self):
@@ -85,20 +82,18 @@ class GraphPrimitive(GraphObject):
         # TODO: deal with existing bad data. every node and edge should have a
         # value set for each of these properties.
 
-        # TODO: remove int() when data layer returns the right type!
-
         if "created_ts" in self._properties:
-            self._created_ts = int(self._properties.pop("created_ts"))
+            self._created_ts = self._properties.pop("created_ts")
         else:
             self._created_ts = 0
 
         if "updated_ts" in self._properties:
-            self._updated_ts = int(self._properties.pop("updated_ts"))
+            self._updated_ts = self._properties.pop("updated_ts")
         else:
             self._updated_ts = 0
 
         if "deleted_ts" in self._properties:
-            self._deleted_ts = int(self._properties.pop("deleted_ts"))
+            self._deleted_ts = self._properties.pop("deleted_ts")
         else:
             self._deleted_ts = None
 
@@ -138,11 +133,9 @@ class GraphNode(GraphPrimitive):
         super(GraphNode, self).__init__(id, type, properties)
 
         self._edges = {}
+
         for edge_id, edge in edges.items():
-
-            # TODO: remove int() when data layer returns the right type!
-
-            self._edges[int(edge_id)] = GraphEdge(
+            self._edges[edge_id] = GraphEdge(
                     edge["edge_id"],
                     edge["type"],
                     edge["properties"],
@@ -178,10 +171,8 @@ class GraphEdge(GraphPrimitive):
         """ Construct a GraphEdge extending GraphPrimitive. """
         super(GraphEdge, self).__init__(id, type, properties)
 
-        # TODO: remove int() when data layer returns the right type!
-
-        self._from_node_id = int(from_node_id)
-        self._to_node_id = int(to_node_id)
+        self._from_node_id = from_node_id
+        self._to_node_id = to_node_id
 
         # TODO: move as much error checking from reader/writer into here as
         # possible to avoid repetitive code and to grant class hierarchy
@@ -190,15 +181,13 @@ class GraphEdge(GraphPrimitive):
         # TODO: deal with existing bad data. every node and edge should have a
         # value set for each of these properties.
 
-        # TODO: remove bool() when data layer returns the right type!
-
         if "is_one_way" in self._properties:
-            self._is_one_way = bool(self._properties.pop("is_one_way"))
+            self._is_one_way = self._properties.pop("is_one_way")
         else:
             self._is_one_way = False
 
         if "is_unique" in self._properties:
-            self._is_unique = bool(self._properties.pop("is_unique"))
+            self._is_unique = self._properties.pop("is_unique")
         else:
             self._is_unique = False
 
@@ -261,17 +250,19 @@ class GraphPath(GraphObject):
             self._node_type_return_filter = []
 
        # infer depth member from path dict
-        self._depth = len(path)
+        self._depth = (len(path) - 1)
 
-        # load nodes and edges at each depth level
+        # TODO: determine whether to keep path or just rely on convenience
+        # methods, since they are more explicit and easier to read.
+
         self._path = {}
-        for level in range(0, self._depth):
-            self._path[level] = {}
-            for node_id, node_dict in path[level].items():
 
-                # TODO: remove int() when data layer returns the right type!
+        # load nodes and edges at each depth
+        for depth in range(self._depth + 1):
+            self._path[depth] = {}
 
-                self._path[level][int(node_id)] = GraphNode(
+            for node_id, node_dict in path[depth].items():
+                self._path[depth][node_id] = GraphNode(
                         node_dict["node_id"],
                         node_dict["type"],
                         node_dict["properties"],
@@ -326,19 +317,17 @@ class GraphInputError(Exception):
     to this graph API is invalid.
 
     Required:
-    str     parameter   parameter which has bad data
-    mixed   value       value of the bad parameter
+    iter    parameters  parameters which have bad data
     str     message     why is this data bad?
 
     """
 
     reason = None
 
-    def __init__(self, parameter, value, message):
+    def __init__(self, parameters, message):
         """ Construct a GraphInputError extending Exception. """
-        self.reason = "GraphInputError: [{0}] = [{1}] : {2}".format(
-                parameter,
-                value,
+        self.reason = "GraphInputError: [{0}] : {1}".format(
+                ", ".join(parameters),
                 message)
 
 
@@ -346,11 +335,11 @@ class GraphOutputError(Exception):
 
     """ GraphOutputError is a subclass of Exception.
 
-    Provide an exception to be raised when output from the Data layer 
+    Provide an exception to be raised when output from the data layer 
     supplied to this graph API is invalid.
 
     Required:
-    iter    parameter   parameters which have bad data
+    iter    parameters  parameters which have bad data
     str     message     why is this data bad?
 
     """
@@ -360,6 +349,6 @@ class GraphOutputError(Exception):
     def __init__(self, parameters, message):
         """ Construct a GraphInputError extending Exception. """
         self.reason = "GraphOutputError: [{0}] : {1}".format(
-                parameters,
+                ", ".join(parameters),
                 message)
 

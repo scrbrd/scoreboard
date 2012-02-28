@@ -16,9 +16,6 @@ Provides:
 from model.graph import GraphEdge, GraphNode, GraphPath, GraphOutputError
 from model.data import db, DbInputError, DbReadError, DbWriteError
 
-# TODO: remove!
-from exceptions import NotImplementedError
-
 
 def get_node(node_id):
     """ Return a GraphNode from a graph database.
@@ -60,6 +57,7 @@ def get_node(node_id):
 
     # TODO: deal with existing bad data. every node and edge should have a
     # value set for each of these properties.
+
     required_properties = set([
             #"created_ts",
             #"updated_ts",
@@ -98,8 +96,7 @@ def get_node(node_id):
         #logger.debug(e.reason)
         node = None
 
-    finally:
-        return node
+    return node
 
 
 def multiget_node(node_ids):
@@ -118,6 +115,7 @@ def multiget_node(node_ids):
     """
 
     nodes = {}
+
     for node_id in node_ids:
         nodes[node_id] = get_node(node_id)
 
@@ -202,13 +200,7 @@ def get_edge(edge_id):
         #logger.debug(e.reason)
         edge = None
 
-    except NotImplementedError as e:
-        # TODO: remove!
-        print e
-        edge = None
-
-    finally:
-        return edge
+    return edge
 
 
 def multiget_edge(edge_ids):
@@ -227,6 +219,7 @@ def multiget_edge(edge_ids):
     """
 
     edges = {}
+
     for edge_id in edge_ids:
         edges[edge_id] = get_edge(edge_id)
 
@@ -290,8 +283,7 @@ def get_path_to_neighbor_nodes(
         #logger.debug(e.reason)
         path = None
 
-    finally:
-        return path
+    return path
 
 
 def multiget_path_to_neighbor_nodes(
@@ -317,6 +309,7 @@ def multiget_path_to_neighbor_nodes(
     """
 
     paths = {}
+
     for start_node_id in start_node_ids:
         paths[start_node_id] = get_path_to_neighbor_nodes(start_node_id)
 
