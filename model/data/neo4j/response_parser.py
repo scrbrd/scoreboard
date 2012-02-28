@@ -51,8 +51,7 @@ def format_node(raw_node):
     node_section = raw_node[0]
     edge_section = raw_node[1]
 
-    self_url = node_section["self"]
-    node["node_id"] = self_url.rpartition("/")[2]
+    node["node_id"] = url_to_id(node_section["self"])
 
     # its properties 
     properties = node_section["data"]
@@ -94,12 +93,16 @@ def format_edge(raw_edge):
     """
     edge = {}
 
-    edge_id = raw_edge["self"].rpartition("/")[2]
+    edge_id = url_to_id(raw_edge["self"])
     edge["edge_id"] = edge_id
     edge["properties"] = raw_edge["data"]
-    edge["from_node_id"] = raw_edge["start"].rpartition("/")[2]
-    edge["to_node_id"] = raw_edge["end"].rpartition("/")[2]
+    edge["from_node_id"] = url_to_id(raw_edge["start"])
+    edge["to_node_id"] = url_to_id(raw_edge["end"])
     edge["type"] = raw_edge["type"]
 
     return edge
+
+def url_to_id(url):
+    """ Extract the id from a neo4j url. """
+    return int(url.rpartition("/")[2])
 
