@@ -3,10 +3,13 @@
 ...
 """
 
+from itertools import groupby
+
+from model.const import CONST, EDGE_TYPE, NODE_TYPE
+
 from model.api import SqNode
 from model.api import loader
 
-from itertools import groupby
 
 
 class Game(SqNode):
@@ -20,12 +23,12 @@ class Game(SqNode):
         int _id             super class requirement 
         
         Edges Dict: 
-        "WON_BY": [(opponent_ids, score)]
-        "LOST_BY": [(opponent_ids, score)]
-        "TIED_BY": [(opponent_ids, score)]
-        "PLAYED_BY": [(opponent_ids, score)]
-        "CREATED_BY": player_id ***REQUIRED***
-        "SCHEDULED_IN": league_id ***REQUIRED***
+        EDGE_TYPE.WON_BY: [(opponent_ids, score)]
+        EDGE_TYPE.LOST_BY: [(opponent_ids, score)]
+        EDGE_TYPE.TIED_BY: [(opponent_ids, score)]
+        EDGE_TYPE.PLAYED_BY: [(opponent_ids, score)]
+        EDGE_TYPE.CREATED_BY: player_id ***REQUIRED***
+        EDGE_TYPE.SCHEDULED_IN: league_id ***REQUIRED***
         
         dict _opponents     store loaded Opponents
         
@@ -36,13 +39,13 @@ class Game(SqNode):
 
     _opponents = None
     _complements = {
-            "WON_BY": "WON",
-            "LOST_BY": "LOST",
-            "TIED_BY": "TIED",
-            "PLAYED_BY": "PLAYED",
-            "CREATED_BY": "CREATED"
-            "SCHEDULED_IN": "OPEN_SCHEDULE"}
-    
+            EDGE_TYPE.WON_BY: EDGE_TYPE.WON,
+            EDGE_TYPE.LOST_BY: EDGE_TYPE.LOST,
+            EDGE_TYPE.TIED_BY: EDGE_TYPE.TIED,
+            EDGE_TYPE.PLAYED_BY: EDGE_TYPE.PLAYED,
+            EDGE_TYPE.CREATED_BY: EDGE_TYPE.CREATED,
+            EDGE_TYPE.SCHEDULED_IN: EDGE_TYPE.HAS_SCHEDULED}
+            
     def __init__(self, game_id, attributes_dict):
         """ Initialize Game class with attributes
 
@@ -55,12 +58,12 @@ class Game(SqNode):
 
     def creator_id(self):
         """  Return the Player who created the game. """
-        return SqNode._edge_ids_dict["CREATED_BY"]
+        return SqNode._edge_ids_dict[EDGE_TYPE.CREATED_BY]
 
     def outcome(self):
         """ Return a dictionary - {opponent_id: score} """
         outcome_dict = {}
-        results_list = ["WON_BY", "LOST_BY", "TIED_BY", "PLAYED_BY"]
+        results_list = CONST.RESULT_TYPES
         for r in results_list:
             for i, s in SqNode._edge_ids_dict[r]
                 outcome_dict[i] = s
@@ -86,8 +89,8 @@ class Game(SqNode):
         """
         return loader.load_path(
                 game_id, 
-                ["WON_BY", "LOST_BY", "TIED_BY", "PLAYED_BY"], 
-                ["PLAYER", "TEAM"])
+                CONST.RESULT_TYPES, 
+                CONST.OPPONENT_TYPES)
 
     @staticmethod
     def multiload_opponents(game_ids):
@@ -114,7 +117,7 @@ class Game(SqNode):
         If 0 Opponents: {}
         If 1 Opponent: "PLAYED_BY"
         If more Opponents: 
-        "WON_BY" (highest score), "LOST_BY", "TIED_BY (even)
+        WON_BY (highest score), LOST_BY, TIED_BY (even)
 
         Currently, the highest score wins.
 
@@ -130,7 +133,7 @@ class Game(SqNode):
             results_with_opponents_dict = {}
         # if one opponent, then no win or loss
         elif num_of_opponents == 1:
-            results_with_opponents_dict = {"PLAYED_BY": 
+            results_with_opponents_dict = {EDGE_TYPE.PLAYED_BY: 
                     [(opponent_score_pairs[0][1], opponent_score_pairs[0][0])]}
         # if two or more opponents, then calculate results
         else:
@@ -142,17 +145,17 @@ class Game(SqNode):
             num_of_results = len(opps_by_score)
             # if 1 result, then the game was a tie
             if num_of_results == 1:
-                results_with_opponents_dict = {"TIED_BY": [(opps_by_score[0][0],
+                results_with_opponents_dict = {EDGE_TYPE.TIED_BY: [(opps_by_score[0][0],
                     opps_by_score[0][1])]}
             else:
                 # otherwise, win is highest score
-                results_with_opponents_dict = {"WON_BY": [(opps_by_score[0][0], 
+                results_with_opponents_dict = {EDGE_TYPE.WON_BY: [(opps_by_score[0][0], 
                     opps_by_score[0][1])]}
                 # and loss is all the other scores
                 losers = []
                 for t in opps_by_score[1:]:
                     losers.append((t[0], t[1]))
-                results_with_opponents_dict["LOST_BY"] = losers
+                results_with_opponents_dict[EDGE_TYPE.LOST_BY] = losers
         return results_with_opponents_dict
 
     @staticmethod
@@ -177,11 +180,11 @@ class Game(SqNode):
         # TODO turn pairs into bi-directional edges
         edges = []
 
-        type = "SCHEDULED_IN"
+        type = EDGE_TYPE.SCHEDULED_IN
         edges.append({"to_id": league_id, "type": type})
         edges.append({"from_id": league_id, "type": _complements[type]})
 
-        type = "CREATED_BY"
+        type = EDGE_TYPE.CREATED_BY
         edges.append({"to_id": creator_id, "type": type})
         edges.append({"from_id": creator_id, "type": _complements[type]})
 
@@ -197,6 +200,6 @@ class Game(SqNode):
                     "type": _complements[type], 
                     "properties": properties})
 
-        new_game = editor.create_node("GAME",properties, edges)
+        new_game = editor.create_node(NODE_TYPE.GAME,properties, edges)
         return new_game
 

@@ -3,6 +3,8 @@
 ...
 """
 
+from model.const import EDGE_TYPE, NODE_TYPE
+
 from model.api import SqNode
 from model.api import loader
 
@@ -18,8 +20,8 @@ class League(SqNode):
     str  _name          League node name
 
     Edges Dict:
-    "OPEN_SCHEDULE": [game_ids]
-    "LEAGUE_MEMBER": [opponent_ids]
+    EDGE_TYPE.HAS_SCHEDULED: [game_ids]
+    EDGE_TYPE.HAS_LEAGUE_MEMBER: [opponent_ids]
 
     dict _opponents     Opponents in this League
     dict _games         Games played by Opponents in this League
@@ -83,14 +85,14 @@ class League(SqNode):
         """ Return a League with opponents loaded from the data layer."""
         return loader.load_path(
                 league_id, 
-                ["LEAGUE_MEMBER"], 
-                ["PLAYER", "TEAM"])
+                [EDGE_TYPE.HAS_LEAGUE_MEMBER], 
+                [NODE_TYPE.PLAYER, NODE_TYPE.TEAM])
 
     @staticmethod
     def load_games(league_id):
         """ Return a League with opponents loaded from the data layer."""
         return loader.load_path(
                 league_id,
-                ["OPEN_SCHEDULE"]
-                ["GAME"])
+                [EDGE_TYPE.HAS_SCHEDULED]
+                [NODE_TYPE.GAME])
 
