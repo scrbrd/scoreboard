@@ -1,6 +1,7 @@
 """ Module: game
 
 ...
+
 """
 
 from itertools import groupby
@@ -16,24 +17,24 @@ class Game(SqNode):
 
     """ Game is a subclass of SqObject for representing games. 
 
-        Provide access to the attributes of a Game, including fields,
-        relationships, and nearby nodes.
+    Provide access to the attributes of a Game, including fields,
+    relationships, and nearby nodes.
 
-        Required:
-        int _id             super class requirement 
-        
-        Edges Dict: 
-        EDGE_TYPE.WON_BY: [(opponent_ids, score)]
-        EDGE_TYPE.LOST_BY: [(opponent_ids, score)]
-        EDGE_TYPE.TIED_BY: [(opponent_ids, score)]
-        EDGE_TYPE.PLAYED_BY: [(opponent_ids, score)]
-        EDGE_TYPE.CREATED_BY: player_id ***REQUIRED***
-        EDGE_TYPE.SCHEDULED_IN: league_id ***REQUIRED***
-        
-        dict _opponents     store loaded Opponents
-        
-        TODO - remove complements
-        dict _complements   store bi-directional edge complements
+    Required:
+    int _id             super class requirement 
+
+    Edges Dict: 
+    "WON_BY": [(opponent_ids, score)]
+    "LOST_BY": [(opponent_ids, score)]
+    "TIED_BY": [(opponent_ids, score)]
+    "PLAYED_BY": [(opponent_ids, score)]
+    "CREATED_BY": player_id ***REQUIRED***
+    "SCHEDULED_IN": league_id ***REQUIRED***
+
+    dict _opponents     store loaded Opponents
+
+    TODO - remove complements
+    dict _complements   store bi-directional edge complements
 
     """
 
@@ -45,67 +46,76 @@ class Game(SqNode):
             EDGE_TYPE.PLAYED_BY: EDGE_TYPE.PLAYED,
             EDGE_TYPE.CREATED_BY: EDGE_TYPE.CREATED,
             EDGE_TYPE.SCHEDULED_IN: EDGE_TYPE.HAS_SCHEDULED}
-            
-    def __init__(self, game_id, attributes_dict):
-        """ Initialize Game class with attributes
 
-        Arguments:
-        int game_id             sent to SqObject
-        dict attributes_dict    a dictionary of attributes
 
-        """
-        super(Game, self).__init__(game_id, attributes_dict)
+    def __init__(self, graph_node):
+        """ Initialize Game class with attributes. """
+        super(Game, self).__init__(graph_node)
+
 
     def creator_id(self):
         """  Return the Player who created the game. """
-        return SqNode._edge_ids_dict[EDGE_TYPE.CREATED_BY]
+        # FIXME: edges are keyed on id, not type
+        return self._edges["CREATED_BY"]
+
 
     def outcome(self):
         """ Return a dictionary - {opponent_id: score} """
         outcome_dict = {}
         results_list = CONST.RESULT_TYPES
         for r in results_list:
-            for i, s in SqNode._edge_ids_dict[r]:
+            for i, s in self._edge_ids_dict[r]
                 outcome_dict[i] = s
         return outcome_dict
+
 
     def get_opponents(self):
         """ Return a dict of Opponents. """
         return self.assert_loaded(self._opponents) if self._opponents else {}
 
+
     def set_opponents(self, opponents):
         """ Set a Game's loaded Opponents from a dict. """
         self._opponents = opponents
 
+
     @staticmethod
     def load_opponents(game_id):
-        """
-        Load the Game's Opponents and attributes into a Game.
-        
+        """ Load the Game's Opponents and attributes into a Game.
+
         Required:
         int game_id     the id of the Game
 
-        Return Game
+        Return:
+        Game            Game SqNode
+
         """
-        return loader.load_path(
+        
+        return loader.load_neighbors(
                 game_id, 
                 CONST.RESULT_TYPES, 
                 CONST.OPPONENT_TYPES)
 
+
     @staticmethod
     def multiload_opponents(game_ids):
-        """
-        Load multiple Games' Opponents and attributes into a list.
-        
+        """ Load multiple Games' Opponents and attributes into a dict.
+
         Required:
         list game_ids   the ids of the Games
 
-        Return Games list
+        Return:
+        dict            Game SqNodes keyed on id
+
         """
-        games = []
+
+        games = {}
+
         for id in game_ids:
-            games.append(load_opponents(id))
+            games[id] = load_opponents(id)
+
         return games
+
 
     @staticmethod
     def calculate_outcome_from_scores(opponent_score_pairs):
@@ -158,6 +168,7 @@ class Game(SqNode):
                 results_with_opponents_dict[EDGE_TYPE.LOST_BY] = losers
         return results_with_opponents_dict
 
+
     @staticmethod
     def create_game(league_id, creator_id, opponent_score_pairs):
         """ Create a Game and return it.
@@ -189,7 +200,7 @@ class Game(SqNode):
         edges.append({"from_id": creator_id, "type": _complements[type]})
 
         for type, vals in outcome:
-            for o,s in vals:
+            for o, s in vals:
                 properties = {"score": s}
                 edges.append({
                     "to_id": o, 
@@ -200,6 +211,5 @@ class Game(SqNode):
                     "type": _complements[type], 
                     "properties": properties})
 
-        new_game = editor.create_node(NODE_TYPE.GAME,properties, edges)
-        return new_game
+        return editor.create_node_and_edges("GAME", properties, edges)
 

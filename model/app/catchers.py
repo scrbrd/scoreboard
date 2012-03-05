@@ -9,6 +9,7 @@ from model.api.game import Game
 from model.api.league import League
 from model.api.opponent import Opponent
 
+
 def generate_games(league_id):
     """ Fetch and return all data necessary for a games list.
 
@@ -19,36 +20,43 @@ def generate_games(league_id):
     {game_id: {opponent_id: (name, score)}}
 
     """
-    
+
     # Load all needed data
     league = League.load_games(league_id) 
-    league_games = league.get_games()
-    Game.multiload_opponents(league_games)
+    opponents_by_game = Game.multiload_opponents(league.get_games().keys())
+
+    # TODO: make this a depth-2 traversal instead.
+    for g_id, game in league.get_games():
+        game.set_opponents(opponents_by_game[g_id])
 
     games_dict = {}
 
     # Process all data
-    for g in league_games:
-        opponents_return_dict = {}
-        game_id = g.id
+    for g_id, game in league.get_games():
+        opponents_dict = {}
+
         # {opponent_id: score}
-        scores_dict = g.outcome()
+        scores_dict = game.outcome()
+
         # list of Opponents
-        opponents = g.get_opponents()
-        for o in opponents:
-            opponents_return_dict[o.id] = (o.name(), scores_dict[id])
-        games_dict[game_id] = opponents_return_dict
+        opponents = game.get_opponents()
+
+        for o_id, opponent in opponents:
+            opponents_dict[o_id] = (o.name(), scores_dict[o_id])
+
+        games_dict[g_id] = opponents_return_dict
 
     return games_dict
+
 
 def generate_rankings(league_id):
     """ Generate league rankings based on most wins.
 
     Required:
-    id  league_id  League node id
+    id  league_id   League node id
 
     Return:
-    dict of name/wins tuples keyed on opponent id.
+    dict            name/wins tuples keyed on opponent id
 
     """
 
@@ -61,6 +69,7 @@ def generate_rankings(league_id):
     
     return rankings_dict
 
+
 def create_game(league_id, creator_id, opponent_score_pairs):
     """ Create a game and return it.
 
@@ -69,9 +78,10 @@ def create_game(league_id, creator_id, opponent_score_pairs):
     id creator_id               player id of game's creator
     list opponent_score_pairs   tuples of opponent ids and score
     
-    Return the created game.
+    Return:
+    Game                        instance of SqNode subclass Game
 
     """
-    new_game = Game.create_game(league_id, creator_id, opponent_score_pairs)
-    return new_game
+
+    return Game.create_game(league_id, creator_id, opponent_score_pairs)
 

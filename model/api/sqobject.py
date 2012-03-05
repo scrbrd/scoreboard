@@ -1,7 +1,18 @@
 """ Module: sqobject
 
-...
+SqObject
+  |   |
+  |   +-- SqNode
+  |
+  +------ SqEdge
+
+Exception
+    |
+    +-- SqObjectNotLoadedError
+
 """
+
+from model.api import SqFactory
 
 from exceptions import NotImplementedError
 
@@ -13,30 +24,30 @@ class SqObject(object):
     subclasses.
 
     Required:
-    id   _id            SqObject id
-    str  _type          SqObject type
-    
+    id      _id     SqObject id
+    str     _type   SqObject type
+
     """
 
     _id = None
     _type = None
 
-    def __init__(self, id, attributes_dict):
-        """
-        Construct a SqObject extending the __new__ python object and 
-        set private members common to all subclasses.
-        """
-        self._id = id
 
-        self._type = attributes_dict["type"]
+    def __init__(self, graph_node):
+        """ Construct a SqObject extending the __new__ python object. """
+        self._id = graph_node.id()
+        self._type = graph_node.type()
+
 
     def id(self):
         """ Return a SqObject id. """
         return self._id
 
+
     def type(self):
         """ Return a SqObject type. """
         return self._type
+
 
     def assert_loaded(self, loaded_data):
         """ Return true if data is loaded, otherwise raise an error. """
@@ -69,21 +80,78 @@ class SqNode(SqObject):
 
     SqNode's only requirement is at least one set of SqEdges.
 
-    Required:
-    dict _edge_ids_dict     {edge_type: [SqNode_id]}
+    Optional:
+    dict    edges       this SqNode's outgoing SqEdges keyed on id
+    dict    neighbors   neighbor SqNodes keyed on id
 
     """
 
-    _edge_ids_dict = {}
-    
-    def __init__(self, id, attributes_dict):
+    _edges = None
+    _neighbors = None
+
+
+    def __init__(self, graph_node):
         """ Construct a SqNode extending SqObject. """
-        _edge_ids_dict = attributes_dict["edge_ids_dict"]
-        super(SqNode, self).__init__(id, attributes_dict)
+        super(SqNode, self).__init__(graph_node)
+
 
     def name(self):
         """ Return a SqNode name. """
         raise NotImplementedError("All SqObject subclasses must override")
+
+
+    def incoming_edge_types(self):
+        """ Return a list of allowed incoming SqEdge types. """
+        # TODO: list of edge types, or dict of edge type/node type pairs?
+        raise NotImplementedError("Abstract Method: SUBCLASS MUST OVERRIDE!")
+
+
+    def outgoing_edge_types(self):
+        """ Return a list of allowed outgoing SqEdge types. """
+        # TODO: list of edge types, or dict of edge type/node type pairs?
+        raise NotImplementedError("Abstract Method: SUBCLASS MUST OVERRIDE!")
+
+
+    def get_edges(self):
+        """ Return a dict of outgoing SqEdges. """
+
+        edges = self._edges
+
+        try:
+            self.assert_loaded(edges)
+
+        except SqObjectNotLoadedError as e:
+            #logger.debug(e.reason)
+            print e.reason
+            edges = {}
+
+        return edges
+
+
+    def set_edges(self, edges):
+        """ Set a member variable with a dict of outgoing SqEdges. """
+        self._neighbors = neighbors
+
+
+    def get_neighbors(self):
+        """ Return a dict of neighbor SqNodes. """
+
+        neighbors = self._neighbors
+
+        try:
+            self.assert_loaded(neighbors)
+
+        except SqObjectNotLoadedError as e:
+            #logger.debug(e.reason)
+            print e.reason
+            neighbors = {}
+
+        return neighbors
+
+
+    def set_neighbors(self, neighbors):
+        """ Set a member variable with a dict of neighbor SqNodes. """
+        self._neighbors = neighbors
 
 
 class SqEdge(SqObject):
@@ -94,10 +162,10 @@ class SqEdge(SqObject):
     and other edges modeling relationships between SqNodes.
 
     Required:
-    id   _node_id_1     SqNode id at one end of this SqEdge
-    id   _node_id_2     SqNode id at the other end of this SqEdge
-    bool _is_one_way    does this SqEdge point to both SqNodes?
-    bool _is_unique     can more than one SqEdge exist between SqNodes?
+    id      _from_node_id   SqNode id for which this SqEdge is outgoing
+    id      _to_node_id     SqNode id for which this SqEdge is incoming
+    bool    _is_one_way     does this SqEdge point to both SqNodes?
+    bool    _is_unique      can only one of an SqEdge exist for SqNodes?
 
     """
 
@@ -106,12 +174,30 @@ class SqEdge(SqObject):
     #_is_one_way = None
     #_is_unique = None
 
-    def __init__(self, id, attributes_dict):
-        """ Construct a SqEdge extending SqObject. """
-        super(SqEdge, self).__init__(id, attributes_dict)
 
-        self._node_id_1 = attributes_dict["node_id_1"]
-        self._node_id_2 = attributes_dict["node_id_2"]
-        #self._is_one_way = attributes_dict["is_one_way"]
-        #self._is_unique = attributes_dict["is_unique"]
+    def __init__(self, graph_edge):
+        """ Construct a SqEdge extending SqObject. """
+        super(SqEdge, self).__init__(graph_edge)
+
+        self._from_node_id = graph_edge.from_node_id()
+        self._to_node_id = graph_edge.to_node_id()
+        #self._is_one_way = graph_edge.is_one_way()
+        #self._is_unique = graph_edge.is_unique()
+
+
+class SqObjectNotLoadedError(Exception):
+
+    """ SqObjectNotLoadedError is a subclass of Exception.
+
+    Provide an exception to be raised when a member of a SqObject has 
+    not yet been loaded from the data layer and an attempt has been 
+    made to access it.
+
+    """
+
+    reason = None
+
+    def __init__(self, reason):
+        self.reason = reason
+>>>>>>> WIP
 

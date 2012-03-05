@@ -1,12 +1,14 @@
 """ Module: league
 
 ...
+
 """
 
 from model.const import EDGE_TYPE, NODE_TYPE
 
 from sqobject import SqNode
 import loader
+
 
 class League(SqNode):
 
@@ -33,52 +35,63 @@ class League(SqNode):
     _opponents = None
     _games = None
 
-    def __init__(self, id, attributes_dict):
-        """
-        Construct a League extending SqNode and set any private
-        members which are league-specific.
-        """
-        super(League, self).__init__(id, attributes_dict)
 
-        self._name = attributes_dict["name"]
+    def __init__(self, graph_node):
+        """ Construct a League extending SqNode. """
+        super(League, self).__init__(graph_node)
+
+        self._name = graph_node.properties()["name"]
+
 
     def name(self):
         """ Return this League's name. """
         return self._name
 
+
     def get_opponents(self):
         """ Return a dict of Opponents. """
+
+        opponents = self._opponents
+
         try:
-            opponents = self._opponents
             self.assert_loaded(opponents)
+
         except SqObjectNotLoadedError as e:
-            # log error and send app empty data
-            #logger.debug(e.msg)
+            #logger.debug(e.reason)
+            print e.reason
             opponents = {}
-        
+
         return opponents
+
 
     def set_opponents(self, opponents):
         """ Set a member variable with a dict of Opponents. """
         self._opponents = opponents
 
+
     def get_games(self):
         """ Return a dict of Games. """
+
+        games = self._games
+
         try:
-            games = self._games
             self.assert_loaded(games)
+
         except SqObjectNotLoadedError as e:
-            # log error and send app empty data
-            #logger.debug(e.msg)
+            #logger.debug(e.reason)
+            print e.reason
             games = {}
 
         return games
 
+
     def set_games(self, games):
         """ Set a member variable with a dict of Games. """
-        self._opponents = opponents
+        self._games = games
+
 
     """ Static loader wrappers. """
+
 
     @staticmethod
     def load_opponents(league_id):
@@ -87,6 +100,7 @@ class League(SqNode):
                 league_id, 
                 [EDGE_TYPE.HAS_LEAGUE_MEMBER], 
                 [NODE_TYPE.PLAYER, NODE_TYPE.TEAM])
+
 
     @staticmethod
     def load_games(league_id):
