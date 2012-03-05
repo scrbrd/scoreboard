@@ -4,6 +4,6 @@ import logging
 logger = logging.getLogger('boilerplate.' + __name__)
 
 
-class FooHandler(BaseHandler):
+class GamesHandler(BaseHandler):
     def get(self):
-        self.render("base.html")
+        self.render("games.html")

@@ -1,5 +1,7 @@
-from handlers.foo import FooHandler
+from handlers import SplashHandler, GamesHandler, RankingsHandler
 
 url_patterns = [
-    (r"/foo", FooHandler),
+    (r"/", SplashHandler),
+    (r"/games", GamesHandler),
+    (r"/rankings", RankingsHandler),
 ]

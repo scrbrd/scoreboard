@@ -5,8 +5,9 @@ data is retrieved and returned.
 
 """
 
-from model.api import Game, League, Opponent
-
+from model.api.game import Game
+from model.api.league import League
+from model.api.opponent import Opponent
 
 def generate_games(league_id):
     """ Fetch and return all data necessary for a games list.

@@ -5,8 +5,8 @@
 
 from model.const import EDGE_TYPE, NODE_TYPE
 
-from model.api import SqNode
-from model.api import loader
+from sqobject import SqNode
+import loader
 
 class League(SqNode):
 

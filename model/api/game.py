@@ -7,8 +7,8 @@ from itertools import groupby
 
 from model.const import CONST, EDGE_TYPE, NODE_TYPE
 
-from model.api import SqNode
-from model.api import loader
+from sqobject import SqNode
+import loader
 
 
 
@@ -65,13 +65,13 @@ class Game(SqNode):
         outcome_dict = {}
         results_list = CONST.RESULT_TYPES
         for r in results_list:
-            for i, s in SqNode._edge_ids_dict[r]
+            for i, s in SqNode._edge_ids_dict[r]:
                 outcome_dict[i] = s
         return outcome_dict
 
     def get_opponents(self):
         """ Return a dict of Opponents. """
-        return self.assert_loaded(self._opponents) ? self._opponents : {}
+        return self.assert_loaded(self._opponents) if self._opponents else {}
 
     def set_opponents(self, opponents):
         """ Set a Game's loaded Opponents from a dict. """

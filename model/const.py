@@ -132,7 +132,7 @@ class _Const():
     @constant
     def OPPONENT_TYPES():
         """ OPPOENENT_NODE_TYPES is a list of Opponent Node Types. """
-        return = [NODE_TYPE.PLAYER, NODE_TYPE.TEAM]
+        return [NODE_TYPE.PLAYER, NODE_TYPE.TEAM]
 
 CONST = _Const
 

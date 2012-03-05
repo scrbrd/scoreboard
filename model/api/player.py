@@ -5,8 +5,9 @@
 
 from model.const import EDGE_TYPE, NODE_TYPE
 
-from model.api import SqNode, Game, Opponent
-from model.api import editor
+from sqobject import SqNode
+from game import Game
+from opponent import Opponent
 
 class Player(SqNode, Opponent):
 
@@ -31,7 +32,7 @@ class Player(SqNode, Opponent):
     dict _games         Dict of Game lists keyed by win/loss/tie
     
     """
-
+    
     _first_name = None
     _last_name = None
     

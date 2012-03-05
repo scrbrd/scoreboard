@@ -4,7 +4,7 @@
 """
 
 from model.graph import writer
-from model.api import SqFactory
+from sqobject import SqFactory
 
 def create_node(type, properties, edges):
     """ Create a Node for this SqObject and create its edges.
