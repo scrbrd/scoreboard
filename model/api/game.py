@@ -4,12 +4,11 @@
 
 """
 
-from sqobject import SqNode
-import loader
+from itertools import groupby
 
 from model.const import CONST, EDGE_TYPE, NODE_TYPE
-
-from itertools import groupby
+from sqobject import SqNode
+import loader
 
 
 class Game(SqNode):
@@ -23,12 +22,12 @@ class Game(SqNode):
     int _id             super class requirement 
 
     Edges Dict: 
-    "WON_BY": [(opponent_ids, score)]
-    "LOST_BY": [(opponent_ids, score)]
-    "TIED_BY": [(opponent_ids, score)]
-    "PLAYED_BY": [(opponent_ids, score)]
-    "CREATED_BY": player_id ***REQUIRED***
-    "SCHEDULED_IN": league_id ***REQUIRED***
+    EDGE_TYPE.WON_BY: [(opponent_ids, score)]
+    EDGE_TYPE.LOST_BY: [(opponent_ids, score)]
+    EDGE_TYPE.TIED_BY: [(opponent_ids, score)]
+    EDGE_TYPE.PLAYED_BY: [(opponent_ids, score)]
+    EDGE_TYPE.CREATED_BY: player_id ***REQUIRED***
+    EDGE_TYPE.SCHEDULED_IN: league_id ***REQUIRED***
 
     dict _opponents     store loaded Opponents
 
@@ -55,7 +54,7 @@ class Game(SqNode):
     def creator_id(self):
         """  Return the Player who created the game. """
         # FIXME: edges are keyed on id, but should be keyed on type
-        return self._edges["CREATED_BY"]
+        return self._edges[EDGE_TYPE.CREATED_BY]
 
 
     def outcome(self):
@@ -63,7 +62,7 @@ class Game(SqNode):
         outcome_dict = {}
         results_list = CONST.RESULT_TYPES
         for r in results_list:
-            for i, s in self._edge_ids_dict[r]
+            for i, s in self._edge_ids_dict[r]:
                 outcome_dict[i] = s
         return outcome_dict
 
@@ -210,5 +209,5 @@ class Game(SqNode):
                     "type": _complements[type], 
                     "properties": properties})
 
-        return editor.create_node_and_edges("GAME", properties, edges)
+        return editor.create_node_and_edges(NODE_TYPE.GAME, properties, edges)
 

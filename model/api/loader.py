@@ -10,11 +10,10 @@ Provides:
 
 """
 
+from model.graph import GraphEdge, GraphNode, GraphPath, GraphOutputError
+from model.graph import reader
 from sqobject import SqNode
 from sqfactory import SqFactory
-
-from model.graph import GraphEdge, GraphNode, GraphPath
-from model.graph import reader, GraphOutputError
 
 
 def load_node(node_id):

@@ -12,9 +12,10 @@ Exception
 
 """
 
-from sqfactory import SqFactory
-
 from exceptions import NotImplementedError
+
+from model.graph import GraphEdge, GraphNode
+from sqfactory import SqFactory
 
 
 class SqObject(object):

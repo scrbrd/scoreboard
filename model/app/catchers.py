@@ -21,17 +21,23 @@ def generate_games(league_id):
 
     """
 
-    # Load all needed data
+    # Load games data from API.
+    
     league = League.load_games(league_id) 
-    opponents_by_game = Game.multiload_opponents(league.get_games().keys())
 
-    # TODO: make this a depth-2 traversal instead.
-    for g_id, game in league.get_games():
-        game.set_opponents(opponents_by_game[g_id])
+    # TODO: make it a depth-2 traversal. don't manually load opponents.
+    games = league.get_games()
+    game_ids = games.keys()
+    
+    opponents_by_game = Game.multiload_opponents(game_ids)
+
+    for g_id in game_ids:
+        games[g_id].set_opponents(opponents_by_game[g_id])
+
+    # Prepare games data for handler.
 
     games_dict = {}
 
-    # Process all data
     for g_id, game in league.get_games():
         opponents_dict = {}
 

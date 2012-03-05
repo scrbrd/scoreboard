@@ -11,12 +11,12 @@ Provides:
 
 """
 
+from model.const import NODE_TYPE, EDGE_TYPE
+from model.graph import GraphEdge, GraphNode
 from sqobject import SqNode
 from game import Game
 from league import League
 from player import Player
-
-from model.graph import GraphEdge, GraphNode
 
 
 class SqFactory(object):
@@ -53,16 +53,16 @@ class SqFactory(object):
     def construct_node(graph_node)
         node = None
 
-        if graph_node.type() is "LEAGUE":
+        if graph_node.type() is NODE_TYPE.LEAGUE:
             node = League(graph_node)
 
-        else if graph_node.type() is "PLAYER":
+        else if graph_node.type() is NODE_TYPE.PLAYER:
             node = Player(graph_node)
 
-        else if graph_node.type() is "GAME":
+        else if graph_node.type() is NODE_TYPE.GAME:
             node = Game(graph_node)
 
-        #else if graph_node.type() is "TEAM":
+        #else if graph_node.type() is NODE_TYPE.TEAM:
         #    node = Team.init_from_graph_node(graph_node)
         #
         #else if graph_node.type() is "OPEN_PLAY":
@@ -97,22 +97,22 @@ class SqFactory(object):
 
         edge = None
 
-        #if graph_edge.type() is "":
+        #if graph_edge.type() is EDGE_TYPE.:
         #    edge = (graph_edge)
         #
-        #else if graph_edge.type() is "":
+        #else if graph_edge.type() is EDGE_TYPE.:
         #    edge = (graph_edge)
         #
-        #else if graph_edge.type() is "":
+        #else if graph_edge.type() is EDGE_TYPE.:
         #    edge = (graph_edge)
         #
-        #else if graph_edge.type() is "":
+        #else if graph_edge.type() is EDGE_TYPE.:
         #    edge = (graph_edge)
         #
-        #else if graph_edge.type() is "":
+        #else if graph_edge.type() is EDGE_TYPE.:
         #    edge = (graph_edge)
         #
-        #else if graph_edge.type() is "":
+        #else if graph_edge.type() is EDGE_TYPE.:
         #    edge = (graph_edge)
         #
         #else:
