@@ -35,7 +35,7 @@ def create_node(base_url, type, properties):
 
     data = {}
     # does grabbing the empty edges list take time here?
-    data["script"] = "g.addVertex(properties).transform{[it, it.bothE()]}"
+    data["script"] = "g.addVertex(properties).transform{[it, it.outE()]}"
     data["params"] = {"properties": properties}
     
     response_data = connect(url, json.dumps(data))
@@ -88,7 +88,7 @@ def read_node_and_edges(base_url, node_id):
     url = base_url + _gremlin_path
 
     data = {}
-    data["script"] = "g.v(id).transform{[it, it.bothE()]}"
+    data["script"] = "g.v(id).transform{[it, it.outE()]}"
     data["params"] = {"id":node_id}
     
     response_data = connect(url, json.dumps(data))
@@ -129,9 +129,9 @@ def read_nodes_from_immediate_path(
                 "\"{0}\"".format(formatted_node_filter))
 
     # all unique nodes depth 1 from start node with restrictions 
-    start = "s=g.v(id).transform{[it, it.bothE()]}; "
+    start = "s=g.v(id).transform{[it, it.outE()]}; "
     path = """
-            n=g.v(id).both({0}).dedup(){1}.transform{{[it, it.bothE()]}}; 
+            n=g.v(id).out({0}).dedup(){1}.transform{{[it, it.outE()]}}; 
             """.format(formatted_edge_pruner, return_filter)
     concat = "[s,n]"
     data = {}

@@ -5,7 +5,8 @@
 
     <body>
         <h1>RANKINGS!</h1>
-        <h2>Hi {{ name }} <br />Wasn't internet programming in the 90's the
-            best!</h2>
+        {% for p in players %}
+        <div>{{ p.name }} has {{ p.wins }} wins.</div>
+        {% end %}
     </body>
 </html>

@@ -1,4 +1,6 @@
-from handlers import SplashHandler, GamesHandler, RankingsHandler
+from handlers.splash import SplashHandler
+from handlers.games import GamesHandler
+from handlers.rankings import RankingsHandler
 
 url_patterns = [
     (r"/", SplashHandler),
