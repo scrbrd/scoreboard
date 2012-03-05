@@ -12,9 +12,10 @@ Exception
 
 """
 
-from model.api import SqFactory
+from sqfactory import SqFactory
 
 from exceptions import NotImplementedError
+
 
 class SqObject(object):
 
@@ -50,25 +51,10 @@ class SqObject(object):
 
 
     def assert_loaded(self, loaded_data):
-        """ Return true if data is loaded, otherwise raise an error. """
+        """ If data is not loaded, raise an error. """
         if loaded_data is None:
             raise SqObjectNotLoadedError("SqObject member not loaded")
 
-
-class SqObjectNotLoadedError(Exception):
-
-    """ SqObjectNotLoadedError is a subclass of Exception.
-
-    Provide an exception to be raised when a member of a SqObject has 
-    not yet been loaded from the data layer and an attempt has been 
-    made to access it.
-
-    """
-
-    msg = None
-
-    def __init__(self, msg):
-        self.msg = msg
 
 class SqNode(SqObject):
 
@@ -199,5 +185,3 @@ class SqObjectNotLoadedError(Exception):
 
     def __init__(self, reason):
         self.reason = reason
->>>>>>> WIP
-

@@ -1,13 +1,15 @@
 """ Module: Player
 
 ...
-"""
 
-from model.const import EDGE_TYPE, NODE_TYPE
+"""
 
 from sqobject import SqNode
 from game import Game
 from opponent import Opponent
+
+from model.const import EDGE_TYPE, NODE_TYPE
+
 
 class Player(SqNode, Opponent):
 

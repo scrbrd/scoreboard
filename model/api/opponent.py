@@ -5,6 +5,7 @@
 
 from exceptions import NotImplementedError
 
+
 class Opponent(object):
 
     """ Opponent is an interface.

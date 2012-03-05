@@ -11,8 +11,12 @@ Provides:
 
 """
 
-from model.api import Game, League, Player
-from model.graph import GraphEdge, GraphNode, GraphPath
+from sqobject import SqNode
+from game import Game
+from league import League
+from player import Player
+
+from model.graph import GraphEdge, GraphNode
 
 
 class SqFactory(object):

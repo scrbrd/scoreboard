@@ -4,10 +4,10 @@
 
 """
 
-from model.const import EDGE_TYPE, NODE_TYPE
-
 from sqobject import SqNode
 import loader
+
+from model.const import EDGE_TYPE, NODE_TYPE
 
 
 class League(SqNode):

@@ -4,13 +4,12 @@
 
 """
 
-from itertools import groupby
-
-from model.const import CONST, EDGE_TYPE, NODE_TYPE
-
 from sqobject import SqNode
 import loader
 
+from model.const import CONST, EDGE_TYPE, NODE_TYPE
+
+from itertools import groupby
 
 
 class Game(SqNode):
@@ -55,7 +54,7 @@ class Game(SqNode):
 
     def creator_id(self):
         """  Return the Player who created the game. """
-        # FIXME: edges are keyed on id, not type
+        # FIXME: edges are keyed on id, but should be keyed on type
         return self._edges["CREATED_BY"]
 
 
