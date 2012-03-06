@@ -13,7 +13,7 @@ Provides:
 
 from model.const import NODE_TYPE, EDGE_TYPE
 from model.graph import GraphEdge, GraphNode
-from sqobject import SqNode
+from sqobject import SqNode, SqEdge
 from game import Game
 from league import League
 from player import Player
@@ -63,16 +63,16 @@ class SqFactory(object):
             node = Game(graph_node)
 
         #else if graph_node.type() is NODE_TYPE.TEAM:
-        #    node = Team.init_from_graph_node(graph_node)
+        #    node = Team(graph_node)
         #
         #else if graph_node.type() is "OPEN_PLAY":
-        #    node = OpenPlay.init_from_graph_node(graph_node)
+        #    node = OpenPlay(graph_node)
         #
         #else if graph_node.type() is "SEASON":
-        #    node = Season.init_from_graph_node(graph_node)
+        #    node = Season(graph_node)
         #
         #else if graph_node.type() is "TOURNAMENT":
-        #    node = Tournament.init_from_graph_node(graph_node)
+        #    node = Tournament(graph_node)
         #
         #else if graph_node.type() is "USER":
         #    node = User.init_from_graph_node(graph_node)
@@ -95,21 +95,9 @@ class SqFactory(object):
         
         """
 
-        edge = None
-
+        #edge = None
+        #
         #if graph_edge.type() is EDGE_TYPE.:
-        #    edge = (graph_edge)
-        #
-        #else if graph_edge.type() is EDGE_TYPE.:
-        #    edge = (graph_edge)
-        #
-        #else if graph_edge.type() is EDGE_TYPE.:
-        #    edge = (graph_edge)
-        #
-        #else if graph_edge.type() is EDGE_TYPE.:
-        #    edge = (graph_edge)
-        #
-        #else if graph_edge.type() is EDGE_TYPE.:
         #    edge = (graph_edge)
         #
         #else if graph_edge.type() is EDGE_TYPE.:
@@ -120,8 +108,7 @@ class SqFactory(object):
         #
         #return edge
 
-        # TODO: stop returning a GraphEdge when subclasses are implemented
-        return graph_edge
+        return SqEdge(graph_edge)
 
 
     @staticmethod
@@ -139,8 +126,13 @@ class SqFactory(object):
         edges = {}
 
         for id, graph_edge in graph_edges:
-            # TODO: better to return None on any failure?
-            edges[id] = SqFactory.construct_edge(graph_edge)
+            type = graph_edge.type()
+
+            if type not in edges:
+                edges[type] = {}
+
+            # TODO: decide whether returning None on any failure is better?
+            edges[type][id] = SqFactory.construct_edge(graph_edge)
 
         return edges
 

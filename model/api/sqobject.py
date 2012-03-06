@@ -40,6 +40,9 @@ class SqObject(object):
         self._id = graph_node.id()
         self._type = graph_node.type()
 
+        # TODO: decide whether to unset properties copied into members
+        self._properties = graph_node.properties()
+
 
     def id(self):
         """ Return a SqObject id. """

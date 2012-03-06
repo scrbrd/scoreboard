@@ -53,8 +53,7 @@ class Game(SqNode):
 
     def creator_id(self):
         """  Return the Player who created the game. """
-        # FIXME: edges are keyed on id, but should be keyed on type
-        return self._edges[EDGE_TYPE.CREATED_BY]
+        return self.edges()[EDGE_TYPE.CREATED_BY].iterkeys().next()
 
 
     def outcome(self):

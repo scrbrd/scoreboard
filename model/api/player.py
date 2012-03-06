@@ -39,22 +39,42 @@ class Player(SqNode, Opponent):
     
     _games = None
 
+
     def __init__(self, graph_node):
         """ Construct a Player extending SqNode. """
         super(Player, self).__init__(graph_node)
 
-        self._first_name = graph_node.properties()["first_name"]
-        self._last_name = graph_node.properties()["last_name"]
+        self._first_name = self.properties()["first_name"]
+        self._last_name = self.properties()["last_name"]
 
-    def name(self):
+
+    def name(self, use_last_initial=false):
         """ Return this Player's name. """
-        return self._first_name + " " + self._last_name
+        return "{0} {1}".format(
+                self.first_name(),
+                self.last_name()[0] if use_last_initial else self.last_name())
+
+
+    def first_name(self):
+        """ Return this Player's first name. """
+        return self._first_name
+
+
+    def last_name(self):
+        """ Return this Player's last name. """
+        return self._last_name
+
+
+    def shorten_name(self):
+        """ Return this Player's first name and last initial. """
+        return self.name(true)
+
 
     def count_wins(self):
         """ Return the number of Games this Player has won. """
-        # FIXME: this just counts all the edges, not just EDGE_TYPE.WON
-        return len(self.edges())
-    
+        return len(self.edges()[EDGE_TYPE.WON])
+
+
 #    def create_game(self, creator_id, league_id, opponent_scores_dict):
 #        """ Write Game and corresponding Edges to DB. 
 #        
