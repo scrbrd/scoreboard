@@ -16,8 +16,8 @@ from model.graph import GraphEdge, GraphNode
 # TODO - do we need to import SqNode?
 from sqobject import SqNode, SqEdge
 import game
-import player
 import league
+import player
 
 class SqFactory(object):
 

@@ -47,7 +47,7 @@ class Player(SqNode, Opponent):
         self._last_name = self.properties()["last_name"]
 
 
-    def name(self, use_last_initial=false):
+    def name(self, use_last_initial=False):
         """ Return this Player's name. """
         return "{0} {1}".format(
                 self.first_name(),

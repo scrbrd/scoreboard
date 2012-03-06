@@ -10,8 +10,8 @@ Provides:
 
 """
 
-from sqobject import SqFactory
 from model.graph import reader, writer, GraphInputError, GraphOutputError
+from sqobject import SqFactory
 
 
 def create_node_and_edges(type, properties, edges):
