@@ -34,7 +34,7 @@ class RankingsHandler(BaseHandler):
         rankings = []
         
         rankings.append(Player(19, "Evan Hammer", 5))
-        rankings.append(Player(20, "Jon Warman", 2))
+        rankings.append(Player(20, "Jon Warman", 12))
         rankings.append(Player(23, "Bobby Kellogg", 0))
 
         keywords_dict = {"players": rankings}
