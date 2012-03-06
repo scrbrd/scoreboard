@@ -62,6 +62,16 @@ class _EdgeType(object):
         return "CREATED_BY"
 
     @constant
+    def IN_LEAGUE():
+        """ IN_LEAGUE is a Type of Edge. """
+        return "IN_LEAGUE"
+
+    @constant
+    def HAS_LEAGUE_MEMBER():
+        """ HAS_LEAGUE_MEMBER is a Type of Edge. """
+        return "HAS_LEAGUE_MEMBER"
+
+    @constant
     def LOST():
         """ LOST is a Type of Edge. """
         return "LOST"

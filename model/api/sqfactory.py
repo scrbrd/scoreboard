@@ -13,11 +13,11 @@ Provides:
 
 from model.const import NODE_TYPE, EDGE_TYPE
 from model.graph import GraphEdge, GraphNode
+# TODO - do we need to import SqNode?
 from sqobject import SqNode, SqEdge
-from game import Game
-from league import League
-from player import Player
-
+import game
+import player
+import league
 
 class SqFactory(object):
 
@@ -50,17 +50,17 @@ class SqFactory(object):
 
 
     @staticmethod
-    def construct_node(graph_node)
+    def construct_node(graph_node):
         node = None
 
         if graph_node.type() is NODE_TYPE.LEAGUE:
-            node = League(graph_node)
+            node = league.League(graph_node)
 
-        else if graph_node.type() is NODE_TYPE.PLAYER:
-            node = Player(graph_node)
+        elif graph_node.type() is NODE_TYPE.PLAYER:
+            node = player.Player(graph_node)
 
-        else if graph_node.type() is NODE_TYPE.GAME:
-            node = Game(graph_node)
+        elif graph_node.type() is NODE_TYPE.GAME:
+            node = game.Game(graph_node)
 
         #else if graph_node.type() is NODE_TYPE.TEAM:
         #    node = Team(graph_node)
@@ -79,6 +79,7 @@ class SqFactory(object):
 
         else:
             # TODO: raise an error...something went terribly wrong.
+            pass
 
         return node
 

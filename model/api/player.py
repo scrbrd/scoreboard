@@ -6,9 +6,8 @@
 
 from model.const import EDGE_TYPE, NODE_TYPE
 from sqobject import SqNode
-from game import Game
 from opponent import Opponent
-
+# from game import Game
 
 class Player(SqNode, Opponent):
 
@@ -73,28 +72,4 @@ class Player(SqNode, Opponent):
     def count_wins(self):
         """ Return the number of Games this Player has won. """
         return len(self.edges()[EDGE_TYPE.WON])
-
-
-#    def create_game(self, creator_id, league_id, opponent_scores_dict):
-#        """ Write Game and corresponding Edges to DB. 
-#        
-#        Required:
-#        int creator_id  id of Player that create the Game
-#        int league_id   id of League that Game belongs to
-#        dict opponent_scores_dict   {opponent_id: score}
-#
-#        Return bool for success/failure
-#        
-#        """
-#        edges_dict = {
-#                EDGE_TYPE.CREATED: [{"TO_ID": creator_id}], 
-#                EDGE_TYPE.IN_LEAGUE: [{"TO_ID": league_id}]}
-#        # get outcome from opponent scores dict
-#        outcome = Game.calculate_outcome_from_scores(
-#                [(o, s) for o, s in opponent_scores_dict])
-#        # convert output into a format where editor can be blind
-#       for r, os in outcome:
-#            edges_dict[r] = [{"TO_ID": o, "SCORE": s} for o, s in os]
-# 
-#        return editor.create_node_and_edges("GAME", {}, edges_dict)
 

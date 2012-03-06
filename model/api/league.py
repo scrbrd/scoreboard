@@ -95,7 +95,7 @@ class League(SqNode):
     @staticmethod
     def load_opponents(league_id):
         """ Return a League with opponents loaded from the data layer."""
-        return loader.load_path(
+        return loader.load_neighbors(
                 league_id, 
                 [EDGE_TYPE.HAS_LEAGUE_MEMBER], 
                 [NODE_TYPE.PLAYER, NODE_TYPE.TEAM])
@@ -104,7 +104,7 @@ class League(SqNode):
     @staticmethod
     def load_games(league_id):
         """ Return a League with opponents loaded from the data layer."""
-        return loader.load_path(
+        return loader.load_neighbors(
                 league_id,
                 [EDGE_TYPE.HAS_SCHEDULED]
                 [NODE_TYPE.GAME])
