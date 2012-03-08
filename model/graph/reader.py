@@ -13,8 +13,8 @@ Provides:
 
 """
 
-from model.graph import GraphEdge, GraphNode, GraphPath, GraphOutputError
 from model.data import db, DbInputError, DbReadError, DbWriteError
+from model.graph import GraphEdge, GraphNode, GraphPath, GraphOutputError
 
 
 def get_node(node_id):

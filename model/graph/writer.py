@@ -13,10 +13,10 @@ Provides:
 
 """
 
-from model.graph import GraphEdge, GraphNode, GraphInputError
-from model.data import db
-
 from time import time
+
+from model.data import db, DbInputError, DbReadError, DbWriteError
+from model.graph import GraphEdge, GraphNode, GraphInputError
 
 
 def create_node(type, properties):
@@ -45,7 +45,7 @@ def create_node(type, properties):
                 "updated_ts",
                 "deleted_ts"]
 
-        input_errors = set(bad_properties).intersect(set(properties))
+        input_errors = set(bad_properties).intersection(set(properties))
 
         if input_errors:
             raise GraphInputError(
@@ -103,7 +103,7 @@ def update_node(node_id, new_properties):
                 "updated_ts",
                 "deleted_ts"]
         
-        input_errors = set(bad_properties).intersect(set(new_properties))
+        input_errors = set(bad_properties).intersection(set(new_properties))
         
         if input_errors:
             raise GraphInputError(
@@ -205,7 +205,7 @@ def create_edge(
                 "updated_ts",
                 "deleted_ts"]
 
-        input_errors = set(bad_properties).intersect(set(properties))
+        input_errors = set(bad_properties).intersection(set(properties))
 
         if input_errors:
             raise GraphInputError(
@@ -273,7 +273,7 @@ def update_edge(edge_id, new_properties):
                 "updated_ts",
                 "deleted_ts"]
 
-        input_errors = set(bad_properties).intersect(set(new_properties))
+        input_errors = set(bad_properties).intersection(set(new_properties))
 
         if input_errors:
             raise GraphInputError(

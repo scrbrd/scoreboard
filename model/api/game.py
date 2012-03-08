@@ -125,10 +125,10 @@ class Game(SqNode):
     @staticmethod
     def calculate_outcome_from_scores(opponent_score_pairs):
         """ Convert opponents and scores to opponents by result. 
-        
+
         Arguments:
         list opponent_score_pairs   a list of opponents and scores
-        
+
         If 0 Opponents: {}
         If 1 Opponent: "PLAYED_BY"
         If more Opponents: 
@@ -137,9 +137,9 @@ class Game(SqNode):
         Currently, the highest score wins.
 
         Return {"result": [(score, Opponents)]}
-        
+
         TODO - change RETURN type {RESULT: [(opponent_id, score)]
-        
+
         """
 
         num_of_opponents = len(opponent_score_pairs)

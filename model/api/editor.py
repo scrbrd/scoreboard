@@ -32,10 +32,10 @@ def create_node_and_edges(type, properties, edges):
 
     try:
         # create and store a new GraphNode
-        new_node = editor._create_node(type, properties)
+        new_node = _create_node(type, properties)
 
         # create and store new GraphEdges to/from the new GraphNode
-        editor._create_edges(new_node.id(), edges)
+        _create_edges(new_node.id(), edges)
 
         # read the new GraphNode with GraphEdges loaded
         graph_node = reader.get_node(new_node.id())
@@ -70,7 +70,7 @@ def _create_edges(connecting_node_id, edges):
     graph_edges = {}
 
     for edge in edges:
-        graph_edge = editor._create_edge(connecting_node_id, edge)
+        graph_edge = _create_edge(connecting_node_id, edge)
         graph_edges[graph_edge.id()] = graph_edge
 
     return graph_edges
