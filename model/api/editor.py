@@ -11,7 +11,7 @@ Provides:
 """
 
 from model.graph import reader, writer, GraphInputError, GraphOutputError
-from sqobject import SqFactory
+import sqfactory
 
 
 def create_node_and_edges(type, properties, edges):
@@ -20,7 +20,7 @@ def create_node_and_edges(type, properties, edges):
     Required:
     str type            the type/class of the node
     dict properties     the properties of the node {PROP: VALUE}
-    list edges          list of edges as dict
+    list edges          list of edge dicts
 
     edges list's dicts' keys: "from_id", "type", "properties"
 
@@ -41,7 +41,7 @@ def create_node_and_edges(type, properties, edges):
         graph_node = reader.get_node(new_node.id())
 
         # load the new GraphNode and GraphEdges into SqObjects
-        node = SqFactory.construct_node_and_edges(graph_node)
+        node = sqfactory.construct_node_and_edges(graph_node)
 
     except GraphOutputError as e:
         #logger.debug(e.reason)
@@ -79,15 +79,15 @@ def _create_edges(connecting_node_id, edges):
 def _create_edge(connecting_node_id, edge):
     """ Intramodule Convenience wrapper returning GraphEdges. """
 
-    from_id = ("from_id" in edge) ? edge["from_id"] : node_id
-    to_id = ("to_id" in edge) ? edge["to_id"] : node_id
+    from_node_id = edge["from_node_id"] if "from_node_id" in edge else node_id
+    to_node_id = edge["to_node_id"] if "to_node_id" in edge else node_id
 
-    is_one_way = true
-    is_unique = false
+    is_one_way = True
+    is_unique = False
 
     return writer.create_edge(
-            from_id,
-            to_id,
+            from_node_id,
+            to_node_id,
             edge["type"],
             is_one_way,
             is_unique,

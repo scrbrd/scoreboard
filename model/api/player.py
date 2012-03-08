@@ -43,8 +43,8 @@ class Player(SqNode, Opponent):
         """ Construct a Player extending SqNode. """
         super(Player, self).__init__(graph_node)
 
-        self._first_name = self.properties()["first_name"]
-        self._last_name = self.properties()["last_name"]
+        self._first_name = graph_node.properties()["first_name"]
+        self._last_name = graph_node.properties()["last_name"]
 
 
     @property
@@ -70,13 +70,13 @@ class Player(SqNode, Opponent):
     @property
     def shorten_name(self):
         """ Return this Player's first name and last initial. """
-        return self.name(true)
+        return self.name(True)
 
 
     @property
     def count_wins(self):
         """ Return the number of Games this Player has won. """
-        return len(self.edges()[EDGE_TYPE.WON])
+        return len(self.get_edges()[EDGE_TYPE.WON])
 
 
     @property

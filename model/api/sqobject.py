@@ -15,7 +15,6 @@ Exception
 from exceptions import NotImplementedError
 
 from model.graph import GraphEdge, GraphNode
-# from sqfactory import SqFactory
 
 
 class SqObject(object):
@@ -39,9 +38,6 @@ class SqObject(object):
         """ Construct a SqObject extending the __new__ python object. """
         self._id = graph_node.id()
         self._type = graph_node.type()
-
-        # TODO: decide whether to unset properties copied into members
-        self._properties = graph_node.properties()
 
 
     @property
@@ -123,7 +119,7 @@ class SqNode(SqObject):
 
     def set_edges(self, edges):
         """ Set a member variable with a dict of outgoing SqEdges. """
-        self._neighbors = neighbors
+        self._edges = edges
 
 
     def get_neighbors(self):
@@ -176,6 +172,18 @@ class SqEdge(SqObject):
         self._to_node_id = graph_edge.to_node_id()
         #self._is_one_way = graph_edge.is_one_way()
         #self._is_unique = graph_edge.is_unique()
+
+
+    @property
+    def from_node_id(self):
+        """ Return the SqNode id for which this SqEdge is outgoing. """
+        return self._from_node_id
+
+
+    @property
+    def to_node_id(self):
+        """ Return the SqNode id for which this SqEdge is incoming. """
+        return self._to_node_id
 
 
 class SqObjectNotLoadedError(Exception):

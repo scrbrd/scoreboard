@@ -53,17 +53,18 @@ class Game(SqNode):
 
     def creator_id(self):
         """  Return the Player who created the game. """
-        return self.edges()[EDGE_TYPE.CREATED_BY].iterkeys().next()
+        return self.get_edges()[EDGE_TYPE.CREATED_BY].iterkeys().next()
 
 
     @property
     def outcome(self):
         """ Return a dictionary - {opponent_id: score} """
         outcome_dict = {}
-        results_list = CONST.RESULT_TYPES
-        for r in results_list:
-            for i, s in self._edge_ids_dict[r]:
-                outcome_dict[i] = s
+
+        for edge_type in CONST.RESULT_TYPES:
+            for edge in self.get_edges()[edge_type].values():
+                outcome_dict[edge.to_node_id()] = edge.properties()["score"]
+
         return outcome_dict
 
 
@@ -138,7 +139,9 @@ class Game(SqNode):
         Return {"result": [(score, Opponents)]}
         
         TODO - change RETURN type {RESULT: [(opponent_id, score)]
+        
         """
+
         num_of_opponents = len(opponent_score_pairs)
         results_with_opponents_dict = {}
 
@@ -147,8 +150,10 @@ class Game(SqNode):
             results_with_opponents_dict = {}
         # if one opponent, then no win or loss
         elif num_of_opponents == 1:
-            results_with_opponents_dict = {EDGE_TYPE.PLAYED_BY: 
-                    [(opponent_score_pairs[0][1], opponent_score_pairs[0][0])]}
+            results_with_opponents_dict = {
+                    EDGE_TYPE.PLAYED_BY: [(
+                        opponent_score_pairs[0][1],
+                        opponent_score_pairs[0][0])]}
         # if two or more opponents, then calculate results
         else:
             # opponent lists grouped by score (high to low)
@@ -159,12 +164,16 @@ class Game(SqNode):
             num_of_results = len(opps_by_score)
             # if 1 result, then the game was a tie
             if num_of_results == 1:
-                results_with_opponents_dict = {EDGE_TYPE.TIED_BY: [(opps_by_score[0][0],
-                    opps_by_score[0][1])]}
+                results_with_opponents_dict = {
+                        EDGE_TYPE.TIED_BY: [(
+                            opps_by_score[0][0],
+                            opps_by_score[0][1])]}
             else:
                 # otherwise, win is highest score
-                results_with_opponents_dict = {EDGE_TYPE.WON_BY: [(opps_by_score[0][0], 
-                    opps_by_score[0][1])]}
+                results_with_opponents_dict = {
+                        EDGE_TYPE.WON_BY: [(
+                            opps_by_score[0][0],
+                            opps_by_score[0][1])]}
                 # and loss is all the other scores
                 losers = []
                 for t in opps_by_score[1:]:
@@ -178,41 +187,42 @@ class Game(SqNode):
         """ Create a Game and return it.
 
         Required:
-        id league_id                league id that game belogs to
-        id creator_id               player id of game's creator
-        list opponent_score_pairs   tuples of opponent ids and score
+        id      league_id               league id that game belogs to
+        id      creator_id              player id of game's creator
+        list    opponent_score_pairs    tuples of opponent ids and score
 
         Return the created game.
 
         """
+
         # get outcome from opponent score pairs
         outcome = Game.calculate_outcome_from_scores(opponent_score_pairs)
         
         # create nodes
-        properties = {}
+        node_properties = {}
 
         # create edges
         # TODO turn pairs into bi-directional edges
         edges = []
 
         type = EDGE_TYPE.SCHEDULED_IN
-        edges.append({"to_id": league_id, "type": type})
-        edges.append({"from_id": league_id, "type": _complements[type]})
+        edges.append({"to_node_id": league_id, "type": type})
+        edges.append({"from_node_id": league_id, "type": _complements[type]})
 
         type = EDGE_TYPE.CREATED_BY
-        edges.append({"to_id": creator_id, "type": type})
-        edges.append({"from_id": creator_id, "type": _complements[type]})
+        edges.append({"to_node_id": creator_id, "type": type})
+        edges.append({"from_node_id": creator_id, "type": _complements[type]})
 
-        for type, vals in outcome:
-            for o, s in vals:
-                properties = {"score": s}
+        for type, result in outcome.items():
+            for opponent_id, score in result:
+                properties = {"score": score}
                 edges.append({
-                    "to_id": o, 
-                    "type": type, 
+                    "to_node_id": opponent_id,
+                    "type": type,
                     "properties": properties})
                 edges.append({
-                    "from_id": o, 
-                    "type": _complements[type], 
+                    "from_node_id": opponent_id,
+                    "type": _complements[type],
                     "properties": properties})
 
         return editor.create_node_and_edges(NODE_TYPE.GAME, properties, edges)

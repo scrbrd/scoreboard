@@ -39,7 +39,7 @@ class League(SqNode):
         """ Construct a League extending SqNode. """
         super(League, self).__init__(graph_node)
 
-        self._name = self.properties()["name"]
+        self._name = graph_node.properties()["name"]
 
 
     @property

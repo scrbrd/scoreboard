@@ -13,14 +13,14 @@ Provides:
 from model.graph import GraphEdge, GraphNode, GraphPath, GraphOutputError
 from model.graph import reader
 from sqobject import SqNode
-from sqfactory import SqFactory
+import sqfactory
 
 
 def load_node(node_id):
     """ Return a SqNode subclass for the given id.
 
     Wrap a call to a Graph API that returns a GraphNode and call on 
-    the SqFactory to parse it into a SqNode subclass.
+    sqfactory to parse it into a SqNode subclass.
 
     Required:
     id  node_id         id of node to fetch
@@ -33,7 +33,7 @@ def load_node(node_id):
     node = None
 
     try:
-        node = SqFactory.construct_node_and_edges(reader.get_node(node_id))
+        node = sqfactory.construct_node_and_edges(reader.get_node(node_id))
 
     except GraphOutputError as e:
         #logger.debug(e.reason)
@@ -46,7 +46,7 @@ def load_edge(edge_id):
     """ Return a SqEdge subclass for the given id.
 
     Wrap a call to a Graph API that returns a GraphEdge and call on 
-    the SqFactory to parse it into a SqEdge subclass.
+    sqfactory to parse it into a SqEdge subclass.
 
     Required:
     id  edge_id         id of edge to fetch
@@ -59,7 +59,7 @@ def load_edge(edge_id):
     edge = None
 
     try:
-        edge = SqFactory.construct_edge(reader.get_edge(edge_id))
+        edge = sqfactory.construct_edge(reader.get_edge(edge_id))
 
     except GraphOutputError as e:
         #logger.debug(e.reason)
@@ -72,7 +72,7 @@ def load_edges(node_id):
     """ Return a SqEdge subclass for the given id.
 
     Wrap a call to a Graph API that returns a GraphEdge and call on 
-    the SqFactory to parse it into a SqEdge subclass.
+    sqfactory to parse it into a SqEdge subclass.
 
     Required:
     id  edge_id         id of edge to fetch
@@ -89,7 +89,7 @@ def load_edges(node_id):
 
         edges = {}
         for id, graph_edge in graph_node.edges().items():
-            edges[id] = SqFactory.construct_edge(graph_edge)
+            edges[id] = sqfactory.construct_edge(graph_edge)
 
     except GraphOutputError as e:
         #logger.debug(e.reason)
@@ -123,11 +123,11 @@ def load_neighbors(node_id, edge_type_pruner=[], node_type_return_filter=[]):
                 node_type_return_filter)
 
         # load nodes and edges into SqNodes and SqEdges
-        node = SqFactory.construct_node(graph_path.get_start_node())
+        node = sqfactory.construct_node(graph_path.get_start_node())
 
         neighbor_nodes = {}
         for id, graph_node in graph_path.get_neighbor_nodes().items():
-            neighbor_nodes[id] = SqFactory.construct_node(graph_node)
+            neighbor_nodes[id] = sqfactory.construct_node(graph_node)
 
         node.set_neighbors(neighbor_nodes)
 
