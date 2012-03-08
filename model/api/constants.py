@@ -205,3 +205,24 @@ class _APIConstant(object):
 
 API_CONSTANT = _APIConstant()
 
+class _Rankings():
+
+    """ _Rankings class holds Catcher's rankings' constants. """
+
+    @constant
+    def RANKS():
+        """ RANKS is the ranked objects. """
+        return "ranks"
+
+    @constant
+    def SORT_FIELD():
+        """ SORT_FIELD signifies the ranked objects sort field. """
+        return "sort_field"
+
+    @constant
+    def RANKED_IN():
+        """ RANKED_IN signifies the rankings' container. """
+        return "ranked_in"
+
+RANKINGS = _Rankings()
+

@@ -6,4 +6,4 @@ logger = logging.getLogger('boilerplate.' + __name__)
 
 class SplashHandler(BaseHandler):
     def get(self):
-        self.render("splash.html")
+        self.render("mobile/splash.html")

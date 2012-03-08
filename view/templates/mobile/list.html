@@ -1,0 +1,5 @@
+<h1>RANKINGS!</h1>
+League: {{ header.name }} <br />
+{% for row in listed_entries %}
+{{ row.name }} has {{ row.win_count }} wins.<br />
+{% end %}

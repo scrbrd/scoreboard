@@ -6,4 +6,4 @@ logger = logging.getLogger('boilerplate.' + __name__)
 
 class GamesHandler(BaseHandler):
     def get(self):
-        self.render("games.html")
+        self.render("mobile/games.html")

@@ -7,6 +7,8 @@ from tornado.options import define, options
 import environment
 import logconfig
 
+from view.mobileviews import ListView
+
 # Make filepaths relative to settings.
 path = lambda root,*a: os.path.join(root, *a)
 ROOT = os.path.dirname(os.path.abspath(__file__))
@@ -17,7 +19,7 @@ define("debug", default=True, help="debug mode")
 tornado.options.parse_command_line()
 
 MEDIA_ROOT = path(ROOT, 'media')
-TEMPLATE_ROOT = path(ROOT, 'templates')
+TEMPLATE_ROOT = path(ROOT, 'view/templates')
 
 # Deployment Configuration
 
@@ -44,6 +46,7 @@ settings['static_path'] = MEDIA_ROOT
 settings['cookie_secret'] = "your-cookie-secret"
 settings['xsrf_cookies'] = True
 settings['template_loader'] = tornado.template.Loader(TEMPLATE_ROOT)
+settings['ui_modules'] = {'ListView': ListView}
 
 SYSLOG_TAG = "boilerplate"
 SYSLOG_FACILITY = logging.handlers.SysLogHandler.LOG_LOCAL2
