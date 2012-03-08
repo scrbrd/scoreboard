@@ -44,11 +44,13 @@ class SqObject(object):
         self._properties = graph_node.properties()
 
 
+    @property
     def id(self):
         """ Return a SqObject id. """
         return self._id
 
 
+    @property
     def type(self):
         """ Return a SqObject type. """
         return self._type
@@ -85,6 +87,7 @@ class SqNode(SqObject):
         super(SqNode, self).__init__(graph_node)
 
 
+    @property
     def name(self):
         """ Return a SqNode name. """
         raise NotImplementedError("All SqObject subclasses must override")

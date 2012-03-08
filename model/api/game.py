@@ -56,6 +56,7 @@ class Game(SqNode):
         return self.edges()[EDGE_TYPE.CREATED_BY].iterkeys().next()
 
 
+    @property
     def outcome(self):
         """ Return a dictionary - {opponent_id: score} """
         outcome_dict = {}
@@ -74,6 +75,12 @@ class Game(SqNode):
     def set_opponents(self, opponents):
         """ Set a Game's loaded Opponents from a dict. """
         self._opponents = opponents
+
+
+    @property
+    def opponents(self):
+        """ Return a dict of Opponents. """
+        return self.get_opponents()
 
 
     @staticmethod

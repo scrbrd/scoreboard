@@ -42,6 +42,7 @@ class League(SqNode):
         self._name = self.properties()["name"]
 
 
+    @property
     def name(self):
         """ Return this League's name. """
         return self._name
@@ -68,6 +69,12 @@ class League(SqNode):
         self._opponents = opponents
 
 
+    @property
+    def opponents(self):
+        """ Return a dict of Opponents. """
+        return self.get_opponents()
+
+
     def get_games(self):
         """ Return a dict of Games. """
 
@@ -87,6 +94,12 @@ class League(SqNode):
     def set_games(self, games):
         """ Set a member variable with a dict of Games. """
         self._games = games
+
+
+    @property
+    def games(self):
+        """ Return a dict of Games. """
+        return self.get_games()
 
 
     """ Static loader wrappers. """
