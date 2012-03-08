@@ -14,7 +14,9 @@ import response_parser
 from model.data import DbConnectionError
 
 _gremlin_path = "/db/data/ext/GremlinPlugin/graphdb/execute_script"
-_gremlin_err = "javax.script.ScriptException: java.lang.NullPointerException"
+_gremlin_base_err = "javax.script.ScriptException: "
+_gremlin_null_err = "java.lang.NullPointerException"
+_gremlin_input_err = "java.lang.IllegalArgumentException"
 
 def create_node(base_url, type, properties):
     """ Create a node in the db using gremlin and return created node.
@@ -174,8 +176,8 @@ def connect(url, data):
     Return unformatted HTTP response.
 
     Raises:
-    DbConnectionError     db refused connection or threw error
-    
+    DbConnectionError   bad db connection
+
     """
     request = urllib2.Request(url, data)
     request.add_header('Content-Type', "application/json")
@@ -184,8 +186,11 @@ def connect(url, data):
         response = urllib2.urlopen(request)
         response_data = response.read()
         # object not found
-        if _gremlin_err in response_data:
+        if _gremlin_base_err + _gremlin_null_err in response_data:
             return None
+        elif _gremlin_base_err + _gremlin_input_err in response_data:
+            # TODO - make this a more explicit DbInputError
+            raise DbConnectionError(response_data)
         else:
             return ast.literal_eval(response_data)
     except (urllib2.HTTPError, urllib2.URLError) as err:

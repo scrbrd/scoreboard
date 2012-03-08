@@ -32,19 +32,13 @@ def create_node(type, properties):
     DbWriteError        failed to write to database
 
     """
-    if "type" in properties:
-        raise DbInputError(
-                "properties", 
-                properties, 
-                "Type included in properties.")
-    if type is None:
-        raise DbInputError(
-                "type", 
-                type, 
-                "Required 'Type' not inluded.")
+    _validate_input(properties, {"type": type})
     
     try:
-        new_node = connection_manager.create_node(BASE_URL, type, properties)
+        new_node = connection_manager.create_node(
+                BASE_URL, 
+                type, 
+                properties)
         if new_node is None:
             raise DbWriteError(
                     "create_node", 
@@ -71,26 +65,11 @@ def create_edge(from_node_id, to_node_id, type, properties):
     DbWriteError        failed to write to database
 
     """
-    if any(k in properties for k in ("type", "from_node_id", "to_node_id")):
-        raise DbInputError(
-                k, 
-                properties, 
-                k + " included in properties.")
-    if type is None:
-        raise DbInputError(
-                "type", 
-                type, 
-                "Required parameter not included.")
-    if from_node_id is None:
-        raise DbInputError(
-                "from_node_id",
-                from_node_id,
-                "Required parameter not included.")
-    if to_node_id is None:
-        raise DbInputError(
-                "to_node_id",
-                to_node_id,
-                "Required parameter not included.")
+    special_params = {
+            "type": type, 
+            "from_node_id": from_node_id, 
+            "to_node_id": to_node_id}
+    _validate_input(properties, special_params)
 
     try:
         new_edge = connection_manager.create_edge(
@@ -214,7 +193,9 @@ def read_node_and_edges(node_id):
 
     """
     try:
-        node_data = connection_manager.read_node_and_edges(BASE_URL, node_id)
+        node_data = connection_manager.read_node_and_edges(
+                BASE_URL, 
+                node_id)
         return node_data
     except DbConnectionError:
         raise DbReadError("Database read failed.")
@@ -242,7 +223,10 @@ def read_nodes_from_immediate_path(
             (edge_pruner, "edge_pruner"))
     for t in required:
         if t[0] is None:
-            raise DbInputError(t[0], t[1], "Required parameter not included.")
+            raise DbInputError(
+                    t[0], 
+                    t[1], 
+                    "Required parameter not included.")
 
     try:
         path_data = connection_manager.read_nodes_from_immediate_path(
@@ -262,4 +246,51 @@ def read_edge(edge_id):
     raise NotImplementedError("TODO - Implement read_edge.")
     return None
 
+
+def _validate_input(properties, special_params):
+    """ Validate the input properties. 
+    
+    Check for both disallowed keys and null values.
+
+    Required:
+    dict properties         dict for all properties
+    dict special_params     dict for required non-props params
+    
+    Return True for validation or raise error.
+
+    Raises:
+    DbInputError    bad input
+    
+    """
+    # check each property for being a special key and for no value
+    for prop, value in properties.items():
+        # check each special key against props and for no value
+        for special_key, special_val in special_params.items():
+            if prop == special_key:
+                raise DbInputError(
+                        special_key, 
+                        properties, 
+                        special_key + " included in properties.")
+            if special_val is None:
+                raise DbInputError(
+                        special_key, 
+                        "None", 
+                        "Required parameter not included.")
+
+        # check each prop for no value
+        if value is None:
+            raise DbInputError(
+                    prop,
+                    value,
+                    "Null/None properties not allowed.")
+
+    # if no properties still check special keys
+    if len(properties) == 0:
+        for special_key, special_val in special_params.items():
+            if special_val is None:
+                raise DbInputError(
+                        special_key, 
+                        "None", 
+                        "Required parameter not included.")
+    return True
 
