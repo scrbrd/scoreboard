@@ -8,7 +8,7 @@ to the db or if the db returns an error, including a bad id error.
 
 """
 
-import urllib, urllib2, json, ast
+import urllib, urllib2, json
 
 import response_parser
 from model.data import DbConnectionError
@@ -185,6 +185,7 @@ def connect(url, data):
     try:
         response = urllib2.urlopen(request)
         response_data = response.read()
+
         # object not found
         if _gremlin_base_err + _gremlin_null_err in response_data:
             return None
@@ -192,7 +193,8 @@ def connect(url, data):
             # TODO - make this a more explicit DbInputError
             raise DbConnectionError(response_data)
         else:
-            return ast.literal_eval(response_data)
+            loaded_data = json.loads(response_data)
+            return loaded_data   
     except (urllib2.HTTPError, urllib2.URLError) as err:
         raise DbConnectionError(err.read())
 
