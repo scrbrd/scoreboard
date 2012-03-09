@@ -187,10 +187,10 @@ def get_edge(edge_id):
 
             edge = GraphEdge(
                     edge_dict["edge_id"],
-                    edge_dict["type"],
-                    edge_dict["properties"],
                     edge_dict["from_node_id"],
-                    edge_dict["to_node_id"])
+                    edge_dict["to_node_id"],
+                    edge_dict["type"],
+                    edge_dict["properties"])
 
     except DbReadError as e:
         #logger.debug(e.reason)

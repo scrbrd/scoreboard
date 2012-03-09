@@ -69,6 +69,7 @@ class GraphPrimitive(GraphObject):
     _updated_ts = None
     _deleted_ts = None
 
+
     def __init__(self, id, type, properties):
         """ Construct a GraphPrimitive extending GraphObject. """
         super(GraphPrimitive, self).__init__(id, properties)
@@ -82,32 +83,25 @@ class GraphPrimitive(GraphObject):
         # TODO: deal with existing bad data. every node and edge should have a
         # value set for each of these properties.
 
-        if "created_ts" in self._properties:
-            self._created_ts = self._properties.pop("created_ts")
-        else:
-            self._created_ts = 0
+        self._created_ts = self._properties.pop("created_ts", False)
+        self._created_ts = self._properties.pop("updated_ts", False)
+        self._created_ts = self._properties.pop("deleted_ts", False)
 
-        if "updated_ts" in self._properties:
-            self._updated_ts = self._properties.pop("updated_ts")
-        else:
-            self._updated_ts = 0
-
-        if "deleted_ts" in self._properties:
-            self._deleted_ts = self._properties.pop("deleted_ts")
-        else:
-            self._deleted_ts = None
 
     def type(self):
         """ Return a GraphObject type. """
         return self._type
 
+
     def created_ts(self):
         """ Return a GraphObject's created timestamp. """
         return self._created_ts
 
+
     def updated_ts(self):
         """ Return a GraphObject's last updated timestamp. """
         return self._updated_ts
+
 
     def deleted_ts(self):
         """ Return a GraphObject's deleted timestamp (or None). """
@@ -128,6 +122,7 @@ class GraphNode(GraphPrimitive):
 
     _edges = None
 
+
     def __init__(self, id, type, properties, edges):
         """ Construct a GraphNode extending GraphPrimitive. """
         super(GraphNode, self).__init__(id, type, properties)
@@ -137,10 +132,11 @@ class GraphNode(GraphPrimitive):
         for edge_id, edge in edges.items():
             self._edges[edge_id] = GraphEdge(
                     edge["edge_id"],
-                    edge["type"],
-                    edge["properties"],
                     edge["from_node_id"],
-                    edge["to_node_id"])
+                    edge["to_node_id"],
+                    edge["type"],
+                    edge["properties"])
+
 
     def edges(self):
         """ Return a GraphNode's dict of GraphEdges. """
@@ -167,7 +163,8 @@ class GraphEdge(GraphPrimitive):
     _is_one_way = None
     _is_unique = None
 
-    def __init__(self, id, type, properties, from_node_id, to_node_id):
+
+    def __init__(self, id, from_node_id, to_node_id, type, properties):
         """ Construct a GraphEdge extending GraphPrimitive. """
         super(GraphEdge, self).__init__(id, type, properties)
 
@@ -181,27 +178,24 @@ class GraphEdge(GraphPrimitive):
         # TODO: deal with existing bad data. every node and edge should have a
         # value set for each of these properties.
 
-        if "is_one_way" in self._properties:
-            self._is_one_way = self._properties.pop("is_one_way")
-        else:
-            self._is_one_way = False
+        self._is_one_way = self._properties.pop("is_one_way", False)
+        self._is_unique = self._properties.pop("is_unique", False)
 
-        if "is_unique" in self._properties:
-            self._is_unique = self._properties.pop("is_unique")
-        else:
-            self._is_unique = False
 
     def from_node_id(self):
         """ Return the id of the GraphNode a GraphEdge points from. """
         return self._from_node_id
 
+
     def to_node_id(self):
         """ Return the id of the GraphNode a GraphEdge points to. """
         return self._to_node_id
 
+
     def is_one_way(self):
         """ Return if this GraphEdge points to both its GraphNodes. """
         return self._is_one_way
+
 
     def is_unique(self):
         """ Return if GraphNodes have at most one of this GraphEdge. """
@@ -229,6 +223,7 @@ class GraphPath(GraphObject):
     _edge_type_pruner = None
     _node_type_return_filter = None
 
+
     def __init__(self, id, path, properties):
         """ Construct a GraphNode extending GraphObject. """
         super(GraphPath, self).__init__(id, properties)
@@ -236,20 +231,16 @@ class GraphPath(GraphObject):
         # TODO: determine whether these are necessary members.
 
         # make traversal pruner a member
-        key = "edge_type_pruner"
-        if key in properties:
-            self._edge_type_pruner = self._properties.pop(key)
-        else:
-            self._edge_type_pruner = []
+        self._edge_type_pruner = self._properties.pop(
+                "edge_type_pruner",
+                [])
 
         # make return filter a member
-        key = "node_type_return_filter"
-        if key in properties:
-            self._node_type_return_filter = self._properties.pop(key)
-        else:
-            self._node_type_return_filter = []
+        self._node_type_return_filter = self._properties.pop(
+                "node_type_return_filter",
+                [])
 
-       # infer depth member from path dict
+        # infer depth member from path dict
         self._depth = (len(path) - 1)
 
         # TODO: determine whether to keep path or just rely on convenience
@@ -268,41 +259,51 @@ class GraphPath(GraphObject):
                         node_dict["properties"],
                         node_dict["edges"])
 
+
     def edge_type_pruner(self):
         """ Return GraphEdge types pruned when traversing. """
         return self._edge_type_pruner
+
 
     def node_type_return_filter(self):
         """ Return GraphNode types filtered when returning the path. """
         return self._node_type_return_filter
 
+
     def depth(self):
         """ Return an int for this GraphPath's traversal depth. """
         return self._depth
+
 
     def path(self):
         """ Return a dict describing a path from start node. """
         return self._path
 
+
     def get_nodes_at_depth(self, depth):
         """ Return the dict of GraphNodes at a specific depth. """
         return self.path()[depth]
+
 
     def count_nodes_at_depth(self, depth):
         """ Return the number of GraphNodes at a specific depth. """
         return len(self.path()[depth])
 
+
     def start_node_id(self):
         """ Alias for self.id(). """
         return self.id()
+
 
     def get_start_node(self):
         """ Convenience method wrapping self.get_nodes_at_depth(). """
         return self.get_nodes_at_depth(0)[self.start_node_id()]
 
+
     def get_neighbor_nodes(self):
         """ Convenience method to get start node's neighbors. """
         return self.get_nodes_at_depth(1)
+
 
     def count_neighbor_nodes(self):
         """ Convenience method to count start node's neighbors. """
@@ -323,6 +324,7 @@ class GraphInputError(Exception):
     """
 
     reason = None
+
 
     def __init__(self, parameters, message):
         """ Construct a GraphInputError extending Exception. """
@@ -345,6 +347,7 @@ class GraphOutputError(Exception):
     """
 
     reason = None
+
 
     def __init__(self, parameters, message):
         """ Construct a GraphInputError extending Exception. """

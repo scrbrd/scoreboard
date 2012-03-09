@@ -56,7 +56,7 @@ def create_node(type, properties):
         current_ts = int(time())
         properties["created_ts"] = current_ts
         properties["updated_ts"] = current_ts
-        properties["deleted_ts"] = ""
+        properties["deleted_ts"] = False
 
         # issue a call to the data layer
         node_dict = db.create_node(type, properties)
@@ -154,7 +154,8 @@ def delete_node(node_id):
         node = GraphNode(
                 node_dict["node_id"],
                 node_dict["type"],
-                node_dict["properties"])
+                node_dict["properties"],
+                node_dict["edges"])
 
     except DbInputError as e:
         #logger.debug(e.reason)
@@ -222,7 +223,7 @@ def create_edge(
         current_ts = int(time())
         properties["created_ts"] = current_ts
         properties["updated_ts"] = current_ts
-        properties["deleted_ts"] = ""
+        properties["deleted_ts"] = False
 
         # issue a call to the data layer
         edge_dict = db.create_edge(from_node_id, to_node_id, type, properties)

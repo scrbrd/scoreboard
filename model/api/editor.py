@@ -18,13 +18,14 @@ def create_node_and_edges(type, properties, edges):
     """ Create a Node for this SqObject and create its edges.
 
     Required:
-    str type            the type/class of the node
-    dict properties     the properties of the node {PROP: VALUE}
-    list edges          list of edge dicts
+    str     type        the type/class of the node
+    dict    properties  the properties of the node {PROP: VALUE}
+    list    edges       list of edge dicts
 
     edges list's dicts' keys: "from_id", "type", "properties"
 
-    Return new SqNode if success and None if failure
+    Return:
+    SqNode              SqNode created or None on failure
 
     """
 
