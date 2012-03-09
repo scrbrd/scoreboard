@@ -79,8 +79,8 @@ def _create_edges(connecting_node_id, edges):
 def _create_edge(connecting_node_id, edge):
     """ Intramodule Convenience wrapper returning GraphEdges. """
 
-    from_node_id = edge["from_node_id"] if "from_node_id" in edge else node_id
-    to_node_id = edge["to_node_id"] if "to_node_id" in edge else node_id
+    from_node_id = edge.get("from_node_id", connecting_node_id)
+    to_node_id = edge.get("to_node_id", connecting_node_id)
 
     is_one_way = True
     is_unique = False

@@ -199,6 +199,7 @@ class Game(SqNode):
         outcome = Game.calculate_outcome_from_scores(opponent_score_pairs)
         
         # create nodes
+        node_type = NODE_TYPE.GAME
         node_properties = {}
 
         # create edges
@@ -206,12 +207,28 @@ class Game(SqNode):
         edges = []
 
         type = EDGE_TYPE.SCHEDULED_IN
-        edges.append({"to_node_id": league_id, "type": type})
-        edges.append({"from_node_id": league_id, "type": _complements[type]})
+        edges.append({
+            "to_node_id": league_id,
+            "type": type,
+            "properties": {}
+            })
+        edges.append({
+            "from_node_id": league_id,
+            "type": _complements[type],
+            "properties": {}
+            })
 
         type = EDGE_TYPE.CREATED_BY
-        edges.append({"to_node_id": creator_id, "type": type})
-        edges.append({"from_node_id": creator_id, "type": _complements[type]})
+        edges.append({
+            "to_node_id": creator_id,
+            "type": type,
+            "properties": {}
+            })
+        edges.append({
+            "from_node_id": creator_id,
+            "type": _complements[type],
+            "properties": {}
+            })
 
         for type, result in outcome.items():
             for opponent_id, score in result:
@@ -219,11 +236,13 @@ class Game(SqNode):
                 edges.append({
                     "to_node_id": opponent_id,
                     "type": type,
-                    "properties": properties})
+                    "properties": properties
+                    })
                 edges.append({
                     "from_node_id": opponent_id,
                     "type": _complements[type],
-                    "properties": properties})
+                    "properties": properties
+                    })
 
-        return editor.create_node_and_edges(NODE_TYPE.GAME, properties, edges)
+        return editor.create_node_and_edges(node_type, node_properties, edges)
 
