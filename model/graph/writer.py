@@ -38,9 +38,7 @@ def create_node(prototype_node):
     graph_node = None
 
     try:
-
         # isolate the GraphProtoNode members we need
-        type = prototype_node.type()
         properties = prototype_node.properties()
 
         # TODO: move this error checking into GraphPrototype subclasses
@@ -67,7 +65,7 @@ def create_node(prototype_node):
         properties["deleted_ts"] = False
 
         # issue a call to the data layer
-        node = db.create_node(type, properties)
+        node = db.create_node(prototype_node.type(), properties)
 
         graph_node = GraphNode(
                 node["node_id"],
@@ -194,14 +192,16 @@ def create_edge(prototype_edge):
     graph_edge = None
 
     try:
+        properties = prototype_edge.properties()
+
         # make sure callers don't usurp power over data input
         bad_properties = [
                 "edge_id",
                 "from_node_id",
                 "to_node_id",
                 "type",
-                "is_one_way",
-                "is_unique",
+                #"is_one_way",
+                #"is_unique",
                 "created_ts",
                 "updated_ts",
                 "deleted_ts"]
@@ -215,8 +215,8 @@ def create_edge(prototype_edge):
 
         # initialize some required properties
 
-        properties["is_one_way"] = is_one_way
-        properties["is_unique"] = is_unique
+        #properties["is_one_way"] = is_one_way
+        #properties["is_unique"] = is_unique
 
         current_ts = int(time())
         properties["created_ts"] = current_ts
@@ -224,7 +224,11 @@ def create_edge(prototype_edge):
         properties["deleted_ts"] = False
 
         # issue a call to the data layer
-        edge = db.create_edge(from_node_id, to_node_id, type, properties)
+        edge = db.create_edge(
+                prototype_edge.from_node_id(),
+                prototype_edge.to_node_id(),
+                prototype_edge.type(),
+                properties)
 
         graph_edge = GraphEdge(
                 edge["edge_id"],
@@ -268,8 +272,8 @@ def update_edge(edge_id, new_properties):
                 "from_node_id",
                 "to_node_id",
                 "type",
-                "is_one_way",
-                "is_unique",
+                #"is_one_way",
+                #"is_unique",
                 "created_ts",
                 "updated_ts",
                 "deleted_ts"]
