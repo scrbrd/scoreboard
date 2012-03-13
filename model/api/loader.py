@@ -33,7 +33,10 @@ def load_node(node_id):
     node = None
 
     try:
-        node = sqfactory.construct_node_and_edges(reader.get_node(node_id))
+        graph_node = reader.get_node(node_id)
+        graph_edges = graph_node.edges()
+
+        node = sqfactory.construct_node_and_edges(graph_node, graph_edges)
 
     except GraphOutputError as e:
         #logger.debug(e.reason)
@@ -82,7 +85,7 @@ def load_edges(node_id):
 
     """
 
-    edge = None
+    edges = None
 
     try:
         graph_node = reader.get_node(node_id)

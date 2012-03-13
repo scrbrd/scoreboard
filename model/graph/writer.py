@@ -19,24 +19,32 @@ from model.data import db, DbInputError, DbReadError, DbWriteError
 from model.graph import GraphEdge, GraphNode, GraphInputError
 
 
-def create_node(type, properties):
+# TODO: change functions and definitions to use GraphProto*
+
+def create_node(prototype_node):
     """ Create a node in a graph database.
 
     Required:
-    str     type        type for a new GraphNode
-    dict    properties  dict of optional GraphNode properties
+    GraphProtoNode  prototype_node  unwritten version of GraphNode 
 
     Returns:
-    GraphNode           newly created GraphNode
+    GraphNode                       newly created GraphNode
 
     Raises:
-    GraphInputError     bad input
+    GraphInputError                 bad input
 
     """
 
-    node = None
+    graph_node = None
 
     try:
+
+        # isolate the GraphProtoNode members we need
+        type = prototype_node.type()
+        properties = prototype_node.properties()
+
+        # TODO: move this error checking into GraphPrototype subclasses
+
         # make sure callers don't usurp power over data input
         bad_properties = [
                 "node_id",
@@ -59,41 +67,42 @@ def create_node(type, properties):
         properties["deleted_ts"] = False
 
         # issue a call to the data layer
-        node_dict = db.create_node(type, properties)
+        node = db.create_node(type, properties)
 
-        node = GraphNode(
-                node_dict["node_id"],
-                node_dict["type"],
-                node_dict["properties"],
-                node_dict["edges"])
+        graph_node = GraphNode(
+                node["node_id"],
+                node["type"],
+                node["properties"],
+                node["edges"])
 
     except DbInputError as e:
         #logger.debug(e.reason)
-        node = None
+        graph_node = None
 
     except DbWriteError as e:
         #logger.debug(e.reason)
-        node = None
+        graph_node = None
 
-    return node
+    return graph_node
 
 
+# TODO: replace new_properties with GraphProtoEdge
 def update_node(node_id, new_properties):
     """ Update a node in a graph database.
 
     Required:
-    id      node_id     id of the node to update
-    dict    properties  dict of optional GraphNode properties
+    id      node_id         id of the node to update
+    dict    new_properties  dict of optional GraphNode properties
 
     Returns:
-    GraphNode           updated GraphNode
+    GraphNode               updated GraphNode
 
     Raises:
-    GraphInputError     bad input
+    GraphInputError         bad input
 
     """
 
-    node = None
+    graph_node = None
 
     try:
         # make sure callers don't usurp power over data input
@@ -115,85 +124,74 @@ def update_node(node_id, new_properties):
         new_properties["updated_ts"] = int(time())
 
         # issue a call to the data layer
-        node_dict = db.update_node(node_id, new_properties)
+        node = db.update_node(node_id, new_properties)
 
-        node = GraphNode(
-                node_dict["node_id"],
-                node_dict["type"],
-                node_dict["properties"],
-                node_dict["edges"])
+        graph_node = GraphNode(
+                node["node_id"],
+                node["type"],
+                node["properties"],
+                node["edges"])
 
     except DbInputError as e:
         #logger.debug(e.reason)
-        node = None
+        graph_node = None
 
     except DbWriteError as e:
         #logger.debug(e.reason)
-        node = None
+        graph_node = None
 
-    return node
+    return graph_node
 
 
 def delete_node(node_id):
     """ Delete a node in a graph database.
 
     Required:
-    id      node_id     id of the node to update
+    id          node_id     id of the node to update
 
     Returns:
-    GraphNode           deleted GraphNode
+    GraphNode               deleted GraphNode
 
     """
 
-    node = None
+    graph_node = None
 
     try:
         # issue a call to the data layer with the required changes
-        node_dict = db.delete_node(node_id, {"deleted_ts" : int(time())})
+        node = db.delete_node(node_id, {"deleted_ts" : int(time())})
 
-        node = GraphNode(
-                node_dict["node_id"],
-                node_dict["type"],
-                node_dict["properties"],
-                node_dict["edges"])
+        graph_node = GraphNode(
+                node["node_id"],
+                node["type"],
+                node["properties"],
+                node["edges"])
 
     except DbInputError as e:
         #logger.debug(e.reason)
-        node = None
+        graph_node = None
 
     except DbWriteError as e:
         #logger.debug(e.reason)
-        node = None
+        graph_node = None
 
-    return node
+    return graph_node
 
 
-def create_edge(
-        from_node_id,
-        to_node_id,
-        type,
-        is_one_way,
-        is_unique,
-        properties):
+def create_edge(prototype_edge):
     """ Create an edge connecting two nodes in a graph database.
 
     Required:
-    id      from_node_id    id of the node to create the edge from
-    id      to_node_id      id of the node to create the edge to
-    str     type            type for a new GraphNode
-    bool    is_one_way      does the edge point to both nodes?
-    bool    is_unique       can nodes have >1 edge of this type
-    dict    properties      dict of optional GraphNode properties
+    GraphProtoEdge  prototype_edge  unwritten version of GraphEdge
 
     Returns:
-    GraphEdge               newly created GraphEdge
+    GraphEdge                       newly created GraphEdge
 
     Raises:
-    GraphInputError         bad input
+    GraphInputError                 bad input
 
     """
 
-    edge = None
+    graph_edge = None
 
     try:
         # make sure callers don't usurp power over data input
@@ -226,42 +224,42 @@ def create_edge(
         properties["deleted_ts"] = False
 
         # issue a call to the data layer
-        edge_dict = db.create_edge(from_node_id, to_node_id, type, properties)
+        edge = db.create_edge(from_node_id, to_node_id, type, properties)
 
-        edge = GraphEdge(
-                edge_dict["edge_id"],
-                edge_dict["from_node_id"],
-                edge_dict["to_node_id"],
-                edge_dict["type"],
-                edge_dict["properties"])
+        graph_edge = GraphEdge(
+                edge["edge_id"],
+                edge["type"],
+                edge["properties"],
+                edge["from_node_id"],
+                edge["to_node_id"])
 
     except DbInputError as e:
         #logger.debug(e.reason)
-        edge = None
+        graph_edge = None
 
     except DbWriteError as e:
         #logger.debug(e.reason)
-        edge = None
+        graph_edge = None
 
-    return edge
+    return graph_edge
 
-
+# TODO: replace new_properties with GraphProtoEdge
 def update_edge(edge_id, new_properties):
     """ Update an edge connecting two nodes in a graph database.
 
     Required:
-    id      edge_id     id of the edge to update
-    dict    properties  dict of optional GraphEdge properties
+    id          edge_id         id of the edge to update
+    dict        new_properties  dict of optional GraphEdge properties
 
     Returns:
-    GraphEdge           updated GraphEdge
+    GraphEdge                   updated GraphEdge
 
     Raises:
-    GraphInputError     bad input
+    GraphInputError             bad input
 
     """
 
-    edge = None
+    graph_edge = None
 
     try:
         # make sure callers don't usurp power over data input
@@ -287,57 +285,57 @@ def update_edge(edge_id, new_properties):
         new_properties["updated_ts"] = int(time())
 
         # issue a call to the data layer
-        edge_dict = db.update_edge(edge_id, new_properties)
+        edge = db.update_edge(edge_id, new_properties)
 
-        edge = GraphEdge(
-                edge_dict["edge_id"],
-                edge_dict["from_node_id"],
-                edge_dict["to_node_id"],
-                edge_dict["type"],
-                edge_dict["properties"])
+        graph_edge = GraphEdge(
+                edge["edge_id"],
+                edge["type"],
+                edge["properties"],
+                edge["from_node_id"],
+                edge["to_node_id"])
 
     except DbInputError as e:
         #logger.debug(e.reason)
-        edge = None
+        graph_edge = None
 
     except DbWriteError as e:
         #logger.debug(e.reason)
-        edge = None
+        graph_edge = None
 
-    return edge
+    return graph_edge
 
 
 def delete_edge(edge_id):
     """ Delete an edge connecting two nodes in a graph database.
 
     Required:
-    id      edge_id     id of the edge to update
+    id          edge_id     id of the edge to update
 
     Returns:
-    GraphEdge           deleted GraphEdge
+    GraphEdge               deleted GraphEdge
 
     """
 
-    edge = None
+    graph_edge = None
         
     try:
         # issue a call to the data layer with the required changes 
-        edge_dict = db.delete_edge(edge_id, {"deleted_ts" : int(time())})
+        edge = db.delete_edge(edge_id, {"deleted_ts" : int(time())})
 
-        edge = GraphEdge(
-                edge_dict["edge_id"],
-                edge_dict["from_node_id"],
-                edge_dict["to_node_id"],
-                edge_dict["type"],
-                edge_dict["properties"])
+        graph_edge = GraphEdge(
+                edge["edge_id"],
+                edge["type"],
+                edge["properties"],
+                edge["from_node_id"],
+                edge["to_node_id"])
 
     except DbInputError as e:
         #logger.debug(e.reason)
-        edge = None
+        graph_edge = None
 
     except DbWriteError as e:
         #logger.debug(e.reason)
-        edge = None
+        graph_edge = None
 
-    return edge
+    return graph_edge
 

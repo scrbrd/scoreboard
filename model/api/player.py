@@ -4,10 +4,11 @@
 
 """
 
-from model.const import EDGE_TYPE, NODE_TYPE
+from constants import EDGE_TYPE
 from sqobject import SqNode
 from opponent import Opponent
-# from game import Game
+#from game import Game
+
 
 class Player(SqNode, Opponent):
 
@@ -17,26 +18,13 @@ class Player(SqNode, Opponent):
     edges connecting to other nodes.
 
     Required:
-    id   _id            Player node id
-    str  _first_name    Player node first name
-    str  _last_name     Player node last name
+    str     _first_name     Player node first name
+    str     _last_name      Player node last name
 
-    Edge Dict:
-    EDGE_TYPE.WON: [(game_ids, score)]
-    EDGE_TYPE.LOST: [(game_ids, score)]
-    EDGE_TYPE.TIED: [(game_ids, score)]
-    EDGE_TYPE.PLAYED: [(game_ids, score)]
-    EDGE_TYPE.CREATED: [game_ids]
-    EDGE_TYPE.IN_LEAGUE: [league_ids]
- 
-    dict _games         Dict of Game lists keyed by win/loss/tie
-    
     """
     
     _first_name = None
     _last_name = None
-    
-    _games = None
 
 
     def __init__(self, graph_node):
@@ -68,12 +56,16 @@ class Player(SqNode, Opponent):
 
 
     @property
-    def shorten_name(self):
+    def short_name(self):
         """ Return this Player's first name and last initial. """
         return self.name(True)
 
 
-    @property
+    def outgoing_edge_types(self):
+        """ Return a list of allowed outgoing SqEdge types. """
+        return []
+
+
     def count_wins(self):
         """ Return the number of Games this Player has won. """
         return len(self.get_edges()[EDGE_TYPE.WON])
@@ -81,6 +73,18 @@ class Player(SqNode, Opponent):
 
     @property
     def win_count(self):
-        """ Return the number of Games this Player has won. """
+        """ Alias for count_wins() intended for use as a property. """
         return self.count_wins()
+
+
+    def outgoing_edge_types(self):
+        """ Return a list of allowed outgoing SqEdge types. """
+        return [
+                EDGE_TYPE.IN_LEAGUE,
+                EDGE_TYPE.CREATED,
+                EDGE_TYPE.WON,
+                EDGE_TYPE.LOST,
+                EDGE_TYPE.TIED,
+                EDGE_TYPE.PLAYED]
+
 

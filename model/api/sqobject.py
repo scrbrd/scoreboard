@@ -15,7 +15,7 @@ Exception
 from exceptions import NotImplementedError
 
 from model.graph import GraphEdge, GraphNode
-
+from constants import API_CONSTANT, NODE_TYPE, EDGE_TYPE
 
 class SqObject(object):
 
@@ -38,6 +38,10 @@ class SqObject(object):
         """ Construct a SqObject extending the __new__ python object. """
         self._id = graph_node.id()
         self._type = graph_node.type()
+
+        # TODO: move as much error checking from reader/writer into here as
+        # possible to avoid repetitive code and to grant class hierarchy
+        # appropriate knowledge and power over itself.
 
 
     @property
@@ -82,6 +86,13 @@ class SqNode(SqObject):
         """ Construct a SqNode extending SqObject. """
         super(SqNode, self).__init__(graph_node)
 
+        # TODO: should self._edges containing SqEdges be generated from 
+        # GraphNode.edges() here?
+
+        # TODO: move as much error checking from reader/writer into here as
+        # possible to avoid repetitive code and to grant class hierarchy
+        # appropriate knowledge and power over itself.
+
 
     @property
     def name(self):
@@ -89,16 +100,20 @@ class SqNode(SqObject):
         raise NotImplementedError("All SqObject subclasses must override")
 
 
-    def incoming_edge_types(self):
-        """ Return a list of allowed incoming SqEdge types. """
-        # TODO: list of edge types, or dict of edge type/node type pairs?
-        raise NotImplementedError("Abstract Method: SUBCLASS MUST OVERRIDE!")
-
-
     def outgoing_edge_types(self):
         """ Return a list of allowed outgoing SqEdge types. """
-        # TODO: list of edge types, or dict of edge type/node type pairs?
         raise NotImplementedError("Abstract Method: SUBCLASS MUST OVERRIDE!")
+
+
+    def incoming_edge_types(self):
+        """ Return a list of allowed incoming SqEdge types. """
+        
+        edge_types = []
+
+        for edge_type in self.outgoing_edge_types():
+            edge_types.append(API_CONSTANT.EDGE_TYPE_COMPLEMENTS[edge_type])
+
+        return edge_types
 
 
     def get_edges(self):
@@ -153,13 +168,11 @@ class SqEdge(SqObject):
     Required:
     id      _from_node_id   SqNode id for which this SqEdge is outgoing
     id      _to_node_id     SqNode id for which this SqEdge is incoming
-    bool    _is_one_way     does this SqEdge point to both SqNodes?
-    bool    _is_unique      can only one of an SqEdge exist for SqNodes?
 
     """
 
-    _node_id_1 = None
-    _node_id_2 = None
+    _from_node_id = None
+    _to_node_id = None
     #_is_one_way = None
     #_is_unique = None
 
@@ -172,6 +185,10 @@ class SqEdge(SqObject):
         self._to_node_id = graph_edge.to_node_id()
         #self._is_one_way = graph_edge.is_one_way()
         #self._is_unique = graph_edge.is_unique()
+
+        # TODO: move as much error checking from reader/writer into here as
+        # possible to avoid repetitive code and to grant class hierarchy
+        # appropriate knowledge and power over itself.
 
 
     @property

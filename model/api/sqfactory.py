@@ -12,23 +12,24 @@ Provides:
 
 """
 
-from model.const import NODE_TYPE, EDGE_TYPE
 from model.graph import GraphEdge, GraphNode
-# TODO - do we need to import SqNode?
-from sqobject import SqNode, SqEdge
+from constants import NODE_TYPE, EDGE_TYPE
+# TODO: when SqEdge subclasses exist, don't import SqEdge
+from sqobject import SqEdge
 import game
 import league
 import player
 
 
-def construct_node_and_edges(graph_node):
-    """ Instantiate a subclass of SqNode with SqEdges from a GraphNode.
+def construct_node_and_edges(graph_node, graph_edges):
+    """ Construct a SqNode and SqEdges from a GraphNode and GraphEdges.
 
     Required:
     GraphNode   graph_node      GraphNode to convert based on type
+    dict        graph_edges     GraphEdges to convert based on type
 
     Returns:
-    SqNode                      single instance of concrete subclass
+    SqNode                      concrete subclass instance with SqEdges
 
     """
 

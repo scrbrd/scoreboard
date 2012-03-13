@@ -6,7 +6,7 @@
 
 from itertools import groupby
 
-from model.const import CONST, EDGE_TYPE, NODE_TYPE
+from constants import API_CONSTANT, EDGE_TYPE, NODE_TYPE
 from sqobject import SqNode
 import loader
 
@@ -18,37 +18,34 @@ class Game(SqNode):
     Provide access to the attributes of a Game, including fields,
     relationships, and nearby nodes.
 
-    Required:
-    int _id             super class requirement 
+    A Game cannot exist without CREATED_BY and SCHEDULED_IN outgoing 
+    SqEdges and either a WON_BY and one or more LOST_BY outgoing 
+    SqEdges, two or more TIED_BY outgoing SqEdges, or one PLAYED_BY 
+    outgoing SqEdge. In all cases, the incoming SqEdge complements 
+    are also required.
 
-    Edges Dict: 
-    EDGE_TYPE.WON_BY: [(opponent_ids, score)]
-    EDGE_TYPE.LOST_BY: [(opponent_ids, score)]
-    EDGE_TYPE.TIED_BY: [(opponent_ids, score)]
-    EDGE_TYPE.PLAYED_BY: [(opponent_ids, score)]
-    EDGE_TYPE.CREATED_BY: player_id ***REQUIRED***
-    EDGE_TYPE.SCHEDULED_IN: league_id ***REQUIRED***
-
-    dict _opponents     store loaded Opponents
-
-    TODO - remove complements
-    dict _complements   store bi-directional edge complements
+    Optional:
+    dict    _opponents     store loaded Opponents
 
     """
 
     _opponents = None
-    _complements = {
-            EDGE_TYPE.WON_BY: EDGE_TYPE.WON,
-            EDGE_TYPE.LOST_BY: EDGE_TYPE.LOST,
-            EDGE_TYPE.TIED_BY: EDGE_TYPE.TIED,
-            EDGE_TYPE.PLAYED_BY: EDGE_TYPE.PLAYED,
-            EDGE_TYPE.CREATED_BY: EDGE_TYPE.CREATED,
-            EDGE_TYPE.SCHEDULED_IN: EDGE_TYPE.HAS_SCHEDULED}
 
 
     def __init__(self, graph_node):
         """ Initialize Game class with attributes. """
         super(Game, self).__init__(graph_node)
+
+
+    def outgoing_edge_types(self):
+        """ Return a list of allowed outgoing SqEdge types. """
+        return [
+                EDGE_TYPE.SCHEDULED_IN,
+                EDGE_TYPE.CREATED_BY,
+                EDGE_TYPE.WON_BY,
+                EDGE_TYPE.LOST_BY,
+                EDGE_TYPE.TIED_BY,
+                EDGE_TYPE.PLAYED_BY]
 
 
     def creator_id(self):
@@ -61,7 +58,7 @@ class Game(SqNode):
         """ Return a dictionary - {opponent_id: score} """
         outcome_dict = {}
 
-        for edge_type in CONST.RESULT_TYPES:
+        for edge_type in API_CONSTANT.RESULT_TYPES:
             for edge in self.get_edges()[edge_type].values():
                 outcome_dict[edge.to_node_id()] = edge.properties()["score"]
 
@@ -98,8 +95,8 @@ class Game(SqNode):
         
         return loader.load_neighbors(
                 game_id, 
-                CONST.RESULT_TYPES, 
-                CONST.OPPONENT_TYPES)
+                API_CONSTANT.RESULT_TYPES, 
+                API_CONSTANT.OPPONENT_TYPES)
 
 
     @staticmethod
@@ -194,55 +191,34 @@ class Game(SqNode):
         Return the created game.
 
         """
+        
+        # prepare a node prototype for this game
+        prototype_node = editor.prototype_node(NODE_TYPE.GAME, {})
+
+        prototype_edges = []
+
+        # prepare edge prototypes for schedule edges
+        prototype_edges.extend(editor.prototype_edge_and_complement(
+                EDGE_TYPE.SCHEDULED_IN,
+                {},
+                league_id))
+
+        # prepare edge prototypes for creator edges
+        prototype_edges.extend(editor.prototype_edge_and_complement(
+                EDGE_TYPE.CREATED_BY,
+                {},
+                creator_id))
 
         # get outcome from opponent score pairs
         outcome = Game.calculate_outcome_from_scores(opponent_score_pairs)
-        
-        # create nodes
-        node_type = NODE_TYPE.GAME
-        node_properties = {}
 
-        # create edges
-        # TODO turn pairs into bi-directional edges
-        edges = []
-
-        type = EDGE_TYPE.SCHEDULED_IN
-        edges.append({
-            "to_node_id": league_id,
-            "type": type,
-            "properties": {}
-            })
-        edges.append({
-            "from_node_id": league_id,
-            "type": _complements[type],
-            "properties": {}
-            })
-
-        type = EDGE_TYPE.CREATED_BY
-        edges.append({
-            "to_node_id": creator_id,
-            "type": type,
-            "properties": {}
-            })
-        edges.append({
-            "from_node_id": creator_id,
-            "type": _complements[type],
-            "properties": {}
-            })
-
+        # prepare edge prototypes for result edges
         for type, result in outcome.items():
             for opponent_id, score in result:
-                properties = {"score": score}
-                edges.append({
-                    "to_node_id": opponent_id,
-                    "type": type,
-                    "properties": properties
-                    })
-                edges.append({
-                    "from_node_id": opponent_id,
-                    "type": _complements[type],
-                    "properties": properties
-                    })
+                prototype_edges.extend(editor.prototype_edge_and_complement(
+                    type,
+                    {"score": score},
+                    opponent_id))
 
-        return editor.create_node_and_edges(node_type, node_properties, edges)
+        return editor.create_node_and_edges(prototype_node, prototype_edges)
 

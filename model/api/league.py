@@ -4,7 +4,7 @@
 
 """
 
-from model.const import EDGE_TYPE, NODE_TYPE
+from constants import API_CONSTANT, EDGE_TYPE, NODE_TYPE
 from sqobject import SqNode
 import loader
 
@@ -17,20 +17,15 @@ class League(SqNode):
     edges connecting to other nodes.
 
     Required:
-    id   _id            League node id
-    str  _name          League node name
+    str     _name       League node name
 
-    Edges Dict:
-    EDGE_TYPE.HAS_SCHEDULED: [game_ids]
-    EDGE_TYPE.HAS_LEAGUE_MEMBER: [opponent_ids]
-
-    dict _opponents     Opponents in this League
-    dict _games         Games played by Opponents in this League
+    Optional:
+    dict    _opponents  Opponents in this League
+    dict    _games      Games played by Opponents in this League
 
     """
 
     _name = None
-    
     _opponents = None
     _games = None
 
@@ -46,6 +41,13 @@ class League(SqNode):
     def name(self):
         """ Return this League's name. """
         return self._name
+
+
+    def outgoing_edge_types(self):
+        """ Return a list of allowed outgoing SqEdge types. """
+        return [
+                EDGE_TYPE.HAS_LEAGUE_MEMBER,
+                EDGE_TYPE.HAS_SCHEDULED]
 
 
     def get_opponents(self):
@@ -111,7 +113,7 @@ class League(SqNode):
         return loader.load_neighbors(
                 league_id, 
                 [EDGE_TYPE.HAS_LEAGUE_MEMBER], 
-                [NODE_TYPE.PLAYER, NODE_TYPE.TEAM])
+                API_CONSTANT.OPPONENT_TYPES)
 
 
     @staticmethod
