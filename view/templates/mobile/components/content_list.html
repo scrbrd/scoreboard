@@ -1,0 +1,16 @@
+{# Generic Content List. #}
+
+{% set list_start = "<ul" %}
+{% set list_end = "</ul>" %}
+{% set list_start_static = " data-role = \"listview\" >" %} 
+{% if numbered %}
+    {% set list_start = "<ol" %}
+    {% set list_end = "</ol>" %}
+{% end %}
+
+{% set list_start = list_start + list_start_static %}
+{% raw list_start %}
+{% for row in listed_entries %}
+    <li>{% for field in fields %} {{ getattr(row, field) }} {% end %}</li>
+{% end %}
+{% raw list_end %}

@@ -11,6 +11,7 @@ prev_sys_path = list(sys.path)
 
 site.addsitedir(path('handlers'))
 site.addsitedir(path('model'))
+site.addsitedir(path('view'))
 if os.path.exists(path('vendor')):
     for directory in os.listdir(path('vendor')):
         full_path = path('vendor/%s' % directory)

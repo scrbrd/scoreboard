@@ -45,9 +45,19 @@ class RankingsHandler(BaseHandler):
 
         opponents = []
         opponents.append(Player(19, "Evan Hammer", 5))
-        opponents.append(Player(20, "Jon Warman", 12))
-        opponents.append(Player(23, "Bobby Kellogg", 0))
+        opponents.append(Player(20, "Jon Warman", 4))
+        opponents.append(Player(23, "Bobby Kellogg", 3))
+        opponents.append(Player(77, "Felix Grimm", 17))
+        opponents.append(Player(76, "Asa Wildfire", 12))
+        opponents.append(Player(75, "Captain Captain", 0))
+        opponents.append(Player(74, "E. T.", 0))
+        opponents.append(Player(72, "Jimmy Stewart", 6))
+        opponents.append(Player(73, "Tom Greenwood", 10))
+        opponents.append(Player(64, "Neil Armstrong", 45))
+        opponents.append(Player(62, "Teddy Bearenstein", 16))
+        opponents.append(Player(63, "Tommy O'Doyle", 5))
 
+        opponents.sort(key = lambda x: x.win_count, reverse=True)
         rankings_dict[RANKINGS.RANKS] = opponents
         self.render("mobile/rankings.html", **rankings_dict)
         

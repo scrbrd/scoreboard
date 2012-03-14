@@ -7,7 +7,7 @@ from tornado.options import define, options
 import environment
 import logconfig
 
-from view.mobileviews import ListView
+from view.modules.mobileviews import ListView
 
 # Make filepaths relative to settings.
 path = lambda root,*a: os.path.join(root, *a)

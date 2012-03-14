@@ -5,24 +5,13 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0,
 user-scalable=0, minimum-scale=1.0, maximum-scale=1.0">
 <title>Web App Template</title>
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black">
-
-    <link 
-        rel="stylesheet" 
-        href="http://code.jquery.com/mobile/1.1.0-rc.1/jquery.mobile-1.1.0-rc.1.min.css" 
-        type="text/css"
-        media="screen,mobile" 
-        charset="utf-8" />
 
 <style type="text/css" media="all">
-
-@import "/static/css/mobile_reset.css";
-
-.ui-header, .ui-footer {
-    position: absolute;
+body,ul,li {
+    padding:0;
+    margin:0;
+    border:0;
 }
-
 body {
     font-family:helvetica;
 }
@@ -80,11 +69,6 @@ ul {
     text-align:left;
 }
  
-ol {
-    list-style: decimal;    
-    
-}
-
 li {
     padding:0 10px;
     height:40px;
@@ -99,36 +83,60 @@ li {
 </head>
 
 <body>
-    <div data-role="page" id="rankings" >
 
-    <header
-        id="app_header"
-        data-role="header">
-        <h1>SQOREBOARD</h2>
-    </header>
+<header>
+    Web App Template
+</header>
 
 <div id="wrapper">
-    <div id="scroller">
-        {% block page %}No Page Request.{% end %} 
+    <div id="scroll-content">
+        <ul>
+            <li>Some Stuff</li>
+            <li>More Stuff</li>
+            <li>Big Stuff</li>
+            <li>Small
+            Stuff</li>
+            <li>Geek
+            Stuff</li>
+            <li>Nerd
+            Stuff</li>
+            <li>Fast
+            Stuff</li>
+            <li>Slow
+            Stuff</li>
+            <li>Good
+            Stuff</li>
+            <li>Bad
+            Stuff</li>
+            <li>Your
+            Stuff</li>
+            <li>My
+            Stuff</li>
+            <li>Their
+            Stuff</li>
+            <li>Our
+            Stuff</li>
+            <li>Super
+            Stuff</li>
+            <li>Uber
+            Stuff</li>
+            <li>Stuff
+            Stuff</li>
+            <li>French
+            Stuff</li>
+            <li>German
+            Stuff</li>
+            <li>English
+            Stuff</li>
+            <li>American
+            Stuff</li>
+            <li>Stuff</li>
+        </ul>
     </div>
-</div>    
-    <footer 
-        id="app_footer"
-        data-role="footer">
-        <nav data-role="navbar">
-            <ul>
-                <li><a href="/rankings" class="ui-btn-active">Rankings</a></li>
-                <li><a href="/rankings">Games</a></li>
-            </ul>
-        </nav>
-    </footer>
 </div>
-<script 
-        type="text/javascript" 
-        src="http://code.jquery.com/jquery-1.7.1.min.js"></script>        
-    <script 
-        type="text/javascript" 
-        src="http://code.jquery.com/mobile/1.1.0-rc.1/jquery.mobile-1.1.0-rc.1.min.js"></script>
+<footer>
+    Some Footer Content
+</footer>
     <script 
         type="text/javascript"
         src="/static/js/vendor/iscroll.js"></script>
