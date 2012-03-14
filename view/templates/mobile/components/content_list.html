@@ -1,16 +1,21 @@
-{# Generic Content List. #}
+{# Generic Content List #}
+{# Required: listed_entries, sort_field, display_fields (to show), numbered #}
 
+{# Determine ordered or unordered list from parameters. #}
 {% set list_start = "<ul" %}
 {% set list_end = "</ul>" %}
-{% set list_start_static = " data-role = \"listview\" >" %} 
+{% set list_start_static = " data-role=\"listview\" data-theme=\"sq-content\" >" %} 
 {% if numbered %}
     {% set list_start = "<ol" %}
     {% set list_end = "</ol>" %}
 {% end %}
 
+{# Create list entries #}
 {% set list_start = list_start + list_start_static %}
 {% raw list_start %}
 {% for row in listed_entries %}
-    <li>{% for field in fields %} {{ getattr(row, field) }} {% end %}</li>
+    <li>
+        {% for field in display_fields %} {{ getattr(row, field) }} {% end %}
+    </li>
 {% end %}
 {% raw list_end %}

@@ -1,9 +1,13 @@
-<html>
-    <head>
-        <title>Sqoreboard</title>
-    </head>
+{% extends mobile.html %}
 
-    <body>
-        <h1>It worked! GAMES</h1>
-    </body>
-</html>
+{# Games Header #}
+{% block content_header %}
+    {% module ContentHeaderView(ranked_in) %}
+{% end %}
+
+{# Games Content #}
+{% block page_content %}
+    {% set games_fields = ["name"] %}
+    {% module ListView(games, sort_field, games_fields) %}
+{% end %}
+

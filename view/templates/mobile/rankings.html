@@ -1,5 +1,12 @@
 {% extends mobile.html %}
 
-{% block page %}
-    {% module ListView(ranked_in, ranks, sort_field) %}
+{# Rankings Header #}
+{% block content_header %}
+    {% module ContentHeaderView(ranked_in) %}
+{% end %}
+
+{# Rankings Content #}
+{% block page_content %}
+    {% set rankings_fields = ["name", "win_count"] %}
+    {% module ListView(ranks, sort_field, rankings_fields) %}
 {% end %}
