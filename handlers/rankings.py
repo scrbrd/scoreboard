@@ -5,7 +5,7 @@
 import logging
 logger = logging.getLogger('boilerplate.' + __name__)
 
-from model.const import RANKINGS
+from model.constants import RANKINGS
 from handlers.base import BaseHandler
 
 # TODO use API classes
