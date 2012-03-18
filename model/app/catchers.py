@@ -8,7 +8,7 @@ data is retrieved and returned.
 from model.api.game import Game
 from model.api.league import League
 from model.api.opponent import Opponent
-
+from model.constants import RANKINGS
 
 def generate_games(league_id):
     """ Fetch and return all data necessary for a games list.
@@ -61,18 +61,25 @@ def generate_rankings(league_id):
     Required:
     id  league_id   League node id
 
-    Return:
-    dict            name/wins tuples keyed on opponent id
+    Return dict:
+    RANKED_IN   League that rankings occurs in
+    RANKS       Opponents sorted by Win Count
+    SORT_FIELD  Field that Opponents are sorted by
 
     """
 
     league = League.load_opponents(league_id)
 
     rankings_dict = {}
-    
-    for opponent in league.get_opponents():
-        rankings_dict[opponent.id()] = (opponent.name(), opponent.count_wins())
-    
+    rankings_dict[RANKINGS.RANKED_IN] = league
+    rankings_dict[RANKINGS.SORT_FIELD] = "win_count"
+
+    # leagues' opponents by Win Count
+    opponents_dict = league.get_opponents()
+    opponents = [o for o in opponents_dict.values()]
+    opponents.sort(key = lambda x: x.win_count, reverse=True)
+    rankings_dict[RANKINGS.RANKS] = opponents
+
     return rankings_dict
 
 

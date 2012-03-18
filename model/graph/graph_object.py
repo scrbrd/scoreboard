@@ -156,7 +156,7 @@ class GraphEdge(GraphObject):
     #_is_unique = None
 
 
-    def __init__(self, id, from_node_id, to_node_id, type, properties):
+    def __init__(self, id, type, properties, from_node_id, to_node_id):
         """ Construct a GraphEdge extending GraphObject. """
         super(GraphEdge, self).__init__(id, type, properties)
 
@@ -212,13 +212,16 @@ class GraphPath(object):
     _path = None
     _edge_type_pruner = None
     _node_type_return_filter = None
-
+    _properties = None
+    _id = None
 
     def __init__(self, id, path, properties):
         """ Construct a GraphNode extending GraphObject. """
-        super(GraphPath, self).__init__(id, properties)
-
-        # TODO: determine whether these are necessary members.
+        self._properties = properties
+        self._id = id    
+        # super(GraphPath, self).__init__(id, properties)
+        # FIXME: determine whether these are necessary members.
+        # FIXME: make path properties work correctly
 
         # make traversal pruner a member
         self._edge_type_pruner = self._properties.pop(
@@ -282,7 +285,8 @@ class GraphPath(object):
 
     def start_node_id(self):
         """ Alias for self.id(). """
-        return self.id()
+        # FIXME make this work correctly
+        return self._id
 
 
     def get_start_node(self):
@@ -325,7 +329,6 @@ class GraphPrototype(object):
 
         # TODO: raise GraphInputError on failure to provide required field
         # TODO: raise GraphInputError when disallowed fields are provided
-
 
     def type(self):
         """ Return a GraphPrototype's type. """

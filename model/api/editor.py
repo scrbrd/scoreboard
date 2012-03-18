@@ -12,6 +12,8 @@ Provides:
 
 """
 
+from copy import deepcopy
+
 from model.graph import writer, GraphInputError, GraphProtoNode, GraphProtoEdge
 from constants import API_CONSTANT
 import sqfactory
@@ -38,6 +40,7 @@ def create_node_and_edges(prototype_node, prototype_edges):
         # TODO: test whether this modifies prototype_edges
         # point to/from id in GraphEdges-to-be at the new GraphNode
         for prototype_edge in prototype_edges:
+
             prototype_edge.set_node_id(new_node.id())
 
         # create and store new GraphEdges to/from the new GraphNode
@@ -93,7 +96,7 @@ def prototype_edge_and_complement(type, properties, node_id):
             node_id)
     in_prototype_edge = GraphProtoEdge(
             API_CONSTANT.EDGE_TYPE_COMPLEMENTS[type],
-            properties,
+            deepcopy(properties),
             node_id,
             None)
 

@@ -5,7 +5,7 @@
 """
 
 from constants import API_CONSTANT, EDGE_TYPE, NODE_TYPE
-from sqobject import SqNode
+from sqobject import SqNode, SqObjectNotLoadedError
 import loader
 
 

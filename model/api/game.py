@@ -9,6 +9,7 @@ from itertools import groupby
 from constants import API_CONSTANT, EDGE_TYPE, NODE_TYPE
 from sqobject import SqNode
 import loader
+import editor
 
 
 class Game(SqNode):
@@ -124,7 +125,7 @@ class Game(SqNode):
         """ Convert opponents and scores to opponents by result. 
 
         Arguments:
-        list opponent_score_pairs   a list of opponents and scores
+        list opponent_score_pairs   tuples of opponent ids and scores
 
         If 0 Opponents: {}
         If 1 Opponent: "PLAYED_BY"
@@ -133,50 +134,59 @@ class Game(SqNode):
 
         Currently, the highest score wins.
 
-        Return {"result": [(score, Opponents)]}
-
-        TODO - change RETURN type {RESULT: [(opponent_id, score)]
+        Return {RESULT: [(opponent_id, score)]
 
         """
 
         num_of_opponents = len(opponent_score_pairs)
-        results_with_opponents_dict = {}
+        results = {}
 
         # if no opponents, then no results
         if num_of_opponents == 0:
-            results_with_opponents_dict = {}
+            results = {}
+
         # if one opponent, then no win or loss
         elif num_of_opponents == 1:
-            results_with_opponents_dict = {
-                    EDGE_TYPE.PLAYED_BY: [(
-                        opponent_score_pairs[0][1],
-                        opponent_score_pairs[0][0])]}
+            (id, score) = opponent_score_pairs[0]
+            results = {EDGE_TYPE.PLAYED_BY: [(id, score)]}
+        
         # if two or more opponents, then calculate results
         else:
-            # opponent lists grouped by score (high to low)
+            # sort opponents by score from high to low)
             opponent_score_pairs.sort(key = lambda x:x[1], reverse=True)
-            opps_by_score = [(score, [o for o,v in val]) for score, val in
-                    groupby(opponent_score_pairs, lambda x:x[1])]
 
+            # group opponents by their scores
+            opps_by_score = Game._group_opponents_by_score(
+                    opponent_score_pairs)
+           
+            
+            # TIE v WINNER/LOSERS
             num_of_results = len(opps_by_score)
+             
             # if 1 result, then the game was a tie
             if num_of_results == 1:
-                results_with_opponents_dict = {
-                        EDGE_TYPE.TIED_BY: [(
-                            opps_by_score[0][0],
-                            opps_by_score[0][1])]}
+                (tied_score, tied_ids) = opps_by_score[0]
+                tied_result = []
+                for id in tied_ids:
+                    tied_result.append((id, tied_score))
+                results[EDGE_TYPE.TIED_BY] = tied_result
+           
+            # if more results, then win is high score & the rest losses
             else:
-                # otherwise, win is highest score
-                results_with_opponents_dict = {
-                        EDGE_TYPE.WON_BY: [(
-                            opps_by_score[0][0],
-                            opps_by_score[0][1])]}
-                # and loss is all the other scores
-                losers = []
-                for t in opps_by_score[1:]:
-                    losers.append((t[0], t[1]))
-                results_with_opponents_dict[EDGE_TYPE.LOST_BY] = losers
-        return results_with_opponents_dict
+                # winners
+                (winner_score, winner_ids) = opps_by_score[0]
+                winner_result = []
+                for id in winner_ids:
+                    winner_result.append((id, winner_score))
+                results[EDGE_TYPE.WON_BY] = winner_result
+               
+                # losers
+                loser_result = []
+                for loser_score, loser_ids in opps_by_score[1:]:
+                    for id in loser_ids:
+                        loser_result.append((id, loser_score))
+                results[EDGE_TYPE.LOST_BY] = loser_result
+        return results
 
 
     @staticmethod
@@ -221,4 +231,19 @@ class Game(SqNode):
                     opponent_id))
 
         return editor.create_node_and_edges(prototype_node, prototype_edges)
+    
+    @staticmethod
+    def _group_opponents_by_score(opponent_score_pairs):
+        """ Group opponents by score. 
+
+        Required:
+        list opponent_score_pairs  tuples of ids and scores
+
+        Return (score, [opponent_ids])
+
+        """
+        # FIXME make this function more readable
+        opps_by_score = [(score, [o for o,v in val]) for score, val in
+                    groupby(opponent_score_pairs, lambda x:x[1])]
+        return opps_by_score
 
