@@ -79,7 +79,6 @@ class SqNode(SqObject):
     """
 
     _edges = None
-    _neighbors = None
 
 
     def __init__(self, graph_node):
@@ -135,27 +134,6 @@ class SqNode(SqObject):
     def set_edges(self, edges):
         """ Set a member variable with a dict of outgoing SqEdges. """
         self._edges = edges
-
-
-    def get_neighbors(self):
-        """ Return a dict of neighbor SqNodes. """
-
-        neighbors = self._neighbors
-
-        try:
-            self.assert_loaded(neighbors)
-
-        except SqObjectNotLoadedError as e:
-            #logger.debug(e.reason)
-            print e.reason
-            neighbors = {}
-
-        return neighbors
-
-
-    def set_neighbors(self, neighbors):
-        """ Set a member variable with a dict of neighbor SqNodes. """
-        self._neighbors = neighbors
 
 
 class SqEdge(SqObject):

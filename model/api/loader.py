@@ -132,8 +132,6 @@ def load_neighbors(node_id, edge_type_pruner=[], node_type_return_filter=[]):
         for id, graph_node in graph_path.get_neighbor_nodes().items():
             neighbor_nodes[id] = sqfactory.construct_node(graph_node)
 
-        node.set_neighbors(neighbor_nodes)
-
     except GraphOutputError as e:
         #logger.debug(e.reason)
         print e.reason
