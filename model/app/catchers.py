@@ -5,6 +5,8 @@ data is retrieved and returned.
 
 """
 
+from copy import deepcopy
+
 from model.api.game import Game
 from model.api.league import League
 from model.api.opponent import Opponent
@@ -17,8 +19,12 @@ def generate_games(league_id):
     int league_id   id representing the League
 
     Return:
-    GAMES.PLAYED_IN     League which games were/are played in
-    GAMES.GAMES         List of Games (with populated 'opponents')
+    dict            League and Games played in that League      
+
+    {
+        GAMES.PLAYED_IN: League which games were/are played in
+        GAMES.GAMES: List of Games (with populated 'opponents')
+    }
 
     """
 
@@ -27,36 +33,27 @@ def generate_games(league_id):
     league = League.load_games(league_id) 
 
     # TODO: make it a depth-2 traversal. don't manually load opponents.
+    
+    # list of games that were loaded into league
     games = league.get_games()
-    game_ids = games.keys()
+   
+    # iterating through this list is only temporary
+    # because the multiload should have happened in the API
+    game_ids = [g.id() for g in games]
 
+    # load opponents for each game {g_id: Game}
     opponents_by_game = Game.multiload_opponents(game_ids)
 
-    # add opponents to each game and add that game to the return list.
+    # manually add opponents to each game in the league object.
     games_list = []
-    for g_id in game_ids:
-        games[g_id].set_opponents(opponents_by_game[g_id])
-        games_list.append(games[g_id])
+    for g in games:
+        opponents = opponents_by_game[g.id()].get_opponents()
+        g.set_opponents(opponents_by_game[g.id()])
 
     # Prepare games data for handler.
     games_dict = {}
     games_dict[GAMES.PLAYED_IN] = league
     games_dict[GAMES.GAMES] = games
-
-# TODO figure out if the operations below are needed.
-#    for g_id, game in league.get_games():
-#        opponents_dict = {}
-#
-#        # {opponent_id: score}
-#        scores_dict = game.outcome()
-#
-#        # list of Opponents
-#        opponents = game.get_opponents()
-#
-#        for o_id, opponent in opponents:
-#            opponents_dict[o_id] = (o.name(), scores_dict[o_id])
-#
-#        games_dict[g_id] = opponents_return_dict
 
     return games_dict
 
@@ -67,10 +64,14 @@ def generate_rankings(league_id):
     Required:
     id  league_id   League node id
 
-    Return dict:
-    RANKED_IN   League that rankings occur in
-    RANKS       Opponents sorted by Win Count
-    SORT_FIELD  Field that Opponents are sorted by
+    Return:
+    dict            League, Sorted Opponents in League, and Sort Field
+    
+    {
+        RANKED_IN   League that rankings occur in
+        RANKS       Opponents sorted by Win Count
+        SORT_FIELD  Field that Opponents are sorted by
+    }
 
     """
 
@@ -81,8 +82,7 @@ def generate_rankings(league_id):
     rankings_dict[RANKINGS.SORT_FIELD] = "win_count"
 
     # leagues' opponents by Win Count
-    opponents_dict = league.get_opponents()
-    opponents = [o for o in opponents_dict.values()]
+    opponents = deepcopy(league.get_opponents())
     opponents.sort(key = lambda x: x.win_count, reverse=True)
     rankings_dict[RANKINGS.RANKS] = opponents
 
