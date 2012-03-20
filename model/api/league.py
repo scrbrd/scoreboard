@@ -121,6 +121,6 @@ class League(SqNode):
         """ Return a League with opponents loaded from the data layer."""
         return loader.load_neighbors(
                 league_id,
-                [EDGE_TYPE.HAS_SCHEDULED]
+                [EDGE_TYPE.HAS_SCHEDULED],
                 [NODE_TYPE.GAME])
 

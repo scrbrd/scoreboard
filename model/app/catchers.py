@@ -23,13 +23,13 @@ def generate_games(league_id):
     """
 
     # Load games data from API.
-    
+
     league = League.load_games(league_id) 
 
     # TODO: make it a depth-2 traversal. don't manually load opponents.
     games = league.get_games()
     game_ids = games.keys()
-    
+
     opponents_by_game = Game.multiload_opponents(game_ids)
 
     # add opponents to each game and add that game to the return list.
