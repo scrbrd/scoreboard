@@ -193,51 +193,30 @@ class GraphEdge(GraphObject):
 
 class GraphPath(object):
 
-    """ GraphPath is a subclass of GraphObject.
+    """ GraphPath is a subclass of the __new__ python object.
 
-    Provide access to the attributes of a GraphPath not shared with 
-    GraphObjects via the superclass GraphObject.
+    Provide access to the attributes of a GraphPath, which represents a 
+    traversal from a specified start node through an edge type pruner 
+    to a set of nodes described by a node type return filter.
 
     Required:
-    int     _depth                      degrees separating start and end
-    dict    _path                       GraphNodes keyed on depth and id
-
-    Optional:
-    list    _edge_type_pruner           GraphEdge types pruned on path
-    list    _node_type_return_filter    GraphNode types returned in path
+    id      _start_node_id  id of starting GraphNode for this traversal
+    dict    _path           GraphNodes keyed on depth and id
+    int     _depth          degrees separating start and end of path
 
     """
 
-    _depth = None
+    _start_node_id = None
     _path = None
-    _edge_type_pruner = None
-    _node_type_return_filter = None
-    _properties = None
-    _id = None
+    _depth = None
 
-    def __init__(self, id, path, properties):
-        """ Construct a GraphNode extending GraphObject. """
-        self._properties = properties
-        self._id = id    
-        # super(GraphPath, self).__init__(id, properties)
-        # FIXME: determine whether these are necessary members.
-        # FIXME: make path properties work correctly
 
-        # make traversal pruner a member
-        self._edge_type_pruner = self._properties.pop(
-                "edge_type_pruner",
-                [])
-
-        # make return filter a member
-        self._node_type_return_filter = self._properties.pop(
-                "node_type_return_filter",
-                [])
+    def __init__(self, start_node_id, path):
+        """ Construct a GraphPath. """
+        self._start_node_id = start_node_id
 
         # infer depth member from path dict
         self._depth = (len(path) - 1)
-
-        # TODO: determine whether to keep path or just rely on convenience
-        # methods, since they are more explicit and easier to read.
 
         self._path = {}
 
@@ -253,24 +232,22 @@ class GraphPath(object):
                         node_dict["edges"])
 
 
-    def edge_type_pruner(self):
-        """ Return GraphEdge types pruned when traversing. """
-        return self._edge_type_pruner
+    def start_node_id(self):
+        """ Return the id of a GraphPath's start GraphNode. """
+        return self._start_node_id
 
 
-    def node_type_return_filter(self):
-        """ Return GraphNode types filtered when returning the path. """
-        return self._node_type_return_filter
+    def path(self):
+        """ Return a dict describing a path from start node. """
+        # TODO: determine whether to expose path or just rely on convenience
+        # methods, since they are more explicit and easier to read.
+
+        return self._path
 
 
     def depth(self):
         """ Return an int for this GraphPath's traversal depth. """
         return self._depth
-
-
-    def path(self):
-        """ Return a dict describing a path from start node. """
-        return self._path
 
 
     def get_nodes_at_depth(self, depth):
@@ -281,12 +258,6 @@ class GraphPath(object):
     def count_nodes_at_depth(self, depth):
         """ Return the number of GraphNodes at a specific depth. """
         return len(self.path()[depth])
-
-
-    def start_node_id(self):
-        """ Alias for self.id(). """
-        # FIXME make this work correctly
-        return self._id
 
 
     def get_start_node(self):

@@ -267,13 +267,8 @@ def get_path_to_neighbor_nodes(
 
         # TODO: do similar checking to get_node() for path_dict[0]
 
-        properties = {
-                "edge_type_pruner" : edge_type_pruner, 
-                "node_type_return_filter" : node_type_return_filter
-                }
-        
         # instantiate all nodes and edges in one fell swoop
-        path = GraphPath(start_node_id, path_dict, properties)
+        path = GraphPath(start_node_id, path_dict)
 
     except DbReadError as e:
         #logger.debug(e.reason)
@@ -311,7 +306,10 @@ def multiget_path_to_neighbor_nodes(
     paths = {}
 
     for start_node_id in start_node_ids:
-        paths[start_node_id] = get_path_to_neighbor_nodes(start_node_id)
+        paths[start_node_id] = get_path_to_neighbor_nodes(
+                start_node_id,
+                edge_type_pruner,
+                node_type_return_filter)
 
     return paths
 
