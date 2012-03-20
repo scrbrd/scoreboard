@@ -94,10 +94,14 @@ class Game(SqNode):
 
         """
         
-        return loader.load_neighbors(
-                game_id, 
+        (game, opponents) = loader.load_neighbors(
+                game_id,
                 API_CONSTANT.RESULT_TYPES, 
                 API_CONSTANT.OPPONENT_TYPES)
+
+        game.set_opponents(opponents)
+
+        return game
 
 
     @staticmethod
@@ -115,7 +119,7 @@ class Game(SqNode):
         games = {}
 
         for id in game_ids:
-            games[id] = load_opponents(id)
+            games[id] = Game.load_opponents(id)
 
         return games
 

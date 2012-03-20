@@ -112,11 +112,12 @@ def load_neighbors(node_id, edge_type_pruner=[], node_type_return_filter=[]):
     list    node_type_return_filter list of SqNode types to return
 
     Returns:
-    SqNode                          specified SqEdges, SqNodes loaded
+    tuple                           (SqNode, dict) => (start, neighbors)
 
     """
 
-    path = None
+    node = None
+    neighbor_nodes = None
 
     try:
         # get node, outgoing edges, neighbor nodes
@@ -126,15 +127,21 @@ def load_neighbors(node_id, edge_type_pruner=[], node_type_return_filter=[]):
                 node_type_return_filter)
 
         # load nodes and edges into SqNodes and SqEdges
-        node = sqfactory.construct_node(graph_path.get_start_node())
+        node = sqfactory.construct_node_and_edges(
+                graph_path.get_start_node(),
+                graph_path.get_start_node().edges())
 
         neighbor_nodes = {}
         for id, graph_node in graph_path.get_neighbor_nodes().items():
-            neighbor_nodes[id] = sqfactory.construct_node(graph_node)
+            neighbor_nodes[id] = sqfactory.construct_node_and_edges(
+                    graph_node,
+                    graph_node.edges())
 
     except GraphOutputError as e:
         #logger.debug(e.reason)
         print e.reason
 
-    return node
+    # TODO: this only works for depth-1 queries because of graph fan-out, so 
+    # we need something different for queries of depth-2 and up.
+    return (node, neighbor_nodes)
 

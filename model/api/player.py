@@ -68,7 +68,9 @@ class Player(SqNode, Opponent):
 
     def count_wins(self):
         """ Return the number of Games this Player has won. """
-        return len(self.get_edges()[EDGE_TYPE.WON])
+        # it's possible for a player not to have any wins, in which case there 
+        # won't be an entry in the edges dict, so default to the empty dict
+        return len(self.get_edges().get(EDGE_TYPE.WON, {}))
 
 
     @property
