@@ -4,7 +4,7 @@
 
 """
 
-def api_constant(f):
+def constant(f):
     """ Constant Decorator to make constants Final. """
     
 
@@ -25,31 +25,31 @@ class _NodeType(object):
     """ _NodeType class to hold all Node Types. """
 
 
-    @api_constant
+    @constant
     def GAME():
         """ GAME is a Type of Node. """
         return "GAME"
 
 
-    @api_constant
+    @constant
     def LEAGUE():
         """ LEAGUE is a Type of Node. """
         return "LEAGUE"
 
 
-    @api_constant
+    @constant
     def PLAYER():
         """ PLAYER is a Type of Node. """
         return "PLAYER"
 
 
-    @api_constant
+    @constant
     def TEAM():
         """ TEAM is a Type of Node. """
         return "TEAM"
 
 
-    @api_constant
+    @constant
     def USER():
         """ USER is a Type of Node. """
         return "USER"
@@ -60,85 +60,85 @@ class _EdgeType(object):
     """ _EdgeType class to hold all Edge Types. """
 
 
-    @api_constant
+    @constant
     def IN_LEAGUE():
         """ IN_LEAGUE is a Type of Edge. """
         return "IN_LEAGUE"
 
 
-    @api_constant
+    @constant
     def HAS_LEAGUE_MEMBER():
         """ HAS_LEAGUE_MEMBER is a Type of Edge. """
         return "HAS_LEAGUE_MEMBER"
 
 
-    @api_constant
+    @constant
     def SCHEDULED_IN():
         """ SCHEDULED_IN is a Type of Edge. """
         return "SCHEDULED_IN"
 
 
-    @api_constant
+    @constant
     def HAS_SCHEDULED():
         """ HAS_SCHEDULED is a Type of Edge. """
         return "HAS_SCHEDULED"
     
 
-    @api_constant
+    @constant
     def WON():
         """ WON is a Type of Edge. """
         return "WON"
 
 
-    @api_constant
+    @constant
     def WON_BY():
         """ WON_BY is a Type of Edge. """
         return "WON_BY"
 
 
-    @api_constant
+    @constant
     def LOST():
         """ LOST is a Type of Edge. """
         return "LOST"
 
 
-    @api_constant
+    @constant
     def LOST_BY():
         """ LOST_BY is a Type of Edge. """
         return "LOST_BY"
 
 
-    @api_constant
+    @constant
     def TIED():
         """ TIED is a Type of Edge. """
         return "TIED"
 
 
-    @api_constant
+    @constant
     def TIED_BY():
         """ TIED_BY is a Type of Edge. """
         return "TIED_BY"
 
 
-    @api_constant
+    @constant
     def PLAYED():
         """ PLAYED is a Type of Edge. """
         return "PLAYED"
 
 
-    @api_constant
+    @constant
     def PLAYED_BY():
         """ PLAYED_BY is a Type of Edge. """
         return "PLAYED_BY"
 
 
-    @api_constant
+    @constant
     def CREATED():
         """ CREATED is a Type of Edge. """
         return "CREATED"
 
 
-    @api_constant
+    @constant
     def CREATED_BY():
         """ CREATED_BY is a Type of Edge. """
         return "CREATED_BY"
@@ -155,13 +155,13 @@ class _APIConstant(object):
     """ _APIConstant class holds all API constants. """
 
 
-    @api_constant
+    @constant
     def OPPONENT_TYPES():
         """ OPPONENT_NODE_TYPES is a list of Opponent Node Types. """
         return [NODE_TYPE.PLAYER, NODE_TYPE.TEAM]
 
 
-    @api_constant
+    @constant
     def RESULT_TYPES():
         """ RESULT_TYPES is a list of Result Edge Types. """
         return [
@@ -175,7 +175,7 @@ class _APIConstant(object):
                 EDGE_TYPE.PLAYED_BY]
 
 
-    @api_constant
+    @constant
     def EDGE_TYPE_COMPLEMENTS():
         """ EDGE_TYPE_COMPLEMENTS is a dict mapping of Edge Types. """
         return {
@@ -192,7 +192,7 @@ class _APIConstant(object):
                 EDGE_TYPE.WON_BY : EDGE_TYPE.WON,
 
                 EDGE_TYPE.LOST : EDGE_TYPE.LOST_BY,
-                EDGE_TYPE.LOST_BY : EDGE_TYPE.LOST,
+                EDge_tyPE.LOST_BY : EDGE_TYPE.LOST,
 
                 EDGE_TYPE.TIED : EDGE_TYPE.TIED_BY,
                 EDGE_TYPE.TIED_BY : EDGE_TYPE.TIED,
@@ -202,5 +202,4 @@ class _APIConstant(object):
 
 
 API_CONSTANT = _APIConstant()
-
 
