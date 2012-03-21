@@ -1,92 +1,132 @@
 """ Data Request Catchers
 
 All data requests are processed by request type and the appropriate
-data is retrieved and returned.
+data is retrieved and returned as a Catcher.
 
 """
 
 from copy import deepcopy
+from exceptions import NotImplementedError
 
 from model.api.game import Game
 from model.api.league import League
 from model.api.opponent import Opponent
 from model.constants import GAMES, RANKINGS
 
-def generate_games(league_id):
+class Catcher(object):
+    
+    """ Fetch and/or edit all data necessary for a model request. 
+
+    Catchers wrap around returned data to provide controlled access
+    outside of model.
+    
+    Required:
+    League _context   container of objects (id, name fields required)
+    
+    """
+
+    
+    _context = None
+
+    def __init__(self):
+        """ Catcher is an abstract superclass. """
+        raise NotImplementedError("Catcher must be extended by a subclass.")
+    
+    
+    @property
+    def context_container(self):
+        """ Context/Container of fetched data. """
+        return self._context
+
+
+class GamesCatcher(Catcher):
+    
     """ Fetch and return all data necessary for a games list.
 
     Required:
-    int league_id   id representing the League
-
-    Return:
-    dict            League and Games played in that League      
-
-    {
-        GAMES.PLAYED_IN: League which games were/are played in
-        GAMES.GAMES: List of Games (with populated 'opponents')
-    }
-
+    list    _games              list of games
+    dict    _outcome_by_game    {g_id: (score, Opponent)}
     """
 
-    # Load games data from API.
 
-    league = League.load_games(league_id) 
+    _games = []
+    _outcomes_by_game = {}
 
-    # TODO: make it a depth-2 traversal. don't manually load opponents.
+    def __init__(self, league_id):
+        """ Instantiate with League, Games, and Opponents. """
+        # Load games data from API.
+        self._context = League.load_games(league_id) 
+        league = self._context
+
+        # TODO: make it a depth-2 traversal. don't manually load opponents.
+        
+        # list of games that were loaded into league
+        games = league.get_games()
+        
+        # iterating through this list is only temporary
+        # because the multiload should have happened in the API
+        game_ids = [g.id() for g in games]
+        
+        # load opponents for each game {g_id: Game}
+        games_with_opponents = Game.multiload_opponents(game_ids)
+        
+        # store opponents loaded games
+        self._games = games_with_opponents.values()
+        
+        # store score, Opponent tuples by game id for each game
+        for game in self._games:
+            outcome = game.outcome()
+            for (score, opponent_id) in outcome:
+                self._outcomes_by_game[id] = (
+                        score, 
+                        game.get_opponent(opponent_id))
+                
+            
+    @property
+    def games(self):
+        """ Games that belong to the container. """
+        return self._games
+
+
+    def get_outcomes_by_game(self):
+        """ Return dict by game_id of outcome highest to lowest. """
+        return self._outcomes_by_game
+
+
+class RankingsCatcher(Catcher):
+        
+    """ Generate league's rankings based on most wins.
     
-    # list of games that were loaded into league
-    games = league.get_games()
-   
-    # iterating through this list is only temporary
-    # because the multiload should have happened in the API
-    game_ids = [g.id() for g in games]
-
-    # load opponents for each game {g_id: Game}
-    opponents_by_game = Game.multiload_opponents(game_ids)
-
-    # manually add opponents to each game in the league object.
-    games_list = []
-    for g in games:
-        opponents = opponents_by_game[g.id()].get_opponents()
-        g.set_opponents(opponents_by_game[g.id()])
-
-    # Prepare games data for handler.
-    games_dict = {}
-    games_dict[GAMES.PLAYED_IN] = league
-    games_dict[GAMES.GAMES] = games
-
-    return games_dict
-
-
-def generate_rankings(league_id):
-    """ Generate league rankings based on most wins.
-
     Required:
-    id  league_id   League node id
-
-    Return:
-    dict            League, Sorted Opponents in League, and Sort Field
+    Opponents   _opponents      Opponents sorted by Win Count
+    str         _rank_field     Field that Opponents are sorted by
     
-    {
-        RANKED_IN   League that rankings occur in
-        RANKS       Opponents sorted by Win Count
-        SORT_FIELD  Field that Opponents are sorted by
-    }
-
     """
 
-    league = League.load_opponents(league_id)
 
-    rankings_dict = {}
-    rankings_dict[RANKINGS.RANKED_IN] = league
-    rankings_dict[RANKINGS.SORT_FIELD] = "win_count"
+    _opponents = None
+    _rank_field = "win_count"
 
-    # leagues' opponents by Win Count
-    opponents = deepcopy(league.get_opponents())
-    opponents.sort(key = lambda x: x.win_count, reverse=True)
-    rankings_dict[RANKINGS.RANKS] = opponents
+    def __init__(self, league_id):
+        """ Instantiate Rankings with Leagues & Opponents. """        
+        self._context = League.load_opponents(league_id)
+        league = self._context 
 
-    return rankings_dict
+        # leagues' opponents by Win Count
+        self._opponents = league.get_opponents()
+        self._opponents.sort(key = lambda x: x.win_count, reverse=True)
+
+
+    @property
+    def ranks(self):
+        """ Return the ranked objects. """
+        return self._opponents
+    
+
+    @property
+    def rank_field(self):
+        """ Return the field that the objects were ranked by. """
+        return self._rank_field
 
 
 def create_game(league_id, creator_id, opponent_score_pairs):

@@ -150,6 +150,31 @@ NODE_TYPE = _NodeType()
 EDGE_TYPE = _EdgeType()
 
 
+class _NodeProperty(object):
+
+    """ _NodeProperty class to hold all Node Properties. """
+
+    pass
+
+
+class _EdgeProperty(object):
+
+    """ _EdgeProperty class to hold all Edge Properties. """
+
+
+    @api_constant
+    def SCORE():
+        """ SCORE is a Type of Edge Property. """
+        return "SCORE"
+
+
+# variables used to refer to Node and Edge Properties
+NODE_PROPERTY = _NodeProperty()
+EDGE_PROPERTY = _EdgeProperty()
+
+
+
+
 class _APIConstant(object):
 
     """ _APIConstant class holds all API constants. """

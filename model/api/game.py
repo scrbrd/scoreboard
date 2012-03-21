@@ -6,7 +6,7 @@
 
 from itertools import groupby
 
-from constants import API_CONSTANT, EDGE_TYPE, NODE_TYPE
+from constants import API_CONSTANT, EDGE_TYPE, NODE_TYPE, EDGE_PROPERTY
 from sqobject import SqNode
 import loader
 import editor
@@ -26,7 +26,7 @@ class Game(SqNode):
     are also required.
 
     Optional:
-    dict    _opponents     store loaded Opponents
+    dict    _opponents     store loaded Opponents by id
 
     """
 
@@ -54,32 +54,38 @@ class Game(SqNode):
         return self.get_edges()[EDGE_TYPE.CREATED_BY].iterkeys().next()
 
 
-    @property
     def outcome(self):
-        """ Return a dictionary - {opponent_id: score} """
-        outcome_dict = {}
+        """ Return a list of score, opponent_id pairs high to low. """
+        outcome = []
 
         for edge_type in API_CONSTANT.RESULT_TYPES:
             for edge in self.get_edges()[edge_type].values():
-                outcome_dict[edge.to_node_id()] = edge.properties()["score"]
+                score = edge.properties()[EDGE_PROPERTY.SCORE]
+                opponent_id = edge.to_node_id()
+                outcome.append((score, opponent_id))
+                outcome.sort(key = lambda x: x[0], reverse=True)
 
-        return outcome_dict
+        return outcome
+
+
+    def get_opponent(self, opp_id):
+        """ Return an Opponent by its id. """
+        SqNode.assert_loaded(self._opponents)
+        return self._opponents.get(opp_id, None)
 
 
     def get_opponents(self):
-        """ Return a dict of Opponents. """
-        return self.assert_loaded(self._opponents) if self._opponents else {}
-
-
+        """ Return a list of Opponents. """
+        SqNode.assert_loaded(self._opponents)
+        return self._opponents.values()
+            
+    
     def set_opponents(self, opponents):
         """ Set a Game's loaded Opponents from a dict. """
         self._opponents = opponents
 
 
-    @property
-    def opponents(self):
-        """ Return a dict of Opponents. """
-        return self.get_opponents()
+    """ Static loader wrappers. """
 
 
     @staticmethod

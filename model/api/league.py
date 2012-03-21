@@ -50,58 +50,38 @@ class League(SqNode):
                 EDGE_TYPE.HAS_SCHEDULED]
 
 
+    def get_opponent(self, opp_id):
+        """ Return an Opponent by its id. """
+        SqNode.assert_loaded(self._opponents)
+        return self._opponents.get(opp_id, None)
+
+
     def get_opponents(self):
-        """ Return a dict of Opponents. """
-
-        opponents = self._opponents
-
-        try:
-            self.assert_loaded(opponents)
-
-        except SqObjectNotLoadedError as e:
-            #logger.debug(e.reason)
-            print e.reason
-            opponents = {}
-
-        return opponents
-
-
+        """ Return a list of Opponents. """
+        SqNode.assert_loaded(self._opponents)
+        return self._opponents.values()
+            
+    
     def set_opponents(self, opponents):
-        """ Set a member variable with a dict of Opponents. """
+        """ Set a League's loaded Opponents with a dict. """
         self._opponents = opponents
 
 
-    @property
-    def opponents(self):
-        """ Return a dict of Opponents. """
-        return self.get_opponents()
+    def get_game(self, game_id):
+        """ Return League's list of Games. """
+        SqNode.assert_loaded(self._games)
+        return self._games.get(game_id, None)
 
 
     def get_games(self):
-        """ Return a dict of Games. """
-
-        games = self._games
-
-        try:
-            self.assert_loaded(games)
-
-        except SqObjectNotLoadedError as e:
-            #logger.debug(e.reason)
-            print e.reason
-            games = {}
-
-        return games
+        """ Return League's list of Games. """
+        SqNode.assert_loaded(self._games)
+        return self._games.values()
 
 
     def set_games(self, games):
-        """ Set a member variable with a dict of Games. """
+        """ Set League's games with a dict. """
         self._games = games
-
-
-    @property
-    def games(self):
-        """ Return a dict of Games. """
-        return self.get_games()
 
 
     """ Static loader wrappers. """

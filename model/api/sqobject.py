@@ -56,12 +56,6 @@ class SqObject(object):
         return self._type
 
 
-    def assert_loaded(self, loaded_data):
-        """ If data is not loaded, raise an error. """
-        if loaded_data is None:
-            raise SqObjectNotLoadedError("SqObject member not loaded")
-
-
 class SqNode(SqObject):
 
     """ SqNode is a subclass of SqObject.
@@ -134,6 +128,13 @@ class SqNode(SqObject):
     def set_edges(self, edges):
         """ Set a member variable with a dict of outgoing SqEdges. """
         self._edges = edges
+
+    
+    @staticmethod
+    def assert_loaded(loaded_data):
+        """ If data is not loaded, raise an error. """
+        if loaded_data is None:
+            raise SqObjectNotLoadedError("SqObject member not loaded")
 
 
 class SqEdge(SqObject):

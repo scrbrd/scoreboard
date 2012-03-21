@@ -2,11 +2,11 @@
 
 {# Rankings Header #}
 {% block content_header %}
-    {% module ContentHeaderView(ranked_in) %}
+    {% module ContentHeaderView(rankings.context_container) %}
 {% end %}
 
 {# Rankings Content #}
 {% block page_content %}
     {% set rankings_fields = ["name", "win_count"] %}
-    {% module ListView(ranks, sort_field, rankings_fields) %}
+    {% module ListView(rankings.ranks, rankings.rank_field, rankings_fields) %}
 {% end %}

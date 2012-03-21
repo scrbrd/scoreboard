@@ -35,10 +35,10 @@ class RankingsHandler(BaseHandler):
         """ Overload BaseHandler's HTTP GET responder. """
         
         # TODO - remove hardcoded league id
-        league_id = 24
+        league_id = 73
 
         # get ranking data from model
-        # TODO rankings_dict = catchers.generate_rankings(league_id) 
+        # TODO rankings = catchers.RankingsCatcher(league_id) 
         rankings_dict = {}
         rankings_dict[RANKINGS.RANKED_IN] = League(24, "Basketball")
         rankings_dict[RANKINGS.SORT_FIELD] = "win_count"
@@ -59,6 +59,6 @@ class RankingsHandler(BaseHandler):
 
         opponents.sort(key = lambda x: x.win_count, reverse=True)
         rankings_dict[RANKINGS.RANKS] = opponents
-        self.render("mobile/rankings.html", **rankings_dict)
+        self.render("mobile/rankings.html", rankings=rankings)
         
 
