@@ -63,7 +63,13 @@ class Player(SqNode, Opponent):
 
     def outgoing_edge_types(self):
         """ Return a list of allowed outgoing SqEdge types. """
-        return []
+        return [
+                EDGE_TYPE.IN_LEAGUE,
+                EDGE_TYPE.CREATED,
+                EDGE_TYPE.WON,
+                EDGE_TYPE.LOST,
+                EDGE_TYPE.TIED,
+                EDGE_TYPE.PLAYED]
 
 
     def count_wins(self):
