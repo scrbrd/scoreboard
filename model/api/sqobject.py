@@ -13,6 +13,7 @@ Exception
 """
 
 from exceptions import NotImplementedError
+from copy import deepcopy
 
 from model.graph import GraphEdge, GraphNode
 from constants import API_CONSTANT, NODE_TYPE, EDGE_TYPE
@@ -25,14 +26,14 @@ class SqObject(object):
     subclasses.
 
     Required:
-    id      _id     SqObject id
-    str     _type   SqObject type
-
+    id      _id             SqObject id
+    str     _type           SqObject type
+    
     """
 
+   
     _id = None
     _type = None
-
 
     def __init__(self, graph_node):
         """ Construct a SqObject extending the __new__ python object. """
@@ -79,8 +80,7 @@ class SqNode(SqObject):
         """ Construct a SqNode extending SqObject. """
         super(SqNode, self).__init__(graph_node)
 
-        # TODO: should self._edges containing SqEdges be generated from 
-        # GraphNode.edges() here?
+        # TODO: should edges be set here instead of SqFactory?
 
         # TODO: move as much error checking from reader/writer into here as
         # possible to avoid repetitive code and to grant class hierarchy
@@ -118,10 +118,9 @@ class SqNode(SqObject):
             self.assert_loaded(edges)
 
         except SqObjectNotLoadedError as e:
-            #logger.debug(e.reason)
             print e.reason
             edges = {}
-
+        
         return edges
 
 
@@ -147,6 +146,7 @@ class SqEdge(SqObject):
     Required:
     id      _from_node_id   SqNode id for which this SqEdge is outgoing
     id      _to_node_id     SqNode id for which this SqEdge is incoming
+    dict    _properties     all edge properties (temporary)
 
     """
 
@@ -155,6 +155,9 @@ class SqEdge(SqObject):
     #_is_one_way = None
     #_is_unique = None
 
+    # FIXME remove this variable when SqEdges are fully implemented
+    _properties = {}
+    
 
     def __init__(self, graph_edge):
         """ Construct a SqEdge extending SqObject. """
@@ -164,7 +167,10 @@ class SqEdge(SqObject):
         self._to_node_id = graph_edge.to_node_id()
         #self._is_one_way = graph_edge.is_one_way()
         #self._is_unique = graph_edge.is_unique()
-
+    
+        # FIXME remove whenSqEdges are fully implemented
+        self._properties = deepcopy(graph_edge.properties())
+        
         # TODO: move as much error checking from reader/writer into here as
         # possible to avoid repetitive code and to grant class hierarchy
         # appropriate knowledge and power over itself.
@@ -180,6 +186,17 @@ class SqEdge(SqObject):
     def to_node_id(self):
         """ Return the SqNode id for which this SqEdge is incoming. """
         return self._to_node_id
+
+
+    # FIXME remove when SqEdges are implemented
+    def properties(self):
+        """ Return dictionary of SqObject properties. """
+        return self._properties
+
+
+    def get_property(self, key):
+        """ Return value of requested SqObject property. """
+        return self._properties.get(key, None)
 
 
 class SqObjectNotLoadedError(Exception):

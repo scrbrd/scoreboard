@@ -265,7 +265,7 @@ def get_path_to_neighbor_nodes(
                 edge_type_pruner,
                 node_type_return_filter)
 
-        # TODO: do similar checking to get_node() for path_dict[0]
+        # FIXME: do similar checking to get_node() for path_dict[0]
 
         # instantiate all nodes and edges in one fell swoop
         path = GraphPath(start_node_id, path_dict)

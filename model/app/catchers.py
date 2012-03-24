@@ -33,6 +33,11 @@ class Catcher(object):
         raise NotImplementedError("Catcher must be extended by a subclass.")
     
     
+    def _load_catcher(self):
+        """ Load all necessary data. """
+        raise NotImplementedError("Catcher must be extended by a subclass.")
+   
+
     @property
     def context_container(self):
         """ Context/Container of fetched data. """
@@ -45,16 +50,21 @@ class GamesCatcher(Catcher):
 
     Required:
     list    _games              list of games
-    dict    _outcome_by_game    {g_id: (score, Opponent)}
+
     """
 
 
     _games = []
-    _outcomes_by_game = {}
 
     def __init__(self, league_id):
         """ Instantiate with League, Games, and Opponents. """
-        # Load games data from API.
+        self._load_catcher(league_id)
+    
+    
+    def _load_catcher(self, league_id):
+        """ Load League, its Games, and its Games' Opponenets. """
+        
+        # Load league with games into generic context
         self._context = League.load_games(league_id) 
         league = self._context
 
@@ -65,23 +75,17 @@ class GamesCatcher(Catcher):
         
         # iterating through this list is only temporary
         # because the multiload should have happened in the API
-        game_ids = [g.id() for g in games]
-        
+        game_ids = [g.id for g in games]
+       
         # load opponents for each game {g_id: Game}
         games_with_opponents = Game.multiload_opponents(game_ids)
         
         # store opponents loaded games
+        # NOTE: These Games are different objects than the ones in the
+        # League though they represent the same data objects.
         self._games = games_with_opponents.values()
         
-        # store score, Opponent tuples by game id for each game
-        for game in self._games:
-            outcome = game.outcome()
-            for (score, opponent_id) in outcome:
-                self._outcomes_by_game[id] = (
-                        score, 
-                        game.get_opponent(opponent_id))
-                
-            
+
     @property
     def games(self):
         """ Games that belong to the container. """
@@ -90,7 +94,26 @@ class GamesCatcher(Catcher):
 
     def get_outcomes_by_game(self):
         """ Return dict by game_id of outcome highest to lowest. """
-        return self._outcomes_by_game
+        
+        # store score, Opponent tuples by game id for each game
+        outcomes_by_game = {}
+        
+        for game in self._games:
+            # get outcome for each game
+            outcome = game.outcome()
+            
+            # replace opp_id with actual Opponent object from Game
+            outcome_with_opponents = []
+            for result in outcome:
+                score = result[0]
+                opponent_id = result[1]
+                outcome_with_opponents.append(
+                        (score, game.get_opponent(opponent_id)))
+            
+            # save updated outcome for each game
+            outcomes_by_game[game.id] = outcome_with_opponents
+
+        return outcomes_by_game
 
 
 class RankingsCatcher(Catcher):
@@ -109,6 +132,12 @@ class RankingsCatcher(Catcher):
 
     def __init__(self, league_id):
         """ Instantiate Rankings with Leagues & Opponents. """        
+        self._load_catcher(league_id)
+
+
+    def _load_catcher(self, league_id):
+        """ Load League, its Opponents, and sort by Win Count. """
+        
         self._context = League.load_opponents(league_id)
         league = self._context 
 
@@ -129,18 +158,34 @@ class RankingsCatcher(Catcher):
         return self._rank_field
 
 
-def create_game(league_id, creator_id, opponent_score_pairs):
+class CreateCatcher(Catcher):
+    
     """ Create a game and return it.
 
-    Required:
-    id league_id                league id that game belogs to
-    id creator_id               player id of game's creator
-    list opponent_score_pairs   tuples of opponent ids and score
-    
-    Return:
-    Game                        instance of SqNode subclass Game
+    Catcher for handling all Node Creation. We might want to
+    make a catcher for each creation type. We might also want
+    to make this more generic.
 
     """
 
-    return Game.create_game(league_id, creator_id, opponent_score_pairs)
+
+    def __init__(self):
+        """ Instantiate new CreateCatcher. """
+        pass
+
+
+    def create_game(league_id, creator_id, opponent_score_pairs):
+        """ Create new Game in database and return it.
+        
+        Required:
+        id league_id                league id that game belogs to
+        id creator_id               player id of game's creator
+        list opponent_score_pairs   tuples of opponent ids and score
+        
+        Return:
+        Game                        instance of SqNode subclass Game
+        
+        """
+        return Game.create_game(league_id, creator_id, opponent_score_pairs)
+
 

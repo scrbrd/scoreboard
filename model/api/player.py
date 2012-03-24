@@ -36,11 +36,9 @@ class Player(SqNode, Opponent):
 
 
     @property
-    def name(self, use_last_initial=False):
+    def name(self):
         """ Return this Player's name. """
-        return "{0} {1}".format(
-                self.first_name(),
-                self.last_name()[0] if use_last_initial else self.last_name())
+        return self.short_name
 
 
     @property
@@ -58,7 +56,17 @@ class Player(SqNode, Opponent):
     @property
     def short_name(self):
         """ Return this Player's first name and last initial. """
-        return self.name(True)
+        return "{0} {1}".format(
+                self.first_name,
+                self.last_name[0])
+
+
+    @property
+    def full_name(self):
+        """ Return this Player's first and last name. """
+        return "{0} {1}".format(
+                self.first_name,
+                self.last_name)
 
 
     def outgoing_edge_types(self):

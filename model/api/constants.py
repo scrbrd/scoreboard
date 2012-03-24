@@ -162,7 +162,7 @@ class _EdgeProperty(object):
     """ _EdgeProperty class to hold all Edge Properties. """
 
 
-    @api_constant
+    @constant
     def SCORE():
         """ SCORE is a Type of Edge Property. """
         return "SCORE"
@@ -217,7 +217,7 @@ class _APIConstant(object):
                 EDGE_TYPE.WON_BY : EDGE_TYPE.WON,
 
                 EDGE_TYPE.LOST : EDGE_TYPE.LOST_BY,
-                EDge_tyPE.LOST_BY : EDGE_TYPE.LOST,
+                EDGE_TYPE.LOST_BY : EDGE_TYPE.LOST,
 
                 EDGE_TYPE.TIED : EDGE_TYPE.TIED_BY,
                 EDGE_TYPE.TIED_BY : EDGE_TYPE.TIED,

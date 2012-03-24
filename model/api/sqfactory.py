@@ -34,7 +34,8 @@ def construct_node_and_edges(graph_node, graph_edges):
     """
 
     node = construct_node(graph_node)
-    node.set_edges(construct_edges(graph_node.edges()))
+    edges = construct_edges(graph_node.edges())
+    node.set_edges(edges)
 
     return node
 
@@ -106,7 +107,6 @@ def construct_edge(graph_edge):
     #    # TODO: raise an error...something went terribly wrong.
     #
     #return edge
-
     return SqEdge(graph_edge)
 
 
@@ -131,6 +131,6 @@ def construct_edges(graph_edges):
 
         # TODO: decide whether returning None on any failure is better?
         edges[type][id] = construct_edge(graph_edge)
-
+    
     return edges
 

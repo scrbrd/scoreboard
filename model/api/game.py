@@ -57,11 +57,12 @@ class Game(SqNode):
     def outcome(self):
         """ Return a list of score, opponent_id pairs high to low. """
         outcome = []
-
+ 
+        
         for edge_type in API_CONSTANT.RESULT_TYPES:
-            for edge in self.get_edges()[edge_type].values():
-                score = edge.properties()[EDGE_PROPERTY.SCORE]
-                opponent_id = edge.to_node_id()
+            for edge in self.get_edges().get(edge_type, {}).values():
+                score = edge.get_property(EDGE_PROPERTY.SCORE)
+                opponent_id = edge.to_node_id
                 outcome.append((score, opponent_id))
                 outcome.sort(key = lambda x: x[0], reverse=True)
 
@@ -237,7 +238,7 @@ class Game(SqNode):
             for opponent_id, score in result:
                 prototype_edges.extend(editor.prototype_edge_and_complement(
                     type,
-                    {"score": score},
+                    {EDGE_PROPERTY.SCORE: score},
                     opponent_id))
 
         return editor.create_node_and_edges(prototype_node, prototype_edges)
