@@ -32,4 +32,15 @@ def test2():
 
     print g.get_edges()[EDGE_TYPE.WON_BY].values()[0].properties()
 
-test1()
+def test3():
+    from model.app import catchers
+
+    cc = catchers.CreateCatcher()
+    l_id = 596
+    c_id = 600
+    osp = [(600, 3),(602, 0)]
+
+    g = cc.create_game(l_id, c_id, osp)
+    print g.id
+
+test3()

@@ -11,7 +11,6 @@ from exceptions import NotImplementedError
 from model.api.game import Game
 from model.api.league import League
 from model.api.opponent import Opponent
-from model.constants import GAMES, RANKINGS
 
 class Catcher(object):
     
@@ -174,7 +173,7 @@ class CreateCatcher(Catcher):
         pass
 
 
-    def create_game(league_id, creator_id, opponent_score_pairs):
+    def create_game(self, league_id, creator_id, opponent_score_pairs):
         """ Create new Game in database and return it.
         
         Required:
