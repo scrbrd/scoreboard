@@ -19,8 +19,8 @@ class RankingsHandler(BaseHandler):
     def get(self):
         """ Overload BaseHandler's HTTP GET responder. """
         
-        # FIXME - remove hardcoded league id
-        league_id = 596
+        # FIXME remove hardcoded league id
+        league_id = self.settings['league_id']
 
         # get ranking data from model
         rankings = catchers.RankingsCatcher(league_id) 

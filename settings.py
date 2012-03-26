@@ -10,6 +10,10 @@ import logconfig
 from view.modules.mobileviews import ListView
 from view.modules.mobileviews import ContentHeaderView
 
+# Application constants
+# FIXME - build this based on user
+LEAGUE = 643
+
 # Make filepaths relative to settings.
 path = lambda root,*a: os.path.join(root, *a)
 ROOT = os.path.dirname(os.path.abspath(__file__))
@@ -50,6 +54,7 @@ settings['template_loader'] = tornado.template.Loader(TEMPLATE_ROOT)
 settings['ui_modules'] = {
         'ListView': ListView, 
         'ContentHeaderView': ContentHeaderView}
+settings['league_id'] = LEAGUE
 
 SYSLOG_TAG = "boilerplate"
 SYSLOG_FACILITY = logging.handlers.SysLogHandler.LOG_LOCAL2

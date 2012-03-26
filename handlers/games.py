@@ -20,7 +20,7 @@ class GamesHandler(BaseHandler):
         """ Overload BaseHandler's HTTP GET responder. """
 
         # FIXME remove hardcoded league id
-        league_id = 596
+        league_id = self.settings['league_id']
         
         # get games data from model
         games = catchers.GamesCatcher(league_id)

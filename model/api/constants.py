@@ -28,31 +28,31 @@ class _NodeType(object):
     @constant
     def GAME():
         """ GAME is a Type of Node. """
-        return "GAME"
+        return "c_game"
 
 
     @constant
     def LEAGUE():
         """ LEAGUE is a Type of Node. """
-        return "LEAGUE"
+        return "c_league"
 
 
     @constant
     def PLAYER():
         """ PLAYER is a Type of Node. """
-        return "PLAYER"
+        return "c_player"
 
 
     @constant
     def TEAM():
         """ TEAM is a Type of Node. """
-        return "TEAM"
+        return "c_team"
 
 
     @constant
     def USER():
         """ USER is a Type of Node. """
-        return "USER"
+        return "c_user"
 
 
 class _EdgeType(object):
@@ -63,85 +63,85 @@ class _EdgeType(object):
     @constant
     def IN_LEAGUE():
         """ IN_LEAGUE is a Type of Edge. """
-        return "IN_LEAGUE"
+        return "c_in_league"
 
 
     @constant
     def HAS_LEAGUE_MEMBER():
         """ HAS_LEAGUE_MEMBER is a Type of Edge. """
-        return "HAS_LEAGUE_MEMBER"
+        return "c_has_league_member"
 
 
     @constant
     def SCHEDULED_IN():
         """ SCHEDULED_IN is a Type of Edge. """
-        return "SCHEDULED_IN"
+        return "c_scheduled_in"
 
 
     @constant
     def HAS_SCHEDULED():
         """ HAS_SCHEDULED is a Type of Edge. """
-        return "HAS_SCHEDULED"
+        return "c_has_scheduled"
     
 
     @constant
     def WON():
         """ WON is a Type of Edge. """
-        return "WON"
+        return "c_won"
 
 
     @constant
     def WON_BY():
         """ WON_BY is a Type of Edge. """
-        return "WON_BY"
+        return "c_won_by"
 
 
     @constant
     def LOST():
         """ LOST is a Type of Edge. """
-        return "LOST"
+        return "c_lost"
 
 
     @constant
     def LOST_BY():
         """ LOST_BY is a Type of Edge. """
-        return "LOST_BY"
+        return "c_lost_by"
 
 
     @constant
     def TIED():
         """ TIED is a Type of Edge. """
-        return "TIED"
+        return "c_tied"
 
 
     @constant
     def TIED_BY():
         """ TIED_BY is a Type of Edge. """
-        return "TIED_BY"
+        return "c_tied_by"
 
 
     @constant
     def PLAYED():
         """ PLAYED is a Type of Edge. """
-        return "PLAYED"
+        return "c_played"
 
 
     @constant
     def PLAYED_BY():
         """ PLAYED_BY is a Type of Edge. """
-        return "PLAYED_BY"
+        return "c_played_by"
 
 
     @constant
     def CREATED():
         """ CREATED is a Type of Edge. """
-        return "CREATED"
+        return "c_created"
 
 
     @constant
     def CREATED_BY():
         """ CREATED_BY is a Type of Edge. """
-        return "CREATED_BY"
+        return "c_created_by"
 
 
 # variables used to refer to Node and Edge Type Constants
@@ -165,7 +165,7 @@ class _EdgeProperty(object):
     @constant
     def SCORE():
         """ SCORE is a Type of Edge Property. """
-        return "SCORE"
+        return "c_score"
 
 
 # variables used to refer to Node and Edge Properties
