@@ -1,10 +1,12 @@
+{% from view.constants import TEMPLATE %}
+
 <!DOCTYPE html>
 <html>
 <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8">
     <meta 
-        name="viewport" 
-        content="width=device-width, initial-scale=1.0, user-scalable=0, minimum-scale=1.0, maximum-scale=1.0">
+            name="viewport" 
+            content="width=device-width, initial-scale=1.0, user-scalable=0, minimum-scale=1.0, maximum-scale=1.0">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black">
     
@@ -26,49 +28,45 @@
 </head>
 
 <body>
-    <div data-role="page" id="rankings" >
+    <div data-role="page" id="rankings">
 
-    <header
-        id="app_header"
-        data-role="header"
-        data-theme="sq-header">
-        <h1>SQOREBOARD</h1>
-            {% block content_header %}No content header requested.{% end %} 
-        <nav data-role="navbar">
-            <ul>
-                <li><a href="/rankings" class="ui-btn-active">Rankings</a></li>
-                <li><a href="/games">Games</a></li>
-            </ul>
-        </nav>
-    </header>
+        <header
+                id="app_header"
+                data-role="header"
+                data-theme="sq-header">
+            <h1>SQOREBOARD</h1>
+                {% block content_header %}No content header requested.{% end %} 
+            <nav data-role="navbar">
+                <ul>
+                    <li><a href="/rankings" class="ui-btn-active">Rankings</a></li>
+                    <li><a href="/games">Games</a></li>
+                </ul>
+            </nav>
+        </header>
 
-<div id="wrapper">
-    <div id="scroller" data-role="content" data-theme="sq-content" >
-        {% block page_content %}No page content requested.{% end %} 
-    </div>
-</div>    
-    <footer 
-        id="app_footer">
-    </footer>
-</div>
-<script 
-        type="text/javascript" 
-        src="http://code.jquery.com/jquery-1.7.1.min.js"></script>        
+        <div id="wrapper">
+            <div id="scroller" data-role="content" data-theme="sq-content" >
+                {% block page_content %}No page content requested.{% end %} 
+            </div>
+        </div>    
+        <footer 
+            id="app_footer">
+        </footer>
+    
+    </div> <!-- end page div -->
+    
+    <!-- Scripts Section -->
     <script 
-        type="text/javascript" 
-        src="http://code.jquery.com/mobile/1.1.0-rc.1/jquery.mobile-1.1.0-rc.1.min.js"></script>
+            type="text/javascript" 
+            src="http://code.jquery.com/jquery-1.7.1.min.js"></script>        
     <script 
-        type="text/javascript"
-        src="/static/js/vendor/iscroll.js"></script>
-    <!-- <script 
-        type="text/javascript" 
-        src="/static/js/vendor/jquery.easing.1.3.js"></script>
+            type="text/javascript" 
+            src="http://code.jquery.com/mobile/1.1.0-rc.1/jquery.mobile-1.1.0-rc.1.min.js">
+    </script>
     <script 
-        type="text/javascript" 
-        src="/static/js/vendor/jquery.mobile.scrollview.js"></script>
-    <script 
-        type="text/javascript" 
-        src="/static/js/vendor/scrollview.js"></script> -->
+            type="text/javascript"
+            src="/static/js/vendor/iscroll.js">
+    </script>
     <script type="text/javascript" src="/static/js/mobile.js"></script>        
 
 </body>

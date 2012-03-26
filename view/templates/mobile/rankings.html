@@ -7,6 +7,26 @@
 
 {# Rankings Content #}
 {% block page_content %}
-    {% set rankings_fields = ["name", "win_count"] %}
-    {% module ListView(rankings.ranks, rankings.rank_field, rankings_fields) %}
+
+    {# Rankings Row Fields - Primary #}
+    {% set name_tag = {
+            TEMPLATE.START_TAG: "<span class=\"content-title\">", 
+            TEMPLATE.DISPLAY_PROPERTY: "name", 
+            TEMPLATE.END_TAG: "</span>"} %}
+    {% set win_count_tag = {
+            TEMPLATE.START_TAG: "<strong>", 
+            TEMPLATE.DISPLAY_PROPERTY: "win_count", 
+            TEMPLATE.END_TAG: "</strong>"} %}
+
+    {# Rankings Row Creation #}
+    {% set rankings_fields = [name_tag, win_count_tag] %}
+
+    {# ListView #}
+    {% module ListView(
+            rankings.ranks, 
+            rankings_fields, 
+            rankings.rank_field, 
+            {}, 
+            {}) %}
+
 {% end %}

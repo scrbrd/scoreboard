@@ -92,7 +92,12 @@ class GamesCatcher(Catcher):
 
 
     def get_outcomes_by_game(self):
-        """ Return dict by game_id of outcome highest to lowest. """
+        """ Return dict by game_id of outcome highest to lowest. 
+        
+        Each outcome is a list of (score, Opponent) tuples ordered
+        by score from highest to lowest.
+
+        """
         
         # store score, Opponent tuples by game id for each game
         outcomes_by_game = {}
@@ -104,16 +109,17 @@ class GamesCatcher(Catcher):
             # replace opp_id with actual Opponent object from Game
             outcome_with_opponents = []
             for result in outcome:
-                score = result[0]
+                new_result = GenericModel()
+                new_result.score = result[0]
                 opponent_id = result[1]
-                outcome_with_opponents.append(
-                        (score, game.get_opponent(opponent_id)))
-            
+                new_result.opponent = game.get_opponent(opponent_id)
+                outcome_with_opponents.append(new_result)
+
             # save updated outcome for each game
             outcomes_by_game[game.id] = outcome_with_opponents
 
         return outcomes_by_game
-
+    
 
 class RankingsCatcher(Catcher):
         
@@ -187,4 +193,14 @@ class CreateCatcher(Catcher):
         """
         return Game.create_game(league_id, creator_id, opponent_score_pairs)
 
+
+class GenericModel(object):
+
+    """ Generic object for returning data that a catcher constructs. 
+
+    Common models should be added to the API.
+
+    """
+
+    pass
 

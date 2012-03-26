@@ -1,5 +1,8 @@
 {# Generic Content List #}
-{# Required: listed_entries, sort_field, display_fields (to show), numbered #}
+{# Required: listed_entries, sort_field, marked_up_fields, numbered #}
+
+{% from view.constants import TEMPLATE %}
+{% from view.templates import util %}
 
 {# Determine ordered or unordered list from parameters. #}
 {% set list_start = "<ul" %}
@@ -13,9 +16,30 @@
 {# Create list entries #}
 {% set list_start = list_start + list_start_static %}
 {% raw list_start %}
-{% for row in listed_entries %}
+{# each row is another entry in listed_entries #}
+{% for entry in primary_entries %}
     <li>
-        {% for field in display_fields %} {{ getattr(row, field) }} {% end %}
+
+        {# each primary field with mark up #}
+        {% for p_field in primary_fields %}
+            {% raw util.generate_tag(
+                    p_field[TEMPLATE.START_TAG],
+                    entry,
+                    p_field[TEMPLATE.DISPLAY_PROPERTY],
+                    p_field[TEMPLATE.END_TAG]) %}
+        {% end %}
+
+        {# each seconday entry and field #}
+        {% for s_elem in secondary_entries.get(entry.id, []) %}
+            {% for s_field in secondary_fields %}
+            {% raw util.generate_tag(
+                        s_field[TEMPLATE.START_TAG],
+                        s_elem,
+                        s_field[TEMPLATE.DISPLAY_PROPERTY],
+                        s_field[TEMPLATE.END_TAG]) %}
+            {% end %}
+        {% end %}
+
     </li>
 {% end %}
 {% raw list_end %}

@@ -3,10 +3,14 @@
 ...
 """
 import logging
-logger = logging.getLogger('boilerplate.' + __name__)
+
+from handlers.base import BaseHandler
 
 from model.app import catchers
-from handlers.base import BaseHandler
+
+# TODO figure out how logging works
+logger = logging.getLogger('boilerplate.' + __name__)
+
 
 class RankingsHandler(BaseHandler):
     
@@ -21,7 +25,7 @@ class RankingsHandler(BaseHandler):
         # get ranking data from model
         rankings = catchers.RankingsCatcher(league_id) 
 
-        # hand data over to view
+        # hand data over to view and render
         self.render("mobile/rankings.html", rankings=rankings)
         
 
