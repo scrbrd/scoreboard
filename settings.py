@@ -13,7 +13,6 @@ from view.modules.mobileviews import ListItemView
 from view.modules.mobileviews import RankListItemView, GameListItemView
 from view.modules.mobileviews import Header2View, ContentHeaderView
 
-
 # Application constants
 # FIXME - build this based on user
 LEAGUE = 643

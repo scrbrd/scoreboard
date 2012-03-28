@@ -1,17 +1,16 @@
-{% from view.constants import TEMPLATE %}
+{% extends ../base.html %}   
 
-<!DOCTYPE html>
-<html>
-<head>
-    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+
+{% block meta_header %}
     <meta 
             name="viewport" 
             content="width=device-width, initial-scale=1.0, user-scalable=0, minimum-scale=1.0, maximum-scale=1.0">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black">
-    
-    <title>SQOREBOARD</title>
+{% end %}
 
+
+{% block link_header %}
     <link 
         rel="stylesheet" 
         href="http://code.jquery.com/mobile/1.1.0-rc.1/jquery.mobile-1.1.0-rc.1.min.css" 
@@ -24,37 +23,13 @@
         type="text/css"
         media="screen,mobile" 
         charset="utf-8" />
+{% end %}
 
-</head>
 
-<body>
-    <div data-role="page" id="rankings">
+{% block body %}Must include Body.{% end %}
 
-        <header
-                id="app_header"
-                data-role="header"
-                data-theme="sq-header">
-            <h1>SQOREBOARD</h1>
-                {% block content_header %}No content header requested.{% end %} 
-            <nav data-role="navbar">
-                <ul>
-                    <li><a href="/rankings" class="ui-btn-active">Rankings</a></li>
-                    <li><a href="/games">Games</a></li>
-                </ul>
-            </nav>
-        </header>
 
-        <div id="wrapper">
-            <div id="scroller" data-role="content" data-theme="sq-content" >
-                {% block page_content %}No page content requested.{% end %} 
-            </div>
-        </div>    
-        <footer 
-            id="app_footer">
-        </footer>
-    
-    </div> <!-- end page div -->
-    
+{% block script %}
     <!-- Scripts Section -->
     <script 
             type="text/javascript" 
@@ -68,6 +43,4 @@
             src="/static/js/vendor/iscroll.js">
     </script>
     <script type="text/javascript" src="/static/js/mobile.js"></script>        
-
-</body>
-</html>
+{% end %}

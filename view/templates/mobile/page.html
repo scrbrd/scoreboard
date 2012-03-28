@@ -1,0 +1,31 @@
+{% extends base.html %}
+
+
+{% block body %}
+    <div data-role="page" id="rankings">
+
+        <header
+                id="app_header"
+                data-role="header"
+                data-theme="sq-header">
+            <h1>SQOREBOARD</h1>
+                {% block content_header %}No content header requested.{% end %} 
+            <nav data-role="navbar">
+                <ul>
+                    <li><a href="/rankings" class="ui-btn-active">Rankings</a></li>
+                    <li><a href="/games">Games</a></li>
+                </ul>
+            </nav>
+        </header>
+
+        <div id="wrapper">
+            <div id="scroller" data-role="content" data-theme="sq-content" >
+                {% block page_content %}No page content requested.{% end %} 
+            </div>
+        </div>    
+        <footer 
+            id="app_footer">
+        </footer>
+    
+    </div> <!-- end page div -->
+{% end %}
