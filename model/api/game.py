@@ -58,7 +58,6 @@ class Game(SqNode):
         """ Return a list of score, opponent_id pairs high to low. """
         outcome = []
  
-        
         for edge_type in API_CONSTANT.RESULT_TYPES:
             for edge in self.get_edges().get(edge_type, {}).values():
                 score = edge.get_property(EDGE_PROPERTY.SCORE)

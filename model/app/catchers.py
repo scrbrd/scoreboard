@@ -96,7 +96,9 @@ class GamesCatcher(Catcher):
         
         Each outcome is a list of (score, Opponent) tuples ordered
         by score from highest to lowest.
-
+        
+        # TODO remove this method if accessing outcomes directly in Game
+        
         """
         
         # store score, Opponent tuples by game id for each game

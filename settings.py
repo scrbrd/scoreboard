@@ -7,8 +7,12 @@ from tornado.options import define, options
 import environment
 import logconfig
 
-from view.modules.mobileviews import ListView
-from view.modules.mobileviews import ContentHeaderView
+from view.modules.mobileviews import OrderedListView
+from view.modules.mobileviews import RankingsListView, GamesListView
+from view.modules.mobileviews import ListItemView
+from view.modules.mobileviews import RankListItemView, GameListItemView
+from view.modules.mobileviews import Header2View, ContentHeaderView
+
 
 # Application constants
 # FIXME - build this based on user
@@ -52,7 +56,13 @@ settings['cookie_secret'] = "orangebeansproutcamps"
 settings['xsrf_cookies'] = True
 settings['template_loader'] = tornado.template.Loader(TEMPLATE_ROOT)
 settings['ui_modules'] = {
-        'ListView': ListView, 
+        'OrderedListView': OrderedListView,
+        'GamesListView': GamesListView,
+        'RankingsListView': RankingsListView,
+        'ListItemView': ListItemView,
+        'GameListItemView': GameListItemView,
+        'RankListItemView': RankListItemView,
+        'Header2View': Header2View,
         'ContentHeaderView': ContentHeaderView}
 settings['league_id'] = LEAGUE
 
