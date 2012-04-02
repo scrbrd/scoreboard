@@ -1,5 +1,3 @@
-
-var theScroll;
 var myScroll;
 
 $(document).ready(function loaded() {
