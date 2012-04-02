@@ -1,6 +1,7 @@
 """ Module: mobileviews
 
 Provide generic mobile views.
+
 """
 
 import xml.etree.cElementTree as ET
@@ -219,7 +220,7 @@ class ContentHeaderView(Header2View):
         content_header_elem = super(ContentHeaderView, self).html(
                 content_header.name)
         
-        content_header_elem.set("id", "content-header")
+        content_header_elem.set("id", "content_header")
 
         return content_header_elem
 
