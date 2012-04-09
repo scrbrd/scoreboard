@@ -1,3 +1,19 @@
 {% extends base.html %}
 
-{# FIXME extends mobile but not app_page #}
+
+{% block body %}
+    <div data-role="dialog" id="create-game">
+
+        <header 
+                id="dialog-header"
+                data-role="header"
+                data-theme="sq-header">
+            {% block dialog_header %}No Dialog Header requested.{% end %}
+        </header>
+
+        {% block dialog_content %}No dialog content requested.{% end %}
+
+        <footer id="dialog_footer"></footer>
+
+    </div> <!-- end dialog div -->
+{% end %}
