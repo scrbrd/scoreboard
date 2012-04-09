@@ -56,9 +56,9 @@ class SpanView(ElementView):
 
     def html(self, text, attributes={}):
         """ Generate and return a <span> element. """
-        # FIXME: returns <span text="foo" />, not <span>foo</span>
-        return ET.Element("span", attributes, text=text)
-
+        elem = ET.Element("span", attributes)
+        elem.text = text
+        return elem
 
 class ListView(ElementView):
 
@@ -156,8 +156,10 @@ class AView(ElementView):
 
     def html(self, text, attributes={}):
         """ Generate and return a <a> element. """
-        # FIXME: returns <a href="foo" text="bar />, not <a href="foo">bar</a>
-        return ET.Element("a", attributes, text=text)
+        elem = ET.Element("a", attributes)
+        elem.text = text
+        return elem
+
 
 class H1View(ElementView):
 
@@ -173,7 +175,6 @@ class H1View(ElementView):
         elem = ET.Element("h1")
 
         # FIXME move this to generic Element
-        # FIXME add attributes dictionary
         elem.text = text
 
         return elem
@@ -193,7 +194,6 @@ class H2View(ElementView):
         elem = ET.Element("h2")
 
         # FIXME move this to generic Element
-        # FIXME add attributes dictionary
         elem.text = text
         
         return elem
