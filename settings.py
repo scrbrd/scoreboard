@@ -7,11 +7,15 @@ from tornado.options import define, options
 import environment
 import logconfig
 
-from view.modules.mobileviews import OrderedListView
-from view.modules.mobileviews import RankingsListView, GamesListView
-from view.modules.mobileviews import ListItemView
-from view.modules.mobileviews import RankListItemView, GameListItemView
-from view.modules.mobileviews import Header2View, ContentHeaderView
+from view.modules.elementview import DivView, SpanView, NavView
+from view.modules.elementview import OLView, ULView, LIView
+from view.modules.elementview import H1View, H2View
+
+from view.modules.mobileview import AppHeaderView
+from view.modules.mobileview import ContextHeaderView, NavHeaderView
+
+from view.modules.mobileview import RankingsListView, GamesListView
+from view.modules.mobileview import RankListItemView, GameListItemView
 
 # Application constants
 # FIXME - build this based on user
@@ -55,14 +59,23 @@ settings['cookie_secret'] = "orangebeansproutcamps"
 settings['xsrf_cookies'] = True
 settings['template_loader'] = tornado.template.Loader(TEMPLATE_ROOT)
 settings['ui_modules'] = {
-        'OrderedListView': OrderedListView,
-        'GamesListView': GamesListView,
+        'DivView' : DivView,
+        'SpanView' : SpanView,
+        'NavView' : NavView,
+        'OLView': OLView,
+        'ULView': ULView,
+        'LIView': LIView,
+        'H1View': H1View,
+        'H2View': H2View,
+        'AppHeaderView': AppHeaderView,
+        'ContextHeaderView': ContextHeaderView,
+        'NavHeaderView': NavHeaderView,
         'RankingsListView': RankingsListView,
-        'ListItemView': ListItemView,
-        'GameListItemView': GameListItemView,
+        'GamesListView': GamesListView,
         'RankListItemView': RankListItemView,
-        'Header2View': Header2View,
-        'ContentHeaderView': ContentHeaderView}
+        'GameListItemView': GameListItemView
+        }
+
 settings['league_id'] = LEAGUE
 
 SYSLOG_TAG = "boilerplate"

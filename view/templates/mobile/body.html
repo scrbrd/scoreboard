@@ -1,0 +1,30 @@
+{% extends ../base.html %}
+
+
+{% block page %}
+    <div id="page">
+        {% block header %} EMPTY HEADER {% end %}
+        {% block content %} EMPTY CONTENT {% end %}
+        {% block footer %} EMPTY FOOTER {% end %}
+    </div>
+{% end %}
+
+
+{% block script %}
+    <script
+        type="text/javascript"
+        src="http://code.jquery.com/jquery-1.7.1.min.js">
+    </script>
+    <script
+        type="text/javascript"
+        src="http://code.jquery.com/mobile/1.1.0-rc.1/jquery.mobile-1.1.0-rc.1.min.js">
+    </script>
+    <script
+        type="text/javascript"
+        src="/static/js/vendor/iscroll.js">
+    </script>
+    <script
+        type="text/javascript"
+        src="/static/js/mobile.js">
+    </script>
+{% end %}

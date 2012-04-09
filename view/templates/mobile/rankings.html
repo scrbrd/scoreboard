@@ -1,14 +1,13 @@
 {% extends page.html %}
 
+
 {# Rankings Header #}
-{% block content_header %}
-    {% module ContentHeaderView(rankings.context_container) %}
+{% block context_header %}
+    {% module ContextHeaderView(rankings.context_container.name) %}
 {% end %}
 
+
 {# Rankings Content #}
-{% block page_content %}
-
-    {# RankingsListView #}
-    {% module RankingsListView(rankings) %}
-
+{% block context_content %}
+    {% module RankingsListView(rankings.ranks) %}
 {% end %}

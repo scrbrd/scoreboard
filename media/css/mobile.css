@@ -36,7 +36,7 @@ text-shadow:0 -1px 0 rgba(0,0,0,0.5);
 /* line-height:45px; */
 }
 
-#wrapper {
+#iscroll_wrapper {
 position:absolute;
 z-index:1;
 top:100px; bottom:40px; left:0;

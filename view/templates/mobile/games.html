@@ -1,16 +1,14 @@
 {% extends page.html %}
 
+
 {# Games Header #}
-{% block content_header %}
-    {% module ContentHeaderView(games.context_container) %}
+{% block context_header %}
+    {% module ContextHeaderView(games.context_container.name) %}
 {% end %}
+
 
 {# Games Content #}
-{% block page_content %}
-    
-    {# GamesListView #}
+{% block context_content %}
     {# FIXME set sort_field to some representation of created_ts #}
-    {% module GamesListView(games) %}
-
+    {% module GamesListView(games.games) %}
 {% end %}
-
