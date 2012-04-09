@@ -4,7 +4,7 @@
 {% block header %}
     <header>
         <hgroup>
-            {% module AppHeaderView("SQOREBOARD") %}
+            {# {% module AppHeaderView("SQOREBOARD") %} #}
             {% block context_header %} EMPTY CONTEXT HEADER {% end %} 
             {% module NavHeaderView() %}
         </hgroup>
@@ -13,7 +13,7 @@
 
 
 {% block content %}
-    <section id="content" data-role="content" data-theme="sq-content" >
+    <section id="content">
         <div id="iscroll_wrapper">
             {% block context_content %} EMPTY CONTEXT CONTENT {% end %} 
         </div>
@@ -22,5 +22,5 @@
 
 
 {% block footer %}
-    <footer></footer>
+    <!-- <footer></footer> -->
 {% end %}
