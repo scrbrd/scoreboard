@@ -3,18 +3,30 @@
 var App = Backbone.Router.extend({
 
     routes: {
-        "test2":    "test2"     // #test2
+        ":tab":     "load_tab",     // new tab
+        "":    "home"
     },
 
-    test2: function() {
-        console.log("clicked on test2");
+    load_tab: function(tab) {
+        console.log("clicked on tab");
         $.ajax({
             type: "GET",
-            url: "test2",
-        }).done(function(html) {
-            $('#scroller').html(html);
+            url: "a/" + tab,
+            success: function(html) {
+                update_context_content(html);
+            }
         });
+    },
+
+    home: function() {
+        console.log("no handler");
     }
+
 });
 
-console.log("App defined");
+// Updates the Context Content Tag with the new HTML
+function update_context_content(html) {
+    $('#iscroll_wrapper').html(html);
+
+}
+

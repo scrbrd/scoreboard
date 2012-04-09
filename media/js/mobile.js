@@ -1,4 +1,29 @@
-var myScrolls = [];
+/* global _, $, Backbone */
+
+// Instantiate iScroll objects
+var scroller_element = "content";
+var myScroll;
+$(document).ready(function loaded() {
+        myScroll = new iScroll(scroller_element);
+        document.addEventListener('touchmove', function (e) { e.preventDefault(); }, false);
+        document.addEventListener('DOMContentLoaded', function () { setTimeout(loaded, 200); }, false);
+});
+
+
+// Setup Ajax
+$.ajaxSetup({
+    cache: false
+});
+
+
+// Setup Backbone Router
+var app_router = new App;
+Backbone.history.start();
+
+
+
+
+/* var myScrolls = [];
 
 var myScroll = function () {
     var scroller_id = 'wrapper';
@@ -27,6 +52,7 @@ $(document).delegate('[data-role="page"]', 'pageshow', myScroll);
 $(document).delegate('[data-role="page"]', 'pagecreate', myScroll);
 $(window).bind('orientationchange', myScroll);
 
+*/
 //document.body.addEventListener(
 //    'touchmove',
 //    function(e) {
