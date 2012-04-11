@@ -3,12 +3,11 @@
 
 {# Games Header #}
 {% block context_header %}
-    {% module ContextHeaderView(games.context_container.name) %}
+    {% include components/context_header.html %}
 {% end %}
 
 
 {# Games Content #}
-{% block context_content %}
-    {# FIXME set sort_field to some representation of created_ts #}
-    {% module GamesListView(games.games) %}
+{% block content %}
+    {% include components/games.html %}
 {% end %}

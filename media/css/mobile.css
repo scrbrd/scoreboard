@@ -64,7 +64,7 @@ header a {
     border-top:1px solid #444;
 } */
 
-#content {
+#iscroll_wrapper {
     position:absolute; z-index:1;
     top:70px; bottom:0px; left:0;
     width:100%;
@@ -72,7 +72,7 @@ header a {
     overflow:auto;
 }
 
-#iscroll_wrapper {
+#content {
     position:absolute;
     z-index:1;
     /* top:100px; bottom:40px; left:0; */
@@ -81,7 +81,7 @@ header a {
     padding:0;
 }
 
-#iscroll_wrapper ol {
+#content ol {
     list-style: decimal inside;
     padding:0;
     margin:0;
@@ -89,7 +89,7 @@ header a {
     text-align:left;
 }
 
-#iscroll_wrapper li {
+#content li {
     padding:0px 10px;
     height:40px;
     line-height:40px;

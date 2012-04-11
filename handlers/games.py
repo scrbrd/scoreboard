@@ -19,11 +19,50 @@ class GamesHandler(BaseHandler):
     def get(self):
         """ Overload BaseHandler's HTTP GET responder. """
 
+        # check for ajax request or not
+        is_asynch = self.get_argument("asynch", False)
+        
         # FIXME remove hardcoded league id
         league_id = self.settings['league_id']
         
         # get games data from model
-        games = catchers.GamesCatcher(league_id)
+        games_model = catchers.GamesCatcher(league_id)
         
         # hand data over to view and render
-        self.render("mobile/games.html", games=games)
+        if is_asynch:
+            self._get_asynch(games_model)
+        else:
+            self._get_synch(games_model)
+
+
+    def _get_asynch(self, games_model):
+        """ Handle the asynchronous version of the games request. i
+        
+        Render both the context_header and the games components.
+
+        """
+            
+        context_header = self.render_string(
+                "mobile/components/context_header.html",
+                model=games_model)
+        content = self.render_string(
+                "mobile/components/games.html",
+                games_model=games_model)
+        
+        self.write({
+            "context_header": context_header,
+            "content": content})
+
+
+    def _get_synch(self, games_model):
+        """ Handle the synchronous version of the games request. 
+        
+        Render the full games page.
+
+        """
+
+        self.render(
+                "mobile/games.html", 
+                model=games_model, 
+                games_model=games_model)
+

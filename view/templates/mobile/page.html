@@ -1,7 +1,7 @@
 {% extends body.html %}
 
 
-{% block header %}
+{% block header_section %}
     <header>
         <hgroup>
             {# {% module AppHeaderView("SQOREBOARD") %} #}
@@ -12,15 +12,15 @@
 {% end %}
 
 
-{% block content %}
-    <section id="content">
-        <div id="iscroll_wrapper">
-            {% block context_content %} EMPTY CONTEXT CONTENT {% end %} 
-        </div>
-    </section>
+{% block content_section %}
+    <div id="iscroll_wrapper">
+        <section id="content">
+            {% block content %} EMPTY CONTEXT CONTENT {% end %} 
+        </section>
+    </div>
 {% end %}
 
 
-{% block footer %}
+{% block footer_section %}
     <!-- <footer></footer> -->
 {% end %}

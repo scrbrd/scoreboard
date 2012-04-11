@@ -1,19 +1,19 @@
 
 
-var App = Backbone.Router.extend({
+var AppRouter = Backbone.Router.extend({
 
     routes: {
-        ":tab":     "load_tab",     // new tab
-        "":    "home"
+        ":tab":     "load_tab", // new tab
+        "*splat":         "home"      // catch all
     },
 
     load_tab: function(tab) {
-        console.log("clicked on tab");
         $.ajax({
             type: "GET",
-            url: "a/" + tab,
+            url: tab, 
+            data: "asynch=True", // FIXME make this valueless
             success: function(html) {
-                update_context_content(html);
+                update_content(html.content);
             }
         });
     },
@@ -25,8 +25,8 @@ var App = Backbone.Router.extend({
 });
 
 // Updates the Context Content Tag with the new HTML
-function update_context_content(html) {
-    $('#iscroll_wrapper').html(html);
+function update_content(html) {
+    $('#content').html(html);
 
 }
 

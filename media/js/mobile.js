@@ -1,10 +1,10 @@
 /* global _, $, Backbone */
 
 // Instantiate iScroll objects
-var scroller_element = "content";
-var myScroll;
+var scroller_id = "iscroll_wrapper";
+var iScroll;
 $(document).ready(function loaded() {
-        myScroll = new iScroll(scroller_element);
+        iScroll = new iScroll(scroller_id);
         document.addEventListener('touchmove', function (e) { e.preventDefault(); }, false);
         document.addEventListener('DOMContentLoaded', function () { setTimeout(loaded, 200); }, false);
 });
@@ -17,8 +17,10 @@ $.ajaxSetup({
 
 
 // Setup Backbone Router
-var app_router = new App;
-Backbone.history.start();
+var app = new AppRouter;
+Backbone.history.start({
+        silent: true
+});
 
 
 

@@ -3,11 +3,11 @@
 
 {# Rankings Header #}
 {% block context_header %}
-    {% module ContextHeaderView(rankings.context_container.name) %}
+    {% include components/context_header.html %}
 {% end %}
 
 
 {# Rankings Content #}
-{% block context_content %}
-    {% module RankingsListView(rankings.ranks) %}
+{% block content %}
+    {% include components/rankings.html %}
 {% end %}

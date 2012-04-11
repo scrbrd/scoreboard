@@ -38,7 +38,7 @@ class Catcher(object):
    
 
     @property
-    def context_container(self):
+    def context(self):
         """ Context/Container of fetched data. """
         return self._context
 
