@@ -9,6 +9,20 @@ $(document).ready(function loaded() {
         document.addEventListener('DOMContentLoaded', function () { setTimeout(loaded, 200); }, false);
 });
 
+// Update content component and iscroll after an ajax update 
+function update_content_with_iscroll(html) {
+    $('#content').html(html);
+    // scroll to x, y, time in mss
+    iScroll.scrollTo(0, 0, 0);
+    $('#content').fadeIn('fast');
+    iScroll.refresh();
+}
+
+// Hides the Content Tag
+function hide_content() {
+    $('#content').fadeOut(0);
+}
+
 
 // Setup Ajax
 $.ajaxSetup({

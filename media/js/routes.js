@@ -12,8 +12,11 @@ var AppRouter = Backbone.Router.extend({
             type: "GET",
             url: tab, 
             data: "asynch=True", // FIXME make this valueless
+            beforeSend: function() {
+                hide_content();
+            },
             success: function(html) {
-                update_content(html.content);
+                update_content_with_iscroll(html.content);
             }
         });
     },
@@ -24,9 +27,8 @@ var AppRouter = Backbone.Router.extend({
 
 });
 
-// Updates the Context Content Tag with the new HTML
-function update_content(html) {
-    $('#content').html(html);
 
-}
+
+
+
 
