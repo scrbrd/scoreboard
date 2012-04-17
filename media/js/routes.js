@@ -4,10 +4,11 @@ var AppRouter = Backbone.Router.extend({
 
     routes: {
         ":tab":     "load_tab", // new tab
-        "*splat":         "home"      // catch all
+        "*error":         "error"      // error catch all
     },
 
     load_tab: function(tab) {
+        console.log("ajax load tab: " + tab);
         $.ajax({
             type: "GET",
             url: tab, 
@@ -21,14 +22,10 @@ var AppRouter = Backbone.Router.extend({
         });
     },
 
-    home: function() {
-        console.log("no handler");
+    error: function(error) {
+        console.log("no handler: " + error);
     }
 
 });
-
-
-
-
 
 

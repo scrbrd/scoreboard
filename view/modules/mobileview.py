@@ -36,8 +36,8 @@ class NavHeaderView(NavView):
     def render(self):
         """ Render the nav header as a <nav> and nested <ul>. """
         nav_items = {
-                "Rankings" : "#rankings",
-                "Games" : "#games"
+                "Rankings" : "/rankings",
+                "Games" : "/games"
                 }
         return super(NavHeaderView, self).render(nav_items)
 

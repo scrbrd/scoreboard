@@ -38,7 +38,7 @@ class Player(SqNode, Opponent):
     @property
     def name(self):
         """ Return this Player's name. """
-        return self.short_name
+        return self.full_name
 
 
     @property
