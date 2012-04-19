@@ -36,7 +36,7 @@ class RankingsHandler(BaseHandler):
 
 
     def _get_asynch(self, rankings_model):
-        """ Handle the asynchronous version of the rankings request. i
+        """ Handle the asynchronous version of the rankings request.
         
         Render both the context_header and the rankings components.
 

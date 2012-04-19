@@ -21,8 +21,9 @@ class ContextHeaderView(H2View):
 
     """ Context header extending <h2> in the H2View. """
 
-    def html(self, text):
+    def html(self, context):
         """ Generate and return the content header block element. """
+        text = "{0}: {1}".format(context.id, context.name)
         elem = super(ContextHeaderView, self).html(text)
         # FIXME: do this with type+id to guarantee uniqueness
         elem.set("id", "context_header-{0}".format(text))
@@ -35,10 +36,10 @@ class NavHeaderView(NavView):
 
     def render(self):
         """ Render the nav header as a <nav> and nested <ul>. """
-        nav_items = {
-                "Rankings" : "/rankings",
-                "Games" : "/games"
-                }
+        nav_items = [
+                ("Rankings", "/rankings", "link"),
+                ("+", "/create/game", "dialog-link route-bypass"),
+                ("Games", "/games", "link")]
         return super(NavHeaderView, self).render(nav_items)
 
 
@@ -71,21 +72,22 @@ class GameListItemView(LIView):
         # get results' Opponents' names, results' scores
         # TODO organize this code using our framework, hide id
         results_val = ""
-        for result in game.outcome():
-            score = result[0]
-            opp_id = result[1]
+        for opponent_score in game.outcome():
+            score = opponent_score["score"]
+            opp_id = opponent_score["id"]
             name = game.get_opponent(opp_id).name
             results_val = "{0}{1} {2}, ".format(
                     results_val,
                     name,
                     score)
+        
         results_val = results_val[:-2]
         
         results_val = ", ".join(
                 "{name} {score}".format(
-                        score=score, 
-                        name=game.get_opponent(opp_id).name)
-                for (score, opp_id) in game.outcome())
+                        score=opp_score["score"], 
+                        name=game.get_opponent(opp_score["id"]).name)
+                for opp_score in game.outcome())
       
         # FIXME which results_val does Warman like better?
 

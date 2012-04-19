@@ -136,8 +136,11 @@ class NavView(ElementView):
         # FIXME: does this belong here?
         # FIXME: build a URL class to formalize these anchors
         anchors = []
-        for text, href in nav_items.items():
-            anchors.append(AView(self).html(text, {"href" : href}))
+        for item in nav_items:
+            text = item[0]
+            href = item[1]
+            clss = item[2]
+            anchors.append(AView(self).html(text, {"href" : href, "class": clss}))
         
         ul_elem = ULView(self).html(anchors)
         nav_elem.append(ul_elem)

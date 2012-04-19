@@ -181,21 +181,22 @@ class CreateCatcher(Catcher):
         pass
 
 
-    def create_game(self, league_id, creator_id, opponent_score_pairs):
+    def create_game(self, league_id, creator_id, game_score):
         """ Create new Game in database and return it.
         
         Required:
-        id league_id                league id that game belogs to
-        id creator_id               player id of game's creator
-        list opponent_score_pairs   tuples of opponent ids and score
+        id      league_id       league id that game belogs to
+        id      creator_id      player id of game's creator
+        list    game_score      final score of a game
+                                [{"id": VALUE, "score": VALUE}]
         
         Return:
-        Game                        instance of SqNode subclass Game
+        Game                    instance of SqNode subclass Game
         
         """
-        return Game.create_game(league_id, creator_id, opponent_score_pairs)
+        return Game.create_game(league_id, creator_id, game_score)
 
-
+# FIXME remove this class
 class GenericModel(object):
 
     """ Generic object for returning data that a catcher constructs. 
