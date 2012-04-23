@@ -154,7 +154,7 @@ class RankingsCatcher(Catcher):
 
 
     @property
-    def ranks(self):
+    def rankings(self):
         """ Return the ranked objects. """
         return self._opponents
     

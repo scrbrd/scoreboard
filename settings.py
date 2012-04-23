@@ -7,15 +7,9 @@ from tornado.options import define, options
 import environment
 import logconfig
 
-from view.modules.elementview import DivView, SpanView, NavView
-from view.modules.elementview import OLView, ULView, LIView
-from view.modules.elementview import H1View, H2View
+from view.modules.components import UIAppHeader, UIContextHeader, UINavHeader
+from view.modules.components import UIGamesList, UIRankingsList
 
-from view.modules.mobileview import AppHeaderView
-from view.modules.mobileview import ContextHeaderView, NavHeaderView
-
-from view.modules.mobileview import RankingsListView, GamesListView
-from view.modules.mobileview import RankListItemView, GameListItemView
 
 # Application constants
 # FIXME - build this based on user
@@ -59,21 +53,11 @@ settings['cookie_secret'] = "orangebeansproutcamps"
 settings['xsrf_cookies'] = False
 settings['template_loader'] = tornado.template.Loader(TEMPLATE_ROOT)
 settings['ui_modules'] = {
-        'DivView' : DivView,
-        'SpanView' : SpanView,
-        'NavView' : NavView,
-        'OLView': OLView,
-        'ULView': ULView,
-        'LIView': LIView,
-        'H1View': H1View,
-        'H2View': H2View,
-        'AppHeaderView': AppHeaderView,
-        'ContextHeaderView': ContextHeaderView,
-        'NavHeaderView': NavHeaderView,
-        'RankingsListView': RankingsListView,
-        'GamesListView': GamesListView,
-        'RankListItemView': RankListItemView,
-        'GameListItemView': GameListItemView
+        'UIAppHeader' : UIAppHeader,
+        'UIContextHeader' : UIContextHeader,
+        'UINavHeader' : UINavHeader,
+        'UIRankingsList' : UIRankingsList,
+        'UIGamesList' : UIGamesList
         }
 
 settings['league_id'] = LEAGUE

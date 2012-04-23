@@ -2,6 +2,7 @@
 
 ...
 """
+
 import logging
 
 from handlers.base import BaseHandler
@@ -13,8 +14,9 @@ logger = logging.getLogger('boilerplate.' + __name__)
 
 
 class GamesHandler(BaseHandler):
-   
+
     """ Render Games List Page. """
+
 
     def get(self):
         """ Overload BaseHandler's HTTP GET responder. """
@@ -35,34 +37,34 @@ class GamesHandler(BaseHandler):
             self._get_synch(games_model)
 
 
-    def _get_asynch(self, games_model):
+    def _get_asynch(self, model):
         """ Handle the asynchronous version of the games request. i
         
         Render both the context_header and the games components.
 
         """
             
+        # TODO: turn this hardcoded file path into a constant
         context_header = self.render_string(
                 "mobile/components/context_header.html",
-                model=games_model)
+                model=model)
+        # TODO: turn this hardcoded file path into a constant
         content = self.render_string(
                 "mobile/components/games.html",
-                games_model=games_model)
+                model=model)
         
         self.write({
             "context_header": context_header,
             "content": content})
 
 
-    def _get_synch(self, games_model):
+    def _get_synch(self, model):
         """ Handle the synchronous version of the games request. 
         
         Render the full games page.
 
         """
 
-        self.render(
-                "mobile/games.html", 
-                model=games_model, 
-                games_model=games_model)
+        # TODO: turn this hardcoded file path into a constant
+        self.render("mobile/games.html", model=model)
 

@@ -2,6 +2,7 @@
 
 ...
 """
+
 import logging
 
 from handlers.base import BaseHandler
@@ -15,10 +16,11 @@ logger = logging.getLogger('boilerplate.' + __name__)
 class RankingsHandler(BaseHandler):
     
     """ Render Rankings Page. """
-    
+
+
     def get(self):
         """ Overload BaseHandler's HTTP GET responder. """
-       
+
         # check for ajax request or not
         is_asynch = bool(self.get_argument("asynch", False))
 
@@ -35,35 +37,32 @@ class RankingsHandler(BaseHandler):
             self._get_synch(rankings_model)
 
 
-    def _get_asynch(self, rankings_model):
+    def _get_asynch(self, model):
         """ Handle the asynchronous version of the rankings request.
         
         Render both the context_header and the rankings components.
 
         """
-            
+
         context_header = self.render_string(
                 "mobile/components/context_header.html",
-                model=rankings_model)
+                model=model)
         content = self.render_string(
                 "mobile/components/rankings.html",
-                rankings_model=rankings_model)
-        
+                model=model)
+
         self.write({
             "context_header": context_header,
             "content": content})
 
 
-    def _get_synch(self, rankings_model):
+    def _get_synch(self, model):
         """ Handle the synchronous version of the rankings request. 
         
         Render the full rankings page.
 
         """
 
-        self.render(
-                "mobile/rankings.html", 
-                model=rankings_model,
-                rankings_model=rankings_model)
-
+        # TODO: turn this hardcoded file path into a constant
+        self.render("mobile/rankings.html", model=model)
 
