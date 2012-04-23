@@ -3,7 +3,6 @@ from handlers.login import LoginHandler
 from handlers.games import GamesHandler
 from handlers.rankings import RankingsHandler
 from handlers.create import CreateGameHandler
-from handlers.facebooktest import FacebookTestHandler
 
 url_patterns = [
     (r"/", HomeHandler),
@@ -11,5 +10,4 @@ url_patterns = [
     (r"/games", GamesHandler),
     (r"/rankings", RankingsHandler),
     (r"/create/game", CreateGameHandler),
-    (r"/", FacebookTestHandler),
 ]
