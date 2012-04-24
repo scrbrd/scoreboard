@@ -73,7 +73,7 @@ class NavHeaderLI(LI):
         # have a Link class [and an Item interface or some such thing for it
         # to implement] we will just be accessing properties there. this makes
         # it more obvious what to change.
-        a.set_classes(item["class"])
+        a.append_class(item["class"])
         span.append_child(a.element())
 
 

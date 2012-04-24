@@ -22,8 +22,8 @@ All Element subclasses have access to and may override:
     def set_id(self, id)
     def classes(self)
     def set_classes(self, classes)
-    def append_class(self, c)
-    def append_classes(self, c)
+    def append_class(self, clss)
+    def append_classes(self, clss)
     def href(self)
     def set_href(self, href)
     def children(self)
@@ -221,17 +221,17 @@ class Element(object):
         self.element().set(HTML_ATTRIBUTE.CLASS, class_delimiter.join(classes))
 
 
-    def append_class(self, c):
+    def append_class(self, clss):
         """ Add a css class for this element. """
         classes = self.classes()
-        classes.append(c)
+        classes.append(clss)
         self.set_classes(classes)
 
 
-    def append_classes(self, c):
+    def append_classes(self, clss):
         """ Add multiple css classes for this element. """
         classes = self.classes()
-        classes.extend(c)
+        classes.extend(clss)
         self.set_classes(classes)
 
 

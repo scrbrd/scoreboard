@@ -3,6 +3,7 @@
 Handle all incoming requests for object creation.
 
 """
+
 import logging
 import urllib
 import json
@@ -18,6 +19,7 @@ logger = logging.getLogger('boilerplate.' + __name__)
 class CreateGameHandler(BaseHandler):
 
     """ Render Create Game Dialog. """
+
 
     def post(self):
         """ Overload BaseHandler's HTTP GET responder. """
