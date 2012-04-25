@@ -30,6 +30,27 @@ class ContextHeader(H2):
         self.set_text("{0} : {1}".format(context.id, context.name))
 
 
+class NavHeader(Nav):
+
+    """ Nav header extending <nav>. """
+
+
+    def __init__(self, items, special_item=None, special_item_index=0):
+        """ Construct a nav header element tree. """
+        super(NavHeader, self).__init__(
+                items,
+                special_item,
+                special_item_index)
+
+        # TODO: is there css we want applied to this class?
+        #self.append_classes([])
+
+
+    def set_list(self, items):
+        """ Construct and add the NavUL list for this NavHeader. """
+        self.append_child(NavUL(items).element())
+
+
 class NavUL(UL):
 
     """ Nav header extending <nav>. """

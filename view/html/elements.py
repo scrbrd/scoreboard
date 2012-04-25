@@ -441,13 +441,18 @@ class Nav(Element):
         """ Construct a <nav>. """
         super(Nav, self).__init__(HTML_TAG.NAV)
 
-        #if special_item is not None:
-        #    items.insert(special_item_index, special_item)
+        if special_item is not None:
+            items.insert(special_item_index, special_item)
 
-        self.append_child(NavUL(items).element())
+        self.set_list(items)
 
         # TODO: is there css we want applied even to this base class?
         #self.append_classes([])
+
+
+    def set_list(self, items):
+        """ Construct and add the list for this <nav>. """
+        self.append_child(UL(items).element())
 
 
 class A(Element):

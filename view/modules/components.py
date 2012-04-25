@@ -24,7 +24,7 @@ import tornado.web
 
 from html.elements import Element
 from html.mobile import AppHeader, ContextHeader
-from html.mobile import NavUL, GamesOL, RankingsOL
+from html.mobile import NavHeader, GamesOL, RankingsOL
 
 
 class UIAppHeader(tornado.web.UIModule):
@@ -67,18 +67,14 @@ class UINavHeader(tornado.web.UIModule):
     def render(self, model=None):
         """ Render a Nav Header. """
 
-        # TODO: stop hardcoding...build a URL class and use href constants
+        # TODO: stop hardcoding all parameters to NavHeader...build a URL
+        # class and use href constants and use a constant for index
 
-        links = [
+        nav_links = [
                 {
                     "text" : "Rankings",
                     "href" : "/rankings",
                     "class" : "link"
-                    },
-                {
-                    "text" : "+",
-                    "href" : "/create/game",
-                    "class" : "dialog-link route-bypass"
                     },
                 {
                     "text" : "Games",
@@ -87,7 +83,18 @@ class UINavHeader(tornado.web.UIModule):
                     }
                 ]
 
-        element_tree = NavUL(links).element()
+        create_link = {
+                    "text" : "+",
+                    "href" : "/create/game",
+                    "class" : "dialog-link route-bypass"
+                    }
+
+        create_link_index = 1
+
+        element_tree = NavHeader(
+                nav_links,
+                create_link,
+                create_link_index).element()
 
         return Element.to_string(element_tree)
 
