@@ -9,23 +9,7 @@
     </div>
 {% end %}
 
-
-{% block script %}
-    <script
-        type="text/javascript"
-        src="http://code.jquery.com/jquery-1.7.1.min.js">
-    </script>
-    <!-- <script
-        type="text/javascript"
-        src="http://code.jquery.com/mobile/1.1.0-rc.1/jquery.mobile-1.1.0-rc.1.min.js">
-    </script> -->
-    <script type="text/javascript" src="/static/js/vendor/iscroll.js">
-    </script>
-    <script type="text/javascript" src="/static/js/vendor/underscore-min.js">
-    </script>
-    <script type="text/javascript" src="/static/js/vendor/backbone-min.js">
-    </script>
-    <script type="text/javascript" src="/static/js/scroll-fix.js"></script>
-    <script type="text/javascript" src="/static/js/routes.js"></script>
-    <script type="text/javascript" src="/static/js/mobile.js"></script>
+{% block dialog %}
+    <div id="dialog"></div>
 {% end %}
+
