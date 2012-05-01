@@ -9,7 +9,7 @@
 define(
     [
         "jQuery",
-        "constants",                         // constants.js
+        "js/constants",                         // constants.js
         "domReady!",                        // only call when DOM is ready
         "order!libs/iscroll/iscroll-min",
     ], 

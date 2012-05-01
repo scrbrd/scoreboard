@@ -11,8 +11,8 @@ define(
         // Aliases from main.js to module versions of packages
         "jQuery",
         "Backbone",
-        "constants",
-        "crud",
+        "js/constants",
+        "js/crud",
     ],
     function($, Backbone, Constants, Crud) {
 

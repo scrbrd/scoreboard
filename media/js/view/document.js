@@ -11,10 +11,10 @@ define(
         // Aliases from main.js to module versions of packages
         "jQuery",
         "Backbone",
-        "constants",
+        "js/constants",
         "iScroll",
         "view/dialog",
-        "text!html/dialog.html"     // html of dialog screen
+        "text!/dialog/creategame",
     ],
     function($, Backbone, Constants, Scroller, DialogView, dialog_html) {
 

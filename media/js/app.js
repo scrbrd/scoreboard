@@ -12,7 +12,7 @@ define(
         // Aliases from main.js to module versions of packages
         "jQuery",
         "view/document",
-        "router",
+        "js/router",
     ],
     function($, DocView, Router) {
 

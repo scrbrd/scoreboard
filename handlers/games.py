@@ -38,7 +38,7 @@ class GamesHandler(QueryHandler):
 
 
     def _get_asynch(self, model):
-        """ Handle the asynchronous version of the games request. i
+        """ Handle the asynchronous version of the games request.
         
         Render both the context_header and the games components.
 

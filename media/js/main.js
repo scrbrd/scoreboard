@@ -9,12 +9,20 @@
 
 // these shortcuts will be used in application files
 require.config({
+    baseUrl: "/",
+
     paths: {
         // TODO - apparently there is an AMD version of jquery
-        jQuery: "libs/jquery/jquery",
-        Underscore: "libs/underscore/underscore",
-        Backbone: "libs/backbone/backbone",
-        iScroll: "libs/iscroll/iscroll"
+        jQuery: "static/js/libs/jquery/jquery",
+        Underscore: "static/js/libs/underscore/underscore",
+        Backbone: "static/js/libs/backbone/backbone",
+        iScroll: "static/js/libs/iscroll/iscroll",
+        js: "static/js",
+        libs: "static/js/libs",
+        view: "static/js/view",
+        order: "static/js/libs/require/order",
+        text: "static/js/libs/require/text",
+        domReady: "static/js/libs/require/domReady"
     }
 });
 
@@ -22,7 +30,7 @@ require.config({
 require(
     [
         // all app logic
-        "app",
+        "js/app",
 
         // non-AMD 'modules'
         "order!libs/jquery/jquery-min", 

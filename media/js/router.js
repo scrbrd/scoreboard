@@ -30,11 +30,13 @@ define(
                     url: tab, 
                     data: {"asynch": true},
                     beforeSend: function() {
-                        this.doc_view.hide_content();
+                        DocView.get_document_view().hide_content();
                     },
                     success: function(json_response) {
-                        this.doc_view.update_content(json_response.content);
-                        this.doc_view.update_context(json_response.context_header);
+                        DocView.get_document_view().update_content(
+                                json_response.content);
+                        DocView.get_document_view().update_context(
+                                json_response.context_header);
                     }
                 });
             },
@@ -42,10 +44,6 @@ define(
             error: function(error) {
                 console.log("no handler: " + error);
             },
-
-            doc_view: function() {
-                return DocView.get_document_view();
-            }
 
         });
 
