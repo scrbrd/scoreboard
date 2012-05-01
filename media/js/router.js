@@ -23,7 +23,6 @@ define(
                 "*error":           "error"         // error catch all
             },
 
-
             load_tab: function(tab) {
                 console.log("ajax load tab: " + tab);
                 $.ajax({
@@ -31,17 +30,21 @@ define(
                     url: tab, 
                     data: {"asynch": true},
                     beforeSend: function() {
-                        DocView.hide_content();
+                        this.doc_view.hide_content();
                     },
                     success: function(json_response) {
-                        DocView.update_content(json_response.content);
-                        DocView.update_context(json_response.context_header);
+                        this.doc_view.update_content(json_response.content);
+                        this.doc_view.update_context(json_response.context_header);
                     }
                 });
             },
 
             error: function(error) {
                 console.log("no handler: " + error);
+            },
+
+            doc_view: function() {
+                return DocView.get_document_view();
             }
 
         });

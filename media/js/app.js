@@ -11,11 +11,10 @@ define(
     [
         // Aliases from main.js to module versions of packages
         "jQuery",
-        "constants",
         "view/document",
         "router",
     ],
-    function($, Constants, DocView, Router) {
+    function($, DocView, Router) {
 
         // setup ajax and initialize Route and Views
         function initialize() {
@@ -29,7 +28,7 @@ define(
 
             // Post DOM Loaded Initialization 
             $(function() {
-                DocView.initialize();
+                doc_view = DocView.get_document_view();
                 Router.initialize(true); // pushstate = true
                 // TODO remove facebook's #_=_ insertion
             });

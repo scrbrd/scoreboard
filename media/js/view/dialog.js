@@ -18,11 +18,13 @@ define(
 
         var DialogView = Backbone.View.extend({
            
-            
-            initialize: function(dialog_html, page_height) {
+            // Required:
+            // string   html            html to add to the dialog id
+            // int      page_height     height that dialog should be
+            initialize: function() {
                 this.$el.hide(); //hide dialog section
-                this.$el.html(dialog_html); // insert html
-                this.$el.height(page_height); // set the correct height
+                this.$el.append(this.options.html); // insert html
+                this.$el.height(this.options.page_height); // set the correct height
             },
 
             parameters: function() {
@@ -56,7 +58,7 @@ define(
 
         });
 
-
+        
         return DialogView;
     }
 );

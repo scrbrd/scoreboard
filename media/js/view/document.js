@@ -18,6 +18,7 @@ define(
     ],
     function($, Backbone, Constants, Scroller, DialogView, dialog_html) {
 
+        // DocView does basic Document Manipulation
         var DocView = Backbone.View.extend({
            
             // This View will hold the body
@@ -58,8 +59,11 @@ define(
             // Add dialog to DOM
             set_dialog: function(dialog_html) {
                 var page_height = $(Constants.PAGE_SELECTOR).height(); // page height
-                create_game_dialog = new DialogView({el: Constants.DIALOG_SELECTOR});
-                create_game_dialog.initialize(dialog_html, page_height);
+                create_game_dialog = new DialogView({
+                    el: Constants.DIALOG_SELECTOR,
+                    html: dialog_html,
+                    height: page_height
+                });
                 return create_game_dialog;
             }, 
 
@@ -75,8 +79,22 @@ define(
 
         });
 
+        // Singleton DocView
+        var doc_view = null;
 
-        return new DocView();
+        // Singleton accessor to DocView 
+        // Will only initialize on first request
+        function get_document_view() {
+            if (doc_view == null) {
+                doc_view = new DocView();
+            }
+            return doc_view;
+        }
+
+        // return module for DocView access
+        return {
+            get_document_view: get_document_view
+        };
     }
 );
 
