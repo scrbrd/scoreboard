@@ -13,7 +13,7 @@ from view.modules.components import UIGamesList, UIRankingsList
 
 # Application constants
 # FIXME - build this based on user
-LEAGUE = 643
+LEAGUE = 693
 
 # Make filepaths relative to settings.
 path = lambda root,*a: os.path.join(root, *a)

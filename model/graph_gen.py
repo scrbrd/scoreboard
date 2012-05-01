@@ -7,6 +7,8 @@ import random
 from copy import copy
 
 from model.api.constants import NODE_TYPE, EDGE_TYPE
+from model.api.constants import NODE_PROPERTY, EDGE_PROPERTY
+
 from model.api import editor, loader
 from model.api.game import Game
 
@@ -15,7 +17,10 @@ NUMBER_OF_GAMES = 30
 
 
 # LEAGUE CREATION
-proto = editor.prototype_node(NODE_TYPE.LEAGUE, {"name": "The Banana Stand"})
+# TODO: there should be a static League function for prototyping a League
+proto = editor.prototype_node(
+        NODE_TYPE.LEAGUE,
+        {NODE_PROPERTY.NAME: "The Banana Stand"})
 league = editor.create_node_and_edges(proto, [])
 
 print("League ({0}) created successfully.".format(league.id))
@@ -23,21 +28,21 @@ print("League ({0}) created successfully.".format(league.id))
 
 # PLAYER CREATION
 players = []
-players.append({"first_name": "Jon", "last_name": "Warman"})
-players.append({"first_name": "Bobby", "last_name": "Kellogg"})
-players.append({"first_name": "Evan", "last_name": "Hammer"})
-players.append({"first_name": "Bryan", "last_name": "Smokey"})
-players.append({"first_name": "Tom", "last_name": "Greenwood"})
-players.append({"first_name": "Tom", "last_name": "Grant"})
-players.append({"first_name": "Zaphod", "last_name": "Beeblebrox"})
-players.append({"first_name": "Blue", "last_name": "Steel"})
-players.append({"first_name": "Jennifer", "last_name": "Clone"})
-players.append({"first_name": "Melissa", "last_name": "Merrill"})
-players.append({"first_name": "Rachael", "last_name": "Rosen"})
-players.append({"first_name": "Alia", "last_name": "Atreides"})
-players.append({"first_name": "Asa", "last_name": "Wildfire"})
-players.append({"first_name": "Jeremy", "last_name": "Lin"})
-players.append({"first_name": "Corduroy", "last_name": "Jackson"})
+players.append({NODE_PROPERTY.FIRST_NAME: "Jon",        NODE_PROPERTY.LAST_NAME: "Warman"})
+players.append({NODE_PROPERTY.FIRST_NAME: "Bobby",      NODE_PROPERTY.LAST_NAME: "Kellogg"})
+players.append({NODE_PROPERTY.FIRST_NAME: "Evan",       NODE_PROPERTY.LAST_NAME: "Hammer"})
+players.append({NODE_PROPERTY.FIRST_NAME: "Leigh",      NODE_PROPERTY.LAST_NAME: "Salem"})
+players.append({NODE_PROPERTY.FIRST_NAME: "Tom",        NODE_PROPERTY.LAST_NAME: "Greenwood"})
+players.append({NODE_PROPERTY.FIRST_NAME: "Tom",        NODE_PROPERTY.LAST_NAME: "Grant"})
+players.append({NODE_PROPERTY.FIRST_NAME: "Zaphod",     NODE_PROPERTY.LAST_NAME: "Beeblebrox"})
+players.append({NODE_PROPERTY.FIRST_NAME: "Blue",       NODE_PROPERTY.LAST_NAME: "Steel"})
+players.append({NODE_PROPERTY.FIRST_NAME: "Jennifer",   NODE_PROPERTY.LAST_NAME: "Clone"})
+players.append({NODE_PROPERTY.FIRST_NAME: "Melissa",    NODE_PROPERTY.LAST_NAME: "Merrill"})
+players.append({NODE_PROPERTY.FIRST_NAME: "Rachael",    NODE_PROPERTY.LAST_NAME: "Rosen"})
+players.append({NODE_PROPERTY.FIRST_NAME: "Eric",       NODE_PROPERTY.LAST_NAME: "Cartman"})
+players.append({NODE_PROPERTY.FIRST_NAME: "Barack",     NODE_PROPERTY.LAST_NAME: "Obama"})
+players.append({NODE_PROPERTY.FIRST_NAME: "Jeremy",     NODE_PROPERTY.LAST_NAME: "Lin"})
+players.append({NODE_PROPERTY.FIRST_NAME: "Action",     NODE_PROPERTY.LAST_NAME: "Jackson"})
 
 for p in players:
     protoplayer = editor.prototype_node(
@@ -77,10 +82,11 @@ for n in range(0, NUMBER_OF_GAMES):
     score2 = random.randint(0, 10)
 
     # create game
+    # TODO: come up with constants for JSON and/or codify Score in an object
     Game.create_game(
             league.id, 
             creator, 
-            [(opp1, score1), (opp2, score2)])
+            [{"id" : opp1, "score" : score1}, {"id" : opp2, "score" : score2}])
 
 print("{0} Games created successfully.".format(NUMBER_OF_GAMES))
 
