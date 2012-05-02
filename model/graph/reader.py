@@ -16,7 +16,6 @@ Provides:
 from model.data import db, DbInputError, DbReadError, DbWriteError
 from model.graph import GraphEdge, GraphNode, GraphPath, GraphOutputError
 
-
 def get_node(node_id):
     """ Return a GraphNode from a graph database.
 

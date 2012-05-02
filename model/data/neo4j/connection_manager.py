@@ -18,6 +18,7 @@ _gremlin_base_err = "javax.script.ScriptException: "
 _gremlin_null_err = "java.lang.NullPointerException"
 _gremlin_input_err = "java.lang.IllegalArgumentException"
 
+
 def create_node(base_url, type, properties):
     """ Create a node in the db using gremlin and return created node.
 
@@ -179,6 +180,7 @@ def connect(url, data):
     DbConnectionError   bad db connection
 
     """
+    
     request = urllib2.Request(url, data)
     request.add_header('Content-Type', "application/json")
 

@@ -84,6 +84,29 @@ class _HTMLTag(object):
         return "h2"
 
 
+    @constant
+    def HEADER():
+        """ HEADER is a type of HTML tag. """
+        return "header"
+
+
+    @constant
+    def FORM():
+        """ FORM is a type of HTML tag. """
+        return "form"
+
+    @constant
+    def INPUT():
+        """ INPUT is a type of HTML tag. """
+        return "input"
+
+    @constant
+    def BUTTON():
+        """ BUTTON is a type of HTML tag. """
+        return "button"
+
+
+
 class _HTMLAttribute(object):
 
     """ _HTMLAttribute class to hold all implemented HTML attributes. """
@@ -91,13 +114,13 @@ class _HTMLAttribute(object):
 
     @constant
     def CLASS():
-        """ CLASS is a type of HTML attribute. """
+        """ CLASS is a type of HTML global attribute. """
         return "class"
 
 
     @constant
     def ID():
-        """ ID is a type of HTML attribute. """
+        """ ID is a type of HTML global attribute. """
         return "id"
 
 
@@ -105,6 +128,58 @@ class _HTMLAttribute(object):
     def HREF():
         """ HREF is a type of HTML attribute. """
         return "href"
+
+
+    @constant
+    def NAME():
+        """ NAME is a type of HTML attribute. """
+        return "name"
+
+
+    @constant
+    def ACTION():
+        """ ACTION is a type of HTML attribute. """
+        return "action"
+
+
+    @constant
+    def TYPE():
+        """ TYPE is a type of HTML attribute. """
+        return "type"
+
+
+    @constant
+    def VALUE():
+        """ VALUE is a type of HTML attribute. """
+        return "value"
+
+
+    @constant
+    def CHECKED():
+        """ CHECKED is a type of HTML boolean attribute. """
+        return "checked"
+
+
+class _HTMLType(object):
+
+    """ _HTMLType class to hold all 'Type' atttribute values. """
+
+    @constant
+    def TEXT():
+        """ TEXT is a value of the HTML attribute Type. """
+        return "text"
+
+
+    @constant
+    def CHECKBOX():
+        """ CHECKBOX is a value of the HTML attribute Type. """
+        return "checkbox"
+
+
+    @constant
+    def SUBMIT():
+        """ SUBMIT is a value of the HTML attribute Type. """
+        return "submit"
 
 
 class _HTMLClass(object):
@@ -118,6 +193,7 @@ class _HTMLClass(object):
 
 HTML_TAG = _HTMLTag()
 HTML_ATTRIBUTE = _HTMLAttribute()
+HTML_TYPE = _HTMLType()
 HTML_CLASS = _HTMLClass()
 
 
@@ -138,7 +214,11 @@ class _HTMLConstant(object):
                 HTML_TAG.NAV,
                 HTML_TAG.A,
                 HTML_TAG.H1,
-                HTML_TAG.H2
+                HTML_TAG.H2,
+                HTML_TAG.HEADER,
+                HTML_TAG.FORM,
+                HTML_TAG.INPUT,
+                HTML_TAG.BUTTON,
                 ]
 
 
@@ -147,7 +227,7 @@ class _HTMLConstant(object):
         """ GLOBAL_ATTRIBUTES is a list of allowed attributes. """
         return [
                 HTML_ATTRIBUTE.CLASS,
-                HTML_ATTRIBUTE.ID
+                HTML_ATTRIBUTE.ID,
                 ]
 
 
@@ -164,8 +244,35 @@ class _HTMLConstant(object):
         # anchor tags can also have the href attribute set
         attributes[HTML_TAG.A].append(HTML_ATTRIBUTE.HREF)
 
+        # form tags can also have these attributes:
+        attributes[HTML_TAG.FORM].append(HTML_ATTRIBUTE.NAME)
+        attributes[HTML_TAG.FORM].append(HTML_ATTRIBUTE.ACTION)
+
+        # input tags can also have these attributes:
+        attributes[HTML_TAG.INPUT].append(HTML_ATTRIBUTE.NAME)
+        attributes[HTML_TAG.INPUT].append(HTML_ATTRIBUTE.TYPE)
+        attributes[HTML_TAG.INPUT].append(HTML_ATTRIBUTE.VALUE)
+        attributes[HTML_TAG.INPUT].append(HTML_ATTRIBUTE.CHECKED)
+        
+        # button tags can also have these attributes:
+        attributes[HTML_TAG.BUTTON].append(HTML_ATTRIBUTE.NAME)
+        attributes[HTML_TAG.BUTTON].append(HTML_ATTRIBUTE.ACTION)
+        attributes[HTML_TAG.BUTTON].append(HTML_ATTRIBUTE.TYPE)
+        attributes[HTML_TAG.BUTTON].append(HTML_ATTRIBUTE.VALUE)
+        
+        
         return attributes
 
+
+    @constant
+    def TYPES():
+        """ TYPES is a list of allowed types. """
+        return [
+                HTML_TYPE.TEXT,
+                HTML_TYPE.CHECKBOX,
+                HTML_TYPE.SUBMIT,
+                ]
+    
 
     @constant
     def CLASSES():

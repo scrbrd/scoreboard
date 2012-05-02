@@ -50,7 +50,6 @@ settings = {}
 settings['debug'] = DEPLOYMENT != DeploymentType.PRODUCTION or options.debug
 settings['static_path'] = MEDIA_ROOT
 
-# FIXME put in actual cookie secret
 settings['cookie_secret'] = "\xee\x0ec\x9bl\x02\xeb/.\xd4\xeb\xc2(\xb0\xb1\x8a\x0b\xb5[^Tq\xecy"
 settings['xsrf_cookies'] = True
 settings['login_url'] = "/"

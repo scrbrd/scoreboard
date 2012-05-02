@@ -1,7 +1,17 @@
 <!-- Dialog HTML for Create Game -->
-
-<header><h2>Create Game, Son</h2><header>
-<div>This is where you'll do all the cool stuff.</div>
-<button class="submit">Submit</button>
-<button class="close">Close</button>
+<div id="create-game" class="dialog">
+    <header><h2>Add Game</h2></header>
+    
+    <form name="create-game" action="/create/game">
+        <ul>
+            <li>
+                <input type="text" name="name" placeholder="Who Played?" required
+                autofocus/>
+                <input type="checkbox" name="win" value="[POPULATE]" />
+            </li>
+        </ul>
+        <button type="submit" class="submit">Submit</button>
+    </form>
+ 
+</div>
 

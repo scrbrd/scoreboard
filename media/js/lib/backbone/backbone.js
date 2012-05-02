@@ -6,7 +6,7 @@
  *
  */
 
-define(["order!libs/backbone/backbone-min"], function() {
+define(["order!lib/backbone/backbone-min"], function() {
     // Call noConflct to remove globals
     _.noConflict();
     $.noConflict();

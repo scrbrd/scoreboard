@@ -31,8 +31,8 @@ define(
                 // TODO get game info from dialog
                 parameters = {};
                 parameters["league"] = 693;
-                parameters["creator"] = 655;
-                parameters["game_score"] = [{"id": 651, "score": 1}, {"id": 658, "score": 3}];
+                parameters["creator"] = 700;
+                parameters["game_score"] = [{"id": 700, "score": 1}, {"id": 701, "score": 3}];
 
                 return parameters;
             },

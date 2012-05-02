@@ -48,7 +48,10 @@ The following tags are implemented as Element subclasses:
     a
     h1
     h2
-
+    header
+    form
+    input
+    button
 
 The following tags are not implemented because they are hard-coded in
 the top-level templates, which are not dynamically generated:
@@ -57,11 +60,10 @@ the top-level templates, which are not dynamically generated:
     body
     meta
     link
-    header
     footer
     script
     hgroup
-
+    section
 
 The following global html5 attributes are currently implemented:
     class
@@ -77,6 +79,19 @@ The following non-global html5 attributes are currently implemented:
     Attribute       Tag[s]
     ----------------------
     href            a
+    name            form, input, button
+    action          form, input[type="submit"], button
+    type            input, button
+    value           input, button
+    checked         input[type="checkbox"]
+
+TODO: placeholder, required, autofocus
+
+Note: we don't actually check for type of input.
+
+The following attributes are implemented as subclasses because
+they change the functionality of their element.
+    type
 
 """
 
@@ -196,55 +211,196 @@ class Element(object):
         return self.element().attrib
 
 
+    def remove_attribute(self, attribute):
+        """ Remove this attribute from the element. """
+        if self._attribute(attribute) is not None:
+            del self.attribtues()[attribute]
+
+
+    def _attribute(self, attribute):
+        """ Return this element's requested attribute's value. 
+            
+        If the requested attribute doesn't exist on the element
+        then it returns None.
+
+        Note: Only Element should call this method.
+        
+        """
+        return self.attributes().get(attribute, None)
+
+
+    def _boolean_attribute(self, attribute):
+        """ Return this element's boolean value.
+
+        If the value = the attribute name then it's true.
+        Otherwise, including if it doesn't exist, it's false.
+
+        """
+        return attribute == self._attribute(attribute)
+
+
+    def _set_attribute(self, attribute, value):
+        """ Set an attribute with the value for this element. 
+        
+        Raise InvalidAttributeError if the attribute is not allowed
+        for this element or the value is None.
+
+        Note: Only Element should call this method.
+        
+        """
+        if attribute in HTML_CONSTANT.ATTRIBUTES[self.tag()]:
+            if value is None:
+                description = "Cannot set {0} to None.".format(attribute)
+                raise InvalidAttributeError([attribute, value], description)
+            else:
+                self.element().set(attribute, value)
+        else:
+            description = "{0} cannot have attribute {1}.".format(
+                    self.tag(), 
+                    attribute)
+            raise InvalidAttributeError([attribute, value], description)
+
+
+    def _set_boolean_attribute(self, attribute, value):
+        """ Set a boolean attribute for this element.
+
+        If True then set it to itself. If False then remove it.
+
+        """
+        if value:
+            self._set_attribute(attribute, attribute)
+        else:
+            self.remove_attribute(attribute)
+
+
     def id(self):
         """ Return this element's id attribute. """
-        return self.attributes().get(HTML_ATTRIBUTE.ID, "")
+        return self._attribute(HTML_ATTRIBUTE.ID)
 
 
     def set_id(self, id):
         """ Set the id attribute for this element. """
-        self.element().set(HTML_ATTRIBUTE.ID, id)
+        self._set_attribute(HTML_ATTRIBUTE.ID, id)
 
 
     def classes(self):
         """ Return this element's classes as a list."""
-        classes = self.attributes().get(HTML_ATTRIBUTE.CLASS, "")
+        classes = self._attribute(HTML_ATTRIBUTE.CLASS)
         # in the case where classes is empty, split should return an empty
         # list, not [''], which means passing nothing to split(), not " ".
         return classes.split()
 
 
     def set_classes(self, classes):
-        # TODO: add a constant for class delimiter?
-        """ Set a list of css classes for this element. """
+        # TODO: add a constant for class delimiter? [ebh: no.]
+        """ Set a list of classes for this element. """
         class_delimiter = " "
-        self.element().set(HTML_ATTRIBUTE.CLASS, class_delimiter.join(classes))
+        self._set_attribute(HTML_ATTRIBUTE.CLASS, class_delimiter.join(classes))
 
 
-    def append_class(self, clss):
-        """ Add a css class for this element. """
+    def append_class(self, additional_class):
+        """ Add a class for this element. """
         classes = self.classes()
-        classes.append(clss)
+        classes.append(additional_classs)
         self.set_classes(classes)
 
 
-    def append_classes(self, clss):
-        """ Add multiple css classes for this element. """
+    def append_classes(self, additional_classes):
+        # TODO is this method expecting a list?
+        """ Add a list of classes to the current classes list for this i
+        element. 
+        
+        """
         classes = self.classes()
-        classes.extend(clss)
+        classes.extend(additional_classes)
         self.set_classes(classes)
 
 
     def href(self):
         """ Return this element's href attribute. """
-        return self.attributes().get(HTML_ATTRIBUTE.HREF, "")
+        return self._attribute(HTML_ATTRIBUTE.HREF)
 
 
     def set_href(self, href):
         """ Set the href attribute for this element. """
-        self.element().set(HTML_ATTRIBUTE.HREF, href)
+        self._set_attribute(HTML_ATTRIBUTE.HREF, href)
 
 
+    def name(self):
+        """ Return this element's name attribute. """
+        return self._attribute(HTML_ATTRIBUTE.NAME)
+
+
+    def set_name(self, name):
+        """ Set the name attribute for this element. 
+        
+        The name attribute's value cannot be "".
+
+        """
+        if name == "":
+            description = "Name cannot be empty."
+            raise InvalidAttributeError([name], description)
+        else:
+            self._set_attribute(HTML_ATTRIBUTE.NAME, name)
+
+    
+    def action(self):
+        """ Return this element's action attribute. """
+        return self._attribute(HTML_ATTRIBUTE.ACTION)
+
+
+    def set_action(self, url):
+        """ Set the action attribute for this element. """
+        self._set_attribute(HTML_ATTRIBUTE.ACTION, url)
+
+    
+    def type(self):
+        """ Return this element's type attribute. """
+        return self._attribute(HTML_ATTRIBUTE.TYPE)
+
+
+    def set_type(self, type):
+        """ Set the type attribute for this element. 
+        
+        Check the type against the list of allowed type values.
+
+        """
+        if type in HTML_CONSTANT.TYPES: 
+            self._set_attribute(HTML_ATTRIBUTE.TYPE, type)
+        else:
+            description = "Type cannot be of value {0}.".format(type)
+            raise InvalidAttributeError([type], description)
+
+    
+    def value(self):
+        """ Return this element's value attribute. """
+        return self._attribute(HTML_ATTRIBUTE.VALUE)
+
+
+    def set_value(self, value):
+        """ Set the value attribute for this element. """
+        self._set_attribute(HTML_ATTRIBUTE.VALUE, value)
+    
+    
+    def is_checked(self):
+        """ Return True if element is set to be checked. 
+        
+        Considered True if the element has value "checked"
+
+        """
+        return _boolean_attribute(HTML_ATTRIBUTE.CHECKED)
+
+
+    def set_checked(self, checked=True):
+        """ Set the boolean checkbox attribute for this element.
+
+        Optional:
+        bool    checked     if omitted then set as true.
+
+        """
+        self._set_boolean_attribute(HTML_ATTRIBUTE.CHECKED, checked)
+    
+    
     def children(self):
         """ Return a list of the immediate children for this element. """
         # TODO: elementTree suggests list(element) over element.getchildren(),
@@ -434,6 +590,12 @@ class Nav(Element):
             </ul>
         </nav>
 
+    Required:
+    list    items               list of generic items
+    item?   special_item        an 'item' that stands out in the list
+                                (E.g., active link, action item)
+    int     special_item_index  where to put the special item
+    
     """
 
 
@@ -488,6 +650,9 @@ class A(Element):
     type        {MIME_type}     Specifies the MIME type of the linked
                                 document
 
+    Required:
+    url         link            Specifies the value for href
+
     """
 
 
@@ -524,6 +689,135 @@ class H2(Element):
     def __init__(self):
         """ Construct a <h2>. """
         super(H2, self).__init__(HTML_TAG.H2)
+
+
+class Header(Element):
+    
+    """ Header element <header>. """
+
+    def __init__(self):
+        """ Construct a <header>. """
+        super(Header, self).__init__(HTML_TAG.HEADER)
+
+
+class Form(Element):
+
+    """ Form element <form>. """
+
+    def __init__(self, name, action_url=None):
+        """ Construct a <form>. 
+        
+        Required:
+        str     name            unique identifying name of form
+
+        Optional:
+        str     action_url      Form submits to this url. Can also
+                                be identified in the submit button.
+        
+        """
+        super(Form, self).__init__(HTML_TAG.FORM)
+        self.set_name = name
+        if action_url is not None:
+            self.set_action(action_url)
+
+
+class Input(Element):
+
+    """ Input element <input>. """
+
+    def __init__(self, type, name, value=""):
+        """ Construct a <input>. 
+        
+        Required:
+        str     type            type of input element
+        str     name            unique name to be submitted with form
+
+        Optional:
+        str     value           value to be submitted with form
+
+        """
+        super(Input, self).__init__(HTML_TAG.INPUT)
+        self.set_type(type)
+        self.set_name(name)
+        self.set_value(value)
+
+
+class TextInput(Input):
+
+    """ Input element of Text type <input type="text">. """
+
+    def __init__(self, name, value=""):
+        """ Construct a <input type="text">.
+
+        Required:
+        str     name            unique name to be submitted with form
+
+        Optional:
+        str     value           value to be submitted with form
+
+        """
+        super(TextInput, self).__init__(HTML_TYPE.TEXT, name, value)
+
+
+class CheckboxInput(Input):
+
+    """ Input element of Checkbox type <input type="checkbox">. """
+
+
+    def __init__(self, name, value, checked=False):
+        """ Construct a <input type="checkbox">.
+
+        Required:
+        str     name            unique name to be submitted with form
+        str     value           value to be submitted with form
+
+        Optional:
+        bool    checked         determines if checkbox begins checked
+
+        """
+        super(CheckboxInput, self).__init__(HTML_TYPE.CHECKBOX, name, value)
+        self.set_checked(checked)
+
+
+class Button(Element):
+
+    """ Button element <button>. """
+
+    def __init__(self, type=None):
+        """ Construct a <button>. 
+
+        Optional:
+        str     type    the button's type
+        
+        Button's type can be "submit", "reset", or no value.
+        TODO implement "reset"
+
+        """
+        super(Button, self).__init__(HTML_TAG.BUTTON)
+        if type in HTML_TYPE:
+            self.set_type(type)
+        else:
+            # TODO better way to handle this but didn't want to
+            # introduce a bug
+            msg = "Type can only be submit right now."
+            raise InvalidAttributeError([type], msg)
+
+
+class SubmitButton(Button):
+
+    """ Button element of type Submit <button type="submit">. """
+
+    def __init__(self, action_url=None):
+        """ Construct a <button type="submit">.
+
+        Optional:
+        str     action_url      form submits to this url. can also
+                                be identified in the form element.
+
+        """
+        super(SubmitButton, self).__init__(HTML_TYPE.SUBMIT)
+        if action_url is not None:
+            self.set_action(action_url)
 
 
 class ElementError(Exception):

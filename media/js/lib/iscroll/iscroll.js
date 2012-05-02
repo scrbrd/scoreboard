@@ -11,7 +11,7 @@ define(
         "jQuery",
         "js/constants",                         // constants.js
         "domReady!",                        // only call when DOM is ready
-        "order!libs/iscroll/iscroll-min",
+        "order!lib/iscroll/iscroll-min",
     ], 
     function($, Constants, doc) {
     

@@ -16,6 +16,9 @@
 # ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN
 # CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
+# FIXME if this is only provided for backwards compatibility then we can delete
+# it.
+
 import logging.handlers
 import re
 import sys

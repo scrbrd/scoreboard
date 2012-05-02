@@ -13,16 +13,16 @@ require.config({
 
     paths: {
         // TODO - apparently there is an AMD version of jquery
-        jQuery: "static/js/libs/jquery/jquery",
-        Underscore: "static/js/libs/underscore/underscore",
-        Backbone: "static/js/libs/backbone/backbone",
-        iScroll: "static/js/libs/iscroll/iscroll",
+        jQuery: "static/js/lib/jquery/jquery",
+        Underscore: "static/js/lib/underscore/underscore",
+        Backbone: "static/js/lib/backbone/backbone",
+        iScroll: "static/js/lib/iscroll/iscroll",
         js: "static/js",
-        libs: "static/js/libs",
+        lib: "static/js/lib",
         view: "static/js/view",
-        order: "static/js/libs/require/order",
-        text: "static/js/libs/require/text",
-        domReady: "static/js/libs/require/domReady"
+        order: "static/js/lib/require/order",
+        text: "static/js/lib/require/text",
+        domReady: "static/js/lib/require/domReady"
     }
 });
 
@@ -33,12 +33,12 @@ require(
         "js/app",
 
         // non-AMD 'modules'
-        "order!libs/jquery/jquery-min", 
-        "order!libs/underscore/underscore-min", 
-        "order!libs/backbone/backbone-min",
-        "libs/iscroll/iscroll-min"
-    ], 
-    function(App) {
+        "order!lib/jquery/jquery-min",
+        "order!lib/underscore/underscore-min",
+        "order!lib/backbone/backbone-min",
+        "lib/iscroll/iscroll-min"
+    ],
+    function (App) {
         App.initialize();
     }
 

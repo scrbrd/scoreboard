@@ -60,7 +60,7 @@ define(
             set_dialog: function(dialog_html) {
                 var page_height = $(Constants.PAGE_SELECTOR).height(); // page height
                 create_game_dialog = new DialogView({
-                    el: Constants.DIALOG_SELECTOR,
+                    el: Constants.DIALOG_CONTAINER_SELECTOR,
                     html: dialog_html,
                     height: page_height
                 });

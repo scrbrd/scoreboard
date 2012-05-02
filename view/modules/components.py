@@ -142,3 +142,22 @@ class UIRankingsList(tornado.web.UIModule):
 
         return Element.to_string(element_tree)
 
+
+class UICreateGameDialog(tornado.web.UIModule):
+
+    """ Create Game Dialog UI Module. """
+
+    def render(self, model=None):
+        """ Render a Create Game Dialog Screen. """
+
+        element_tree = None
+
+        try:
+            element_tree = CreateGameDiv().element()
+
+        except AttributeError as e:
+            #logger.debug(e.reason)
+            element_tree = None
+
+        return Element.to_string(element_tree)
+
