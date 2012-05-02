@@ -4,7 +4,7 @@
 
 """
 
-from constants import API_CONSTANT, EDGE_TYPE, NODE_TYPE
+from constants import API_CONSTANT, EDGE_TYPE, NODE_TYPE, NODE_PROPERTY
 from sqobject import SqNode, SqObjectNotLoadedError
 import loader
 
@@ -34,7 +34,7 @@ class League(SqNode):
         """ Construct a League extending SqNode. """
         super(League, self).__init__(graph_node)
 
-        self._name = graph_node.properties()["name"]
+        self._name = graph_node.properties()[NODE_PROPERTY.NAME]
 
 
     @property

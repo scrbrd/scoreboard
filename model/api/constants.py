@@ -154,7 +154,22 @@ class _NodeProperty(object):
 
     """ _NodeProperty class to hold all Node Properties. """
 
-    pass
+    @constant
+    def NAME():
+        """ NAME is a Node Property. """
+        return "c_name"
+
+
+    @constant
+    def FIRST_NAME():
+        """ FIRST_NAME is a Node Property. """
+        return "c_first_name"
+
+
+    @constant
+    def LAST_NAME():
+        """ LAST_NAME is a Node Property. """
+        return "c_last_name"
 
 
 class _EdgeProperty(object):

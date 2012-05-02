@@ -4,7 +4,7 @@
 
 """
 
-from constants import EDGE_TYPE
+from constants import EDGE_TYPE, NODE_PROPERTY
 from sqobject import SqNode
 from opponent import Opponent
 #from game import Game
@@ -31,8 +31,8 @@ class Player(SqNode, Opponent):
         """ Construct a Player extending SqNode. """
         super(Player, self).__init__(graph_node)
 
-        self._first_name = graph_node.properties()["first_name"]
-        self._last_name = graph_node.properties()["last_name"]
+        self._first_name = graph_node.properties()[NODE_PROPERTY.FIRST_NAME]
+        self._last_name = graph_node.properties()[NODE_PROPERTY.LAST_NAME]
 
 
     @property
