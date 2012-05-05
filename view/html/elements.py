@@ -22,10 +22,20 @@ All Element subclasses have access to and may override:
     def set_id(self, id)
     def classes(self)
     def set_classes(self, classes)
-    def append_class(self, clss)
-    def append_classes(self, clss)
+    def append_class(self, additional_class)
+    def append_classes(self, additional_classes)
     def href(self)
     def set_href(self, href)
+    def name(self)
+    def set_name(self, name)
+    def action(self)
+    def set_action(self, url)
+    def type(self)
+    def set_type(self, type) 
+    def value(self)
+    def set_value(self, value)
+    def is_checked(self)
+    def set_checked(self, checked)
     def children(self)
     def first_child(self)
     def last_child(self)
@@ -99,7 +109,7 @@ import xml.etree.cElementTree as ET
 
 from exceptions import NotImplementedError
 
-from constants import HTML_TAG, HTML_ATTRIBUTE, HTML_CLASS, HTML_CONSTANT
+from constants import HTML_TAG, HTML_ATTRIBUTE, HTML_TYPE, HTML_CLASS, HTML_CONSTANT
 
 
 class Element(object):
@@ -183,7 +193,7 @@ class Element(object):
 
     def tag(self):
         """ Return this element's tag with <> removed for convenience. """
-        return self.element().tag[1:-1]
+        return self.element().tag
 
 
     def text(self):
@@ -209,12 +219,6 @@ class Element(object):
     def attributes(self):
         """ Return this element's attributes as a dictionary. """
         return self.element().attrib
-
-
-    def remove_attribute(self, attribute):
-        """ Remove this attribute from the element. """
-        if self._attribute(attribute) is not None:
-            del self.attribtues()[attribute]
 
 
     def _attribute(self, attribute):
@@ -251,7 +255,7 @@ class Element(object):
         if attribute in HTML_CONSTANT.ATTRIBUTES[self.tag()]:
             if value is None:
                 description = "Cannot set {0} to None.".format(attribute)
-                raise InvalidAttributeError([attribute, value], description)
+                raise InvalidAttributeError([attribute, "None"], description)
             else:
                 self.element().set(attribute, value)
         else:
@@ -259,6 +263,12 @@ class Element(object):
                     self.tag(), 
                     attribute)
             raise InvalidAttributeError([attribute, value], description)
+
+
+    def _remove_attribute(self, attribute):
+        """ Remove this attribute from the element. """
+        if self._attribute(attribute) is not None:
+            del self.attribtues()[attribute]
 
 
     def _set_boolean_attribute(self, attribute, value):
@@ -270,7 +280,7 @@ class Element(object):
         if value:
             self._set_attribute(attribute, attribute)
         else:
-            self.remove_attribute(attribute)
+            self._remove_attribute(attribute)
 
 
     def id(self):
@@ -286,9 +296,10 @@ class Element(object):
     def classes(self):
         """ Return this element's classes as a list."""
         classes = self._attribute(HTML_ATTRIBUTE.CLASS)
-        # in the case where classes is empty, split should return an empty
-        # list, not [''], which means passing nothing to split(), not " ".
-        return classes.split()
+        if classes is None:
+            return []
+        else:
+            return classes.split()
 
 
     def set_classes(self, classes):
@@ -301,7 +312,7 @@ class Element(object):
     def append_class(self, additional_class):
         """ Add a class for this element. """
         classes = self.classes()
-        classes.append(additional_classs)
+        classes.append(additional_class)
         self.set_classes(classes)
 
 
@@ -421,13 +432,24 @@ class Element(object):
 
 
     def append_child(self, element):
-        """ Append a child element to this element's direct children. """
-        self.element().append(element)
+        """ Append a child element to this element's direct children. 
+
+        Required:
+        Element     element     an instance of elements.Element
+
+        """
+        self.element().append(element.element())
 
 
     def append_children(self, elements):
-        """ Append child elements to this element's direct children. """
-        self.element().extend(elements)
+        """ Append child elements to this element's direct children. 
+        
+        Required:
+        list    element     a list of elements.Elements
+
+        """
+        for e in elements:
+            self.element().append_child(e)
 
 
     @staticmethod
@@ -518,7 +540,7 @@ class List(Element):
 
     def set_list_item(self, item):
         """ Construct and add a list item as a child of this list. """
-        return self.append_child(LI(item).element())
+        return self.append_child(LI(item))
 
 
 class OL(List):
@@ -575,6 +597,8 @@ class LI(Element):
         # TODO: are there special members we want applied to a generic list
         # item, such as special_item or this_is_you?
 
+        # TODO: make a generic implementation of <li>
+
 
 class Nav(Element):
 
@@ -614,7 +638,7 @@ class Nav(Element):
 
     def set_list(self, items):
         """ Construct and add the list for this <nav>. """
-        self.append_child(UL(items).element())
+        self.append_child(UL(items))
 
 
 class A(Element):
@@ -704,11 +728,12 @@ class Form(Element):
 
     """ Form element <form>. """
 
-    def __init__(self, name, action_url=None):
+    def __init__(self, name, xsrf_token, action_url=None):
         """ Construct a <form>. 
         
         Required:
         str     name            unique identifying name of form
+        str     xsrf_token      xsrf token to prevent forgery
 
         Optional:
         str     action_url      Form submits to this url. Can also
@@ -716,9 +741,12 @@ class Form(Element):
         
         """
         super(Form, self).__init__(HTML_TAG.FORM)
-        self.set_name = name
+        self.set_name(name)
         if action_url is not None:
             self.set_action(action_url)
+
+        # add xsrf token bit to prevent xsrf
+        self.append_child(XSRFHiddenInput(xsrf_token))
 
 
 class Input(Element):
@@ -741,6 +769,43 @@ class Input(Element):
         self.set_name(name)
         self.set_value(value)
 
+
+class HiddenInput(Input):
+
+    """ Input element of Hidden type <input type="hidden">. """
+
+    def __init__(self, name, value=""):
+        """ Construct a <input type="hidden"> 
+        
+        Required:
+        str     name            unique name to be submitted with form
+
+        Optional:
+        str     value           value to be submitted with form
+        
+        """
+        super(HiddenInput, self).__init__(HTML_TYPE.HIDDEN, name, value)
+
+
+class XSRFHiddenInput(HiddenInput):
+
+    """ Special Input element of Hidden type that contains the xsrf token: 
+    <input type="hidden" name="_xsrf" value=TOKEN />
+    """
+
+    xsrf_key = "_xsrf"
+
+    def __init__(self, xsrf_token):
+        """ Construct a <input type="hidden" name="_xsrf" value=TOKEN />
+
+        Required:
+        str     xsrf_token      xsrf token to prevent forgery
+
+        """
+        super(XSRFHiddenInput, self).__init__(self.xsrf_key, xsrf_token)
+
+# FIXME XXX - store ids using data-id with new data-attribute
+# make form dynamic, then link up with warman.
 
 class TextInput(Input):
 
@@ -794,9 +859,9 @@ class Button(Element):
 
         """
         super(Button, self).__init__(HTML_TAG.BUTTON)
-        if type in HTML_TYPE:
+        if type in HTML_CONSTANT.TYPES:
             self.set_type(type)
-        else:
+        elif type is not None:
             # TODO better way to handle this but didn't want to
             # introduce a bug
             msg = "Type can only be submit right now."

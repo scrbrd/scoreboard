@@ -19,13 +19,21 @@ define(
             
             // send new object to server
             create: function(type, parameters) {
+                // move _xsrf to highest level parameter
+                _xsrf = parameters["_xsrf"];
+                delete parameters["_xsrf"];
+
                 escaped_params = JSON.stringify(parameters);
-                data = {"asynch": true, "parameters": escaped_params};
+                data = {
+                    "asynch": true, 
+                    "_xsrf": _xsrf,
+                    "parameters": escaped_params,
+                    };
                 $.post(
                         "/create/" + type, 
                         data, 
                         function(json) {
-                            console.log(json);
+                            console.log("success? " + json.is_success);
                         },
                         "json");
             },

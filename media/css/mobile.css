@@ -4,21 +4,23 @@
 
 /* Generic CSS */
 
-/*******************BODY/PAGE********************/
+/*******************  BODY  ********************/
 
 body,ul, ol, li {
-    padding:0;
-    margin:0;
-    border:0;
+    padding: 0;
+    margin: 0;
+    border: 0;
 }
 
 body {
-    font-size:12px;
-    -webkit-user-select:none;
-    -webkit-text-size-adjust:none;
-    font-family:helvetica;
+    font-size: 12px;
+    -webkit-user-select: none;
+    -webkit-text-size-adjust: none;
+    font-family: helvetica;
 }
 
+
+/*******************  PAGE  ********************/
 /* for hiding address bar and pulling content above bottom navigation */
 #page {
     position: absolute;
@@ -30,6 +32,27 @@ body {
     z-index: 1;
 }
 
+#page header {
+    position: absolute; 
+    z-index: 5;
+    top: 0; 
+    left: 0;
+    width: 100%;
+    height: 70px;
+    line-height: 35px;
+    background-color: #d51875;
+    background-image: -webkit-gradient(linear, 0 0, 0 100%, color-stop(0, #fe96c9), color-stop(0.05, #d51875), color-stop(1, #7b0a2e));
+    background-image: -moz-linear-gradient(top, #fe96c9, #d51875 5%, #7b0a2e);
+    background-image: -o-linear-gradient(top, #fe96c9, #d51875 5%, #7b0a2e);
+    padding: 0;
+    color: #eee;
+    font-size: 20px;
+
+
+}
+
+
+/*******************  DIALOG  ********************/
 #dialog-container {
     /* position: absolute;
     width: 100%;
@@ -51,19 +74,7 @@ body {
 /*******************HEADER********************/
 
 header {
-    position:absolute; z-index:5;
-    top:0; left:0;
-    width:100%;
-    height:70px;
-    line-height:35px;
-    background-color:#d51875;
-    background-image:-webkit-gradient(linear, 0 0, 0 100%, color-stop(0, #fe96c9), color-stop(0.05, #d51875), color-stop(1, #7b0a2e));
-    background-image:-moz-linear-gradient(top, #fe96c9, #d51875 5%, #7b0a2e);
-    background-image:-o-linear-gradient(top, #fe96c9, #d51875 5%, #7b0a2e);
-    padding:0;
-    color:#eee;
-    font-size:20px;
-    text-align:center;
+    text-align: center;
 }
 
 header a {

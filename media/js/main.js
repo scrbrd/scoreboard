@@ -34,6 +34,8 @@ require(
 
         // non-AMD 'modules'
         "order!lib/jquery/jquery-min",
+        "order!lib/jquery/form2js/form2js",
+        "order!lib/jquery/form2js/jquery.toObject",
         "order!lib/underscore/underscore-min",
         "order!lib/backbone/backbone-min",
         "lib/iscroll/iscroll-min"

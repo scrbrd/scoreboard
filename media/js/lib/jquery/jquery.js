@@ -6,7 +6,11 @@
  *
  */
 
-define(["order!lib/jquery/jquery-min"], function() {
+define([
+        "order!lib/jquery/jquery-min",
+        "order!lib/jquery/form2js/form2js",
+        "order!lib/jquery/form2js/jquery.toObject",
+        ], function() {
     // Tell Require.js that this module returns a reference to jQuery.
     return $;
 });

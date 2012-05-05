@@ -1,17 +1,13 @@
+{# Create Game Dialog Component #}
+
 <!-- Dialog HTML for Create Game -->
 <div id="create-game" class="dialog">
-    <header><h2>Add Game</h2></header>
+
+    {% module UICreateGameDialog() %}
+
     
-    <form name="create-game" action="/create/game">
-        <ul>
-            <li>
-                <input type="text" name="name" placeholder="Who Played?" required
-                autofocus/>
-                <input type="checkbox" name="win" value="[POPULATE]" />
-            </li>
-        </ul>
-        <button type="submit" class="submit">Submit</button>
-    </form>
- 
+                <!-- <input type="checkbox" name="win" checked="checked"
+                     value="[POPULATE]" /> -->
+
 </div>
 

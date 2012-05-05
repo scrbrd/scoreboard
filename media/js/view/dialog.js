@@ -27,25 +27,28 @@ define(
                 this.$el.height(this.options.page_height); // set the correct height
             },
 
-            parameters: function() {
-                // TODO get game info from dialog
-                parameters = {};
-                parameters["league"] = 693;
-                parameters["creator"] = 700;
-                parameters["game_score"] = [{"id": 700, "score": 1}, {"id": 701, "score": 3}];
-
-                return parameters;
-            },
-
+            // events for this View
             events: {
-                "click button.close":       "hide",      // hide dialog
-                "click button.submit":      function() {
-                    Crud.create("game", this.parameters);
-                    this.hide();
-                },
-
+                "submit form[name='create-game']":      "submit_dialog",
+                "click button.close":               "close_dialog",
             },
 
+            // Handle form submission
+            submit_dialog: function(event) {
+                // using toObject from form2js jquery plugin
+                Crud.create("game", $(event.target).toObject());
+                this.hide();
+                // TODO reset form (after game is created successfully...)
+                return false;
+            },
+
+            // Handle closing dialog
+            close_dialog: function() {
+                this.hide();
+                // TODO reset form
+                return false;
+            },
+            
             // Show dialog screen
             show: function() {
                 this.$el.slideDown('fast');

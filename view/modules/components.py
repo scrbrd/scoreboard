@@ -19,12 +19,15 @@ Each class has a single requirement...override the following:
     def render(self, model=None):
 
 """
+# TODO: should this be in a util?
+import xml.etree.cElementTree as ET
 
 import tornado.web
 
 from html.elements import Element
 from html.mobile import AppHeader, ContextHeader
 from html.mobile import NavHeader, GamesOL, RankingsOL
+from html.mobile import DialogHeader, CreateGameForm
 
 
 class UIAppHeader(tornado.web.UIModule):
@@ -152,12 +155,25 @@ class UICreateGameDialog(tornado.web.UIModule):
 
         element_tree = None
 
+        # block xsrf for forms. required for Tornado posts.
+        # get the input element and pass the token only.
+        xsrf_tag = self.handler.xsrf_form_html()
+        xsrf_token = ET.fromstring(xsrf_tag).attrib.get("value")
+
         try:
-            element_tree = CreateGameDiv().element()
+            header_tree = DialogHeader("Add Game").element()
+            form_tree = CreateGameForm(
+                    "create-game", 
+                    xsrf_token,
+                    "/create/game"
+                    ).element()
 
         except AttributeError as e:
             #logger.debug(e.reason)
             element_tree = None
+            form_tree = None
 
-        return Element.to_string(element_tree)
+        header_str = Element.to_string(header_tree)
+        form_str = Element.to_string(form_tree)
+        return header_str + form_str
 

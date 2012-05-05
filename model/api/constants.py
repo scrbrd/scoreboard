@@ -6,7 +6,8 @@
 
 def constant(f):
     """ Constant Decorator to make constants Final. """
-    
+    # TODO merge this class with the one in view/html and put it in a util lib
+    # TODO add return f(self) to fget and do replace all (): --> (self):
 
     def fset(self, value):
         """ Overload constant function's set to disable."""

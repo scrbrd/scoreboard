@@ -9,7 +9,7 @@ import logconfig
 
 from view.modules.components import UIAppHeader, UIContextHeader, UINavHeader
 from view.modules.components import UIGamesList, UIRankingsList
-
+from view.modules.components import UICreateGameDialog
 
 # Application constants
 # FIXME - build this based on user
@@ -62,7 +62,8 @@ settings['ui_modules'] = {
         'UIContextHeader' : UIContextHeader,
         'UINavHeader' : UINavHeader,
         'UIRankingsList' : UIRankingsList,
-        'UIGamesList' : UIGamesList
+        'UIGamesList' : UIGamesList,
+        'UICreateGameDialog' : UICreateGameDialog
         }
 
 settings['league_id'] = LEAGUE

@@ -19,7 +19,7 @@ def constant(f):
 
     def fget(self):
         """ Overload constant function's get. """
-        return f()
+        return f(self)
 
 
     return property(fget, fset)
@@ -31,77 +31,77 @@ class _HTMLTag(object):
 
 
     @constant
-    def DIV():
+    def DIV(self):
         """ DIV is a type of HTML tag. """
         return "div"
 
 
     @constant
-    def SPAN():
+    def SPAN(self):
         """ SPAN is a type of HTML tag. """
         return "span"
 
 
     @constant
-    def OL():
+    def OL(self):
         """ OL is a type of HTML tag. """
         return "ol"
 
 
     @constant
-    def UL():
+    def UL(self):
         """ UL is a type of HTML tag. """
         return "ul"
 
 
     @constant
-    def LI():
+    def LI(self):
         """ LI is a type of HTML tag. """
         return "li"
 
 
     @constant
-    def NAV():
+    def NAV(self):
         """ NAV is a type of HTML tag. """
         return "nav"
 
 
     @constant
-    def A():
+    def A(self):
         """ A is a type of HTML tag. """
         return "a"
 
 
     @constant
-    def H1():
+    def H1(self):
         """ H1 is a type of HTML tag. """
         return "h1"
 
 
     @constant
-    def H2():
+    def H2(self):
         """ H2 is a type of HTML tag. """
         return "h2"
 
 
     @constant
-    def HEADER():
+    def HEADER(self):
         """ HEADER is a type of HTML tag. """
         return "header"
 
 
     @constant
-    def FORM():
+    def FORM(self):
         """ FORM is a type of HTML tag. """
         return "form"
 
     @constant
-    def INPUT():
+    def INPUT(self):
         """ INPUT is a type of HTML tag. """
         return "input"
 
     @constant
-    def BUTTON():
+    def BUTTON(self):
         """ BUTTON is a type of HTML tag. """
         return "button"
 
@@ -113,49 +113,49 @@ class _HTMLAttribute(object):
 
 
     @constant
-    def CLASS():
+    def CLASS(self):
         """ CLASS is a type of HTML global attribute. """
         return "class"
 
 
     @constant
-    def ID():
+    def ID(self):
         """ ID is a type of HTML global attribute. """
         return "id"
 
 
     @constant
-    def HREF():
+    def HREF(self):
         """ HREF is a type of HTML attribute. """
         return "href"
 
 
     @constant
-    def NAME():
+    def NAME(self):
         """ NAME is a type of HTML attribute. """
         return "name"
 
 
     @constant
-    def ACTION():
+    def ACTION(self):
         """ ACTION is a type of HTML attribute. """
         return "action"
 
 
     @constant
-    def TYPE():
+    def TYPE(self):
         """ TYPE is a type of HTML attribute. """
         return "type"
 
 
     @constant
-    def VALUE():
+    def VALUE(self):
         """ VALUE is a type of HTML attribute. """
         return "value"
 
 
     @constant
-    def CHECKED():
+    def CHECKED(self):
         """ CHECKED is a type of HTML boolean attribute. """
         return "checked"
 
@@ -165,21 +165,27 @@ class _HTMLType(object):
     """ _HTMLType class to hold all 'Type' atttribute values. """
 
     @constant
-    def TEXT():
-        """ TEXT is a value of the HTML attribute Type. """
-        return "text"
-
-
-    @constant
-    def CHECKBOX():
+    def CHECKBOX(self):
         """ CHECKBOX is a value of the HTML attribute Type. """
         return "checkbox"
 
 
     @constant
-    def SUBMIT():
+    def HIDDEN(self):
+        """ HIDDEN is a value of the HTML attribute Type. """
+        return "hidden"
+
+
+    @constant
+    def SUBMIT(self):
         """ SUBMIT is a value of the HTML attribute Type. """
         return "submit"
+
+
+    @constant
+    def TEXT(self):
+        """ TEXT is a value of the HTML attribute Type. """
+        return "text"
 
 
 class _HTMLClass(object):
@@ -203,7 +209,7 @@ class _HTMLConstant(object):
 
 
     @constant
-    def TAGS():
+    def TAGS(self):
         """ TAGS is a list of implemented tags. """
         return [
                 HTML_TAG.DIV,
@@ -223,7 +229,7 @@ class _HTMLConstant(object):
 
 
     @constant
-    def GLOBAL_ATTRIBUTES():
+    def GLOBAL_ATTRIBUTES(self):
         """ GLOBAL_ATTRIBUTES is a list of allowed attributes. """
         return [
                 HTML_ATTRIBUTE.CLASS,
@@ -232,14 +238,14 @@ class _HTMLConstant(object):
 
 
     @constant
-    def ATTRIBUTES():
+    def ATTRIBUTES(self):
         """ ATTRIBUTES is a dict of attributes allowed per tag. """
 
         attributes = {}
 
         # populate dict with all global attributes for each tag
-        for tag in self.TAGS():
-            attributes[tag] = self.GLOBAL_ATTRIBUTES()
+        for tag in self.TAGS:
+            attributes[tag] = self.GLOBAL_ATTRIBUTES
 
         # anchor tags can also have the href attribute set
         attributes[HTML_TAG.A].append(HTML_ATTRIBUTE.HREF)
@@ -265,17 +271,18 @@ class _HTMLConstant(object):
 
 
     @constant
-    def TYPES():
+    def TYPES(self):
         """ TYPES is a list of allowed types. """
         return [
                 HTML_TYPE.TEXT,
                 HTML_TYPE.CHECKBOX,
                 HTML_TYPE.SUBMIT,
+                HTML_TYPE.HIDDEN,
                 ]
     
 
     @constant
-    def CLASSES():
+    def CLASSES(self):
         """ CLASSES is a dict of css classes defined per tag. """
 
         classes = {}
