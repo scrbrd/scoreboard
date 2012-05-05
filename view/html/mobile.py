@@ -3,7 +3,9 @@
 Provide mobile views.
 
 """
+from view.constants import HTML_COPY
 
+from constants import HTML_DATA, HTML_ID, HTML_CLASS, HTML_NAME
 from elements import Element, Div, Span, OL, UL, LI, Nav, A, H1, H2, Header
 from elements import Form, TextInput, HiddenInput, CheckboxInput, SubmitButton, Button
 
@@ -27,7 +29,10 @@ class ContextHeader(H2):
     def __init__(self, context):
         """ Construct a context header element tree. """
         super(ContextHeader, self).__init__()
-        self.set_text("{0} : {1}".format(context.id, context.name))
+        self.set_id(HTML_ID.CONTEXT)
+        self.set_data(HTML_DATA.ID, context.id)
+        self.set_data(HTML_DATA.OBJECT_TYPE, context.type)
+        self.set_text(context.name)
 
 
 class DialogHeader(Header):
@@ -142,34 +147,29 @@ class GameLI(LI):
         """ Construct a game list item element tree. """
         super(GameLI, self).__init__(item)
 
-        # TODO: this is the same as RankingLI...should there be a superclass
-        # adding a <span> element to all <li> elements?
-
         # TODO: add css
-
-        span = Span()
-        span.set_text(self.create_text(item))
-        #span.append_classes([])
-        self.append_child(span)
-        #self.append_classes([])
+        self.set_data(HTML_DATA.ID, item.id)
+        self.set_data(HTML_DATA.OBJECT_TYPE, item.type)
+        self.create_content(item)
 
 
-    def create_text(self, item):
-        """ Generate the text for this game list item. """
+    def create_content(self, item):
+        """ Generate the content for this game list item. """
         # FIXME: this all breaks the contract that the view doesnt get
         # access to non-property methods in model.api.Game.
 
         # get results' Opponents' names, results' scores
-        results = []
         for result in item.outcome():
             # TODO: these are hardcoded to make the fact that they need to be
             # changed more obvious once we have result/outcome classes.
-            results.append("{0} {1}".format(
-                item.get_opponent(result["id"]).name,
-                result["score"]))
-
-        game_text = ", ".join(results)
-        return "{0}: {1}".format(item.id, game_text)
+            id = result["id"]
+            opponent = item.get_opponent(id)
+            span = Span()
+            span.set_data(HTML_DATA.ID, id)
+            span.set_data(HTML_DATA.OBJECT_TYPE, opponent.type)
+            span.set_text("{0} {1}".format(opponent.name, result["score"]))
+            self.append_child(span)
+        # game_text = ", ".join(results)
 
 
 class RankingLI(LI):
@@ -181,21 +181,18 @@ class RankingLI(LI):
         """ Construct a ranking list item element tree. """
         super(RankingLI, self).__init__(item)
 
-        # TODO: this is the same as RankingLI...should there be a superclass
-        # adding a <span> element to all <li> elements?
-
         # TODO: add css and remove id.
 
+        self.set_data(HTML_DATA.ID, item.id)
+        self.set_data(HTML_DATA.OBJECT_TYPE, item.type)
+        self.create_content(item)
+
+
+    def create_content(self, item):
+        """ Generate the content for this ranking list item. """
         span = Span()
-        span.set_text(self.create_text(item))
-        #span.append_classes([])
+        span.set_text("{0} {1}".format(item.name, item.win_count))
         self.append_child(span)
-        #self.append_classes([])
-
-
-    def create_text(self, item):
-        """ Generate the text for this game list item. """
-        return "{0}: {1} {2}".format(item.id, item.name, item.win_count)
 
 
 class CreateGameForm(Form):
@@ -214,26 +211,20 @@ class CreateGameForm(Form):
         """
         super(CreateGameForm, self).__init__(name, xsrf_token, action_url)
 
-        # TODO make league and creator hidden fields
         # FIXME take out hard coded values
-        self.append_child(HiddenInput("league", "693"))
-        self.append_child(HiddenInput("creator", "700"))
+        self.append_child(HiddenInput(HTML_NAME.LEAGUE, ""))
+        self.append_child(HiddenInput(HTML_NAME.CREATOR, "700"))
 
-        # add the game score list
-        example_item = {
-                "rank": 0,
-                "id": "700",
-                "score": "5",
-                }
-        self.append_child(GameScoreUL([example_item]))
+        # need a single item so that OpponentScoreLI is created
+        self.append_child(GameScoreUL([""]))
 
         # add form submit and close buttons
         submit_button = SubmitButton()
-        submit_button.set_text("Submit")
+        submit_button.set_text(HTML_COPY.SUBMIT)
         self.append_child(submit_button)
         close_button = Button()
         close_button.append_class("close")
-        close_button.set_text("Close")
+        close_button.set_text(HTML_COPY.CLOSE)
         self.append_child(close_button)
 
 
@@ -256,12 +247,12 @@ class OpponentScoreLI(LI):
         """ Construct a player score list item element tree. """
         super(OpponentScoreLI, self).__init__(item)
 
-        id_name = "game_score[{0}][id]".format(item["rank"])
-        id_input = TextInput(id_name, item["id"])
-        score_name = "game_score[{0}][score]".format(item["rank"])
-        score_input = TextInput(score_name, item["score"])
-
+        id_input = TextInput(HTML_NAME.GAME_SCORE_ID)
+        id_input.set_placeholder(HTML_COPY.PLAYER_PLACEHOLDER)
         self.append_child(id_input)
+
+        score_input = TextInput(HTML_NAME.GAME_SCORE_SCORE)
+        score_input.set_placeholder(HTML_COPY.SCORE_PLACEHOLDER)
         self.append_child(score_input)
 
 

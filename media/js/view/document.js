@@ -62,7 +62,8 @@ define(
                 create_game_dialog = new DialogView({
                     el: Constants.DIALOG_CONTAINER_SELECTOR,
                     html: dialog_html,
-                    height: page_height
+                    height: page_height,
+                    context_id: $(Constants.CONTEXT_SELECTOR).data(Constants.DATA_ID),
                 });
                 return create_game_dialog;
             }, 

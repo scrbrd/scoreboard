@@ -21,8 +21,9 @@ Each class has a single requirement...override the following:
 """
 # TODO: should this be in a util?
 import xml.etree.cElementTree as ET
-
 import tornado.web
+
+from view.constants import HTML_COPY
 
 from html.elements import Element
 from html.mobile import AppHeader, ContextHeader
@@ -161,7 +162,7 @@ class UICreateGameDialog(tornado.web.UIModule):
         xsrf_token = ET.fromstring(xsrf_tag).attrib.get("value")
 
         try:
-            header_tree = DialogHeader("Add Game").element()
+            header_tree = DialogHeader(HTML_COPY.CREATE_GAME_DIALOG_HEADER).element()
             form_tree = CreateGameForm(
                     "create-game", 
                     xsrf_token,

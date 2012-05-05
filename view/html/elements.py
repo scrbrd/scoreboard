@@ -24,6 +24,10 @@ All Element subclasses have access to and may override:
     def set_classes(self, classes)
     def append_class(self, additional_class)
     def append_classes(self, additional_classes)
+    def data(self, key)
+    def dataset(self)
+    def set_data(self, dict)
+    def remove_data(self, key)
     def href(self)
     def set_href(self, href)
     def name(self)
@@ -34,6 +38,8 @@ All Element subclasses have access to and may override:
     def set_type(self, type) 
     def value(self)
     def set_value(self, value)
+    def placeholder(self)
+    def set_placeholder(self, value)
     def is_checked(self)
     def set_checked(self, checked)
     def children(self)
@@ -44,7 +50,6 @@ All Element subclasses have access to and may override:
 
 
 The base class Element also provides static cElementTree wrappers:
-    def validate(tags)
     def to_string(element)
 
 
@@ -78,6 +83,7 @@ the top-level templates, which are not dynamically generated:
 The following global html5 attributes are currently implemented:
     class
     id
+    data-*
 
     http://www.w3.org/community/webed/wiki/HTML/Attributes/_Global
     http://www.w3schools.com/html5/html5_ref_globalattributes.asp
@@ -94,8 +100,9 @@ The following non-global html5 attributes are currently implemented:
     type            input, button
     value           input, button
     checked         input[type="checkbox"]
+    placeholder     input
 
-TODO: placeholder, required, autofocus
+TODO: required, autofocus
 
 Note: we don't actually check for type of input.
 
@@ -217,8 +224,9 @@ class Element(object):
 
 
     def attributes(self):
-        """ Return this element's attributes as a dictionary. """
-        return self.element().attrib
+        """ Return this element's attributes as a sequence of (key, value)
+        tuples. """
+        return self.element().items()
 
 
     def _attribute(self, attribute):
@@ -230,7 +238,7 @@ class Element(object):
         Note: Only Element should call this method.
         
         """
-        return self.attributes().get(attribute, None)
+        return self.element().get(attribute, None)
 
 
     def _boolean_attribute(self, attribute):
@@ -252,12 +260,17 @@ class Element(object):
         Note: Only Element should call this method.
         
         """
+        if value is None:
+            description = "Cannot set {0} to None.".format(attribute)
+            raise InvalidAttributeError([attribute, "None"], description)
+        else:
+            value = str(value)
+
         if attribute in HTML_CONSTANT.ATTRIBUTES[self.tag()]:
-            if value is None:
-                description = "Cannot set {0} to None.".format(attribute)
-                raise InvalidAttributeError([attribute, "None"], description)
-            else:
-                self.element().set(attribute, value)
+            self.element().set(attribute, value)
+        # special condition for data-* attribute
+        elif attribute.find(HTML_ATTRIBUTE.DATA) != -1:
+            self.element().set(attribute, value)
         else:
             description = "{0} cannot have attribute {1}.".format(
                     self.tag(), 
@@ -327,6 +340,47 @@ class Element(object):
         self.set_classes(classes)
 
 
+    def data(self, data_key):
+        """ Return this element's data-KEY attribute. 
+
+        Optional:
+        data_key         Key of requested data.
+
+        """
+        key = "{0}{1}".format(HTML_ATTRIBUTE.DATA, data-key)
+        return self._attribute(key)
+   
+
+    def dataset(self):
+        """ Return this element's data-* attributes. 
+        
+        Return:
+        dict of {key: value}
+
+        """
+        all_attributes = self.attributes()
+        dataset = {}
+
+        # put the data-* key/values into the dataset
+        for attribute, value in all_attributes:
+            data_index = attribute.rfind(HTML_ATTRIBUTE.DATA)
+            if data_index != -1:
+                dataset[attribute[data_index:]] = value
+        return dataset
+
+
+    def set_data(self, data_key, value):
+        """ Set the data-KEY attribute for this element. """
+        data_attribute = "{0}{1}".format(HTML_ATTRIBUTE.DATA, data_key)
+        self._set_attribute(data_attribute, value)
+
+
+    def remove_data(self, data_key):
+        """ Remove the data-KEY attribute for this element. """
+        data_attribute = "{0}{1}".format(HTML_ATTRIBUTE.DATA, data_key)
+        self._remove_attribute(data_attribute)
+    
+    
     def href(self):
         """ Return this element's href attribute. """
         return self._attribute(HTML_ATTRIBUTE.HREF)
@@ -393,6 +447,16 @@ class Element(object):
         self._set_attribute(HTML_ATTRIBUTE.VALUE, value)
     
     
+    def placeholder(self):
+        """ Return this element's placeholder attribute. """
+        return self._attribute(HTML_ATTRIBUTE.PLACEHOLDER)
+
+
+    def set_placeholder(self, value):
+        """ Set the placeholder attribute for this element. """
+        self._set_attribute(HTML_ATTRIBUTE.PLACEHOLDER, value)
+    
+    
     def is_checked(self):
         """ Return True if element is set to be checked. 
         
@@ -452,43 +516,43 @@ class Element(object):
             self.element().append_child(e)
 
 
-    @staticmethod
-    def validate(tags):
-        """ Validate data being used to create a new HTML element. """
-
-        for tag in tags:
-            
-            # is this a valid tag that has been implemented?
-            if tag not in HTML_CONSTANT.TAGS:
-                raise InvalidTagError(tag, "HTML tag not implemented.")
-
-            invalid_attributes = []
-            invalid_classes = []
-
-            for attribute, value in tag.attributes():
-                
-                # is this a valid attribute that has been implemented?
-                if attribute not in HTML_CONSTANT.ATTRIBUTES[tag]:
-                    invalid_attributes.append(attribute)
-                
-                # if this is the class attribute, is its value valid?
-                if attribute == HTML_ATTRIBUTE.CLASS:
-                    class_set = set(tag.classes())
-                    valid_class_set = set(HTML_CONSTANT.CLASSES[tag])
-                    diff_set = class_set.difference(valid_class_set)
-                    # TODO: this should be a dictionary keyed on tag.
-                    invalid_classes.extend(list(diff_set))
-
-            if invalid_attributes is not []:
-                raise InvalidAttributeError(
-                        invalid_attributes,
-                        "HTML attributes not allowed.")
-
-            # TODO: define InvalidClassError and pass it a dictionary.
-            if invalid_attributes is not []:
-                raise InvalidAttributeError(
-                        invalid_classes,
-                        "HTML classes not allowed for this tag.")
+#   @staticmethod
+#   def validate(tags):
+#       """ Validate data being used to create a new HTML element. """
+#
+#       for tag in tags:
+#           
+#           # is this a valid tag that has been implemented?
+#           if tag not in HTML_CONSTANT.TAGS:
+#               raise InvalidTagError(tag, "HTML tag not implemented.")
+#
+#           invalid_attributes = []
+#           invalid_classes = []
+#
+#           for attribute, value in tag.attributes():
+#               
+#               # is this a valid attribute that has been implemented?
+#               if attribute not in HTML_CONSTANT.ATTRIBUTES[tag]:
+#                   invalid_attributes.append(attribute)
+#               
+#               # if this is the class attribute, is its value valid?
+#               if attribute == HTML_ATTRIBUTE.CLASS:
+#                   class_set = set(tag.classes())
+#                   valid_class_set = set(HTML_CONSTANT.CLASSES[tag])
+#                   diff_set = class_set.difference(valid_class_set)
+#                   # TODO: this should be a dictionary keyed on tag.
+#                   invalid_classes.extend(list(diff_set))
+#
+#           if invalid_attributes is not []:
+#               raise InvalidAttributeError(
+#                       invalid_attributes,
+#                       "HTML attributes not allowed.")
+#
+#           # TODO: define InvalidClassError and pass it a dictionary.
+#           if invalid_attributes is not []:
+#               raise InvalidAttributeError(
+#                       invalid_classes,
+#                       "HTML classes not allowed for this tag.")
 
 
     @staticmethod
@@ -804,8 +868,6 @@ class XSRFHiddenInput(HiddenInput):
         """
         super(XSRFHiddenInput, self).__init__(self.xsrf_key, xsrf_token)
 
-# FIXME XXX - store ids using data-id with new data-attribute
-# make form dynamic, then link up with warman.
 
 class TextInput(Input):
 
@@ -897,15 +959,10 @@ class ElementError(Exception):
     
     """
 
-    reason = None
-
-    def __init__(self, error, parameters, description):
+    def __init__(self, parameters, description):
         """ Construct a generic, not quite abstract ElementError. """
-        self.reason = "{0}: <{1}> : {2}".format(
-                error,
-                ", ".join(parameters),
-                description)
-
+        self.expr = ", ".join([str(p) for p in parameters])
+        self.msg = description
 
 class InvalidTagError(ElementError):
 
@@ -919,7 +976,6 @@ class InvalidTagError(ElementError):
     def __init__(self, parameter, description):
         """ Construct a InvalidTagError extending ElementError. """
         super(InvalidTagError, self).__init__(
-                "InvalidTagError",
                 [parameter],
                 description)
 
@@ -936,7 +992,6 @@ class InvalidElementError(ElementError):
     def __init__(self, parameter, description):
         """ Construct a InvalidElementError extending ElementError. """
         super(InvalidElementError, self).__init__(
-                "InvalidElementError",
                 [parameter],
                 description)
 
@@ -953,7 +1008,6 @@ class InvalidContentError(ElementError):
     def __init__(self, parameters, description):
         """ Construct a InvalidContentError extending ElementError. """
         super(InvalidContentError, self).__init__(
-                "InvalidContentError",
                 parameters,
                 description)
 
@@ -970,7 +1024,6 @@ class InvalidAttributeError(ElementError):
     def __init__(self, parameters, description):
         """ Construct a InvalidAttributeError extending ElementError. """
         super(InvalidAttributeError, self).__init__(
-                "InvalidAttributeError",
                 parameters,
                 description)
 

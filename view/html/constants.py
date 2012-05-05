@@ -4,6 +4,11 @@ Provide constants for view.html.
 
     HTML_TAG
     HTML_ATTRIBUTE
+    HTML_TYPE
+    HTML_ID
+    HTML_CLASS
+    HTML_DATA
+    HTML_NAME
     HTML_CONSTANT
 
 """
@@ -160,6 +165,19 @@ class _HTMLAttribute(object):
         return "checked"
 
 
+    @constant
+    def DATA(self):
+        """ DATA is a type of HTML attribute. In fact it's the special 
+        data-* one. """
+        return "data-"
+
+
+    @constant
+    def PLACEHOLDER(self):
+        """ PLACEHOLDER is a type of HTML attribute. """
+        return "placeholder"
+
+
 class _HTMLType(object):
 
     """ _HTMLType class to hold all 'Type' atttribute values. """
@@ -197,10 +215,73 @@ class _HTMLClass(object):
     pass
 
 
+class _HTMLID(object):
+
+    """ _HTMLID class holds all id attributes' possible values. """
+
+
+    @constant
+    def CONTEXT(self):
+        """ CONTEXT is the element that stores context data.. """
+        return "context"
+
+
+class _HTMLName(object):
+
+    """ _HTMLName class holds all name attributes' possible values. """
+
+
+    @constant
+    def LEAGUE(self):
+        """ LEAGUE is the name of a form element that stores league id. """
+        return "league"
+
+
+    @constant
+    def CREATOR(self):
+        """ CREATOR is the name of a form element that stores creator id. """
+        return "creator"
+
+
+    @constant
+    def GAME_SCORE_ID(self):
+        """ GAME_SCORE_ID is the name of a form element. """
+        return "game_score[0][id]"
+
+
+    @constant
+    def GAME_SCORE_SCORE(self):
+        """ GAME_SCORE_SCORE is the name of a form element. """
+        return "game_score[0][score]"
+
+
+class _HTMLData(object):
+
+    """ _HTMLData class to hold all 'Data-' atttribute keys. 
+    
+    Note: These constants have dashes because the html5 spec says they must.
+
+    """
+
+    @constant
+    def ID(self):
+        """ ID is a key of the HTML attribute Data. """
+        return "id"
+
+
+    @constant
+    def OBJECT_TYPE(self):
+        """ OBJECT_TYPE is a key of the HTML attribute Data. """
+        return "object-type"
+
+
 HTML_TAG = _HTMLTag()
 HTML_ATTRIBUTE = _HTMLAttribute()
 HTML_TYPE = _HTMLType()
 HTML_CLASS = _HTMLClass()
+HTML_ID = _HTMLID()
+HTML_NAME = _HTMLName()
+HTML_DATA = _HTMLData()
 
 
 class _HTMLConstant(object):
@@ -234,6 +315,7 @@ class _HTMLConstant(object):
         return [
                 HTML_ATTRIBUTE.CLASS,
                 HTML_ATTRIBUTE.ID,
+                HTML_ATTRIBUTE.DATA,
                 ]
 
 
@@ -258,6 +340,7 @@ class _HTMLConstant(object):
         attributes[HTML_TAG.INPUT].append(HTML_ATTRIBUTE.NAME)
         attributes[HTML_TAG.INPUT].append(HTML_ATTRIBUTE.TYPE)
         attributes[HTML_TAG.INPUT].append(HTML_ATTRIBUTE.VALUE)
+        attributes[HTML_TAG.INPUT].append(HTML_ATTRIBUTE.PLACEHOLDER)
         attributes[HTML_TAG.INPUT].append(HTML_ATTRIBUTE.CHECKED)
         
         # button tags can also have these attributes:
@@ -297,4 +380,5 @@ class _HTMLConstant(object):
 
 
 HTML_CONSTANT = _HTMLConstant()
+
 

@@ -25,12 +25,15 @@ define(
                 this.$el.hide(); //hide dialog section
                 this.$el.append(this.options.html); // insert html
                 this.$el.height(this.options.page_height); // set the correct height
+                
+                // initialize form
+                this.$el.find('[name="league"]').val(this.options.context_id);
             },
 
             // events for this View
             events: {
                 "submit form[name='create-game']":      "submit_dialog",
-                "click button.close":               "close_dialog",
+                "click button.close":                   "close_dialog",
             },
 
             // Handle form submission
