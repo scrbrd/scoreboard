@@ -25,8 +25,9 @@ define(
                     e.preventDefault(); 
                 }, 
                 false);
-        if ($('#' + Constants.SCROLLER_ID).length) {
-            scroller = new iScroll(Constants.SCROLLER_ID);
+        if ($(Constants.ID.SCROLLER).length) {
+            var scroller_id = Constants.ID.SCROLLER.substring(1);
+            scroller = new iScroll(scroller_id);
            
             // Remove global version of iScroll
             delete iScroll;

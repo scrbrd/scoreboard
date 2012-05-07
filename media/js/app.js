@@ -28,7 +28,7 @@ define(
 
             // Post DOM Loaded Initialization 
             $(function() {
-                doc_view = DocView.get_document_view();
+                doc_view = DocView.getDocumentView();
                 Router.initialize(true); // pushstate = true
                 // TODO remove facebook's #_=_ insertion
             });

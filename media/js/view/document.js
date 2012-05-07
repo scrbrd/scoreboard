@@ -22,59 +22,61 @@ define(
         var DocView = Backbone.View.extend({
            
             // This View will hold the body
-            el: $(Constants.BODY_SELECTOR),
+            el: $(Constants.DOM.BODY),
 
             // Reference to DialogView that will be set upon initialize.
             dialog: null,
 
             initialize: function() {
-                this.dialog = this.set_dialog(dialog_html);
+                this.dialog = this.setDialog(dialog_html);
             },
 
-            events: {
-                "click .dialog-link":       "show_dialog"       // show hidden dialog
+            events: function() {
+                var _events = {}; // to allow for variables in the keys...
+                _events["click " + Constants.CLASS.DIALOG_LINK] = "showDialog";
+                return _events;
             },
 
             // Update content component, scroll to top, show, and refresh iScroll
-            update_content: function(new_html) {
-                $(Constants.CONTENT_SELECTOR).toggle(false); // hide content 
-                $(Constants.CONTENT_SELECTOR).html(new_html); // replace content
+            updateContent: function(new_html) {
+                $(Constants.ID.CONTENT).toggle(false); // hide content 
+                $(Constants.ID.CONTENT).html(new_html); // replace content
                 Scroller.scrollTo(0, 0, 0);  // scroll to x, y, time in ms
-                $(Constants.CONTENT_SELECTOR).fadeIn('fast'); // fade in
+                $(Constants.ID.CONTENT).fadeIn('fast'); // fade in
                 Scroller.refresh(); // refresh scroller for changes in size
             },
             
             // Hide the content
-            hide_content: function() {
-                $(Constants.CONTENT_SELECTOR).toggle(false); // hide content
+            hideContent: function() {
+                $(Constants.ID.CONTENT).toggle(false); // hide content
                 var loading_str = "I know I put the results here somewhere..."
-                $(Constants.CONTENT_SELECTOR).html(loading_str).toggle(true); // show 'loading'
+                $(Constants.ID.CONTENT).html(loading_str).toggle(true); // show 'loading'
             },
 
             // Update context header
-            update_context: function(new_html) {
-                $(Constants.CONTEXT_SELECTOR).html(new_html);
+            updateContext: function(new_html) {
+                $(Constants.ID.CONTEXT).html(new_html);
             },
 
             // Add dialog to DOM
-            set_dialog: function(dialog_html) {
-                var page_height = $(Constants.PAGE_SELECTOR).height(); // page height
-                create_game_dialog = new DialogView({
-                    el: Constants.DIALOG_CONTAINER_SELECTOR,
+            setDialog: function(dialog_html) {
+                var page_height = $(Constants.ID.PAGE).height(); // page height
+                var create_game_dialog = new DialogView({
+                    el: Constants.ID.DIALOG_CONTAINER,
                     html: dialog_html,
                     height: page_height,
-                    context_id: $(Constants.CONTEXT_SELECTOR).data(Constants.DATA_ID),
+                    context_id: $(Constants.ID.CONTEXT).data(Constants.DATA.ID),
                 });
                 return create_game_dialog;
             }, 
 
             // Show dialog
-            show_dialog: function() {
+            showDialog: function() {
                 this.dialog.show();
             },
 
             // Hide dialog
-            hide_dialog: function() {
+            hideDialog: function() {
                 this.dialog.hide();
             },
 
@@ -85,7 +87,7 @@ define(
 
         // Singleton accessor to DocView 
         // Will only initialize on first request
-        function get_document_view() {
+        function getDocumentView() {
             if (doc_view == null) {
                 doc_view = new DocView();
             }
@@ -94,7 +96,7 @@ define(
 
         // return module for DocView access
         return {
-            get_document_view: get_document_view
+            getDocumentView: getDocumentView
         };
     }
 );

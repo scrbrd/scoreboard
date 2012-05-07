@@ -2,7 +2,7 @@
  *
  * Hold all multi-module constants
  *
- * global require
+ * All html/css/js constant values should contain dashes.
  *
  */
 
@@ -11,19 +11,45 @@ define(
     function() {
 
         return {
-            PAGE_SELECTOR:              "#page",            // page container
-            DIALOG_CONTAINER_SELECTOR:  "#dialog-container",// dialog container
-            CONTEXT_SELECTOR:           "#context",        // context header
-            CONTENT_SELECTOR:           "#content",         // content
-            SCROLLER_ID:                "iscroll_wrapper",  // iscroll id
-            BODY_SELECTOR:              "body",             // body selector
+            // Dom selectors used by css, js, and jQuery.
+            DOM: {
+                BODY:                   "body",
+                BUTTON:                 "button",
+            },
 
-            // Data-* types
-            DATA_ID:                    "id",           
+            // Id selectors used by css, js, and jQuery.
+            ID: {
+                PAGE:                   "#page",
+                CONTEXT:                "#context",
+                CONTENT:                "#content",
+                DIALOG_CONTAINER:       "#dialog-container",
+                SCROLLER:               "#iscroll_wrapper",
+            },
 
-            // Name attributes
-            NAME_LEAGUE:                "league",
+            // Class selectors used by css, js, and jQuery.
+            CLASS: {
+                DIALOG_LINK:            ".dialog-link",
+                CLOSE:                  ".close",
+            },
 
+            // Allowed data-* attribute values.
+            DATA: {
+                ID:                     "id",
+            },
+                  
+            // Allowed name attribute values. 
+            NAME: {
+                LEAGUE:                 "[name='league']",
+                CREATE_GAME:            "[name='create-game']",
+            },
+            
+            // FIXME XXX - set up better constants in js, come up with system 
+            // to coordinate constants with python, copy system, better
+            // js commenting.
+            // WARMAN - grab current player id from warman to put in creator
+            // input. 
+            // mixpanel, autocomplete
+            // js around multiple game score inputs?
         }
     }
 );
