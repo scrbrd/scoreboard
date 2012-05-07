@@ -43,13 +43,11 @@ define(
                 CREATE_GAME:            "[name='create-game']",
             },
             
-            // FIXME XXX - set up better constants in js, come up with system 
-            // to coordinate constants with python, copy system, better
+            // FIXME XXX - coordinate constants with python, copy system, better
             // js commenting.
             // WARMAN - grab current player id from warman to put in creator
             // input. 
             // mixpanel, autocomplete
-            // js around multiple game score inputs?
         }
     }
 );

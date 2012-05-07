@@ -86,9 +86,9 @@ class NavUL(UL):
         #self.append_classes([])
 
 
-    def set_list_item(self, item):
+    def set_list_item(self, item, index):
         """ Construct and add a link list item as this NavUL's child. """
-        return self.append_child(NavHeaderLI(item))
+        return self.append_child(NavHeaderLI(item, index))
 
 
 class NavHeaderLI(LI):
@@ -100,9 +100,9 @@ class NavHeaderLI(LI):
     """
 
 
-    def __init__(self, item):
+    def __init__(self, item, index):
         """ Construct a nav header list item element tree. """
-        super(NavHeaderLI, self).__init__(item)
+        super(NavHeaderLI, self).__init__(item, index)
 
         span = Span()
         # TODO: is there css we want applied even to this base class?
@@ -123,9 +123,9 @@ class GamesOL(OL):
     """ Games List extending <ol>. """
 
 
-    def set_list_item(self, item):
+    def set_list_item(self, item, index):
         """ Construct and add a list item as a child of this list. """
-        return self.append_child(GameLI(item))
+        return self.append_child(GameLI(item, index))
 
 
 class RankingsOL(OL):
@@ -133,9 +133,9 @@ class RankingsOL(OL):
     """ Rankings List extending <ol>. """
 
 
-    def set_list_item(self, item):
+    def set_list_item(self, item, index):
         """ Construct and add a list item as a child of this list. """
-        return self.append_child(RankingLI(item))
+        return self.append_child(RankingLI(item, index))
 
 
 class GameLI(LI):
@@ -143,9 +143,9 @@ class GameLI(LI):
     """ Game list item extending <li>. """
 
 
-    def __init__(self, item):
+    def __init__(self, item, index):
         """ Construct a game list item element tree. """
-        super(GameLI, self).__init__(item)
+        super(GameLI, self).__init__(item, index)
 
         # TODO: add css
         self.set_data(HTML_DATA.ID, item.id)
@@ -177,9 +177,9 @@ class RankingLI(LI):
     """ Ranking list item extending <li>. """
 
 
-    def __init__(self, item):
+    def __init__(self, item, index):
         """ Construct a ranking list item element tree. """
-        super(RankingLI, self).__init__(item)
+        super(RankingLI, self).__init__(item, index)
 
         # TODO: add css and remove id.
 
@@ -216,7 +216,7 @@ class CreateGameForm(Form):
         self.append_child(HiddenInput(HTML_NAME.CREATOR, "700"))
 
         # need a single item so that OpponentScoreLI is created
-        self.append_child(GameScoreUL([""]))
+        self.append_child(GameScoreUL(["", "", "", ""]))
 
         # add form submit and close buttons
         submit_button = SubmitButton()
@@ -233,25 +233,42 @@ class GameScoreUL(UL):
     """ Game Score List extending <ul>. """
 
 
-    def set_list_item(self, item):
+    def set_list_item(self, item, index):
         """ Construct and add a list item as a child of this list. """
-        return self.append_child(OpponentScoreLI(item))
+        return self.append_child(GameScoreLI(item, index))
 
 
-class OpponentScoreLI(LI):
+class GameScoreLI(LI):
 
-    """ Opponent's Score list item extending <li>. """
+    """ Game Score list item extending <li>. """
 
 
-    def __init__(self, item):
+    def __init__(self, item, index):
         """ Construct a player score list item element tree. """
-        super(OpponentScoreLI, self).__init__(item)
+        super(GameScoreLI, self).__init__(item, index)
 
-        id_input = TextInput(HTML_NAME.GAME_SCORE_ID)
+        self.create_content(item)
+
+
+    def create_content(self, item):
+        """ Generate the content for this game score list item. """
+        # list names format: NAME[INDEX][DATA_TYPE]
+
+        # id
+        game_score_id = "{0}[{1}][{2}]".format(
+                HTML_NAME.GAME_SCORE, 
+                self._index,
+                HTML_DATA.ID)
+        id_input = TextInput(game_score_id)
         id_input.set_placeholder(HTML_COPY.PLAYER_PLACEHOLDER)
         self.append_child(id_input)
 
-        score_input = TextInput(HTML_NAME.GAME_SCORE_SCORE)
+        # score
+        game_score_score = "{0}[{1}][{2}]".format(
+                HTML_NAME.GAME_SCORE, 
+                self._index,
+                HTML_DATA.SCORE)
+        score_input = TextInput(game_score_score)
         score_input.set_placeholder(HTML_COPY.SCORE_PLACEHOLDER)
         self.append_child(score_input)
 

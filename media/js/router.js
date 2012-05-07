@@ -34,8 +34,8 @@ define(
                     },
                     success: function(json_response) {
                         doc_view = DocView.getDocumentView();
-                        doc_view.update_content(json_response.content);
-                        doc_view.update_context(json_response.context_header);
+                        doc_view.updateContent(json_response.content);
+                        doc_view.updateContext(json_response.context_header);
                     }
                 });
             },

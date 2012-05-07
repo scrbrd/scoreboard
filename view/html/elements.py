@@ -598,13 +598,21 @@ class List(Element):
 
     def set_list_items(self, items):
         """ Construct and add list items as this list's children. """
+        index = 0
         for item in items:
-            self.set_list_item(item)
+            self.set_list_item(item, index)
+            indexk = index + 1
 
 
-    def set_list_item(self, item):
-        """ Construct and add a list item as a child of this list. """
-        return self.append_child(LI(item))
+    def set_list_item(self, item, index):
+        """ Construct and add a list item as a child of this list. 
+        
+        Required:
+        ??? item    undefined item that each subclass LI will interpret
+        int index   index of item on the list
+
+        """
+        return self.append_child(LI(item, index))
 
 
 class OL(List):
@@ -651,12 +659,17 @@ class LI(Element):
                                 following list items will increment from
                                 that number (only for <ol> lists)
 
+    Required:
+    int     _index              index of this list item. 
     """
 
+    _index = -1
 
-    def __init__(self, item):
+    def __init__(self, item, index):
         """ Construct a <li>. """
         super(LI, self).__init__(HTML_TAG.LI)
+
+        _index = index
 
         # TODO: are there special members we want applied to a generic list
         # item, such as special_item or this_is_you?

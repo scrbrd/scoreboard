@@ -230,15 +230,9 @@ class _HTMLName(object):
 
 
     @constant
-    def GAME_SCORE_ID(self):
-        """ GAME_SCORE_ID is the name of a form element. """
-        return "game_score[0][id]"
-
-
-    @constant
-    def GAME_SCORE_SCORE(self):
-        """ GAME_SCORE_SCORE is the name of a form element. """
-        return "game_score[0][score]"
+    def GAME_SCORE(self):
+        """ GAME_SCORE is the name of a set of form elements. """
+        return "game_score"
 
 
 class _HTMLData(object):
@@ -259,6 +253,12 @@ class _HTMLData(object):
     def OBJECT_TYPE(self):
         """ OBJECT_TYPE is a key of the HTML attribute Data. """
         return "object-type"
+
+
+    @constant
+    def SCORE(self):
+        """ SCORE is a key of the HTML attribute Data. """
+        return "score"
 
 
 HTML_TAG = _HTMLTag()
