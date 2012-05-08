@@ -1,0 +1,5 @@
+Topic Type: Module
+    Plural: Modules
+    Scope: Start
+    Keywords:
+        module, modules

@@ -1,21 +1,26 @@
-/* Filename: boilerplate.js
- *
- * PURPOSE
- *
- * global require
- *
- */
-
+/* 
+    Module: Boilerplate
+    Write the most accurate and succinct description you possibly can.
+    
+    Dependencies:
+        $ 
+        Backbone - some information if you think you need it.
+*/
 define(
     [
-        // Aliases from main.js to module versions of packages
         "jQuery",
         "Backbone",
     ],
     function($, Backbone) {
-
-
-        return {}
+        
+        /*
+            Class: TheMostSpecial
+            Manage all the important stuff including X, Y, and Z.
+        */
+        var TheMostSpecial = {
+        }
+    
+        return new TheMostSpecial()
     }
 );
 

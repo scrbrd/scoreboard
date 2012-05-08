@@ -3,6 +3,8 @@
 Provide mobile views.
 
 """
+import json
+
 from view.constants import HTML_COPY
 
 from constants import HTML_DATA, HTML_ID, HTML_CLASS, HTML_NAME
@@ -26,14 +28,21 @@ class ContextHeader(H2):
     """ Context header extending <h2>. """
 
 
-    def __init__(self, context):
+    def __init__(self, context, rivals):
         """ Construct a context header element tree. """
         super(ContextHeader, self).__init__()
+
+        # set context data
         self.set_id(HTML_ID.CONTEXT)
         self.set_data(HTML_DATA.ID, context.id)
         self.set_data(HTML_DATA.OBJECT_TYPE, context.type)
         self.set_text(context.name)
 
+        # set rivals data
+        view_rivals = []
+        for r in rivals:
+            view_rivals.append({HTML_DATA.ID: r.id, HTML_DATA.NAME: r.name})
+        self.set_data(HTML_DATA.RIVALS, json.dumps(view_rivals))
 
 class DialogHeader(Header):
     
@@ -223,7 +232,7 @@ class CreateGameForm(Form):
         submit_button.set_text(HTML_COPY.SUBMIT)
         self.append_child(submit_button)
         close_button = Button()
-        close_button.append_class("close")
+        close_button.append_class(HTML_CLASS.CLOSE)
         close_button.set_text(HTML_COPY.CLOSE)
         self.append_child(close_button)
 
@@ -253,7 +262,6 @@ class GameScoreLI(LI):
     def create_content(self, item):
         """ Generate the content for this game score list item. """
         # list names format: NAME[INDEX][DATA_TYPE]
-
         # id
         game_score_id = "{0}[{1}][{2}]".format(
                 HTML_NAME.GAME_SCORE, 
@@ -261,6 +269,7 @@ class GameScoreLI(LI):
                 HTML_DATA.ID)
         id_input = TextInput(game_score_id)
         id_input.set_placeholder(HTML_COPY.PLAYER_PLACEHOLDER)
+        id_input.set_classes([HTML_CLASS.PLAYER_SELECT])
         self.append_child(id_input)
 
         # score

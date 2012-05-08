@@ -1,85 +1,159 @@
-/* Filename: dialog.js
- *
- * Extend Backbone's View to manage dialog functionality.
- *
- * global require
- *
- */
+/* 
+    Module: Dialog
+    Manage DOM manipulations of Dialog by extending Backbone's View.
 
+    Package:
+        view
+
+    Dependencies:
+        $
+        Backbone
+        Const
+        Crud - Create, Read, Update, Delete
+        DomUtil - util.DomUtil
+*/
 define(
     [
-        // Aliases from main.js to module versions of packages
         "jQuery",
         "Backbone",
         "js/constants",
         "js/crud",
+        "util/dom",
     ],
-    function($, Backbone, Constants, Crud) {
+    function($, Backbone, Const, Crud, DomUtil) {
 
+        /*
+            Class: DialogView
+            Manage all DOM manipulations under "#dialog".
+
+            Subclasses:
+                <Backbone.View at http://documentcloud.github.com/backbone/#View>
+
+        */
         var DialogView = Backbone.View.extend({
            
-            // Required:
-            // string   html            html to add to the dialog id
-            // int      page_height     height that dialog should be
+            /*
+                Function: initialize
+                Initialize all sub-elements of DialogView.
+
+                Options:
+                    html - (string) HTML to add to the dialog element.
+                    height - (int) Dialog element's height.
+                    context_id - (int) Api id of the context of the dialog.
+                    rivals - (json) List of objects representing rivals. 
+                             These objects have keys "id", "name".
+
+                First hides the dialog element, then adds the new markup, then
+                stretches it to the proper height, and finally initializes its
+                form.
+            */
             initialize: function() {
-                this.$el.hide(); //hide dialog section
-                this.$el.append(this.options.html); // insert html
-                this.$el.height(this.options.height); // set the correct height
-                
-                // initialize form
+                this.$el.hide();
+                this.$el.append(this.options.html); 
+                this.$el.height(this.options.height); 
 
-                this._setupForm(this.options.context_id);
+                this._setupForm(this.options.context_id, this.options.rivals);
             },
 
-            // events for this View
+
+            /* 
+                Function: events
+                Add all event handlers.
+
+                Events:
+                    submit form[name='.create-game'] --> submitDialog
+                    click button.close --> closeDialog
+
+                Note: Keep _events notation to allow event keys to be 
+                variables.
+            */
             events: function() {
-                    var _events = {}; // to allow for variables in the keys...
-                    _events["submit " + Constants.NAME.CREATE_GAME] = "submitDialog";
-                    var closeButton = Constants.DOM.BUTTON + Constants.CLASS.CLOSE;
-                    _events["click " + closeButton] = "closeDialog";
-                    return _events;
+                var _events = {};
+                var submitForm = Const.NAME.CREATE_GAME;
+                var closeButton = Const.DOM.BUTTON + Const.CLASS.CLOSE;
+                
+                _events["submit " + submitForm] = "submitDialog";
+                _events["click " + closeButton] = "closeDialog";
+                return _events;
             },
 
-            // Handle form submission
+
+            /* 
+                Function: submitDialog
+                Submit dialog's form and hangle all data manipulation.
+
+                Parameters:
+                    event - the event that caused this handler to trigger
+
+                See:
+                    form2js.toObject
+            */
             submitDialog: function(event) {
-                // using toObject from form2js jquery plugin
-                Crud.create("game", $(event.target).toObject());
-                this.hide();
                 // TODO reset form (after game is created successfully...)
+
+                Crud.createGame($(event.target).toObject());
+                this.hide();
                 return false;
             },
 
-            // Handle closing dialog
+
+            /* 
+                Function: closeDialog
+                Close and hide dialog.
+            */
             closeDialog: function() {
-                this.hide();
                 // TODO reset form
+                
+                this.hide();
                 return false;
             },
             
-            // Show dialog screen
+
+            /* 
+                Function: show
+                Show this View with proper bells and whistles.
+            */
             show: function() {
                 this.$el.slideDown('fast');
             },
 
-            // Hide dialog screen
+
+            /* 
+                Function: hide
+                Hide this View with proper bells and whistles.
+            */
             hide: function() {
                 this.$el.slideUp('fast');
             },
 
-            // Set up form
-            _setupForm: function(league_id) {
-                // pull user's league value from context object
-                this.$el.find(Constants.NAME.LEAGUE).val(league_id);
+
+            /* 
+                Function: _setupForm
+                Sets up the dialog's form with contextual 
+                values and autocomplete functionality.
+
+                PRIVATE
+                
+                Parameters:
+                    league_id - (int) Api id for page's League object.
+                    rivals - (list) List of objects representing rivals,
+                            with the keys "id", "name"
+
+            */
+            _setupForm: function(league_id, rivals) {
+                // Pull page's league id value from context object
+                this.$el.find(Const.NAME.LEAGUE).val(league_id);
             
                 // TODO: add additional row functionality
                 // diabled row, gets enabled, add new row
 
-
+                // set up autocomplete for player selection
+                DomUtil.Autocomplete.autocompletePlayer(
+                        rivals,
+                        Const.NAME.CREATE_GAME,
+                        Const.CLASS.PLAYER_SELECT);
             },
-
         });
-
-        
         return DialogView;
     }
 );

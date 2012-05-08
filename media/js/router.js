@@ -1,11 +1,12 @@
-/* Filename: router.js
- *
- * Router wraps Backbone Routes
- *
- * global require
- *
- */
+/* 
+    Module: Router
+    Handle all routing interactions with server by using Backbone. 
 
+    Dependencies:
+        $
+        Backbone
+        DocView - view.DocView
+*/
 define(
     [
         "jQuery",
@@ -14,8 +15,17 @@ define(
     ], 
     function($, Backbone, DocView) {
 
-        // Router for any page requests (usually affects URL/history) -
-        // Backbone
+        /*
+            Class: NavRouter
+            Handle all navigational routing actions by using Backbone.
+
+            Subclasses:
+                <Backbone.Router at http://documentcloud.github.com/backbone/#Router>
+
+            Routes:
+                /rankings - Load a Rankings page.
+                /games - Load a Games list page.
+        */
         var NavRouter = Backbone.Router.extend({
 
             routes: {
@@ -30,10 +40,10 @@ define(
                     url: tab, 
                     data: {"asynch": true},
                     beforeSend: function() {
-                        DocView.getDocumentView().hideContent();
+                        DocView.getDocView().hideContent();
                     },
                     success: function(json_response) {
-                        doc_view = DocView.getDocumentView();
+                        doc_view = DocView.getDocView();
                         doc_view.updateContent(json_response.content);
                         doc_view.updateContext(json_response.context_header);
                     }
@@ -43,11 +53,21 @@ define(
             error: function(error) {
                 console.log("no handler: " + error);
             },
-
         });
 
-        // Set up Backbone's Router
-        var initialize = function(pushState) {
+
+        /*
+            Function: setupNavRouter
+            Initialize NavRouter's history and handle PushState
+
+            Parameters:
+                pushState - boolean turning pushState on or off. If 
+                            true then remove default link functionality.
+
+            Dependencies:
+                domReady (TODO: make this relationship formal)
+        */
+        var setupNavRouter = function(pushState) {
         
             // Backbone using History API's PushState
             var app_router = new NavRouter;
@@ -90,9 +110,9 @@ define(
             } 
         }
 
-        // Return a Router object with functions
+        // Use setupNavRouter to setup this module's connection to Backbone
         return {
-            initialize: initialize, // associates NavRouter with Backbone
+            setupNavRouter: setupNavRouter, 
         }
 
     }

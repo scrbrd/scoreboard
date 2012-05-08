@@ -8,6 +8,7 @@
 
 define([
         "order!lib/jquery/jquery-min",
+        "order!lib/jquery/jquery-ui/jquery-ui-min",
         "order!lib/jquery/form2js/form2js",
         "order!lib/jquery/form2js/jquery.toObject",
         ], function() {

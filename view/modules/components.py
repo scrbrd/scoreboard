@@ -55,7 +55,8 @@ class UIContextHeader(tornado.web.UIModule):
 
         try:
             context = model.context
-            element_tree = ContextHeader(context).element()
+            rivals = model.rivals
+            element_tree = ContextHeader(context, rivals).element()
 
         except AttributeError as e:
             #logger.debug(e.reason)
@@ -171,6 +172,7 @@ class UICreateGameDialog(tornado.web.UIModule):
 
         except AttributeError as e:
             #logger.debug(e.reason)
+            raise e
             element_tree = None
             form_tree = None
 

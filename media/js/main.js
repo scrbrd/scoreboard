@@ -1,13 +1,18 @@
-/* Filename: main.js
- *
- * Main js that configures require and loads other js files
- *
- * global require
- *
- */
+/* 
+    Module: Main
+    Setup Require.js and load application.
+
+    Main is run first as part of the require.js framework. Require
+    the App, require the non-AMD javascript modules in the correct
+    order, load the plugins (text, domReady, order), and initialize
+    App.
+    
+    Settings:
+        baseUrl - everything is relative to the root directory
+        paths - all shortcut paths to use throughout javascript
 
 
-// these shortcuts will be used in application files
+*/
 require.config({
     baseUrl: "/",
 
@@ -19,6 +24,7 @@ require.config({
         iScroll: "static/js/lib/iscroll/iscroll",
         js: "static/js",
         lib: "static/js/lib",
+        util: "static/js/util",
         view: "static/js/view",
         order: "static/js/lib/require/order",
         text: "static/js/lib/require/text",
@@ -34,6 +40,7 @@ require(
 
         // non-AMD 'modules'
         "order!lib/jquery/jquery-min",
+        "order!lib/jquery/jquery-ui/jquery-ui-min",
         "order!lib/jquery/form2js/form2js",
         "order!lib/jquery/form2js/jquery.toObject",
         "order!lib/underscore/underscore-min",

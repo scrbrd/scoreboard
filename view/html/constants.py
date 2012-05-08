@@ -197,8 +197,16 @@ class _HTMLClass(object):
     """ _HTMLClass class to hold all defined HTML classes. """
 
 
-    # TODO: FILL ME IN AND REMOVE pass!
-    pass
+    @constant
+    def CLOSE(self):
+        """ CLOSE is a html/css/js class. """
+        return "close"
+
+
+    @constant
+    def PLAYER_SELECT(self):
+        """ PLAYER_SELECT is a html/css/js class. """
+        return "player-select"
 
 
 class _HTMLID(object):
@@ -240,6 +248,7 @@ class _HTMLData(object):
     """ _HTMLData class to hold all 'Data-' atttribute keys. 
     
     Note: These constants have dashes because the html5 spec says they must.
+    Note: These can be used for json data as well.
 
     """
 
@@ -250,6 +259,12 @@ class _HTMLData(object):
 
 
     @constant
+    def NAME(self):
+        """ NAME is a key of the HTML attribute Data. """
+        return "name"
+    
+    
+    @constant
     def OBJECT_TYPE(self):
         """ OBJECT_TYPE is a key of the HTML attribute Data. """
         return "object-type"
@@ -259,6 +274,11 @@ class _HTMLData(object):
     def SCORE(self):
         """ SCORE is a key of the HTML attribute Data. """
         return "score"
+
+    @constant
+    def RIVALS(self):
+        """ RIVALS is a key of the HTML attribute Data. """
+        return "rivals"
 
 
 HTML_TAG = _HTMLTag()

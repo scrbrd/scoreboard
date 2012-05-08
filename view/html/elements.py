@@ -601,7 +601,7 @@ class List(Element):
         index = 0
         for item in items:
             self.set_list_item(item, index)
-            indexk = index + 1
+            index = index + 1
 
 
     def set_list_item(self, item, index):
@@ -668,8 +668,7 @@ class LI(Element):
     def __init__(self, item, index):
         """ Construct a <li>. """
         super(LI, self).__init__(HTML_TAG.LI)
-
-        _index = index
+        self._index = index
 
         # TODO: are there special members we want applied to a generic list
         # item, such as special_item or this_is_you?

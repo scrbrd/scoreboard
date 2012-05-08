@@ -13,7 +13,7 @@ define(
         "domReady!",                        // only call when DOM is ready
         "order!lib/iscroll/iscroll-min",
     ], 
-    function($, Constants, doc) {
+    function($, Const, doc) {
    
         // Instantiate iScroll object
         // TODO remove if and put that conditional in the script load
@@ -25,8 +25,8 @@ define(
                     e.preventDefault(); 
                 }, 
                 false);
-        if ($(Constants.ID.SCROLLER).length) {
-            var scroller_id = Constants.ID.SCROLLER.substring(1);
+        if ($(Const.ID.SCROLLER).length) {
+            var scroller_id = Const.ID.SCROLLER.substring(1);
             scroller = new iScroll(scroller_id);
            
             // Remove global version of iScroll

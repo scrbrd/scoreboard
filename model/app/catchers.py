@@ -18,24 +18,51 @@ class Catcher(object):
 
     Catchers wrap around returned data to provide controlled access
     outside of model.
-    
-    Required:
-    League _context   container of objects (id, name fields required)
-    
+
     """
 
     
-    _context = None
-
     def __init__(self):
         """ Catcher is an abstract superclass. """
         raise NotImplementedError("Catcher must be extended by a subclass.")
     
     
+class ReadCatcher(Catcher):
+    
+    """ Read and return  all data for a model request.
+
+    Required:
+    League  _context    container of objects (id, name fields required)
+    list    _rivals     list of Opponents (id, name)
+
+    """
+    
+    
+    _context = None
+    _rivals = None
+
     def _load_catcher(self):
         """ Load all necessary data. """
         raise NotImplementedError("Catcher must be extended by a subclass.")
    
+
+    def _load_rivals(self, league_id, opponents=None):
+        """ Load rival list for context. 
+       
+        Required:
+        int     league_id   league that rivals are part of
+
+        Optional:
+        list    opponents   List of opponents. if it is excluded then
+                            load from league_id.
+
+        """
+        if opponents is None:
+            league = League.load_opponents(league_id)
+            self._rivals = league.get_opponents()
+        else: 
+            self._rivals = opponents
+
 
     @property
     def context(self):
@@ -43,7 +70,15 @@ class Catcher(object):
         return self._context
 
 
-class GamesCatcher(Catcher):
+    @property
+    def rivals(self):
+        """ List of Opponents with name and id. """
+        return self._rivals
+
+
+
+    
+class GamesCatcher(ReadCatcher):
     
     """ Fetch and return all data necessary for a games list.
 
@@ -83,7 +118,14 @@ class GamesCatcher(Catcher):
         # NOTE: These Games are different objects than the ones in the
         # League though they represent the same data objects.
         self._games = games_with_opponents.values()
-        
+   
+        # send all opponents to rivals
+        unique_opponents = {}
+        for g in games_with_opponents.values():
+            for o in g.get_opponents():
+                unique_opponents[o.id] = o
+        self._load_rivals(league_id, unique_opponents.values())
+
 
     @property
     def games(self):
@@ -123,7 +165,7 @@ class GamesCatcher(Catcher):
         return outcomes_by_game
     
 
-class RankingsCatcher(Catcher):
+class RankingsCatcher(ReadCatcher):
         
     """ Generate league's rankings based on most wins.
     
@@ -151,6 +193,9 @@ class RankingsCatcher(Catcher):
         # leagues' opponents by Win Count
         self._opponents = league.get_opponents()
         self._opponents.sort(key = lambda x: x.win_count, reverse=True)
+
+        # load opponents into rivals as well
+        self._load_rivals(league_id, self._opponents)
 
 
     @property
