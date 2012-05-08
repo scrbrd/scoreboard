@@ -14,14 +14,14 @@ from model.api import editor, loader
 from model.api.game import Game
 
 # CONSTANTS
-NUMBER_OF_GAMES = 30
+NUMBER_OF_GAMES = 10
 
 
 # LEAGUE CREATION
 # TODO: there should be a static League function for prototyping a League
 proto = editor.prototype_node(
         API_NODE_TYPE.LEAGUE,
-        {API_NODE_PROPERTY.NAME: "The Banana Stand"})
+        {API_NODE_PROPERTY.NAME: "Game of Thrones"})
 league = editor.create_node_and_edges(proto, [])
 
 print("League ({0}) created successfully.".format(league.id))
@@ -30,50 +30,29 @@ print("League ({0}) created successfully.".format(league.id))
 # PLAYER CREATION
 players = []
 players.append({
-    API_NODE_PROPERTY.FIRST_NAME: "Jon",
-    API_NODE_PROPERTY.LAST_NAME: "Warman"})
+    API_NODE_PROPERTY.FIRST_NAME: "David",
+    API_NODE_PROPERTY.LAST_NAME: "Wright"})
 players.append({
-    API_NODE_PROPERTY.FIRST_NAME: "Bobby",
-    API_NODE_PROPERTY.LAST_NAME: "Kellogg"})
+    API_NODE_PROPERTY.FIRST_NAME: "Albert",
+    API_NODE_PROPERTY.LAST_NAME: "Pujols"})
 players.append({
-    API_NODE_PROPERTY.FIRST_NAME: "Evan",
-    API_NODE_PROPERTY.LAST_NAME: "Hammer"})
+    API_NODE_PROPERTY.FIRST_NAME: "Rafael",
+    API_NODE_PROPERTY.LAST_NAME: "Nadal"})
 players.append({
-    API_NODE_PROPERTY.FIRST_NAME: "Leigh",
-    API_NODE_PROPERTY.LAST_NAME: "Salem"})
+    API_NODE_PROPERTY.FIRST_NAME: "Cristiano",
+    API_NODE_PROPERTY.LAST_NAME: "Ronaldo"})
 players.append({
-    API_NODE_PROPERTY.FIRST_NAME: "Tom",
-    API_NODE_PROPERTY.LAST_NAME: "Greenwood"})
-players.append({
-    API_NODE_PROPERTY.FIRST_NAME: "Tom",
-    API_NODE_PROPERTY.LAST_NAME: "Grant"})
-players.append({
-    API_NODE_PROPERTY.FIRST_NAME: "Zaphod",
-    API_NODE_PROPERTY.LAST_NAME: "Beeblebrox"})
-players.append({
-    API_NODE_PROPERTY.FIRST_NAME: "Blue",
-    API_NODE_PROPERTY.LAST_NAME: "Steel"})
-players.append({
-    API_NODE_PROPERTY.FIRST_NAME: "Jennifer",
-    API_NODE_PROPERTY.LAST_NAME: "Clone"})
-players.append({
-    API_NODE_PROPERTY.FIRST_NAME: "Melissa",
-    API_NODE_PROPERTY.LAST_NAME: "Merrill"})
-players.append({
-    API_NODE_PROPERTY.FIRST_NAME: "Rachael",
-    API_NODE_PROPERTY.LAST_NAME: "Rosen"})
-players.append({
-    API_NODE_PROPERTY.FIRST_NAME: "Eric",
-    API_NODE_PROPERTY.LAST_NAME: "Cartman"})
-players.append({
-    API_NODE_PROPERTY.FIRST_NAME: "Barack",
-    API_NODE_PROPERTY.LAST_NAME: "Obama"})
+    API_NODE_PROPERTY.FIRST_NAME: "Michael",
+    API_NODE_PROPERTY.LAST_NAME: "Phelps"})
 players.append({
     API_NODE_PROPERTY.FIRST_NAME: "Jeremy",
     API_NODE_PROPERTY.LAST_NAME: "Lin"})
 players.append({
-    API_NODE_PROPERTY.FIRST_NAME: "Action",
-    API_NODE_PROPERTY.LAST_NAME: "Jackson"})
+    API_NODE_PROPERTY.FIRST_NAME: "Lance",
+    API_NODE_PROPERTY.LAST_NAME: "Armstrong"})
+players.append({
+    API_NODE_PROPERTY.FIRST_NAME: "Alexander",
+    API_NODE_PROPERTY.LAST_NAME: "Ovechkin"})
 
 for p in players:
     protoplayer = editor.prototype_node(

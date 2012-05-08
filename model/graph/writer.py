@@ -16,6 +16,9 @@ Provides:
 from time import time
 
 from model.data import db, DbInputError, DbReadError, DbWriteError
+from model.constants import NODE_PROPERTY, EDGE_PROPERTY
+
+from constants import GRAPH_PROPERTY
 from model.graph import GraphEdge, GraphNode, GraphInputError
 
 
@@ -45,11 +48,12 @@ def create_node(prototype_node):
 
         # make sure callers don't usurp power over data input
         bad_properties = [
-                "node_id",
-                "type",
-                "created_ts",
-                "updated_ts",
-                "deleted_ts"]
+                NODE_PROPERTY.ID,
+                NODE_PROPERTY.TYPE,
+                GRAPH_PROPERTY.CREATED_TS,
+                GRAPH_PROPERTY.UPDATED_TS,
+                GRAPH_PROPERTY.DELETED_TS
+                ]
 
         input_errors = set(bad_properties).intersection(set(properties))
 
@@ -60,18 +64,18 @@ def create_node(prototype_node):
 
         # initialize some required properties
         current_ts = int(time())
-        properties["created_ts"] = current_ts
-        properties["updated_ts"] = current_ts
-        properties["deleted_ts"] = False
+        properties[GRAPH_PROPERTY.CREATED_TS] = current_ts
+        properties[GRAPH_PROPERTY.UPDATED_TS] = current_ts
+        properties[GRAPH_PROPERTY.DELETED_TS] = False
 
         # issue a call to the data layer
         node = db.create_node(prototype_node.type(), properties)
 
         graph_node = GraphNode(
-                node["node_id"],
-                node["type"],
-                node["properties"],
-                node["edges"])
+                node[NODE_PROPERTY.ID],
+                node[NODE_PROPERTY.TYPE],
+                node[NODE_PROPERTY.PROPERTIES],
+                node[NODE_PROPERTY.EDGES])
 
     except DbInputError as e:
         #logger.debug(e.reason)
@@ -105,11 +109,12 @@ def update_node(node_id, new_properties):
     try:
         # make sure callers don't usurp power over data input
         bad_properties = [
-                "node_id",
-                "type",
-                "created_ts",
-                "updated_ts",
-                "deleted_ts"]
+                NODE_PROPERTY.ID,
+                NODE_PROPERTY.TYPE,
+                GRAPH_PROPERTY.CREATED_TS,
+                GRAPH_PROPERTY.UPDATED_TS,
+                GRAPH_PROPERTY.DELETED_TS
+                ]
         
         input_errors = set(bad_properties).intersection(set(new_properties))
         
@@ -119,16 +124,16 @@ def update_node(node_id, new_properties):
                     "Invalid input supplied to update_node().")
 
         # make required changes
-        new_properties["updated_ts"] = int(time())
+        new_properties[GRAPH_PROPERTY.UPDATED_TS] = int(time())
 
         # issue a call to the data layer
         node = db.update_node(node_id, new_properties)
 
         graph_node = GraphNode(
-                node["node_id"],
-                node["type"],
-                node["properties"],
-                node["edges"])
+                node[NODE_PROPERTY.ID],
+                node[NODE_PROPERTY.TYPE],
+                node[NODE_PROPERTY.PROPERTIES],
+                node[NODE_PROPERTY.EDGES])
 
     except DbInputError as e:
         #logger.debug(e.reason)
@@ -159,10 +164,10 @@ def delete_node(node_id):
         node = db.delete_node(node_id, {"deleted_ts" : int(time())})
 
         graph_node = GraphNode(
-                node["node_id"],
-                node["type"],
-                node["properties"],
-                node["edges"])
+                node[NODE_PROPERTY.ID],
+                node[NODE_PROPERTY.TYPE],
+                node[NODE_PROPERTY.PROPERTIES],
+                node[NODE_PROPERTY.EDGES])
 
     except DbInputError as e:
         #logger.debug(e.reason)
@@ -196,15 +201,16 @@ def create_edge(prototype_edge):
 
         # make sure callers don't usurp power over data input
         bad_properties = [
-                "edge_id",
-                "from_node_id",
-                "to_node_id",
-                "type",
-                #"is_one_way",
-                #"is_unique",
-                "created_ts",
-                "updated_ts",
-                "deleted_ts"]
+                EDGE_PROPERTY.ID,
+                EDGE_PROPERTY.FROM_NODE_ID,
+                EDGE_PROPERTY.TO_NODE_ID,
+                EDGE_PROPERTY.TYPE,
+                #GRAPH_PROPERTY.IS_ONE_WAY,
+                #GRAPH_PROPERTY.IS_UNIQUE,
+                GRAPH_PROPERTY.CREATED_TS,
+                GRAPH_PROPERTY.UPDATED_TS,
+                GRAPH_PROPERTY.DELETED_TS
+                ]
 
         input_errors = set(bad_properties).intersection(set(properties))
 
@@ -219,9 +225,9 @@ def create_edge(prototype_edge):
         #properties["is_unique"] = is_unique
 
         current_ts = int(time())
-        properties["created_ts"] = current_ts
-        properties["updated_ts"] = current_ts
-        properties["deleted_ts"] = False
+        properties[GRAPH_PROPERTY.CREATED_TS] = current_ts
+        properties[GRAPH_PROPERTY.UPDATED_TS] = current_ts
+        properties[GRAPH_PROPERTY.DELETED_TS] = False
 
         # issue a call to the data layer
         edge = db.create_edge(
@@ -231,11 +237,11 @@ def create_edge(prototype_edge):
                 properties)
 
         graph_edge = GraphEdge(
-                edge["edge_id"],
-                edge["type"],
-                edge["properties"],
-                edge["from_node_id"],
-                edge["to_node_id"])
+                edge[EDGE_PROPERTY.ID],
+                edge[EDGE_PROPERTY.TYPE],
+                edge[EDGE_PROPERTY.PROPERTIES],
+                edge[EDGE_PROPERTY.FROM_NODE_ID],
+                edge[EDGE_PROPERTY.TO_NODE_ID])
 
     except DbInputError as e:
         #logger.debug(e.reason)
@@ -268,15 +274,16 @@ def update_edge(edge_id, new_properties):
     try:
         # make sure callers don't usurp power over data input
         bad_properties = [
-                "edge_id",
-                "from_node_id",
-                "to_node_id",
-                "type",
-                #"is_one_way",
-                #"is_unique",
-                "created_ts",
-                "updated_ts",
-                "deleted_ts"]
+                EDGE_PROPERTY.ID,
+                EDGE_PROPERTY.FROM_NODE_ID,
+                EDGE_PROPERTY.TO_NODE_ID,
+                EDGE_PROPERTY.TYPE,
+                #GRAPH_PROPERTY.IS_ONE_WAY,
+                #GRAPH_PROPERTY.IS_UNIQUE,
+                GRAPH_PROPERTY.CREATED_TS,
+                GRAPH_PROPERTY.UPDATED_TS,
+                GRAPH_PROPERTY.DELETED_TS
+                ]
 
         input_errors = set(bad_properties).intersection(set(new_properties))
 
@@ -286,17 +293,17 @@ def update_edge(edge_id, new_properties):
                     "Invalid input supplied to update_edge().")
 
         # make required changes
-        new_properties["updated_ts"] = int(time())
+        new_properties[GRAPH_PROPERTY.UPDATED_TS] = int(time())
 
         # issue a call to the data layer
         edge = db.update_edge(edge_id, new_properties)
 
         graph_edge = GraphEdge(
-                edge["edge_id"],
-                edge["type"],
-                edge["properties"],
-                edge["from_node_id"],
-                edge["to_node_id"])
+                edge[EDGE_PROPERTY.ID],
+                edge[EDGE_PROPERTY.TYPE],
+                edge[EDGE_PROPERTY.PROPERTIES],
+                edge[EDGE_PROPERTY.FROM_NODE_ID],
+                edge[EDGE_PROPERTY.TO_NODE_ID])
 
     except DbInputError as e:
         #logger.debug(e.reason)
@@ -324,14 +331,16 @@ def delete_edge(edge_id):
         
     try:
         # issue a call to the data layer with the required changes 
-        edge = db.delete_edge(edge_id, {"deleted_ts" : int(time())})
+        edge = db.delete_edge(
+                edge_id,
+                {GRAPH_PROPERTY.DELETED_TS : int(time())})
 
         graph_edge = GraphEdge(
-                edge["edge_id"],
-                edge["type"],
-                edge["properties"],
-                edge["from_node_id"],
-                edge["to_node_id"])
+                edge[EDGE_PROPERTY.ID],
+                edge[EDGE_PROPERTY.TYPE],
+                edge[EDGE_PROPERTY.PROPERTIES],
+                edge[EDGE_PROPERTY.FROM_NODE_ID],
+                edge[EDGE_PROPERTY.TO_NODE_ID])
 
     except DbInputError as e:
         #logger.debug(e.reason)

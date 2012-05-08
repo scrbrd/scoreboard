@@ -10,13 +10,12 @@ to the db or if the db returns an error, including a bad id error.
 
 import urllib, urllib2, json
 
+from model.constants import NODE_PROPERTY, EDGE_PROPERTY
+from constants import GREMLIN, NEO4J
+
 import response_parser
 from model.data import DbConnectionError
 
-_gremlin_path = "/db/data/ext/GremlinPlugin/graphdb/execute_script"
-_gremlin_base_err = "javax.script.ScriptException: "
-_gremlin_null_err = "java.lang.NullPointerException"
-_gremlin_input_err = "java.lang.IllegalArgumentException"
 
 
 def create_node(base_url, type, properties):
@@ -31,19 +30,23 @@ def create_node(base_url, type, properties):
     keys = node_id, type, properties, edges
     
     """
-    url = base_url + _gremlin_path
 
-    # add type to properties dictionary
-    properties["type"] = type
+    # add type to properties dictionary before generating script
+    properties[NODE_PROPERTY.TYPE] = type
 
-    data = {}
-    # does grabbing the empty edges list take time here?
-    data["script"] = "g.addVertex(properties).transform{[it, it.outE()]}"
-    data["params"] = {"properties": properties}
-    
+    # TODO: does grabbing the empty edges list take time here?
+    script = "g.addVertex({0}).transform{{[it, it.outE()]}}".format(
+            NODE_PROPERTY.PROPERTIES)
+    params = {NODE_PROPERTY.PROPERTIES : properties}
+
+    url = base_url + GREMLIN.PATH
+    data = {NEO4J.SCRIPT : script, NEO4J.PARAMS : params}
+
     response_data = connect(url, json.dumps(data))
+
     return response_parser.format_node(response_data[0])
-    
+
+
 def create_edge(base_url, from_node, to_node, type, properties):
     """ Create an edge in the db using gremlin and return created edge.
 
@@ -58,24 +61,35 @@ def create_edge(base_url, from_node, to_node, type, properties):
     keys = edge_id, from_node_id, to_node_id, type, properties
     
     """
-    url = base_url + _gremlin_path
-   
-    data = {}
-    data["script"] = "g.addEdge(g.v(from),g.v(to),type,properties)"
-    data["params"] = {
-            "from": from_node, 
-            "to": to_node, 
-            "type": type,
-            "properties": properties}
+
+    script = "g.addEdge(g.v({0}), g.v({1}), {2}, {3})".format(
+            EDGE_PROPERTY.FROM_NODE_ID,
+            EDGE_PROPERTY.TO_NODE_ID,
+            EDGE_PROPERTY.TYPE,
+            EDGE_PROPERTY.PROPERTIES)
+
+    params = {
+            EDGE_PROPERTY.FROM_NODE_ID : from_node, 
+            EDGE_PROPERTY.TO_NODE_ID : to_node, 
+            EDGE_PROPERTY.TYPE : type,
+            EDGE_PROPERTY.PROPERTIES : properties
+            }
+
+    url = base_url + GREMLIN.PATH
+    data = {NEO4J.SCRIPT : script, NEO4J.PARAMS : params}
 
     response_data = connect(url, json.dumps(data))
+
     return response_parser.format_edge(response_data)
+
 
 def update_node(base_url, id, properties):
     return None
 
+
 def update_edge(base_url, id, properties):
     return None
+
 
 def read_node_and_edges(base_url, node_id):
     """ Read a node and all its edges from the db using gremlin.
@@ -88,20 +102,24 @@ def read_node_and_edges(base_url, node_id):
     keys = node_id, type, properties, edges
     
     """
-    url = base_url + _gremlin_path
 
-    data = {}
-    data["script"] = "g.v(id).transform{[it, it.outE()]}"
-    data["params"] = {"id":node_id}
-    
+    script = "g.v({0}).transform{{[it, it.outE()]}}".format(NODE_PROPERTY.ID)
+    params = {NODE_PROPERTY.ID : node_id}
+
+    url = base_url + GREMLIN.PATH
+    data = {NEO4J.SCRIPT : script, NEO4J.PARAMS : params}
+
     response_data = connect(url, json.dumps(data))
+
     if response_data is None:
         return None
     else:
         return response_parser.format_node(response_data[0])
 
+
 def read_edge(base_url, edge_id):
     return None
+
 
 def read_nodes_from_immediate_path(
         base_url, 
@@ -120,32 +138,43 @@ def read_nodes_from_immediate_path(
     {depth: {node_id: node}}
     
     """
-    url = base_url + _gremlin_path
-    
-    # formatt the pruners and filter
+
+    # TODO: there's got to be a better way to do all of this string formatting
+
+    # format the pruners and filter
     formatted_edge_pruner = ["\"{0}\"".format(f) for f in edge_pruner]
     formatted_edge_pruner = ",".join(formatted_edge_pruner)
     formatted_node_filter = "|".join(node_return_filter)
     return_filter = ""
     if formatted_node_filter != "":
-        return_filter = ".filter{{it.type.matches({0})}}".format(
+        return_filter = ".filter{{it.{0}.matches({1})}}".format(
+                NODE_PROPERTY.TYPE,
                 "\"{0}\"".format(formatted_node_filter))
 
     # all unique nodes depth 1 from start node with restrictions 
-    start = "s=g.v(id).transform{[it, it.outE()]}; "
+    start = "s=g.v({0}).transform{{[it, it.outE()]}}; ".format(
+            NODE_PROPERTY.ID)
     path = """
-            n=g.v(id).out({0}).dedup(){1}.transform{{[it, it.outE()]}}; 
-            """.format(formatted_edge_pruner, return_filter)
+            n=g.v({0}).out({1}).dedup(){2}.transform{{[it, it.outE()]}}; 
+            """.format(
+                    NODE_PROPERTY.ID,
+                    formatted_edge_pruner,
+                    return_filter)
     concat = "[s,n]"
-    data = {}
-    data["script"] = start + path + concat
-    data["params"] = {"id": start_node_id} 
-  
+
+    script = start + path + concat
+    params = {NODE_PROPERTY.ID : start_node_id} 
+
+    url = base_url + GREMLIN.PATH
+    data = {NEO4J.SCRIPT : script, NEO4J.PARAMS : params}
+
     response_data = connect(url, json.dumps(data))
+
     if response_data is None:
         return None
     else:
         return response_parser.format_path(response_data)
+
 
 def gremlin(base_url, script, params):
     """ Read/Write an unrestricted data set using Gremlin.
@@ -158,14 +187,12 @@ def gremlin(base_url, script, params):
     Return unformatted neo4j response.
 
     """
-    url = base_url + _gremlin_path
-
-    data = {}
-    data["script"] = script
-    data["params"] = params
     
-    response_data = connect(url, json.dumps(data))
-    return response_data
+    url = base_url + GREMLIN.PATH
+    data = {NEO4J.SCRIPT : script, NEO4J.PARAMS : params}
+
+    return connect(url, json.dumps(data))
+
 
 def connect(url, data):
     """ POST data the the url as a JSON request.
@@ -180,23 +207,22 @@ def connect(url, data):
     DbConnectionError   bad db connection
 
     """
-    
+
     request = urllib2.Request(url, data)
-    request.add_header('Content-Type', "application/json")
+    request.add_header(GREMLIN.REQUEST_HEADER_TYPE, GREMLIN.REQUEST_HEADER)
 
     try:
         response = urllib2.urlopen(request)
         response_data = response.read()
 
         # object not found
-        if _gremlin_base_err + _gremlin_null_err in response_data:
+        if GREMLIN.BASE_ERROR + GREMLIN.NULL_ERROR in response_data:
             return None
-        elif _gremlin_base_err + _gremlin_input_err in response_data:
+        elif GREMLIN.BASE_ERROR + GREMLIN.INPUT_ERROR in response_data:
             # TODO - make this a more explicit DbInputError
             raise DbConnectionError(response_data)
         else:
-            loaded_data = json.loads(response_data)
-            return loaded_data   
+            return json.loads(response_data)
     except (urllib2.HTTPError, urllib2.URLError) as err:
         raise DbConnectionError(err.read())
 

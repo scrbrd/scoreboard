@@ -30,6 +30,7 @@ def test2():
     g = loader.load_node(543)
     print "Game loaded: {0}".format(g.id)
 
+    # FIXME: what the hell is going on here?
     print g.get_edges()[EDGE_TYPE.WON_BY].values()[0].properties()
 
 def test3():

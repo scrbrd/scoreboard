@@ -4,6 +4,9 @@ Parse data lists/dicts from neo4j and return nodes/edges.
 
 """
 
+from model.constants import NODE_PROPERTY, EDGE_PROPERTY
+from constants import NEO4J
+
 def format_path(raw_path):
     """ Convert gremlin depth 1 path into a formatted path dict.
 
@@ -33,7 +36,7 @@ def format_nodes(raw_nodes):
     nodes = {}
     for raw_n in raw_nodes:
         node = format_node(raw_n)
-        nodes[node["node_id"]] = node
+        nodes[node[NODE_PROPERTY.ID]] = node
     return nodes
 
 def format_node(raw_node):
@@ -51,15 +54,15 @@ def format_node(raw_node):
     node_section = raw_node[0]
     edge_section = raw_node[1]
 
-    node["node_id"] = url_to_id(node_section["self"])
+    node[NODE_PROPERTY.ID] = url_to_id(node_section[NEO4J.SELF])
 
     # its properties 
-    properties = node_section["data"]
-    node["type"] = properties.pop("type")
-    node["properties"] = properties
-    
+    properties = node_section[NEO4J.DATA]
+    node[NODE_PROPERTY.TYPE] = properties.pop(NODE_PROPERTY.TYPE)
+    node[NODE_PROPERTY.PROPERTIES] = properties
+
     # grab nodes' edges
-    node["edges"] = format_edges(edge_section)
+    node[NODE_PROPERTY.EDGES] = format_edges(edge_section)
 
     return node
 
@@ -75,9 +78,9 @@ def format_edges(raw_edges):
     """
     edges= {}
     
-    for raw_e in raw_edges:
-        edge = format_edge(raw_e)
-        edges[edge["edge_id"]] = edge
+    for raw_edge in raw_edges:
+        edge = format_edge(raw_edge)
+        edges[edge[EDGE_PROPERTY.ID]] = edge
 
     return edges
 
@@ -93,12 +96,12 @@ def format_edge(raw_edge):
     """
     edge = {}
 
-    edge_id = url_to_id(raw_edge["self"])
-    edge["edge_id"] = edge_id
-    edge["properties"] = raw_edge["data"]
-    edge["from_node_id"] = url_to_id(raw_edge["start"])
-    edge["to_node_id"] = url_to_id(raw_edge["end"])
-    edge["type"] = raw_edge["type"]
+    edge_id = url_to_id(raw_edge[NEO4J.SELF])
+    edge[EDGE_PROPERTY.ID] = edge_id
+    edge[EDGE_PROPERTY.PROPERTIES] = raw_edge[NEO4J.DATA]
+    edge[EDGE_PROPERTY.FROM_NODE_ID] = url_to_id(raw_edge[NEO4J.START])
+    edge[EDGE_PROPERTY.TO_NODE_ID] = url_to_id(raw_edge[NEO4J.END])
+    edge[EDGE_PROPERTY.TYPE] = raw_edge[NEO4J.TYPE]
 
     return edge
 

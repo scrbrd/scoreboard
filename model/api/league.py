@@ -1,10 +1,13 @@
 """ Module: league
 
-...
+TODO: fill this in with required methods to implement since required
+members aren't strictly members [they are pulled from properties].
 
 """
 
-from constants import API_CONSTANT, EDGE_TYPE, NODE_TYPE, NODE_PROPERTY
+from constants import API_NODE_TYPE, API_EDGE_TYPE
+from constants import API_NODE_PROPERTY, API_CONSTANT
+
 from sqobject import SqNode, SqObjectNotLoadedError
 import loader
 
@@ -25,29 +28,29 @@ class League(SqNode):
 
     """
 
-    _name = None
     _opponents = None
     _games = None
 
 
-    def __init__(self, graph_node):
-        """ Construct a League extending SqNode. """
-        super(League, self).__init__(graph_node)
-
-        self._name = graph_node.properties()[NODE_PROPERTY.NAME]
+    def _get_property(self, key):
+        """ Return League property denoted by key. """
+        return self._properties.get(key, None)
 
 
     @property
     def name(self):
         """ Return this League's name. """
-        return self._name
+        # TODO: this wouldn't have to be defined here or in Person if it were
+        # instead defined in SqNode, but this seems less confusing for now.
+        return self._get_property(API_NODE_PROPERTY.NAME)
 
 
     def outgoing_edge_types(self):
         """ Return a list of allowed outgoing SqEdge types. """
         return [
-                EDGE_TYPE.HAS_LEAGUE_MEMBER,
-                EDGE_TYPE.HAS_SCHEDULED]
+                API_EDGE_TYPE.HAS_LEAGUE_MEMBER,
+                API_EDGE_TYPE.HAS_SCHEDULED
+                ]
 
 
     def get_opponent(self, opp_id):
@@ -92,8 +95,8 @@ class League(SqNode):
         """ Return a League with opponents loaded from the data layer."""
         (league, opponents) = loader.load_neighbors(
                 league_id,
-                [EDGE_TYPE.HAS_LEAGUE_MEMBER], 
-                API_CONSTANT.OPPONENT_TYPES)
+                [API_EDGE_TYPE.HAS_LEAGUE_MEMBER], 
+                API_CONSTANT.OPPONENT_NODE_TYPES)
 
         league.set_opponents(opponents)
 
@@ -105,8 +108,8 @@ class League(SqNode):
         """ Return a League with opponents loaded from the data layer."""
         (league, games) = loader.load_neighbors(
                 league_id,
-                [EDGE_TYPE.HAS_SCHEDULED],
-                [NODE_TYPE.GAME])
+                [API_EDGE_TYPE.HAS_SCHEDULED],
+                [API_NODE_TYPE.GAME])
 
         league.set_games(games)
 

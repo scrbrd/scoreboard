@@ -13,7 +13,7 @@ Provides:
 """
 
 from model.graph import GraphEdge, GraphNode
-from constants import NODE_TYPE, EDGE_TYPE
+from constants import API_NODE_TYPE, API_EDGE_TYPE
 # TODO: when SqEdge subclasses exist, don't import SqEdge
 from sqobject import SqEdge
 import game
@@ -53,29 +53,29 @@ def construct_node(graph_node):
 
     node = None
 
-    if graph_node.type() == NODE_TYPE.LEAGUE:
+    if graph_node.type() == API_NODE_TYPE.LEAGUE:
         node = league.League(graph_node)
 
-    elif graph_node.type() == NODE_TYPE.PLAYER:
+    elif graph_node.type() == API_NODE_TYPE.PLAYER:
         node = player.Player(graph_node)
 
-    elif graph_node.type() == NODE_TYPE.GAME:
+    elif graph_node.type() == API_NODE_TYPE.GAME:
         node = game.Game(graph_node)
+    
+    elif graph_node.type() == API_NODE_TYPE.USER:
+        node = user.User(graph_node)
 
-    #else if graph_node.type() == NODE_TYPE.TEAM:
+    #elif graph_node.type() == API_NODE_TYPE.TEAM:
     #    node = Team(graph_node)
     #
-    #else if graph_node.type() == "OPEN_PLAY":
+    #elif graph_node.type() == API_NODE_TYPE.OPEN_PLAY:
     #    node = OpenPlay(graph_node)
     #
-    #else if graph_node.type() == "SEASON":
+    #elif graph_node.type() == API_NODE_TYPE.SEASON:
     #    node = Season(graph_node)
     #
-    #else if graph_node.type() == "TOURNAMENT":
+    #elif graph_node.type() == API_NODE_TYPE.TOURNAMENT:
     #    node = Tournament(graph_node)
-    #
-    #else if graph_node.type() == "USER":
-    #    node = User.init_from_graph_node(graph_node)
 
     else:
     # TODO: raise an error...something went terribly wrong.
@@ -97,10 +97,10 @@ def construct_edge(graph_edge):
 
     #edge = None
     #
-    #if graph_edge.type() == EDGE_TYPE.:
+    #if graph_edge.type() == API_EDGE_TYPE.:
     #    edge = (graph_edge)
     #
-    #else if graph_edge.type() == EDGE_TYPE.:
+    #else if graph_edge.type() == API_EDGE_TYPE.:
     #    edge = (graph_edge)
     #
     #else:

@@ -14,6 +14,9 @@ Provides:
 """
 
 from model.data import db, DbInputError, DbReadError, DbWriteError
+from model.constants import NODE_PROPERTY, EDGE_PROPERTY
+
+from constants import GRAPH_PROPERTY
 from model.graph import GraphEdge, GraphNode, GraphPath, GraphOutputError
 
 def get_node(node_id):
@@ -23,10 +26,10 @@ def get_node(node_id):
     like the following, and parse it into a GraphNode:
 
     {
-        "node_id" : node_id,
-        "type" : type,
-        "properties" : {"p0" : p0, ..., "pN" : pN},
-        "edges" : {edge_id0 : edge_dict0, ..., edge_idN : edge_dictN}
+        "n_id" : node_id,
+        "n_type" : type,
+        "n_properties" : {"p0" : p0, ..., "pN" : pN},
+        "n_edges" : {edge_id0 : edge_dict0, ..., edge_idN : edge_dictN}
     }
 
     Required:
@@ -48,19 +51,19 @@ def get_node(node_id):
     node = None
 
     required_fields = set([
-            "node_id",
-            "type",
-            "properties",
-            "edges"
+            NODE_PROPERTY.ID,
+            NODE_PROPERTY.TYPE,
+            NODE_PROPERTY.PROPERTIES,
+            NODE_PROPERTY.EDGES
             ])
 
     # TODO: deal with existing bad data. every node and edge should have a
     # value set for each of these properties.
 
     required_properties = set([
-            #"created_ts",
-            #"updated_ts",
-            #"deleted_ts"
+            GRAPH_PROPERTY.CREATED_TS,
+            GRAPH_PROPERTY.UPDATED_TS,
+            GRAPH_PROPERTY.DELETED_TS
             ])
 
     try:
@@ -70,9 +73,9 @@ def get_node(node_id):
             # data layer nodes only have fields explicitly required
             errors = required_fields.symmetric_difference(set(node_dict))
 
-            if "properties" not in errors:
+            if NODE_PROPERTY.PROPERTIES not in errors:
                 # ensure properties the graph layer requires are present too
-                properties = set(node_dict["properties"])
+                properties = set(node_dict[NODE_PROPERTY.PROPERTIES])
                 property_errors = required_properties.difference(properties)
                 errors = errors.union(property_errors)
 
@@ -82,16 +85,18 @@ def get_node(node_id):
                         "Required fields or properties missing from GraphNode.")
 
             node = GraphNode(
-                    node_dict["node_id"],
-                    node_dict["type"],
-                    node_dict["properties"],
-                    node_dict["edges"])
+                    node_dict[NODE_PROPERTY.ID],
+                    node_dict[NODE_PROPERTY.TYPE],
+                    node_dict[NODE_PROPERTY.PROPERTIES],
+                    node_dict[NODE_PROPERTY.EDGES])
 
     except DbReadError as e:
+        print(e.reason)
         #logger.debug(e.reason)
         node = None
 
     except DbInputError as e:
+        print(e.reason)
         #logger.debug(e.reason)
         node = None
 
@@ -128,11 +133,11 @@ def get_edge(edge_id):
     like the following, and parse it into a GraphEdge:
 
     {
-        "edge_id" : edge_id,
-        "type" : type,
-        "properties" : {"p0" : p0, ..., "pN" : pN},
-        "from_node_id" : from_node_id,
-        "to_node_id" : to_node_id
+        "e_id" : edge_id,
+        "e_type" : type,
+        "e_properties" : {"p0" : p0, ..., "pN" : pN},
+        "e_from_node_id" : from_node_id,
+        "e_to_node_id" : to_node_id
     }
 
     Required:
@@ -151,19 +156,19 @@ def get_edge(edge_id):
     edge = None
 
     required_fields = set([
-            "edge_id",
-            "type",
-            "properties",
-            "from_node_id",
-            "to_node_id"
+            EDGE_PROPERTY.ID,
+            EDGE_PROPERTY.TYPE,
+            EDGE_PROPERTY.PROPERTIES,
+            EDGE_PROPERTY.FROM_NODE_ID,
+            EDGE_PROPERTY.TO_NODE_ID
             ])
 
     required_properties = set([
-            #"created_ts",
-            #"updated_ts",
-            #"deleted_ts",
-            #"is_one_way",
-            #"is_unique"
+            GRAPH_PROPERTY.CREATED_TS,
+            GRAPH_PROPERTY.UPDATED_TS,
+            GRAPH_PROPERTY.DELETED_TS
+            #GRAPH_PROPERTY.IS_ONE_WAY,
+            #GRAPH_PROPERTY.IS_UNIQUE
             ])
 
     try:
@@ -173,9 +178,9 @@ def get_edge(edge_id):
             # data layer edges only have fields explicitly required
             errors = required_fields.symmetric_difference(set(edge_dict))
 
-            if "properties" not in errors:
+            if EDGE_PROPERTY.PROPERTIES not in errors:
                 # ensure properties the graph layer requires are present too
-                properties = set(edge_dict["properties"])
+                properties = set(edge_dict[EDGE_PROPERTY.PROPERTIES])
                 property_errors = required_properties.difference(properties)
                 errors = errors.union(property_errors)
 
@@ -185,17 +190,19 @@ def get_edge(edge_id):
                         "Required fields or properties missing from GraphEdge.")
 
             edge = GraphEdge(
-                    edge_dict["edge_id"],
-                    edge_dict["type"],
-                    edge_dict["properties"],
-                    edge_dict["from_node_id"],
-                    edge_dict["to_node_id"])
+                    edge_dict[EDGE_PROPERTY.ID],
+                    edge_dict[EDGE_PROPERTY.TYPE],
+                    edge_dict[EDGE_PROPERTY.PROPERTIES],
+                    edge_dict[EDGE_PROPERTY.FROM_NODE_ID],
+                    edge_dict[EDGE_PROPERTY.TO_NODE_ID])
 
     except DbReadError as e:
+        print(e.reason)
         #logger.debug(e.reason)
         edge = None
 
     except DbInputError as e:
+        print(e.reason)
         #logger.debug(e.reason)
         edge = None
 
@@ -270,10 +277,12 @@ def get_path_to_neighbor_nodes(
         path = GraphPath(start_node_id, path_dict)
 
     except DbReadError as e:
+        print(e.reason)
         #logger.debug(e.reason)
         path = None
 
     except DbInputError as e:
+        print(e.reason)
         #logger.debug(e.reason)
         path = None
 

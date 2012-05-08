@@ -7,14 +7,13 @@ Manage incoming db requests and pass them to the proper database.
 import urllib2, urllib
 from exceptions import NotImplementedError
 
+from model.constants import NODE_PROPERTY, EDGE_PROPERTY
+from model.data.constants import DATABASE
+
 from model.data import DbInputError, DbReadError, DbWriteError
 from model.data import DbConnectionError
 from neo4j import connection_manager
 
-HOST = "localhost"
-PORT = "7474"
-DB = "NEO4J"
-BASE_URL = "http://" + HOST + ":" + PORT
 
 def create_node(type, properties):
     """ Create a new node and return it.
@@ -32,11 +31,12 @@ def create_node(type, properties):
     DbWriteError        failed to write to database
 
     """
-    _validate_input(properties, {"type": type})
+    
+    _validate_input(properties, {NODE_PROPERTY.TYPE : type})
     
     try:
         new_node = connection_manager.create_node(
-                BASE_URL, 
+                DATABASE.BASE_URL, 
                 type, 
                 properties)
         if new_node is None:
@@ -46,6 +46,7 @@ def create_node(type, properties):
         return new_node
     except DbConnectionError:
         raise DbWriteError("create_node", "Database write failed.")
+
 
 def create_edge(from_node_id, to_node_id, type, properties):
     """ Create a new edge and return it.
@@ -65,15 +66,17 @@ def create_edge(from_node_id, to_node_id, type, properties):
     DbWriteError        failed to write to database
 
     """
+
     special_params = {
-            "type": type, 
-            "from_node_id": from_node_id, 
-            "to_node_id": to_node_id}
+            EDGE_PROPERTY.TYPE : type, 
+            EDGE_PROPERTY.FROM_NODE_ID : from_node_id, 
+            EDGE_PROPERTY.TO_NODE_ID : to_node_id 
+            }
     _validate_input(properties, special_params)
 
     try:
         new_edge = connection_manager.create_edge(
-                BASE_URL, 
+                DATABASE.BASE_URL, 
                 from_node_id,
                 to_node_id,
                 type, 
@@ -105,7 +108,7 @@ def update_node(node_id, properties):
     """
     raise NotImplementedError("TODO - Implement update_node.")
 
-    if any(k in properties for k in ("type", "node_id")):
+    if any(k in properties for k in (NODE_PROPERTY.TYPE, NODE_PROPERTY.ID)):
         raise DbInputError(
                 k, 
                 properties, 
@@ -118,7 +121,7 @@ def update_node(node_id, properties):
     
     try:
         updated_node = connection_manager.update_node(
-                BASE_URL, 
+                DATABASE.BASE_URL, 
                 node_id, 
                 properties)
         if updated_node is None:
@@ -128,6 +131,7 @@ def update_node(node_id, properties):
         return updated_node
     except DbConnectionError:
         raise DbWriteError("update_node", "Database write failed.")
+
 
 def update_edge(edge_id, properties):
     """ Update existing edge and return it.
@@ -146,13 +150,13 @@ def update_edge(edge_id, properties):
     raise NotImplementedError("TODO - Implement update_edge.")
     
     if any(k in properties for k in (
-        "type", 
-        "from_node_id", 
-        "to_node_id",
-        "edge_id")):
+        EDGE_PROPERTY.TYPE,
+        EDGE_PROPERTY.FROM_NODE_ID,
+        EDGE_PROPERTY.TO_NODE_ID,
+        EDGE_PROPERTY.ID)):
         raise DbInputError(
-            k, 
-            properties, 
+            k,
+            properties,
             k + " included in properties.")
     if edge_id is None:
         raise DbInputError(
@@ -161,7 +165,7 @@ def update_edge(edge_id, properties):
                 "Required parameter not included.")
     try:
         updated_edge = connection_manager.update_edge(
-                BASE_URL, 
+                DATABASE.BASE_URL, 
                 edge_id, 
                 properties)
         if updated_edge is None:
@@ -172,13 +176,16 @@ def update_edge(edge_id, properties):
     except DbConnectionError:
         raise DbWriteError("update_edge", "Database write failed.")
 
+
 def delete_node(node_id, properties):
     raise NotImplementedError("TODO - Implement delete_node.")
     return None
 
+
 def delete_edge(edge_id, properties):
     raise NotImplementedError("TODO - Implement delete_edge.")
     return None
+
 
 def read_node_and_edges(node_id):
     """ Read a node and its edges. 
@@ -194,11 +201,12 @@ def read_node_and_edges(node_id):
     """
     try:
         node_data = connection_manager.read_node_and_edges(
-                BASE_URL, 
+                DATABASE.BASE_URL, 
                 node_id)
         return node_data
     except DbConnectionError:
         raise DbReadError("Database read failed.")
+
 
 def read_nodes_from_immediate_path(
         start_node_id, 
@@ -229,18 +237,20 @@ def read_nodes_from_immediate_path(
                     "Required parameter not included.")
 
     try:
-        path_data = connection_manager.read_nodes_from_immediate_path(
-                BASE_URL,
+        return connection_manager.read_nodes_from_immediate_path(
+                DATABASE.BASE_URL,
                 start_node_id, 
                 edge_pruner,
                 node_return_filter)
-        return path_data
+
     except DbConnectionError:
         raise DbReadError("Database read failed.")
+
 
 def read_node(node_id):
     raise NotImplementedError("TODO - Implement read_node.")
     return None
+
 
 def read_edge(edge_id):
     raise NotImplementedError("TODO - Implement read_edge.")

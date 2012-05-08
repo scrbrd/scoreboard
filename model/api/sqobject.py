@@ -16,7 +16,12 @@ from exceptions import NotImplementedError
 from copy import deepcopy
 
 from model.graph import GraphEdge, GraphNode
-from constants import API_CONSTANT, NODE_TYPE, EDGE_TYPE
+from model.constants import NODE_PROPERTY, EDGE_PROPERTY
+
+from constants import API_NODE_TYPE, API_EDGE_TYPE
+from constants import API_NODE_PROPERTY, API_EDGE_PROPERTY
+from constants import API_CONSTANT
+
 
 class SqObject(object):
 
@@ -28,17 +33,23 @@ class SqObject(object):
     Required:
     id      _id             SqObject id
     str     _type           SqObject type
-    
+    dict    _properties     SqObject properties from GraphObject 
+
     """
 
-   
     _id = None
     _type = None
+    _properties = None
 
-    def __init__(self, graph_node):
+
+    def __init__(self, graph_object):
         """ Construct a SqObject extending the __new__ python object. """
-        self._id = graph_node.id()
-        self._type = graph_node.type()
+        self._id = graph_object.id()
+        self._type = graph_object.type()
+
+        # intentionally not exposed as a property or even as a method since
+        # most of the helpers defined by subclasses are access wrappers.
+        self._properties = graph_object.properties()
 
         # TODO: move as much error checking from reader/writer into here as
         # possible to avoid repetitive code and to grant class hierarchy
@@ -57,6 +68,11 @@ class SqObject(object):
         return self._type
 
 
+    def _get_property(self, key):
+        """ Return SqObject property denoted by key. """
+        raise NotImplementedError("Abstract Method: SUBCLASS MUST OVERRIDE!")
+
+
 class SqNode(SqObject):
 
     """ SqNode is a subclass of SqObject.
@@ -69,16 +85,15 @@ class SqNode(SqObject):
 
     Optional:
     dict    edges       this SqNode's outgoing SqEdges keyed on id
-    dict    neighbors   neighbor SqNodes keyed on id
 
     """
 
     _edges = None
 
 
-    def __init__(self, graph_node):
+    def __init__(self, graph_object):
         """ Construct a SqNode extending SqObject. """
-        super(SqNode, self).__init__(graph_node)
+        super(SqNode, self).__init__(graph_object)
 
         # TODO: should edges be set here instead of SqFactory?
 
@@ -86,11 +101,13 @@ class SqNode(SqObject):
         # possible to avoid repetitive code and to grant class hierarchy
         # appropriate knowledge and power over itself.
 
+        # TODO: if neither of the above is necessary remove this empty override
+
 
     @property
     def name(self):
         """ Return a SqNode name. """
-        raise NotImplementedError("All SqObject subclasses must override")
+        raise NotImplementedError("Abstract Method: SUBCLASS MUST OVERRIDE!")
 
 
     def outgoing_edge_types(self):
@@ -128,7 +145,31 @@ class SqNode(SqObject):
         """ Set a member variable with a dict of outgoing SqEdges. """
         self._edges = edges
 
-    
+
+    def _get_property(self, key):
+        """ Return a GraphObject property as a member.
+
+        If we have data stored for this property key, use it. Otherwise,
+        default [for now] to what we get from Facebook. In the future,
+        what we default to will depend on some input parameter [likely a
+        cookie] describing how this user is logged in.
+
+        """
+
+        property = self._properties.get(
+                key,
+                self._properties.get(
+                    API_CONSTANT.FACEBOOK_NODE_PROPERTIES[key],
+                    None))
+
+        if property is None:
+            raise SqObjectPropertyError(
+                    key,
+                    "SqObject property doesn't exist.")
+
+        return property
+
+
     @staticmethod
     def assert_loaded(loaded_data):
         """ If data is not loaded, raise an error. """
@@ -159,17 +200,17 @@ class SqEdge(SqObject):
     _properties = {}
     
 
-    def __init__(self, graph_edge):
+    def __init__(self, graph_object):
         """ Construct a SqEdge extending SqObject. """
-        super(SqEdge, self).__init__(graph_edge)
+        super(SqEdge, self).__init__(graph_object)
 
-        self._from_node_id = graph_edge.from_node_id()
-        self._to_node_id = graph_edge.to_node_id()
-        #self._is_one_way = graph_edge.is_one_way()
-        #self._is_unique = graph_edge.is_unique()
+        self._from_node_id = graph_object.from_node_id()
+        self._to_node_id = graph_object.to_node_id()
+        #self._is_one_way = graph_object.is_one_way()
+        #self._is_unique = graph_object.is_unique()
     
         # FIXME remove whenSqEdges are fully implemented
-        self._properties = deepcopy(graph_edge.properties())
+        self._properties = deepcopy(graph_object.properties())
         
         # TODO: move as much error checking from reader/writer into here as
         # possible to avoid repetitive code and to grant class hierarchy
@@ -188,15 +229,30 @@ class SqEdge(SqObject):
         return self._to_node_id
 
 
-    # FIXME remove when SqEdges are implemented
-    def properties(self):
-        """ Return dictionary of SqObject properties. """
-        return self._properties
-
-
-    def get_property(self, key):
-        """ Return value of requested SqObject property. """
+    def _get_property(self, key):
+        """ Return SqEdge property denoted by key. """
         return self._properties.get(key, None)
+
+
+class SqObjectPropertyError(Exception):
+
+    """ SqObjectPropertyError is a subclass of Exception.
+
+    Provide an exception to be raised when an attempt is made to access
+    a SqObject property which does not exist. Usually this means that
+    we failed to retrieve the property from our own database and from
+    third party APIs like Facebook as well.
+
+    """
+
+    reason = None
+
+
+    def __init__(self, parameter, description):
+        """ Construct a SqObjectPropertyError extending Exception. """
+        self.reason = "SqObjectPropertyError: {0} : {1}".format(
+                parameter, 
+                description)
 
 
 class SqObjectNotLoadedError(Exception):
@@ -211,5 +267,7 @@ class SqObjectNotLoadedError(Exception):
 
     reason = None
 
+
     def __init__(self, reason):
         self.reason = reason
+

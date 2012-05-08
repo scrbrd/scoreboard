@@ -22,6 +22,9 @@ GraphError
 
 """
 
+from model.constants import NODE_PROPERTY, EDGE_PROPERTY
+from constants import GRAPH_PROPERTY
+
 
 class GraphObject(object):
     
@@ -53,13 +56,12 @@ class GraphObject(object):
         self._id = id
         self._type = type
 
-        # FIXME: deal with existing bad data in the database. every node 
-        # and edge should have a value set for each of these properties.
+        # pop timestamps from properties into members
+        self._created_ts = properties.pop(GRAPH_PROPERTY.CREATED_TS, False)
+        self._updated_ts = properties.pop(GRAPH_PROPERTY.UPDATED_TS, False)
+        self._deleted_ts = properties.pop(GRAPH_PROPERTY.DELETED_TS, False)
 
-        self._created_ts = properties.pop("created_ts", False)
-        self._created_ts = properties.pop("updated_ts", False)
-        self._created_ts = properties.pop("deleted_ts", False)
-
+        # set properties member with timestamps explicitly removed
         self._properties = properties
 
         # TODO: move as much error checking from reader/writer into here as
@@ -120,11 +122,11 @@ class GraphNode(GraphObject):
 
         for edge_id, edge in edges.items():
             self._edges[edge_id] = GraphEdge(
-                    edge["edge_id"],
-                    edge["type"],
-                    edge["properties"],
-                    edge["from_node_id"],
-                    edge["to_node_id"])
+                    edge[EDGE_PROPERTY.ID],
+                    edge[EDGE_PROPERTY.TYPE],
+                    edge[EDGE_PROPERTY.PROPERTIES],
+                    edge[EDGE_PROPERTY.FROM_NODE_ID],
+                    edge[EDGE_PROPERTY.TO_NODE_ID])
 
 
     def edges(self):
@@ -226,10 +228,10 @@ class GraphPath(object):
 
             for node_id, node_dict in path[depth].items():
                 self._path[depth][node_id] = GraphNode(
-                        node_dict["node_id"],
-                        node_dict["type"],
-                        node_dict["properties"],
-                        node_dict["edges"])
+                        node_dict[NODE_PROPERTY.ID],
+                        node_dict[NODE_PROPERTY.TYPE],
+                        node_dict[NODE_PROPERTY.PROPERTIES],
+                        node_dict[NODE_PROPERTY.EDGES])
 
 
     def start_node_id(self):

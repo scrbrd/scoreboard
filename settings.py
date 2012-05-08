@@ -12,8 +12,8 @@ from view.modules.components import UIGamesList, UIRankingsList
 from view.modules.components import UICreateGameDialog
 
 # Application constants
-# FIXME - build this based on user
-LEAGUE = 693
+#LEAGUE = 693 # The Banana Stand
+LEAGUE = 745 # Game of Thrones
 
 # Make filepaths relative to settings.
 path = lambda root,*a: os.path.join(root, *a)

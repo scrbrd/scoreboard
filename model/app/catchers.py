@@ -188,7 +188,10 @@ class CreateCatcher(Catcher):
         id      league_id       league id that game belogs to
         id      creator_id      player id of game's creator
         list    game_score      final score of a game
-                                [{"id": VALUE, "score": VALUE}]
+                                [{"id": id1, "score": score1},
+                                 {"id": id2, "score": score2},
+                                 ...
+                                 {"id": idN, "score": scoreN}]
         
         Return:
         Game                    instance of SqNode subclass Game

@@ -1,16 +1,16 @@
 """ Module: Player
 
-...
+TODO: fill this in with required methods to implement since required
+members aren't strictly members [they are pulled from properties].
 
 """
 
-from constants import EDGE_TYPE, NODE_PROPERTY
-from sqobject import SqNode
+from constants import API_EDGE_TYPE
+from person import Person
 from opponent import Opponent
-#from game import Game
 
 
-class Player(SqNode, Opponent):
+class Player(Person, Opponent):
 
     """ Player is a subclass of SqNode.
 
@@ -18,73 +18,31 @@ class Player(SqNode, Opponent):
     edges connecting to other nodes.
 
     Required:
-    str     _first_name     Player node first name
-    str     _last_name      Player node last name
 
     """
-    
-    _first_name = None
-    _last_name = None
-
-
-    def __init__(self, graph_node):
-        """ Construct a Player extending SqNode. """
-        super(Player, self).__init__(graph_node)
-
-        self._first_name = graph_node.properties()[NODE_PROPERTY.FIRST_NAME]
-        self._last_name = graph_node.properties()[NODE_PROPERTY.LAST_NAME]
-
-
-    @property
-    def name(self):
-        """ Return this Player's name. """
-        return self.full_name
-
-
-    @property
-    def first_name(self):
-        """ Return this Player's first name. """
-        return self._first_name
-
-
-    @property
-    def last_name(self):
-        """ Return this Player's last name. """
-        return self._last_name
-
-
-    @property
-    def short_name(self):
-        """ Return this Player's first name and last initial. """
-        return "{0} {1}".format(
-                self.first_name,
-                self.last_name[0])
-
-
-    @property
-    def full_name(self):
-        """ Return this Player's first and last name. """
-        return "{0} {1}".format(
-                self.first_name,
-                self.last_name)
 
 
     def outgoing_edge_types(self):
         """ Return a list of allowed outgoing SqEdge types. """
+        # TODO: other eventual Person subclasses will be able to log in as well
+        # and will need API_EDGE_TYPE.HAS_PRIMARY to refer to a User. this
+        # method in the super class should define a list to be extend()ed here.
         return [
-                EDGE_TYPE.IN_LEAGUE,
-                EDGE_TYPE.CREATED,
-                EDGE_TYPE.WON,
-                EDGE_TYPE.LOST,
-                EDGE_TYPE.TIED,
-                EDGE_TYPE.PLAYED]
+                API_EDGE_TYPE.IN_LEAGUE,
+                API_EDGE_TYPE.CREATED,
+                API_EDGE_TYPE.WON,
+                API_EDGE_TYPE.LOST,
+                API_EDGE_TYPE.TIED,
+                API_EDGE_TYPE.PLAYED,
+                API_EDGE_TYPE.HAS_PRIMARY
+                ]
 
 
     def count_wins(self):
         """ Return the number of Games this Player has won. """
         # it's possible for a player not to have any wins, in which case there 
         # won't be an entry in the edges dict, so default to the empty dict
-        return len(self.get_edges().get(EDGE_TYPE.WON, {}))
+        return len(self.get_edges().get(API_EDGE_TYPE.WON, {}))
 
 
     @property
@@ -93,14 +51,49 @@ class Player(SqNode, Opponent):
         return self.count_wins()
 
 
-    def outgoing_edge_types(self):
-        """ Return a list of allowed outgoing SqEdge types. """
-        return [
-                EDGE_TYPE.IN_LEAGUE,
-                EDGE_TYPE.CREATED,
-                EDGE_TYPE.WON,
-                EDGE_TYPE.LOST,
-                EDGE_TYPE.TIED,
-                EDGE_TYPE.PLAYED]
+    # TODO FIXME XXX: convert this to create_player
 
+    #@staticmethod
+    #def create_player(league_id, creator_id, game_score):
+    #    """ Create a Game and return it.
+    #
+    #    Required:
+    #    id      league_id       league id that game belogs to
+    #    id      creator_id      player id of game's creator
+    #    list    game_score      final score of a game
+    #                            [{"id": VALUE, "score": VALUE}]
+    #
+    #    Return the created game.
+    #
+    #    """
+    #
+    #    # prepare a node prototype for this game
+    #    prototype_node = editor.prototype_node(API_NODE_TYPE.GAME, {})
+    #
+    #    prototype_edges = []
+    #
+    #    # prepare edge prototypes for schedule edges
+    #    prototype_edges.extend(editor.prototype_edge_and_complement(
+    #            API_EDGE_TYPE.SCHEDULED_IN,
+    #            {},
+    #            league_id))
+    #
+    #    # prepare edge prototypes for creator edges
+    #    prototype_edges.extend(editor.prototype_edge_and_complement(
+    #            API_EDGE_TYPE.CREATED_BY,
+    #            {},
+    #            creator_id))
+    #
+    #    # get outcome from gamescore
+    #    outcome = Game.calculate_outcome(game_score)
+    #
+    #    # prepare edge prototypes for result edges
+    #    for type, result in outcome.items():
+    #        for opponent_score in result:
+    #            prototype_edges.extend(editor.prototype_edge_and_complement(
+    #                type,
+    #                {API_EDGE_PROPERTY.SCORE: opponent_score["score"]},
+    #                opponent_score["id"]))
+    #
+    #    return editor.create_node_and_edges(prototype_node, prototype_edges)
 

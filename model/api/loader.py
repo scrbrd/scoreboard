@@ -12,6 +12,7 @@ Provides:
 
 from model.graph import GraphEdge, GraphNode, GraphPath, GraphOutputError
 from model.graph import reader
+# TODO: remove this import?
 from sqobject import SqNode
 import sqfactory
 

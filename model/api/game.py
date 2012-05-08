@@ -1,12 +1,16 @@
 """ Module: game
 
-...
+TODO: fill this in with required methods to implement since required
+members aren't strictly members [they are pulled from properties].
 
 """
 
+from exceptions import NotImplementedError
 from itertools import groupby
 
-from constants import API_CONSTANT, EDGE_TYPE, NODE_TYPE, EDGE_PROPERTY
+from constants import API_NODE_TYPE, API_EDGE_TYPE
+from constants import API_EDGE_PROPERTY, API_CONSTANT
+
 from sqobject import SqNode
 import loader
 import editor
@@ -33,25 +37,27 @@ class Game(SqNode):
     _opponents = None
 
 
-    def __init__(self, graph_node):
-        """ Initialize Game class with attributes. """
-        super(Game, self).__init__(graph_node)
+    @property
+    def name(self):
+        """ Games do not have names. Raise an error. """
+        raise NotImplementedError("Game does not implement name property.")
 
 
     def outgoing_edge_types(self):
         """ Return a list of allowed outgoing SqEdge types. """
         return [
-                EDGE_TYPE.SCHEDULED_IN,
-                EDGE_TYPE.CREATED_BY,
-                EDGE_TYPE.WON_BY,
-                EDGE_TYPE.LOST_BY,
-                EDGE_TYPE.TIED_BY,
-                EDGE_TYPE.PLAYED_BY]
+                API_EDGE_TYPE.SCHEDULED_IN,
+                API_EDGE_TYPE.CREATED_BY,
+                API_EDGE_TYPE.WON_BY,
+                API_EDGE_TYPE.LOST_BY,
+                API_EDGE_TYPE.TIED_BY,
+                API_EDGE_TYPE.PLAYED_BY
+                ]
 
 
     def creator_id(self):
         """  Return the Player who created the game. """
-        return self.get_edges()[EDGE_TYPE.CREATED_BY].iterkeys().next()
+        return self.get_edges()[API_EDGE_TYPE.CREATED_BY].iterkeys().next()
 
 
     def outcome(self):
@@ -61,11 +67,12 @@ class Game(SqNode):
         [{"id": VALUE, "score": VALUE}]
 
         """
+
         outcome = []
  
-        for edge_type in API_CONSTANT.RESULT_TYPES:
+        for edge_type in API_CONSTANT.RESULT_EDGE_TYPES:
             for edge in self.get_edges().get(edge_type, {}).values():
-                score = edge.get_property(EDGE_PROPERTY.SCORE)
+                score = edge._get_property(API_EDGE_PROPERTY.SCORE)
                 opponent_id = edge.to_node_id
                 outcome.append({"id": opponent_id, "score": score})
                 outcome.sort(key = lambda x: x["score"], reverse=True)
@@ -107,8 +114,8 @@ class Game(SqNode):
         
         (game, opponents) = loader.load_neighbors(
                 game_id,
-                API_CONSTANT.RESULT_TYPES, 
-                API_CONSTANT.OPPONENT_TYPES)
+                API_CONSTANT.RESULT_EDGE_TYPES,
+                API_CONSTANT.OPPONENT_NODE_TYPES)
 
         game.set_opponents(opponents)
 
@@ -152,7 +159,7 @@ class Game(SqNode):
 
         Return 
         Outcome
-        {RESULT_TYPE: [{"id": VALUE, "score": VALUE}]}
+        {RESULT_EDGE_TYPE: [{"id": VALUE, "score": VALUE}]}
 
         """
 
@@ -164,7 +171,7 @@ class Game(SqNode):
             pass
         # if one opponent, then no win or loss
         elif num_of_opponents == 1:
-            outcome[EDGE_TYPE.PLAYED_BY] = game_score
+            outcome[API_EDGE_TYPE.PLAYED_BY] = game_score
         
         # if two or more opponents, then calculate results
         else:
@@ -177,18 +184,18 @@ class Game(SqNode):
              
             # if 1 result, then the game was a tie
             if num_of_results == 1:
-                outcome[EDGE_TYPE.TIED_BY] = game_score
+                outcome[API_EDGE_TYPE.TIED_BY] = game_score
            
             # if more results, then win is high score & the rest losses
             else:
                 # winners
                 winner_scores = opp_scores_by_score[0][1]
-                outcome[EDGE_TYPE.WON_BY] = winner_scores
+                outcome[API_EDGE_TYPE.WON_BY] = winner_scores
                
                 # losers
-                outcome[EDGE_TYPE.LOST_BY] = []
+                outcome[API_EDGE_TYPE.LOST_BY] = []
                 for score, loser_scores in opp_scores_by_score[1:]:
-                    outcome[EDGE_TYPE.LOST_BY].extend(loser_scores)
+                    outcome[API_EDGE_TYPE.LOST_BY].extend(loser_scores)
         return outcome
 
 
@@ -200,26 +207,30 @@ class Game(SqNode):
         id      league_id       league id that game belogs to
         id      creator_id      player id of game's creator
         list    game_score      final score of a game
-                                [{"id": VALUE, "score": VALUE}]
+                                [{"id": id1, "score": score1},
+                                 {"id": id2, "score": score2},
+                                 ...
+                                 {"id": idN, "score": scoreN}]
 
-        Return the created game.
+        Return:
+        Game                    newly created Game
 
         """
         
         # prepare a node prototype for this game
-        prototype_node = editor.prototype_node(NODE_TYPE.GAME, {})
+        prototype_node = editor.prototype_node(API_NODE_TYPE.GAME, {})
 
         prototype_edges = []
 
         # prepare edge prototypes for schedule edges
         prototype_edges.extend(editor.prototype_edge_and_complement(
-                EDGE_TYPE.SCHEDULED_IN,
+                API_EDGE_TYPE.SCHEDULED_IN,
                 {},
                 league_id))
 
         # prepare edge prototypes for creator edges
         prototype_edges.extend(editor.prototype_edge_and_complement(
-                EDGE_TYPE.CREATED_BY,
+                API_EDGE_TYPE.CREATED_BY,
                 {},
                 creator_id))
 
@@ -231,7 +242,7 @@ class Game(SqNode):
             for opponent_score in result:
                 prototype_edges.extend(editor.prototype_edge_and_complement(
                     type,
-                    {EDGE_PROPERTY.SCORE: opponent_score["score"]},
+                    {API_EDGE_PROPERTY.SCORE: opponent_score["score"]},
                     opponent_score["id"]))
 
         return editor.create_node_and_edges(prototype_node, prototype_edges)
@@ -255,13 +266,13 @@ class Game(SqNode):
 
         # sort opponents by score  from high to low (needed for groupby)
         game_score.sort(key = lambda x:x[index_field], reverse=True)
-        
+
         # group opponents by score
         opponent_scores_by_score = []
         for score, result_group in groupby(game_score, lambda x:x[index_field]):
             # get opponent score list for each score
             opponent_scores = [opp_score for opp_score in result_group]
             opponent_scores_by_score.append((score, opponent_scores))
-            
+
         return opponent_scores_by_score
 
