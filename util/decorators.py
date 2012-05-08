@@ -20,3 +20,4 @@ def constant(f):
 
     return property(fget, fset)
 
+

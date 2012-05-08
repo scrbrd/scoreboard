@@ -5,7 +5,7 @@ Provide mobile views.
 """
 import json
 
-from view.constants import HTML_COPY
+from view.app_copy import Copy
 
 from constants import HTML_DATA, HTML_ID, HTML_CLASS, HTML_NAME
 from elements import Element, Div, Span, OL, UL, LI, Nav, A, H1, H2, Header
@@ -229,11 +229,11 @@ class CreateGameForm(Form):
 
         # add form submit and close buttons
         submit_button = SubmitButton()
-        submit_button.set_text(HTML_COPY.SUBMIT)
+        submit_button.set_text(Copy.submit)
         self.append_child(submit_button)
         close_button = Button()
         close_button.append_class(HTML_CLASS.CLOSE)
-        close_button.set_text(HTML_COPY.CLOSE)
+        close_button.set_text(Copy.close)
         self.append_child(close_button)
 
 
@@ -268,7 +268,7 @@ class GameScoreLI(LI):
                 self._index,
                 HTML_DATA.ID)
         id_input = TextInput(game_score_id)
-        id_input.set_placeholder(HTML_COPY.PLAYER_PLACEHOLDER)
+        id_input.set_placeholder(Copy.player_placeholder)
         id_input.set_classes([HTML_CLASS.PLAYER_SELECT])
         self.append_child(id_input)
 
@@ -278,7 +278,7 @@ class GameScoreLI(LI):
                 self._index,
                 HTML_DATA.SCORE)
         score_input = TextInput(game_score_score)
-        score_input.set_placeholder(HTML_COPY.SCORE_PLACEHOLDER)
+        score_input.set_placeholder(Copy.score_placeholder)
         self.append_child(score_input)
 
 
