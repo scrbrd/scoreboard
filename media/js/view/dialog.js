@@ -6,6 +6,7 @@
         view
 
     Dependencies:
+        MP
         $
         Backbone
         Const
@@ -14,13 +15,14 @@
 */
 define(
     [
+        "MP",
         "jQuery",
         "Backbone",
         "js/constants",
         "js/crud",
         "util/dom",
     ],
-    function($, Backbone, Const, Crud, DomUtil) {
+    function(MP, $, Backbone, Const, Crud, DomUtil) {
 
         /*
             Class: DialogView
@@ -115,6 +117,9 @@ define(
             */
             show: function() {
                 this.$el.slideDown('fast');
+
+                var path = $(location).attr('href');
+                MP.trackDialogViewPage(Const.PAGE_NAME.CREATE_GAME, path);
             },
 
 

@@ -11,7 +11,6 @@
         baseUrl - everything is relative to the root directory
         paths - all shortcut paths to use throughout javascript
 
-
 */
 require.config({
     baseUrl: "/",
@@ -22,6 +21,7 @@ require.config({
         Underscore: "static/js/lib/underscore/underscore",
         Backbone: "static/js/lib/backbone/backbone",
         iScroll: "static/js/lib/iscroll/iscroll",
+        MP: "static/js/lib/mixpanel/mixpanel",
         js: "static/js",
         lib: "static/js/lib",
         util: "static/js/util",
@@ -45,7 +45,8 @@ require(
         "order!lib/jquery/form2js/jquery.toObject",
         "order!lib/underscore/underscore-min",
         "order!lib/backbone/backbone-min",
-        "lib/iscroll/iscroll-min"
+        "lib/iscroll/iscroll-min",
+        "lib/mixpanel/mixpanel-min",
     ],
     function (App) {
         App.initialize();

@@ -26,7 +26,7 @@ All Element subclasses have access to and may override:
     def append_classes(self, additional_classes)
     def data(self, key)
     def dataset(self)
-    def set_data(self, dict)
+    def set_data(self, data_key, value)
     def remove_data(self, key)
     def href(self)
     def set_href(self, href)
@@ -64,6 +64,7 @@ The following tags are implemented as Element subclasses:
     h1
     h2
     header
+    section
     form
     input
     button
@@ -78,7 +79,6 @@ the top-level templates, which are not dynamically generated:
     footer
     script
     hgroup
-    section
 
 The following global html5 attributes are currently implemented:
     class
@@ -116,7 +116,7 @@ import xml.etree.cElementTree as ET
 
 from exceptions import NotImplementedError
 
-from constants import HTML_TAG, HTML_ATTRIBUTE, HTML_TYPE, HTML_CLASS, HTML_CONSTANT
+from constants import HTML_TAG, HTML_ATTRIBUTE, HTML_TYPE, HTML_CONSTANT
 
 
 class Element(object):
@@ -798,6 +798,15 @@ class Header(Element):
     def __init__(self):
         """ Construct a <header>. """
         super(Header, self).__init__(HTML_TAG.HEADER)
+
+
+class Section(Element):
+    
+    """ Section element <section>. """
+
+    def __init__(self):
+        """ Construct a <section>. """
+        super(Section, self).__init__(HTML_TAG.SECTION)
 
 
 class Form(Element):

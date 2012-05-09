@@ -7,9 +7,10 @@ import json
 
 from view.app_copy import Copy
 
-from constants import HTML_DATA, HTML_ID, HTML_CLASS, HTML_NAME
+from view.constants import APP_DATA, FORM_NAME, APP_ID, APP_CLASS
 from elements import Element, Div, Span, OL, UL, LI, Nav, A, H1, H2, Header
-from elements import Form, TextInput, HiddenInput, CheckboxInput, SubmitButton, Button
+from elements import Section, Form, TextInput, HiddenInput, CheckboxInput
+from elements import SubmitButton, Button
 
 
 class AppHeader(H1):
@@ -33,16 +34,16 @@ class ContextHeader(H2):
         super(ContextHeader, self).__init__()
 
         # set context data
-        self.set_id(HTML_ID.CONTEXT)
-        self.set_data(HTML_DATA.ID, context.id)
-        self.set_data(HTML_DATA.OBJECT_TYPE, context.type)
+        self.set_id(APP_ID.CONTEXT)
+        self.set_data(APP_DATA.ID, context.id)
+        self.set_data(APP_DATA.OBJECT_TYPE, context.type)
         self.set_text(context.name)
 
         # set rivals data
         view_rivals = []
         for r in rivals:
-            view_rivals.append({HTML_DATA.ID: r.id, HTML_DATA.NAME: r.name})
-        self.set_data(HTML_DATA.RIVALS, json.dumps(view_rivals))
+            view_rivals.append({APP_DATA.ID: r.id, APP_DATA.NAME: r.name})
+        self.set_data(APP_DATA.RIVALS, json.dumps(view_rivals))
 
 class DialogHeader(Header):
     
@@ -127,6 +128,24 @@ class NavHeaderLI(LI):
         span.append_child(a)
 
 
+class PageSection(Section):
+
+    """ Page section encapsulates the generic page wrappers around i
+    <section>. """
+    
+
+    def __init__(self, page_name):
+        """ Construct a page section element tree.
+
+        Required:
+        string  page_name   the page name of this page.
+
+        """
+        super(PageSection, self).__init__()
+        self.set_id(APP_ID.CONTENT)
+        self.set_data(APP_DATA.PAGE_NAME, page_name)
+
+
 class GamesOL(OL):
 
     """ Games List extending <ol>. """
@@ -157,8 +176,8 @@ class GameLI(LI):
         super(GameLI, self).__init__(item, index)
 
         # TODO: add css
-        self.set_data(HTML_DATA.ID, item.id)
-        self.set_data(HTML_DATA.OBJECT_TYPE, item.type)
+        self.set_data(APP_DATA.ID, item.id)
+        self.set_data(APP_DATA.OBJECT_TYPE, item.type)
         self.create_content(item)
 
 
@@ -174,8 +193,8 @@ class GameLI(LI):
             id = result["id"]
             opponent = item.get_opponent(id)
             span = Span()
-            span.set_data(HTML_DATA.ID, id)
-            span.set_data(HTML_DATA.OBJECT_TYPE, opponent.type)
+            span.set_data(APP_DATA.ID, id)
+            span.set_data(APP_DATA.OBJECT_TYPE, opponent.type)
             span.set_text("{0} {1}".format(opponent.name, result["score"]))
             self.append_child(span)
         # game_text = ", ".join(results)
@@ -192,8 +211,8 @@ class RankingLI(LI):
 
         # TODO: add css and remove id.
 
-        self.set_data(HTML_DATA.ID, item.id)
-        self.set_data(HTML_DATA.OBJECT_TYPE, item.type)
+        self.set_data(APP_DATA.ID, item.id)
+        self.set_data(APP_DATA.OBJECT_TYPE, item.type)
         self.create_content(item)
 
 
@@ -221,8 +240,8 @@ class CreateGameForm(Form):
         super(CreateGameForm, self).__init__(name, xsrf_token, action_url)
 
         # FIXME take out hard coded values
-        self.append_child(HiddenInput(HTML_NAME.LEAGUE, ""))
-        self.append_child(HiddenInput(HTML_NAME.CREATOR, "700"))
+        self.append_child(HiddenInput(FORM_NAME.LEAGUE, ""))
+        self.append_child(HiddenInput(FORM_NAME.CREATOR, "700"))
 
         # need a single item so that OpponentScoreLI is created
         self.append_child(GameScoreUL(["", "", "", ""]))
@@ -232,7 +251,7 @@ class CreateGameForm(Form):
         submit_button.set_text(Copy.submit)
         self.append_child(submit_button)
         close_button = Button()
-        close_button.append_class(HTML_CLASS.CLOSE)
+        close_button.append_class(APP_CLASS.CLOSE)
         close_button.set_text(Copy.close)
         self.append_child(close_button)
 
@@ -264,19 +283,19 @@ class GameScoreLI(LI):
         # list names format: NAME[INDEX][DATA_TYPE]
         # id
         game_score_id = "{0}[{1}][{2}]".format(
-                HTML_NAME.GAME_SCORE, 
+                FORM_NAME.GAME_SCORE, 
                 self._index,
-                HTML_DATA.ID)
+                APP_DATA.ID)
         id_input = TextInput(game_score_id)
         id_input.set_placeholder(Copy.player_placeholder)
-        id_input.set_classes([HTML_CLASS.PLAYER_SELECT])
+        id_input.set_classes([APP_CLASS.PLAYER_SELECT])
         self.append_child(id_input)
 
         # score
         game_score_score = "{0}[{1}][{2}]".format(
-                HTML_NAME.GAME_SCORE, 
+                FORM_NAME.GAME_SCORE, 
                 self._index,
-                HTML_DATA.SCORE)
+                APP_DATA.SCORE)
         score_input = TextInput(game_score_score)
         score_input.set_placeholder(Copy.score_placeholder)
         self.append_child(score_input)

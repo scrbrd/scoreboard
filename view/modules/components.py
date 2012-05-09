@@ -25,10 +25,12 @@ import tornado.web
 
 from view.app_copy import Copy
 
+from view.constants import PAGE_NAME
 from html.elements import Element
 from html.mobile import AppHeader, ContextHeader
 from html.mobile import NavHeader, GamesOL, RankingsOL
 from html.mobile import DialogHeader, CreateGameForm
+from html.mobile import PageSection
 
 
 class UIAppHeader(tornado.web.UIModule):
@@ -117,7 +119,10 @@ class UIGamesList(tornado.web.UIModule):
 
         try:
             games = model.games
-            element_tree = GamesOL(games).element()
+
+            section = PageSection(PAGE_NAME.GAMES)
+            section.append_child(GamesOL(games))
+            element_tree = section.element()
 
         except AttributeError as e:
             #logger.debug(e.reason)
@@ -139,7 +144,10 @@ class UIRankingsList(tornado.web.UIModule):
 
         try:
             rankings = model.rankings
-            element_tree = RankingsOL(rankings).element()
+            
+            section = PageSection(PAGE_NAME.RANKINGS)
+            section.append_child(RankingsOL(rankings))
+            element_tree = section.element()
 
         except AttributeError as e:
             #logger.debug(e.reason)

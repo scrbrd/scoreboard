@@ -16,22 +16,41 @@ define(
     function($, Const, doc) {
    
         // Instantiate iScroll object
-        // TODO remove if and put that conditional in the script load
-        var scroller;
-       
-        document.addEventListener(
-                'touchmove', 
-                function (e) { 
-                    e.preventDefault(); 
-                }, 
-                false);
-        if ($(Const.ID.SCROLLER).length) {
-            var scroller_id = Const.ID.SCROLLER.substring(1);
-            scroller = new iScroll(scroller_id);
-           
-            // Remove global version of iScroll
+        function Scroller() {
+
+            var curr_scroll = null;
+            var iScroller = iScroll;
             delete iScroll;
+            var scroller_id = Const.ID.SCROLLER.substring(1);
+
+            this.refresh = function() {
+                curr_scroll.refresh();
+            };
+
+            this.scrollTo = function(x, y, time) {
+                curr_scroll.scrollTo(x, y, time);
+            };
+
+            this.reset = function() {
+                curr_scroll.destroy();
+                curr_scroll = new iScroller(scroller_id);
+            };
+
+            function initialize() {
+                document.addEventListener(
+                        'touchmove', 
+                        function (e) { 
+                            e.preventDefault(); 
+                        }, 
+                        false);
+                //if ($(Const.ID.SCROLLER).length) {
+                curr_scroll = new iScroller(scroller_id);
+                //}
+            }
+
+            initialize();
         }
+       
 
     
         // Hide the address bar so the appl looks for appy
@@ -102,6 +121,8 @@ define(
         }
 
         hide_address_bar();
+        
+        var scroller = new Scroller();
 
         // adjust length of scroller after address bar is hidden
         scroller.refresh();

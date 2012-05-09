@@ -5,10 +5,6 @@ Provide constants for view.html.
     HTML_TAG
     HTML_ATTRIBUTE
     HTML_TYPE
-    HTML_ID
-    HTML_CLASS
-    HTML_DATA
-    HTML_NAME
     HTML_CONSTANT
 
 """
@@ -82,14 +78,22 @@ class _HTMLTag(object):
 
 
     @constant
+    def SECTION(self):
+        """ SECTION is a type of HTML tag. """
+        return "section"
+
+
+    @constant
     def FORM(self):
         """ FORM is a type of HTML tag. """
         return "form"
+
 
     @constant
     def INPUT(self):
         """ INPUT is a type of HTML tag. """
         return "input"
+
 
     @constant
     def BUTTON(self):
@@ -192,103 +196,9 @@ class _HTMLType(object):
         return "text"
 
 
-class _HTMLClass(object):
-
-    """ _HTMLClass class to hold all defined HTML classes. """
-
-
-    @constant
-    def CLOSE(self):
-        """ CLOSE is a html/css/js class. """
-        return "close"
-
-
-    @constant
-    def PLAYER_SELECT(self):
-        """ PLAYER_SELECT is a html/css/js class. """
-        return "player-select"
-
-
-class _HTMLID(object):
-
-    """ _HTMLID class holds all id attributes' possible values. """
-
-
-    @constant
-    def CONTEXT(self):
-        """ CONTEXT is the element that stores context data.. """
-        return "context"
-
-
-class _HTMLName(object):
-
-    """ _HTMLName class holds all name attributes' possible values. """
-
-
-    @constant
-    def LEAGUE(self):
-        """ LEAGUE is the name of a form element that stores league id. """
-        return "league"
-
-
-    @constant
-    def CREATOR(self):
-        """ CREATOR is the name of a form element that stores creator id. """
-        return "creator"
-
-
-    @constant
-    def GAME_SCORE(self):
-        """ GAME_SCORE is the name of a set of form elements. """
-        return "game_score"
-
-
-class _HTMLData(object):
-
-    """ _HTMLData class to hold all 'Data-' atttribute keys. 
-    
-    Note: These constants have dashes because the html5 spec says they must.
-    Note: These can be used for json data as well.
-
-    """
-
-    @constant
-    def ID(self):
-        """ ID is a key of the HTML attribute Data. """
-        return "id"
-
-
-    @constant
-    def NAME(self):
-        """ NAME is a key of the HTML attribute Data. """
-        return "name"
-    
-    
-    @constant
-    def OBJECT_TYPE(self):
-        """ OBJECT_TYPE is a key of the HTML attribute Data. """
-        return "object-type"
-
-
-    @constant
-    def SCORE(self):
-        """ SCORE is a key of the HTML attribute Data. """
-        return "score"
-
-    @constant
-    def RIVALS(self):
-        """ RIVALS is a key of the HTML attribute Data. """
-        return "rivals"
-
-
 HTML_TAG = _HTMLTag()
 HTML_ATTRIBUTE = _HTMLAttribute()
 HTML_TYPE = _HTMLType()
-HTML_CLASS = _HTMLClass()
-HTML_ID = _HTMLID()
-HTML_NAME = _HTMLName()
-HTML_DATA = _HTMLData()
-
 
 class _HTMLConstant(object):
 
@@ -309,6 +219,7 @@ class _HTMLConstant(object):
                 HTML_TAG.H1,
                 HTML_TAG.H2,
                 HTML_TAG.HEADER,
+                HTML_TAG.SECTION,
                 HTML_TAG.FORM,
                 HTML_TAG.INPUT,
                 HTML_TAG.BUTTON,

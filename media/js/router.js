@@ -3,6 +3,7 @@
     Handle all routing interactions with server by using Backbone. 
 
     Dependencies:
+        MP
         $
         Backbone
         DocView - view.DocView
@@ -44,9 +45,11 @@ define(
                     },
                     success: function(json_response) {
                         doc_view = DocView.getDocView();
-                        doc_view.updateContent(json_response.content);
-                        doc_view.updateContext(json_response.context_header);
-                    }
+                        doc_view.updatePage(
+                                json_response.context_header,
+                                json_response.content
+                        );
+                    },
                 });
             },
 

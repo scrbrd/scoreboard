@@ -6,6 +6,7 @@
         view
 
     Dependencies:
+        MP
         $
         Backbone
         Const
@@ -16,6 +17,7 @@
 */
 define(
     [
+        "MP",
         "jQuery",
         "Backbone",
         "js/constants",
@@ -23,7 +25,7 @@ define(
         "view/dialog",
         "text!/dialog/creategame",
     ],
-    function($, Backbone, Const, Scroller, DialogView, dialog_html) {
+    function(MP, $, Backbone, Const, Scroller, DialogView, dialog_html) {
 
         
         // Variable: doc_view
@@ -55,9 +57,19 @@ define(
             // Setup DialogView with dialog html file.
             initialize: function() {
                 this.dialog = this.setDialog(dialog_html);
+               
+                var path = $(location).attr('href');
+                MP.trackViewPageByName(this.pageName(), path);
             },
 
             
+            // Function: page_name
+            // The Documents current displayed page
+            pageName: function() {
+                return $(Const.ID.CONTENT).data(Const.DATA.PAGE_NAME);
+            },
+        
+
             /* 
                 Function: events
                 Add all event handlers.
@@ -76,6 +88,24 @@ define(
             },
 
 
+            /* 
+                Function: updatePage
+                Update both the context and the content with new html. 
+                Then update mixpanel with a Tab View Page.
+
+                Parameters:
+                    context_html - (string) new html for updating context
+                    content_html - (string) new html for udpating content
+            */
+            updatePage: function(context_html, content_html) {
+                this.updateContext(context_html);
+                this.updateContent(content_html);
+
+                var path = $(location).attr('href')
+                MP.trackViewPageByName(this.pageName(), path);
+            },
+            
+
             /*
                 Function: updateContent
                 Update the content with the new html.
@@ -83,15 +113,17 @@ define(
                 Parameters:
                     new_html - (string) HTML with new content.
 
-                Hide the old content, update to the new content, rescroll
-                to screen top, show new content, and resize the scroller.
+                Hide the old content, rescroll to screen top, update new 
+                content, show new content, and reset the Scroller. Must 
+                reset the Scroller because the new_html will need to be
+                incorporated into its functionality.
             */
             updateContent: function(new_html) {
                 $(Const.ID.CONTENT).toggle(false); 
-                $(Const.ID.CONTENT).html(new_html);                
                 Scroller.scrollTo(0, 0, 0);  // scroll to x, y, time (ms)
+                $(Const.ID.CONTENT).replaceWith(new_html); 
                 $(Const.ID.CONTENT).fadeIn('fast');
-                Scroller.refresh();
+                Scroller.reset();
             },
            
 
@@ -152,7 +184,7 @@ define(
 
             /* 
                 Function: hideDialog
-                Hidethe dialog portion of the DOM.
+                Hide the dialog portion of the DOM.
             */
             hideDialog: function() {
                 this.dialog.hide();

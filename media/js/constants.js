@@ -57,6 +57,7 @@ define(
                 ID:                     "id",
                 NAME:                   "name",
                 RIVALS:                 "rivals",
+                PAGE_NAME:              "page-name",
             },
                   
 
@@ -68,6 +69,16 @@ define(
                 LEAGUE:                 "[name='league']",
                 CREATE_GAME:            "[name='create-game']",
             },
+
+
+            // Type: PAGE_NAME
+            // These are all the different possible page names.
+            PAGE_NAME: {
+                RANKINGS:               "rankings",
+                GAMES:                  "games",
+                LANDING:                "landing",
+                CREATE_GAME:            "create-game",
+            }
         }
     }
 );
