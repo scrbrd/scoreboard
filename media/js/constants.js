@@ -19,6 +19,15 @@ define(
 
         return {
 
+            /* 
+                Constants: API Objects
+                GAME - Corresponds to model.api.game.Game
+            */
+            API_OBJECT: {
+                GAME:       "game",
+            },
+
+
             // Type: DOM
             // All DOM Constants correspond to DOM tags.
             DOM: {
@@ -58,6 +67,7 @@ define(
                 NAME:                   "name",
                 RIVALS:                 "rivals",
                 PAGE_NAME:              "page-name",
+                GAME_SCORE:             "game-score",
             },
                   
 
@@ -79,7 +89,7 @@ define(
                 LANDING:                "landing",
                 CREATE_GAME:            "create-game",
             }
-        }
+        };
     }
 );
 

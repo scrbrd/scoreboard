@@ -52,7 +52,7 @@ class CreateGameHandler(BaseHandler):
         params_dict = json.loads(params_str)
         league_id = params_dict["league"]
         creator_id = params_dict["creator"]
-        game_score = params_dict["game_score"]
+        game_score = params_dict["game-score"]
         
         # create game in model
         creator = catchers.CreateCatcher();

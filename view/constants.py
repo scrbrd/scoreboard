@@ -64,7 +64,7 @@ class _FormName(object):
     @constant
     def GAME_SCORE(self):
         """ GAME_SCORE is the name of a set of form elements. """
-        return "game_score"
+        return "game-score"
 
 
 class _AppData(object):

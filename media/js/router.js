@@ -14,7 +14,7 @@ define(
         "Backbone",
         "view/document",
     ], 
-    function($, Backbone, DocView) {
+    function ($, Backbone, DocView) {
 
         /*
             Class: NavRouter
@@ -34,26 +34,25 @@ define(
                 "*error":           "error"         // error catch all
             },
 
-            loadTab: function(tab) {
+            loadTab: function (tab) {
                 console.log("ajax load tab: " + tab);
                 $.ajax({
                     type: "GET",
                     url: tab, 
                     data: {"asynch": true},
-                    beforeSend: function() {
-                        DocView.getDocView().hideContent();
+                    beforeSend: function () {
+                        DocView.hideContent();
                     },
-                    success: function(json_response) {
-                        doc_view = DocView.getDocView();
-                        doc_view.updatePage(
-                                json_response.context_header,
-                                json_response.content
+                    success: function (jsonResponse) {
+                        docView = DocView.updatePage(
+                                jsonResponse.context_header,
+                                jsonResponse.content
                         );
                     },
                 });
             },
 
-            error: function(error) {
+            error: function (error) {
                 console.log("no handler: " + error);
             },
         });
@@ -70,10 +69,10 @@ define(
             Dependencies:
                 domReady (TODO: make this relationship formal)
         */
-        var setupNavRouter = function(pushState) {
+        var setupNavRouter = function (pushState) {
         
             // Backbone using History API's PushState
-            var app_router = new NavRouter;
+            var appRouter = new NavRouter;
             if (pushState) {
                 Backbone.history.start({
                     pushState: true,
@@ -81,10 +80,11 @@ define(
                 });
             
                 // SRC = https://github.com/tbranyen/backbone-boilerplate
-                // All navigation that is relative should be passed through the navigate
-                // method, to be processed by the router.  If the link has a data-bypass
-                // attribute, bypass the delegation completely.
-                $(document).on("click", "a:not(.data-bypass)", function(event) {
+                // All navigation that is relative should be passed through 
+                // the navigate method, to be processed by the router.  If 
+                // the link has a data-bypass attribute, bypass the 
+                // delegation completely.
+                $(document).on("click", "a:not(.data-bypass)", function (event) {
                     // Get the anchor href and protcol
                     var href = $(this).attr("href");
                     var protocol = this.protocol + "//";
@@ -100,7 +100,7 @@ define(
                         // trigger the correct events.  The Router's internal `navigate` method
                         // calls this anyways.
                         if (!$(this).hasClass('route-bypass')) {
-                            app_router.navigate(href, {trigger: true});
+                            appRouter.navigate(href, {trigger: true});
                         }
                     }
                 });
@@ -108,7 +108,7 @@ define(
             // Backbone without using History's PushState
             } else {
                 Backbone.history.start({
-                        silent: true
+                    silent: true
                 });
             } 
         }
@@ -116,7 +116,7 @@ define(
         // Use setupNavRouter to setup this module's connection to Backbone
         return {
             setupNavRouter: setupNavRouter, 
-        }
+        };
 
     }
 );

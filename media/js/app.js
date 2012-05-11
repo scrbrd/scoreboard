@@ -13,14 +13,14 @@ define(
         "view/document",
         "js/router",
     ],
-    function($, DocView, Router) {
+    function ($, DocView, Router) {
         return {
             
             /*
                 Function: initialize
                 Run all application logic
             */
-            initialize: function() {
+            initialize: function () {
 
                 // Setup application before DOM loads
                 $.ajaxSetup({
@@ -29,12 +29,11 @@ define(
                 
 
                 // Run DOM dependent logic
-                $(function() {
-                    doc_view = DocView.getDocView();
+                $(function () {
                     Router.setupNavRouter(true); // pushstate = true
                     // TODO remove facebook's #_=_ insertion
                 });
             }
-        }
+        };
     }
 );

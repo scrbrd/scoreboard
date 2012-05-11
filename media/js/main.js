@@ -28,8 +28,8 @@ require.config({
         view: "static/js/view",
         order: "static/js/lib/require/order",
         text: "static/js/lib/require/text",
-        domReady: "static/js/lib/require/domReady"
-    }
+        domReady: "static/js/lib/require/domReady",
+    },
 });
 
 
@@ -51,5 +51,4 @@ require(
     function (App) {
         App.initialize();
     }
-
 );

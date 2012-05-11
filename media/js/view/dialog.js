@@ -30,10 +30,14 @@ define(
 
             Subclasses:
                 <Backbone.View at http://documentcloud.github.com/backbone/#View>
-
         */
         var DialogView = Backbone.View.extend({
-           
+          
+            // Variable: form
+            // The jQuery object of the included form
+            form: null,
+          
+            
             /*
                 Function: initialize
                 Initialize all sub-elements of DialogView.
@@ -49,12 +53,12 @@ define(
                 stretches it to the proper height, and finally initializes its
                 form.
             */
-            initialize: function() {
+            initialize: function () {
                 this.$el.hide();
                 this.$el.append(this.options.html); 
                 this.$el.height(this.options.height); 
 
-                this._setupForm(this.options.context_id, this.options.rivals);
+                this.setupForm(this.options.contextID, this.options.rivals);
             },
 
 
@@ -69,7 +73,7 @@ define(
                 Note: Keep _events notation to allow event keys to be 
                 variables.
             */
-            events: function() {
+            events: function () {
                 var _events = {};
                 var submitForm = Const.NAME.CREATE_GAME;
                 var closeButton = Const.DOM.BUTTON + Const.CLASS.CLOSE;
@@ -81,6 +85,33 @@ define(
 
 
             /* 
+                Function: setupForm
+                Sets up the dialog's form with contextual 
+                values and autocomplete functionality.
+
+                Parameters:
+                    league_id - (int) Api id for page's League object.
+                    rivals - (list) List of objects representing rivals,
+                            with the keys "id", "name"
+
+            */
+            setupForm: function(league_id, rivals) {
+                this.form = this.$(Const.NAME.CREATE_GAME);
+                // Pull page's league id value from context object
+                this.form.find(Const.NAME.LEAGUE).val(league_id);
+            
+                // TODO: add additional row functionality
+                // diabled row, gets enabled, add new row
+
+                // set up autocomplete for player selection
+                DomUtil.autocompletePlayer(
+                        rivals,
+                        Const.NAME.CREATE_GAME,
+                        Const.CLASS.PLAYER_SELECT);
+            },
+            
+                       
+            /* 
                 Function: submitDialog
                 Submit dialog's form and hangle all data manipulation.
 
@@ -90,11 +121,9 @@ define(
                 See:
                     form2js.toObject
             */
-            submitDialog: function(event) {
-                // TODO reset form (after game is created successfully...)
-
+            submitDialog: function (event) {
                 Crud.createGame($(event.target).toObject());
-                this.hide();
+                this.hideDialog();
                 return false;
             },
 
@@ -103,63 +132,58 @@ define(
                 Function: closeDialog
                 Close and hide dialog.
             */
-            closeDialog: function() {
-                // TODO reset form
-                
-                this.hide();
+            closeDialog: function () {
+                this.hideDialog();
                 return false;
             },
-            
 
             /* 
-                Function: show
-                Show this View with proper bells and whistles.
+                Function: hideDialog
+                Hides dialog.
             */
-            show: function() {
-                this.$el.slideDown('fast');
-
-                var path = $(location).attr('href');
-                MP.trackDialogViewPage(Const.PAGE_NAME.CREATE_GAME, path);
-            },
-
-
-            /* 
-                Function: hide
-                Hide this View with proper bells and whistles.
-            */
-            hide: function() {
-                this.$el.slideUp('fast');
-            },
-
-
-            /* 
-                Function: _setupForm
-                Sets up the dialog's form with contextual 
-                values and autocomplete functionality.
-
-                PRIVATE
-                
-                Parameters:
-                    league_id - (int) Api id for page's League object.
-                    rivals - (list) List of objects representing rivals,
-                            with the keys "id", "name"
-
-            */
-            _setupForm: function(league_id, rivals) {
-                // Pull page's league id value from context object
-                this.$el.find(Const.NAME.LEAGUE).val(league_id);
-            
-                // TODO: add additional row functionality
-                // diabled row, gets enabled, add new row
-
-                // set up autocomplete for player selection
-                DomUtil.Autocomplete.autocompletePlayer(
-                        rivals,
-                        Const.NAME.CREATE_GAME,
-                        Const.CLASS.PLAYER_SELECT);
+            hideDialog: function () {
+                var form = this.form;;
+                this.$el.slideUp('fast', function() {
+                    // TODO: make this nicer...
+                    form[0].reset();
+                });
             },
         });
-        return DialogView;
+        
+        function initializeDialogView(options) {
+            var createGameView =  new DialogView(options);
+            return {
+                
+
+                /* 
+                    Function: show
+                    Show this View with proper bells and whistles.
+                */
+                show: function () {
+                    createGameView.$el.slideDown('fast');
+
+                    var path = $(location).attr('href');
+                    MP.trackViewDialog(Const.PAGE_NAME.CREATE_GAME, path);
+                },
+
+
+                /* 
+                    Function: hide
+                    Hide this View with proper bells and whistles.
+                */
+                hide: function () {
+                    createGameView.hideDialog();
+                },
+
+
+
+
+            };
+        }
+
+        return {
+            initializeCreateGame: initializeDialogView,
+        };
     }
 );
 
