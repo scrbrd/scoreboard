@@ -1,11 +1,10 @@
 /* 
-    Module: Main
+    Filanem: main
     Setup Require.js and load application.
 
     Main is run first as part of the require.js framework. Require
     the App, require the non-AMD javascript modules in the correct
-    order, load the plugins (text, domReady, order), and initialize
-    App.
+    order, and load the plugins (text, domReady, order).
     
     Settings:
         baseUrl - everything is relative to the root directory
@@ -26,6 +25,7 @@ require.config({
         lib: "static/js/lib",
         util: "static/js/util",
         view: "static/js/view",
+        controller: "static/js/controller",
         order: "static/js/lib/require/order",
         text: "static/js/lib/require/text",
         domReady: "static/js/lib/require/domReady",
@@ -47,8 +47,5 @@ require(
         "order!lib/backbone/backbone-min",
         "lib/iscroll/iscroll-min",
         "lib/mixpanel/mixpanel-min",
-    ],
-    function (App) {
-        App.initialize();
-    }
+    ]
 );

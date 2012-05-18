@@ -3,17 +3,15 @@
     Handle all Create, Read, Update, Delete actions on specific model objects.
     
     Dependencies:
-        MP
         $ 
         constants
 */
 define(
     [
-        "MP",
         "jQuery",
         "js/constants",
     ],
-    function (MP, $, Const) {
+    function ($, Const) {
 
         /*
             Constants: Request Keys
@@ -52,8 +50,9 @@ define(
             Parameters:
                 type - the object type to create
                 parameters - the parameters that define this object
+                controller - the controller that initiated this create request
         */
-        function create(type, objParams) {
+        function create(type, objParams, controller) {
 
             // move xsrf token to request parameters
             var xsrfToken = objParams[REQUEST_KEY.XSRF];
@@ -76,17 +75,14 @@ define(
                     requestData, 
                     function (jsonResponse) {
                         success = jsonResponse[RESPONSE_KEY.IS_SUCCESS];
-                        console.log("success? " + jsonResponse[RESPONSE_KEY.IS_SUCCESS]);
-                        // TODO: if success or fail, tell user
+                        // TODO: send response object to grab relevent MP data
+                        // from
                         if (success) {
-                            MP.trackCreateGame(
-                                numberOfTags,
-                                null,
-                                null);
-
-                            // DocView.refresh();
+                            controller.handleSuccess(numberOfTags);
+                        } else {
+                            //TODO: alert user on fail
+                            console.log('failed to create game');
                         }
-                        // TODO: if success reload page
                     },
                     POST_JSON);
         };
@@ -99,9 +95,9 @@ define(
                 Parameters:
                     parameters - the parameters that define this object
             */
-            createGame: function (objParams) {
+            createGame: function (gameParams, controller) {
                 // TODO: make the objParams more specific
-                create(Const.API_OBJECT.GAME, objParams);
+                create(Const.API_OBJECT.GAME, gameParams, controller);
             },
         };
     }

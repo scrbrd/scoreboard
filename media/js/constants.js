@@ -44,7 +44,7 @@ define(
                 CONTEXT:                "#context",
                 CONTENT:                "#content",
                 DIALOG_CONTAINER:       "#dialog-container",
-                SCROLLER:               "#iscroll_wrapper",
+                SCROLLER:               "#iscroll-wrapper",
             },
 
 
@@ -88,7 +88,13 @@ define(
                 GAMES:                  "games",
                 LANDING:                "landing",
                 CREATE_GAME:            "create-game",
-            }
+            },
+
+            // Type: EVENT
+            // All the possible events to trigger.
+            EVENT: {
+                DISPLAYED_DIALOG:       "displayed-dialog",
+            },
         };
     }
 );

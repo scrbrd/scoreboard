@@ -3,18 +3,16 @@
     Handle all routing interactions with server by using Backbone. 
 
     Dependencies:
-        MP
         $
         Backbone
-        DocView - view.DocView
 */
 define(
     [
         "jQuery",
         "Backbone",
-        "view/document",
+        "controller/loadTab",
     ], 
-    function ($, Backbone, DocView) {
+    function ($, Backbone, LoadTabController) {
 
         /*
             Class: NavRouter
@@ -41,10 +39,10 @@ define(
                     url: tab, 
                     data: {"asynch": true},
                     beforeSend: function () {
-                        DocView.hideContent();
+                        LoadTabController.handleSubmit();
                     },
                     success: function (jsonResponse) {
-                        docView = DocView.updatePage(
+                        LoadTabController.handleSuccess(
                                 jsonResponse.context_header,
                                 jsonResponse.content
                         );
@@ -59,63 +57,29 @@ define(
 
 
         /*
-            Function: setupNavRouter
+            Function: initialize
             Initialize NavRouter's history and handle PushState
 
             Parameters:
                 pushState - boolean turning pushState on or off. If 
                             true then remove default link functionality.
-
-            Dependencies:
-                domReady (TODO: make this relationship formal)
         */
-        var setupNavRouter = function (pushState) {
+        var initialize = function (pushState) {
         
             // Backbone using History API's PushState
             var appRouter = new NavRouter;
+            var options = {silent: true};
             if (pushState) {
-                Backbone.history.start({
-                    pushState: true,
-                    silent: true
-                });
+                options.pushState = true;
+            }
             
-                // SRC = https://github.com/tbranyen/backbone-boilerplate
-                // All navigation that is relative should be passed through 
-                // the navigate method, to be processed by the router.  If 
-                // the link has a data-bypass attribute, bypass the 
-                // delegation completely.
-                $(document).on("click", "a:not(.data-bypass)", function (event) {
-                    // Get the anchor href and protcol
-                    var href = $(this).attr("href");
-                    var protocol = this.protocol + "//";
+            Backbone.history.start(options);
 
-                    // Ensure the protocol is not part of URL, meaning its relative.
-                    if (href && href.slice(0, protocol.length) !== protocol) {
-                
-                        // Stop the default event to ensure the link will not cause a page
-                        // refresh.
-                        event.preventDefault();
-
-                        // `Backbone.history.navigate` is sufficient for all Routers and will
-                        // trigger the correct events.  The Router's internal `navigate` method
-                        // calls this anyways.
-                        if (!$(this).hasClass('route-bypass')) {
-                            appRouter.navigate(href, {trigger: true});
-                        }
-                    }
-                });
-            
-            // Backbone without using History's PushState
-            } else {
-                Backbone.history.start({
-                    silent: true
-                });
-            } 
+            return appRouter;
         }
 
-        // Use setupNavRouter to setup this module's connection to Backbone
         return {
-            setupNavRouter: setupNavRouter, 
+            initializeAppRouter: initialize,
         };
 
     }

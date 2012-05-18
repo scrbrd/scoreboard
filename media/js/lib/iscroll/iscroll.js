@@ -31,10 +31,6 @@ define(
                 curr_scroll.scrollTo(x, y, time);
             };
 
-            this.reset = function() {
-                curr_scroll.destroy();
-                curr_scroll = new iScroller(scroller_id);
-            };
 
             function initialize() {
                 document.addEventListener(
@@ -43,9 +39,7 @@ define(
                             e.preventDefault(); 
                         }, 
                         false);
-                //if ($(Const.ID.SCROLLER).length) {
                 curr_scroll = new iScroller(scroller_id);
-                //}
             }
 
             initialize();

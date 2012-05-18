@@ -6,26 +6,23 @@
         view
 
     Dependencies:
-        MP
         $
         Backbone
         Const
-        Scroller - iScroll
+
+    Lazy Dependencies:
         DialogView - view.DialogView
         dialogHTML - (string) text.dialog.creategame
 
 */
 define(
     [
-        "MP",
         "jQuery",
         "Backbone",
         "js/constants",
-        "iScroll",
-        "view/dialog",
-        "text!/dialog/creategame",
+        "view/tab",
     ],
-    function(MP, $, Backbone, Const, Scroller, DialogView, dialogHTML) {
+    function($, Backbone, Const, Tab) {
 
         /*
             Class: DocView
@@ -45,39 +42,52 @@ define(
             // DialogView under DocView.
             dialog: null,
 
-            // Variable: content
-            // jQuery element for content.
-            content: null,
+            tabView: null,
 
-            // Variable: content
-            // jQuery element for context.
-            content: null,
-
-            // Variable: path
-            // Current path of url.
-            path: null,
-            
-            // Variable: pageName
-            // Current page name (from content).
-            pageName: null,
-            
             // Function: initialize
             // Setup DialogView with dialog html file.
-            initialize: function () {
-                this.refreshDoc();
-                
-                this.dialog = this.setDialog(dialogHTML);
-                this.trackViewPageByName(this.pageName, this.path);
+            initialize: function (initDOMForRouting, appRouter) {
+                this.setTabView();
+              
+                if (initDOMForRouting) {
+                    this.initializeDOMForRouting(appRouter);
+                }
+
             },
 
+        
+            path: function () {
+                return $(location).attr('href');
+            },
+
+            // Function: lazyIntialize():
+            // Initialize post DOM load functionality.
+            //
+            // Dependencies:
+            // DialogView - view.DialogView
+            // dialogHTML - (string) text.dialog.creategame
+            lazyInitialize: function () {
+                var thisDocView = this;
+                require(
+                        [
+                            "view/dialog", 
+                            "controller/dialog",
+                            "text!/dialog/creategame"], 
+                        function (Dialog, DialogController, dialogHTML) {
+                    thisDocView.dialog = thisDocView.setDialog(
+                            Dialog, 
+                            DialogController,
+                            dialogHTML);
+                });
+            },
            
-            // Function: refreshDoc
-            // Resets doc variables to point to current set
-            refreshDoc: function () {
-                this.content = this.$(Const.ID.CONTENT);
-                this.context = this.$(Const.ID.CONTEXT);
-                this.path = $(location).attr('href');
-                this.pageName = this.content.data(Const.DATA.PAGE_NAME);
+            setTabView: function () {
+                var tabViewParams = {
+                    content: Const.ID.CONTENT,
+                    context: Const.ID.CONTEXT,
+                };
+                this.tabView = Tab.construct(tabViewParams);
+
             },
 
 
@@ -106,18 +116,17 @@ define(
                     dialogHTML - (string) HTML with dialog markup.
 
                 Set element to '#dialog-containe', and grab the
-                height, context id, and rivals list from the current page.
+                height from the current page.
             */
-            setDialog: function (dialogHTML) {
+            setDialog: function (Dialog, DialogController, dialogHTML) {
                 var pageHeight = $(Const.ID.PAGE).height(); // page height
-                var createGameDialog = DialogView.initializeCreateGame({
+                var createGameView = Dialog.construct({
                     el: Const.ID.DIALOG_CONTAINER,
                     html: dialogHTML,
                     height: pageHeight,
-                    contextID: this.context.data(Const.DATA.ID),
-                    rivals: this.context.data(Const.DATA.RIVALS)
                 });
-                return createGameDialog;
+                DialogController.initialize(createGameView);
+                return createGameView;
             }, 
 
 
@@ -126,7 +135,9 @@ define(
                 Show the dialog portion of the DOM.
             */
             showDialog: function () {
-                this.dialog.show();
+                var id = this.tabView.contextView.contextID();
+                var rivals = this.tabView.contextView.rivals();
+                this.dialog.render(id, rivals, this.path());
             },
 
 
@@ -138,36 +149,10 @@ define(
                 this.dialog.hide();
             },
 
-            /*
-                Function: trackViewPageByName
-                Track the right type of page view by checking the page's name.
+            
 
-                Parameters:
-                    name - specific name of tab page
-                    path - path to page
-            */
-            trackViewPageByName: function (name, path) {
-                if (name === Const.PAGE_NAME.RANKINGS ||
-                        name === Const.PAGE_NAME.GAMES) {
-                    MP.trackViewTab(name, path);
-                } else if (name === Const.PAGE_NAME.CREATE_GAME) {
-                    MP.trackViewDialog(name, path);
-                } else {
-                    MP.trackViewLanding(name, path);
-                }
-
-            },
-
-        });
-
-        // Variable: docView
-        // Store Singleton DocView.
-        var docView = new DocView();
-        
-
-        return {
             /* 
-                Function: updatePage
+                Function: updateTab
                 Update both the context and the content with new html. 
                 Then update mixpanel with a Tab View Page.
 
@@ -175,60 +160,62 @@ define(
                     contextHTML - (string) new html for updating context
                     contentHTML - (string) new html for udpating content
             */
-            updatePage: function (contextHTML, contentHTML) {
-                this.updateContext(contextHTML);
-                this.updateContent(contentHTML);
-
-                docView.trackViewPageByName(docView.pageName, docView.path);
+            updateTab: function (contextHTML, contentHTML) {
+                this.tabView.render(contextHTML, contentHTML);
             },
             
-
             /*
-                Function: updateContent
-                Update the content with the new html.
+            
 
-                Parameters:
-                    newHTML - (string) HTML with new content.
-
-                Hide the old content, rescroll to screen top, update new 
-                content, show new content, and reset the Scroller. Must 
-                reset the Scroller because the newHTML will need to be
-                incorporated into its functionality.
             */
-            updateContent: function (newHTML) {
-                docView.content.toggle(false); 
-                Scroller.scrollTo(0, 0, 0);  // scroll to x, y, time (ms)
+            initializeDOMForRouting: function (appRouter) {
+                // SRC = https://github.com/tbranyen/backbone-boilerplate
+                // All navigation that is relative should be passed through 
+                // the navigate method, to be processed by the router.  If 
+                // the link has a data-bypass attribute, bypass the 
+                // delegation completely.
+                $(document).on(
+                        "click", 
+                        "a:not(.data-bypass)", 
+                        function (event) {
+                    // Get the anchor href and protcol
+                    var href = $(this).attr("href");
+                    var protocol = this.protocol + "//";
 
-                docView.content.replaceWith(newHTML);
-                docView.refreshDoc();
+                    // Ensure the protocol is not part of URL, meaning its relative.
+                    if (href && href.slice(0, protocol.length) !== protocol) {
                 
-                docView.content.fadeIn('fast');
-                Scroller.reset();
+                        // Stop the default event to ensure the link will not cause a page
+                        // refresh.
+                        event.preventDefault();
+
+                        // `Backbone.history.navigate` is sufficient for all Routers and will
+                        // trigger the correct events.  The Router's internal 
+                        // `navigate` method calls this anyways.
+                        // can use something separate from routing by labeling
+                        // route-bypass
+                        if (!$(this).hasClass('route-bypass')) {
+                            appRouter.navigate(href, {trigger: true});
+                        }
+                    }
+                });
             },
-           
 
-            /*
-                Function: hideContent
-                Hide the content and show a loading screen.
-            */
-            hideContent: function () {
-                var loading = "I know I put the results here somewhere...";
-                
-                docView.content.toggle(false);
-                docView.content.html(loading).toggle(true);
+        });
+
+        // Variable: docView
+        // Keep track of Singleton DocView instantiation.
+        var docView = null;
+
+        return {
+            construct: function (initDOMForRouting, appRouter) {
+                if (docView === null) {
+                    docView = new DocView(initDOMForRouting, appRouter);
+                }
+                return docView;
             },
-
-
-            /*
-                Function: updateContext
-                Update the context header with new html.
-
-                Parameters:
-                    newHTML - (string) HTML with new content.
-            */
-            updateContext: function (newHTML) {
-                docView.context.replaceWith(newHTML);
-                docView.refreshDoc();
+            retrieve: function() {
+                return docView;
             },
         };
     }

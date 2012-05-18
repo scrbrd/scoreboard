@@ -124,7 +124,7 @@ nav li {
 
 /*******************CONTENT********************/
 
-#iscroll_wrapper {
+#iscroll-wrapper {
     position:absolute; z-index:3;
     top:70px; bottom:0px; left:0;
     width:100%;
@@ -132,7 +132,7 @@ nav li {
     overflow:auto;
 }
 
-#content {
+#content-container {
     position:absolute;
     z-index:3;
     /* top:100px; bottom:40px; left:0; */
