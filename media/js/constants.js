@@ -1,101 +1,112 @@
-/* 
-    Module: Constants
-    Hold all multi-module constants used by html, css, and js.
-    
-    Types:     
-        DOM - DOM Selectors
-        ID - ID Selectors
-        CLASS - Class Selectors
-        DATA - Data Values (JSON, data-*)
-        NAME - Name Values
-
-    Note:
-        All constant values should contain dashes to comply
-        with html5 standards. E.g., "class-name".
-*/
 define(
-    [],
-    function() {
+        [], 
+        /**
+            A module for containing all js, css, and html constants.
+            
+            Note: All constant values should contain dashes to comply with
+            html5 standards. E.g., "class-name".
+            
+            @exports Const
+        */
+        function () {
+    
+    var constants = /** @lends module:Const */ { 
 
-        return {
+        /**
+            Enum for API object types.
+            @enum {string} 
+            @const
+        */
+        API_OBJECT: {
+            /** @const */ GAME:                 "game",
+        },
 
-            /* 
-                Constants: API Objects
-                GAME - Corresponds to model.api.game.Game
-            */
-            API_OBJECT: {
-                GAME:       "game",
-            },
+        /**
+            Enum for DOM object selectors.
+            @enum {string} 
+            @const
+        */
+        DOM: {
+            /** @const */ BODY:                 "body",
+            /** @const */ BUTTON:               "button",
+        },
 
-
-            // Type: DOM
-            // All DOM Constants correspond to DOM tags.
-            DOM: {
-                BODY:                   "body",
-                BUTTON:                 "button",
-            },
-
-
-            // Type: ID
-            // All ID Constants are prefixed with "#" for selection.
-            // TODO: make this link sink with Python HTML_ID constants
-            ID: {
-                PAGE:                   "#page",
-                CONTEXT:                "#context",
-                CONTENT:                "#content",
-                DIALOG_CONTAINER:       "#dialog-container",
-                SCROLLER:               "#iscroll-wrapper",
-            },
-
-
-            // Type: CLASS
-            // All Class Constants are prefixed with "." for selection.
-            // TODO: make this link sink with Python HTML_CLASS constants
-            CLASS: {
-                DIALOG_LINK:            ".dialog-link",
-                CLOSE:                  ".close",
-                PLAYER_SELECT:          ".player-select",
-            },
-
-
-            // Type: DATA
-            // These constants should be used with "data-*" attributes,
-            // as JSON keys, or as form name attribute values.
-            // TODO: make this link sink with Python HTML_DATA constants
-            DATA: {
-                ID:                     "id",
-                NAME:                   "name",
-                RIVALS:                 "rivals",
-                PAGE_NAME:              "page-name",
-                GAME_SCORE:             "game-score",
-            },
-                  
-
-            // Type: NAME
-            // These constants are used as possible values for form tag names.
-            // They are all of the format "[name='CONST']".
-            // TODO: make this link sink with Python HTML_NAME constants
-            NAME: {
-                LEAGUE:                 "[name='league']",
-                CREATE_GAME:            "[name='create-game']",
-            },
+        /**
+            Enum for ID selectors. (Prefixed with '#')
+            @enum {string} 
+            @const
+        */
+        // TODO: make this link sink with Python HTML_ID constants
+        ID: {
+            /** @const */ PAGE:                 "#page",
+            /** @const */ CONTEXT:              "#context",
+            /** @const */ CONTENT:              "#content",
+            /** @const */ DIALOG_CONTAINER:     "#dialog-container",
+            /** @const */ SCROLLER:             "#iscroll-wrapper",
+        },
 
 
-            // Type: PAGE_NAME
-            // These are all the different possible page names.
-            PAGE_NAME: {
-                RANKINGS:               "rankings",
-                GAMES:                  "games",
-                LANDING:                "landing",
-                CREATE_GAME:            "create-game",
-            },
+        /**
+            Enum for Class selectors. (Prefixed with '.')
+            @enum {string}
+            @const
+        */
+        // TODO: make this link sink with Python HTML_CLASS constants
+        CLASS: {
+            /** @const */ DIALOG_LINK:          ".dialog-link",
+            /** @const */ CLOSE:                ".close",
+            /** @const */ PLAYER_SELECT:        ".player-select",
+        },
 
-            // Type: EVENT
-            // All the possible events to trigger.
-            EVENT: {
-                DISPLAYED_DIALOG:       "displayed-dialog",
-            },
-        };
-    }
-);
+        /**
+            Enum for data-* attributes, JSON keys, or as form name attribute 
+            values.
+            @enum {string}
+            @const
+        */
+        // TODO: make this link sink with Python HTML_DATA constants
+        DATA: {
+            /** @const */ ID:                     "id",
+            /** @const */ NAME:                   "name",
+            /** @const */ RIVALS:                 "rivals",
+            /** @const */ PAGE_NAME:              "page-name",
+            /** @const */ GAME_SCORE:             "game-score",
+        },
+                
+        /**
+            Enum for values of name attributes. (Wrapped in [name=VALUE].)
+            values.
+            @enum {string}
+            @const
+        */
+        // TODO: make this link sink with Python HTML_NAME constants
+        NAME: {
+            /** @const */ LEAGUE:                 "[name='league']",
+            /** @const */ CREATE_GAME:            "[name='create-game']",
+        },
+
+        /**
+            Enum for page names. 
+            @enum {string}
+            @const
+        */
+        PAGE_NAME: {
+            /** @const */ RANKINGS:               "rankings",
+            /** @const */ GAMES:                  "games",
+            /** @const */ LANDING:                "landing",
+            /** @const */ CREATE_GAME:            "create-game",
+        },
+
+        /**
+            Enum for triggerable events. 
+            @enum {string}
+            @const
+        */
+        EVENT: {
+            /** @const */ DISPLAYED_DIALOG:       "displayed-dialog",
+        },
+    };
+
+    return constants;
+});
 

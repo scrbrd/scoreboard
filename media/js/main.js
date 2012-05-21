@@ -1,19 +1,24 @@
-/* 
-    Filanem: main
+/**
     Setup Require.js and load application.
-
+    
     Main is run first as part of the require.js framework. Require
     the App, require the non-AMD javascript modules in the correct
     order, and load the plugins (text, domReady, order).
-    
-    Settings:
-        baseUrl - everything is relative to the root directory
-        paths - all shortcut paths to use throughout javascript
 
+    @module main
+    @requires app
 */
 require.config({
+    /**
+        The base URL for require is "/".
+        @property {string} baseUrl
+    */
     baseUrl: "/",
 
+    /**
+        All the path shortcuts to use in the application.
+        @property {Object} paths
+    */
     paths: {
         // TODO - apparently there is an AMD version of jquery
         jQuery: "static/js/lib/jquery/jquery",
@@ -31,7 +36,6 @@ require.config({
         domReady: "static/js/lib/require/domReady",
     },
 });
-
 
 require(
     [

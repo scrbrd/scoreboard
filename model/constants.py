@@ -13,7 +13,6 @@ class _NodeProperty(object):
 
     """ _NodeProperty class to hold all Node Properties. """
 
-
     @constant
     def ID(self):
         """ ID is a Property of Node. """

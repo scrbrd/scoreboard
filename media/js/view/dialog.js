@@ -129,7 +129,7 @@ define(
             Hides dialog.
         */
         hide: function () {
-            var form = this.form;;
+            var form = this.form;
             this.$el.slideUp('fast', function() {
                 // TODO: make this nicer...
                 form[0].reset();

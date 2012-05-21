@@ -1,73 +1,75 @@
-/* 
-    Module: Router
-    Handle all routing interactions with server by using Backbone. 
-
-    Dependencies:
-        $
-        Backbone
-*/
 define(
-    [
-        "jQuery",
-        "Backbone",
-        "controller/loadTab",
-    ], 
-    function ($, Backbone, LoadTabController) {
+        [
+            "jQuery",
+            "Backbone",
+            "controller/loadTab",
+        ], 
+        /**
+            A module for server routing.
 
-        /*
-            Class: NavRouter
-            Handle all navigational routing actions by using Backbone.
+            @exports Router
 
-            Subclasses:
-                <Backbone.Router at http://documentcloud.github.com/backbone/#Router>
-
-            Routes:
-                /rankings - Load a Rankings page.
-                /games - Load a Games list page.
+            @requires $
+            @requires Backbone
+            @requires LoadTabController
         */
-        var NavRouter = Backbone.Router.extend({
+        function ($, Backbone, LoadTabController) {
 
-            routes: {
-                ":tab":             "loadTab",     // load tab
-                "*error":           "error"         // error catch all
-            },
-
-            loadTab: function (tab) {
-                console.log("ajax load tab: " + tab);
-                $.ajax({
-                    type: "GET",
-                    url: tab, 
-                    data: {"asynch": true},
-                    beforeSend: function () {
-                        LoadTabController.handleSubmit();
-                    },
-                    success: function (jsonResponse) {
-                        LoadTabController.handleSuccess(
-                                jsonResponse.context_header,
-                                jsonResponse.content
-                        );
-                    },
-                });
-            },
-
-            error: function (error) {
-                console.log("no handler: " + error);
-            },
-        });
+    /**
+        Handle all routing interactions with server by using Backbone.
+        (Subclasses Backbone.Router.)
+        @class NavRouter
+    */
+    var NavRouter = Backbone.Router.extend(/** @lends NavRouter# */{
 
 
-        /*
-            Function: initialize
-            Initialize NavRouter's history and handle PushState
-
-            Parameters:
-                pushState - boolean turning pushState on or off. If 
-                            true then remove default link functionality.
+        /** 
+            List out all routes. 
+            @private 
+            @type {Object}
         */
-        var initialize = function (pushState) {
-        
+        routes: {
+            ":tab":             "loadTab",      // load tab
+            "*error":           "error"         // error catch all
+        },
+
+        /** 
+            Route: Load the requested tab.
+            @private 
+            @param {string} tab "/rankings", "/games"
+        */
+        loadTab: function (tab) {
+            console.log("ajax load tab: " + tab);
+            $.ajax({
+                type: "GET",
+                url: tab, 
+                data: {"asynch": true},
+                beforeSend: function () {
+                    LoadTabController.handleSubmit();
+                },
+                success: function (jsonResponse) {
+                    LoadTabController.handleSuccess(
+                            jsonResponse.context_header,
+                            jsonResponse.content
+                    );
+                },
+            });
+        },
+
+        error: function (error) {
+            console.log("no handler: " + error);
+        },
+    });
+
+    return /** @lends module:Router */ {
+        /**
+            Initialize NavRouter's history.
+            @param {boolean} pushState Set Router's PushState functionality.
+            @returns {NavRouter} An app-wide Router.
+        */
+        initialize: function (pushState) {
             // Backbone using History API's PushState
-            var appRouter = new NavRouter;
+            var appRouter = new NavRouter();
             var options = {silent: true};
             if (pushState) {
                 options.pushState = true;
@@ -76,11 +78,6 @@ define(
             Backbone.history.start(options);
 
             return appRouter;
-        }
-
-        return {
-            initializeAppRouter: initialize,
-        };
-
-    }
-);
+        },
+    };
+});
