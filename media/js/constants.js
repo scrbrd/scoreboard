@@ -38,7 +38,7 @@ define(
         */
         // TODO: make this link sink with Python HTML_ID constants
         ID: {
-            /** @const */ PAGE:                 "#page",
+            /** @const */ TAB:                  "#tab",
             /** @const */ CONTEXT:              "#context",
             /** @const */ CONTENT:              "#content",
             /** @const */ DIALOG_CONTAINER:     "#dialog-container",

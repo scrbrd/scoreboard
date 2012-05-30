@@ -84,6 +84,12 @@ class _HTMLTag(object):
 
 
     @constant
+    def BR(self):
+        """ BR is a type of HTML tag. """
+        return "br"
+
+
+    @constant
     def FORM(self):
         """ FORM is a type of HTML tag. """
         return "form"

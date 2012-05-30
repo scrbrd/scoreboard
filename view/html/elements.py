@@ -68,6 +68,7 @@ The following tags are implemented as Element subclasses:
     form
     input
     button
+    br
 
 The following tags are not implemented because they are hard-coded in
 the top-level templates, which are not dynamically generated:
@@ -807,6 +808,15 @@ class Section(Element):
     def __init__(self):
         """ Construct a <section>. """
         super(Section, self).__init__(HTML_TAG.SECTION)
+
+
+class BR(Element):
+    
+    """ Section element <br>. """
+
+    def __init__(self):
+        """ Construct a <br>. """
+        super(BR, self).__init__(HTML_TAG.BR)
 
 
 class Form(Element):

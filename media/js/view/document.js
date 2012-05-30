@@ -119,7 +119,7 @@ define(
                 height from the current page.
             */
             setDialog: function (Dialog, DialogController, dialogHTML) {
-                var pageHeight = $(Const.ID.PAGE).height(); // page height
+                var pageHeight = $(Const.ID.TAB).height(); // page height
                 var createGameView = Dialog.construct({
                     el: Const.ID.DIALOG_CONTAINER,
                     html: dialogHTML,

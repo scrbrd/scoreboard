@@ -54,7 +54,7 @@ define(
             // Third Party module that hide the Address Bar in iPhone and Droid
             // From: https://gist.github.com/1172490
 
-            var page = document.getElementById('page'),
+            var page = document.getElementById(Const.ID.TAB.substring(1)),
                 ua = navigator.userAgent,
                 iphone = ~ua.indexOf('iPhone') || ~ua.indexOf('iPod'),
                 ipad = ~ua.indexOf('iPad'),

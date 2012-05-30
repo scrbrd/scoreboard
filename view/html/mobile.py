@@ -8,8 +8,9 @@ import json
 from view.app_copy import Copy
 
 from view.constants import APP_DATA, FORM_NAME, APP_ID, APP_CLASS
+from view.constants import DESIGN_ID, DESIGN_CLASS
 from elements import Element, Div, Span, OL, UL, LI, Nav, A, H1, H2, Header
-from elements import Section, Form, TextInput, HiddenInput, CheckboxInput
+from elements import Section, BR, Form, TextInput, HiddenInput, CheckboxInput
 from elements import SubmitButton, Button
 
 
@@ -24,20 +25,36 @@ class AppHeader(H1):
         self.set_text(app_name)
 
 
-class ContextHeader(H2):
+class ContextHeader(Div):
 
-    """ Context header extending <h2>. """
+    """ Context header extending <div>. """
 
 
     def __init__(self, context, rivals):
-        """ Construct a context header element tree. """
+        """ Construct a context header element tree.
+
+        The div is for the background image and anything external. The
+        inside h2 is for managing the font layout, specifically because
+        some fonts aren't centered correctly.
+
+        """
         super(ContextHeader, self).__init__()
 
         # set context data
         self.set_id(APP_ID.CONTEXT)
         self.set_data(APP_DATA.ID, context.id)
         self.set_data(APP_DATA.OBJECT_TYPE, context.type)
-        self.set_text(context.name)
+        self.set_classes([
+            DESIGN_CLASS.MAIN_HEADER,
+            DESIGN_CLASS.HEADER_SECTION,
+        ])
+
+        #add inner h2 and span around context
+        h2 = H2()
+        span = Span()
+        span.set_text(context.name)
+        h2.append_child(span)
+        self.append_child(h2)
 
         # set rivals data
         view_rivals = []
@@ -45,8 +62,9 @@ class ContextHeader(H2):
             view_rivals.append({APP_DATA.ID: r.id, APP_DATA.NAME: r.name})
         self.set_data(APP_DATA.RIVALS, json.dumps(view_rivals))
 
+
 class DialogHeader(Header):
-    
+
     """ Dialog Header extending <header> and including <h2>. """
 
 
@@ -58,8 +76,8 @@ class DialogHeader(Header):
         h2 = H2()
         h2.set_text(dialog_name)
         self.append_child(h2)
-        
-    
+
+
 class NavHeader(Nav):
 
     """ Nav header extending <nav>. """
@@ -72,8 +90,10 @@ class NavHeader(Nav):
                 special_item,
                 special_item_index)
 
-        # TODO: is there css we want applied to this class?
-        #self.append_classes([])
+        self.append_classes([
+            DESIGN_CLASS.SECOND_HEADER,
+            DESIGN_CLASS.HEADER_SECTION,
+        ])
 
 
     def set_list(self, items):
@@ -113,12 +133,11 @@ class NavHeaderLI(LI):
     def __init__(self, item, index):
         """ Construct a nav header list item element tree. """
         super(NavHeaderLI, self).__init__(item, index)
+        self.append_classes([DESIGN_CLASS.INACTIVE_NAV])
 
         span = Span()
-        # TODO: is there css we want applied even to this base class?
-        #span.append_classes([])
         self.append_child(span)
-
+        
         a = A(item)
         # TODO: this is a hardcoded string and not a constant because once we
         # have a Link class [and an Item interface or some such thing for it
@@ -161,6 +180,12 @@ class RankingsOL(OL):
     """ Rankings List extending <ol>. """
 
 
+    def __init__(self, items):
+        """ Construct a Rankings of type <ol>. """
+        super(RankingsOL, self).__init__(items)
+        self.set_classes([DESIGN_CLASS.COUNTER])
+
+
     def set_list_item(self, item, index):
         """ Construct and add a list item as a child of this list. """
         return self.append_child(RankingLI(item, index))
@@ -192,11 +217,17 @@ class GameLI(LI):
             # changed more obvious once we have result/outcome classes.
             id = result["id"]
             opponent = item.get_opponent(id)
+            
             span = Span()
             span.set_data(APP_DATA.ID, id)
             span.set_data(APP_DATA.OBJECT_TYPE, opponent.type)
             span.set_text("{0} {1}".format(opponent.name, result["score"]))
             self.append_child(span)
+            
+            # add break between results
+            br = BR()
+            self.append_child(br)
+
         # game_text = ", ".join(results)
 
 
