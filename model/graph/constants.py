@@ -16,19 +16,19 @@ class _GraphProperty(object):
     @constant
     def CREATED_TS(self):
         """ CREATED_TS is a Property of GraphObject. """
-        return "g_created_ts"
+        return "created_ts"
 
 
     @constant
     def UPDATED_TS(self):
         """ UPDATED_TS is a Property of GraphObject. """
-        return "g_updated_ts"
+        return "updated_ts"
 
 
     @constant
     def DELETED_TS(self):
         """ DELETED_TS is a Property of GraphObject. """
-        return "g_deleted_ts"
+        return "deleted_ts"
 
 
 GRAPH_PROPERTY = _GraphProperty()

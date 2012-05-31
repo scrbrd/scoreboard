@@ -5,7 +5,7 @@
 """
 
 from util.decorators import constant
-from model.constants import NODE_PROPERTY, EDGE_PROPERTY
+from model.constants import NODE_PROPERTY, EDGE_PROPERTY, THIRD_PARTY
 
 
 class _APINodeType(object):
@@ -16,31 +16,35 @@ class _APINodeType(object):
     @constant
     def GAME(self):
         """ GAME is a Type of Node. """
-        return "n_game"
+        return "game"
 
 
     @constant
     def LEAGUE(self):
         """ LEAGUE is a Type of Node. """
-        return "n_league"
+        return "league"
 
 
     @constant
     def PLAYER(self):
         """ PLAYER is a Type of Node. """
-        return "n_player"
+        return "player"
 
 
     @constant
     def TEAM(self):
         """ TEAM is a Type of Node. """
-        return "n_team"
+        return "team"
 
 
     @constant
     def USER(self):
         """ USER is a Type of Node. """
-        return "n_user"
+        return "user"
+
+
+# intentionally make this declaration now so that we can refer to it below.
+API_NODE_TYPE = _APINodeType()
 
 
 class _APIEdgeType(object):
@@ -51,105 +55,206 @@ class _APIEdgeType(object):
     @constant
     def IN_LEAGUE(self):
         """ IN_LEAGUE is a Type of Edge. """
-        return "e_in_league"
+        return "in_league"
 
 
     @constant
     def HAS_LEAGUE_MEMBER(self):
         """ HAS_LEAGUE_MEMBER is a Type of Edge. """
-        return "e_has_league_member"
+        return "has_league_member"
 
 
     @constant
     def SCHEDULED_IN(self):
         """ SCHEDULED_IN is a Type of Edge. """
-        return "e_scheduled_in"
+        return "scheduled_in"
 
 
     @constant
     def HAS_SCHEDULED(self):
         """ HAS_SCHEDULED is a Type of Edge. """
-        return "e_has_scheduled"
+        return "has_scheduled"
     
 
     @constant
     def WON(self):
         """ WON is a Type of Edge. """
-        return "e_won"
+        return "won"
 
 
     @constant
     def WON_BY(self):
         """ WON_BY is a Type of Edge. """
-        return "e_won_by"
+        return "won_by"
 
 
     @constant
     def LOST(self):
         """ LOST is a Type of Edge. """
-        return "e_lost"
+        return "lost"
 
 
     @constant
     def LOST_BY(self):
         """ LOST_BY is a Type of Edge. """
-        return "e_lost_by"
+        return "lost_by"
 
 
     @constant
     def TIED(self):
         """ TIED is a Type of Edge. """
-        return "e_tied"
+        return "tied"
 
 
     @constant
     def TIED_BY(self):
         """ TIED_BY is a Type of Edge. """
-        return "e_tied_by"
+        return "tied_by"
 
 
     @constant
     def PLAYED(self):
         """ PLAYED is a Type of Edge. """
-        return "e_played"
+        return "played"
 
 
     @constant
     def PLAYED_BY(self):
         """ PLAYED_BY is a Type of Edge. """
-        return "e_played_by"
+        return "played_by"
 
 
     @constant
     def CREATED(self):
         """ CREATED is a Type of Edge. """
-        return "e_created"
+        return "created"
 
 
     @constant
     def CREATED_BY(self):
         """ CREATED_BY is a Type of Edge. """
-        return "e_created_by"
+        return "created_by"
+
+
+    @constant
+    def SPAWNED(self):
+        """ SPAWNED is a Type of Edge.
+
+        User > Person : SPAWNED
+
+        Like CREATED, but functionally the User/Person relationship is
+        a bit different than the Person/Entity relationship.
+
+        Like OWNS, but implies creation instead of ownership. For
+        example, when Player A owned by User X tags non-existent Player
+        B in Game G, User X spawns Player B and invites non-existent
+        User Y, and User Y will own Player B.
+
+        """
+        return "spawned"
+
+
+    @constant
+    def SPAWNED_BY(self):
+        """ SPAWNED_BY is a Type of Edge.
+
+        Person > User : SPAWNED_BY
+
+        Like CREATED_BY, but functionally the Person/User relationship
+        is a bit different than the Entity/Person relationship.
+
+        Like OWNED_BY, but implies creation instead of ownership.
+
+        """
+        return "spawned_by"
+
+
+    @constant
+    def OWNS(self):
+        """ OWNS is a Type of Edge.
+
+        User > Person : OWNS
+
+        """
+        return "owns"
+
+
+    @constant
+    def OWNED_BY(self):
+        """ OWNED_BY is a Type of Edge.
+
+        Person > User : OWNED_BY
+
+        """
+        return "owned_by"
 
 
     @constant
     def DEFAULTS_TO(self):
         """ DEFAULTS_TO is a Type of Edge.
 
-        User > Player : DEFAULTS_TO
+        User > Person : DEFAULTS_TO
+
+        Denotes the default owned Person a User controls upon login.
 
         """
-        return "e_defaults_to"
+        return "defaults_to"
 
 
     @constant
     def HAS_PRIMARY(self):
         """ HAS_PRIMARY is a Type of Edge.
 
-        Player > User : HAS_PRIMARY
+        Person > User : HAS_PRIMARY
+
+        Denotes the primary User among the owners who control a Person.
 
         """
-        return "e_has_primary"
+        return "has_primary"
+
+
+    #@constant
+    #def INVITED(self):
+    #    """ INVITED is a Type of Edge.
+    #
+    #    User > User : INVITED
+    #
+    #    """
+    #    return "invited"
+    #
+    #
+    #@constant
+    #def INVITED_BY(self):
+    #    """ INVITED_BY is a Type of Edge.
+    #
+    #    User > User : INVITED_BY
+    #
+    #    """
+    #    return "invited_by"
+    #
+    #
+    #@constant
+    #def TAGGED(self):
+    #    """ TAGGED is a Type of Edge.
+    #
+    #    Person > Person : TAGGED
+    #
+    #    """
+    #    return "tagged"
+    #
+    #
+    #@constant
+    #def TAGGED_BY(self):
+    #    """ TAGGED_BY is a Type of Edge.
+    #
+    #    Person > Person : TAGGED_BY
+    #
+    #    """
+    #    return "tagged_by"
+
+
+# intentionally make this declaration now so that we can refer to it below.
+API_EDGE_TYPE = _APIEdgeType()
 
 
 class _APINodeProperty(object):
@@ -160,97 +265,112 @@ class _APINodeProperty(object):
     @constant
     def NAME(self):
         """ NAME is a Property of Node. """
-        return "n_name"
+        return "name"
 
 
     @constant
     def FIRST_NAME(self):
         """ FIRST_NAME is a Property of Node. """
-        return "n_first_name"
+        return "first_name"
 
 
     @constant
     def MIDDLE_NAME(self):
         """ MIDDLE_NAME is a Property of Node. """
-        return "n_middle_name"
+        return "middle_name"
 
 
     @constant
     def LAST_NAME(self):
         """ LAST_NAME is a Property of Node. """
-        return "n_last_name"
+        return "last_name"
 
 
     @constant
     def LINK(self):
         """ LINK is a Property of Node. """
-        return "n_link"
+        return "link"
 
 
     @constant
     def USERNAME(self):
         """ USERNAME is a Property of Node. """
-        return "n_username"
+        return "username"
 
 
     @constant
     def GENDER(self):
         """ GENDER is a Property of Node. """
-        return "n_gender"
+        return "gender"
 
 
     @constant
     def TIMEZONE(self):
         """ TIMEZONE is a Property of Node. """
-        return "n_timezone"
+        return "timezone"
 
 
     @constant
     def LOCALE(self):
         """ LOCALE is a Property of Node. """
-        return "n_locale"
+        return "locale"
 
 
     @constant
     def PICTURE(self):
         """ PICTURE is a Property of Node. """
-        return "n_picture"
+        return "picture"
 
 
     @constant
     def EMAIL(self):
         """ EMAIL is a Property of Node. """
-        return "n_email"
+        return "email"
+
+
+    @constant
+    def PASSWORD_HASH(self):
+        """ PASSWORD_HASH is a Property of Node. """
+        return "password_hash"
 
 
     @constant
     def VERSION(self):
         """ VERSION is a Property of Node. """
-        return "n_version"
+        return "version"
 
 
     @constant
-    def ACCOUNT_STATUS(self):
-        """ ACCOUNT_STATUS is a Property of Node. """
-        return "n_account_status"
-
-
-    @constant
-    def ACCOUNT_STATUS_TS(self):
-        """ ACCOUNT_STATUS_TS is a Property of Node. """
-        return "n_account_status_ts"
+    def LAST_IP(self):
+        """ LAST_IP is a Property of Node. """
+        return "last_ip"
 
 
     @constant
     def LAST_LOGIN_TS(self):
         """ LAST_LOGIN_TS is a Property of Node. """
-        return "n_last_login_ts"
+        return "last_login_ts"
 
 
     @constant
-    def LAST_LOGIN_IP(self):
-        """ LAST_LOGIN_IP is a Property of Node. """
-        return "n_last_login_ip"
+    def LAST_AUTHORIZED_TS(self):
+        """ LAST_AUTHORIZED_TS is a Property of Node. """
+        return "last_authorized_ts"
+
+
+    @constant
+    def LAST_DEAUTHORIZED_TS(self):
+        """ LAST_DEAUTHORIZED_TS is a Property of Node. """
+        return "last_deauthorized_ts"
+
+
+    @constant
+    def REFERRER_URL(self):
+        """ REFERRER_URL is a Property of Node. """
+        return "referrer_url"
+
+
+API_NODE_PROPERTY = _APINodeProperty()
 
 
 class _APIEdgeProperty(object):
@@ -261,15 +381,9 @@ class _APIEdgeProperty(object):
     @constant
     def SCORE(self):
         """ SCORE is a Property of Edge. """
-        return "e_score"
+        return "score"
 
 
-# these are variables used to refer to the above classes. some of them are used
-# in _APINodeTypes and _APIEdgeTypes, so we have to make sure to declare them
-# before defining those classes.
-API_NODE_TYPE = _APINodeType()
-API_EDGE_TYPE = _APIEdgeType()
-API_NODE_PROPERTY = _APINodeProperty()
 API_EDGE_PROPERTY = _APIEdgeProperty()
 
 
@@ -277,7 +391,7 @@ class _APIConstant(object):
 
     """ _APIConstant defines other Node and Edge Type and Property
     constants.
-    
+
     """
 
 
@@ -300,25 +414,31 @@ class _APIConstant(object):
 
     @constant
     def FACEBOOK_NODE_PROPERTIES(self):
-        """ FACEBOOK_NODE_PROPERTIES is a dict of Facebook Node
-        Properties.
+        """ FACEBOOK_NODE_PROPERTIES is a dict of Facebook Properties.
         
+        For all properties we get from Facebook, prefix the
+        corresponding Node property we have internally with "fb_" and
+        map one to the other.
+
         """
-        
-        return {
-                NODE_PROPERTY.ID :              "fb_id",
-                API_NODE_PROPERTY.NAME :        "fb_name",
-                API_NODE_PROPERTY.FIRST_NAME :  "fb_first_name",
-                API_NODE_PROPERTY.MIDDLE_NAME : "fb_middle_name",
-                API_NODE_PROPERTY.LAST_NAME :   "fb_last_name",
-                API_NODE_PROPERTY.LINK :        "fb_link",
-                API_NODE_PROPERTY.USERNAME :    "fb_username",
-                API_NODE_PROPERTY.GENDER :      "fb_gender",
-                API_NODE_PROPERTY.TIMEZONE :    "fb_timezone",
-                API_NODE_PROPERTY.LOCALE :      "fb_locale",
-                API_NODE_PROPERTY.PICTURE :     "fb_picture",
-                API_NODE_PROPERTY.EMAIL :       "fb_email"
-                }
+
+        properties = [
+                NODE_PROPERTY.ID,
+                API_NODE_PROPERTY.NAME,
+                API_NODE_PROPERTY.FIRST_NAME,
+                API_NODE_PROPERTY.MIDDLE_NAME,
+                API_NODE_PROPERTY.LAST_NAME,
+                API_NODE_PROPERTY.LINK,
+                API_NODE_PROPERTY.USERNAME,
+                API_NODE_PROPERTY.GENDER,
+                API_NODE_PROPERTY.TIMEZONE,
+                API_NODE_PROPERTY.LOCALE,
+                API_NODE_PROPERTY.PICTURE,
+                API_NODE_PROPERTY.EMAIL,
+                ]
+
+        # TODO: define a constant for delimiter "_"
+        return dict((p, (THIRD_PARTY.FACEBOOK + "_" + p)) for p in properties)
 
 
     @constant
@@ -346,9 +466,6 @@ class _APIConstant(object):
                 API_EDGE_TYPE.SCHEDULED_IN : API_EDGE_TYPE.HAS_SCHEDULED,
                 API_EDGE_TYPE.HAS_SCHEDULED : API_EDGE_TYPE.SCHEDULED_IN,
 
-                API_EDGE_TYPE.CREATED : API_EDGE_TYPE.CREATED_BY,
-                API_EDGE_TYPE.CREATED_BY : API_EDGE_TYPE.CREATED,
-
                 API_EDGE_TYPE.WON : API_EDGE_TYPE.WON_BY,
                 API_EDGE_TYPE.WON_BY : API_EDGE_TYPE.WON,
 
@@ -359,7 +476,17 @@ class _APIConstant(object):
                 API_EDGE_TYPE.TIED_BY : API_EDGE_TYPE.TIED,
 
                 API_EDGE_TYPE.PLAYED : API_EDGE_TYPE.PLAYED_BY,
-                API_EDGE_TYPE.PLAYED_BY : API_EDGE_TYPE.PLAYED
+                API_EDGE_TYPE.PLAYED_BY : API_EDGE_TYPE.PLAYED,
+
+                API_EDGE_TYPE.CREATED : API_EDGE_TYPE.CREATED_BY,
+                API_EDGE_TYPE.CREATED_BY : API_EDGE_TYPE.CREATED,
+
+                API_EDGE_TYPE.SPAWNED : API_EDGE_TYPE.SPAWNED_BY,
+                API_EDGE_TYPE.SPAWNED_BY : API_EDGE_TYPE.SPAWNED,
+
+                API_EDGE_TYPE.OWNS : API_EDGE_TYPE.OWNED_BY,
+                API_EDGE_TYPE.OWNED_BY : API_EDGE_TYPE.OWNS,
+
                 }
 
 

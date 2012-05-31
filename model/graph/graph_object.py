@@ -326,7 +326,7 @@ class GraphProtoNode(GraphPrototype):
     """
 
 
-    def __init__(self, type, properties, edges=[]):
+    def __init__(self, type, properties):
         """ Construct a GraphProtoNode extending GraphPrototype. """
         super(GraphProtoNode, self).__init__(type, properties)
 

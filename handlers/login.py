@@ -24,6 +24,7 @@ class LoginHandler(BaseHandler, tornado.auth.FacebookGraphMixin):
     def process_request(self):
         """ Process login request. Inherited from BaseHandler. """
 
+        # TODO: make redirect_uri a function and "/login" a constant
         # redirect uri pulls "next" which current_user creates to maintain url
         redirect_uri = "{0}://{1}{2}?next={3}".format(
                 self.request.protocol,
@@ -31,13 +32,16 @@ class LoginHandler(BaseHandler, tornado.auth.FacebookGraphMixin):
                 "/login",
                 tornado.escape.url_escape(self.get_argument("next", "/")))
 
+        # TODO: make a constant so we don't have to hardcode this.
         # if there is no "code" then do facebook app authorization
         if not self.get_argument("code", False):
             
+            # TODO: make a constant so we don't have to hardcode this.
             # create a unique state to prevent XSRF
             state = self.create_unique_state()
             self.set_secure_cookie("state", state)
 
+            # TODO: make a constant so we don't have to hardcode any of this.
             # request authorization from facebook
             self.authorize_redirect(
                     redirect_uri=redirect_uri,
@@ -47,6 +51,7 @@ class LoginHandler(BaseHandler, tornado.auth.FacebookGraphMixin):
         # facebook has provided a "code" so get the "access token"
         # check the state cookie to make sure there is not CSRF
         else:
+            # TODO: make a constant so we don't have to hardcode any of this.
             request_state = self.get_argument("state", None) 
             session_state = self.get_secure_cookie("state")
             if all([
@@ -67,6 +72,7 @@ class LoginHandler(BaseHandler, tornado.auth.FacebookGraphMixin):
     
     def _on_auth(self, user):
         """ Private method for wrapping up user authentication. """
+
         if not user:
             raise tornado.web.HTTPError(500, "Facebook auth failed")
         # TODO - save useful user info in db

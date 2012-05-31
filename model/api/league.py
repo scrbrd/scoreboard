@@ -9,7 +9,7 @@ from constants import API_NODE_TYPE, API_EDGE_TYPE
 from constants import API_NODE_PROPERTY, API_CONSTANT
 
 from sqobject import SqNode, SqObjectNotLoadedError
-import loader
+import loader, editor
 
 
 class League(SqNode):
@@ -91,6 +91,14 @@ class League(SqNode):
 
 
     @staticmethod
+    def property_keys():
+        """ Return a list of permitted property fields for Game. """
+        return [
+                API_NODE_PROPERTY.NAME,
+                ]
+
+
+    @staticmethod
     def load_opponents(league_id):
         """ Return a League with opponents loaded from the data layer."""
         (league, opponents) = loader.load_neighbors(
@@ -114,4 +122,48 @@ class League(SqNode):
         league.set_games(games)
 
         return league
+
+
+    @staticmethod
+    def create_league(name, creator_id, opponent_ids=[]):
+        """ Create and return a League.
+
+        Required:
+        str     name            name of League to be created
+        id      creator_id      id of Person creating this League
+        list    opponent_ids    ids of Teams/Players to add by default
+
+        Return:
+        League                  SqNode of Teams, Players, Schedules
+
+        """
+
+        raw_properties = {
+                API_NODE_PROPERTY.NAME : name,
+                }
+
+        # squash the two into one set of flat, valid node properties
+        properties = SqNode.prepare_node_properties(
+                League.property_keys(),
+                raw_properties)
+
+        # prepare a node prototype for this league
+        prototype_node = editor.prototype_node(
+                API_NODE_TYPE.LEAGUE,
+                properties)
+
+        # prepare edge prototypes for creator edges
+        prototype_edges = editor.prototype_edge_and_complement(
+            API_EDGE_TYPE.CREATED_BY,
+            {},
+            creator_id)
+
+        # prepare edge prototypes for default opponents
+        for opponent_id in opponent_ids:
+            prototype_edges.extend(editor.prototype_edge_and_complement(
+                API_EDGE_TYPE.HAS_LEAGUE_MEMBER,
+                {},
+                opponent_id))
+
+        return editor.create_node_and_edges(prototype_node, prototype_edges)
 

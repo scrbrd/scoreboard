@@ -76,6 +76,38 @@ def prototype_node(type, properties):
     return GraphProtoNode(type, properties)
 
 
+def prototype_outgoing_edge(type, properties, to_node_id):
+    """ Prototype a single out GraphEdge for writing to the database.
+
+    Required:
+    str     type        constants.EDGE_TYPE
+    dict    properties  properties of GraphEdge-to-be
+    id      to_node_id  id of GraphNode to point to
+
+    Return:
+    GraphProtoEdge      unwritten GraphProtoEdge
+
+    """
+
+    return GraphProtoEdge(type, properties, None, to_node_id)
+
+
+def prototype_incoming_edge(type, properties, from_node_id):
+    """ Prototype a single in GraphEdge for writing to the database.
+
+    Required:
+    str     type            constants.EDGE_TYPE
+    dict    properties      properties of GraphEdge-to-be
+    id      from_node_id    id of GraphNode to point from
+
+    Return:
+    GraphProtoEdge      unwritten GraphProtoEdge
+
+    """
+
+    return GraphProtoEdge(type, properties, from_node_id, None)
+
+
 def prototype_edge_and_complement(type, properties, node_id):
     """ Prototype complementary GraphEdges for writing to the database.
 
@@ -89,16 +121,15 @@ def prototype_edge_and_complement(type, properties, node_id):
 
     """
 
-    out_prototype_edge = GraphProtoEdge(
+    out_prototype_edge = prototype_outgoing_edge(
             type,
             properties,
-            None,
             node_id)
-    in_prototype_edge = GraphProtoEdge(
+
+    in_prototype_edge = prototype_incoming_edge(
             API_CONSTANT.EDGE_TYPE_COMPLEMENTS[type],
             deepcopy(properties),
-            node_id,
-            None)
+            node_id)
 
     return [out_prototype_edge, in_prototype_edge]
 

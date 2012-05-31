@@ -17,6 +17,7 @@ from copy import deepcopy
 
 from model.graph import GraphEdge, GraphNode
 from model.constants import NODE_PROPERTY, EDGE_PROPERTY
+from model.constants import PROPERTY_KEY, PROPERTY_VALUE, THIRD_PARTY
 
 from constants import API_NODE_TYPE, API_EDGE_TYPE
 from constants import API_NODE_PROPERTY, API_EDGE_PROPERTY
@@ -177,6 +178,204 @@ class SqNode(SqObject):
             raise SqObjectNotLoadedError("SqObject member not loaded")
 
 
+    @staticmethod
+    def locked_property_keys():
+        """ Return a list of uneditable SqNode properties. """
+        return [
+                NODE_PROPERTY.ID,
+                NODE_PROPERTY.TYPE,
+                NODE_PROPERTY.EDGES,
+                ]
+
+
+    @staticmethod
+    def prepare_node_properties(type_keys, raw_properties, third_parties=None):
+        """ Return a dict with node properties prepared for storage.
+
+        This is intended to make use of sibling static methods
+        SqNode.prepare_default_properties() and
+        SqNode.prepare_third_party_properties() when called by SqNode
+        subclasses at node creation and update time.
+
+        Largely, this is a convenience method which centralizes logic
+        around preparing the properties of a new or existing node for
+        storage. For a given SqNode type, We expunge invalid keys and
+        values, store a default value for any unspecified properties,
+        and merge in valid keys and values provided by third parties.
+
+        Required:
+        list    type_keys       property keys for a specific SqNode type
+        dict    raw_properties  SqNode property values keyed on type
+
+        Optional:
+        dict    third_parties   3rd party property dicts keyed on party
+
+        Return:
+        dict                    SqNode properties valid for storage
+
+        """
+
+        # TODO: make this available and functional for create/update.
+
+        # initialize the dict to return
+        properties = SqNode.prepare_default_properties(type_keys)
+
+        valid_properties = SqNode.validate_properties(
+                type_keys,
+                raw_properties)
+
+        properties.update(valid_properties)
+
+        if third_parties is not None:
+            tp_properties = SqNode.prepare_third_party_properties(
+                    type_keys,
+                    third_parties)
+
+            properties.update(tp_properties)
+
+        return properties
+
+
+    @staticmethod
+    def prepare_default_properties(type_keys):
+        """ Return a dict initialized with default node properties.
+
+        This is intended to be called from related static method
+        SqNode.prepare_node_properties(), which is called by SqNode
+        subclasses at node creation time.
+
+        Largely, this is a convenience method which centralizes usage of
+        PROPERTY_VALUE.EMPTY. However, if we decide to initialize
+        different types of data to different values, this is the right
+        place to do it.
+
+        Further, this is helpful if we swap out one database for another
+        and find different restrictions on storage (None, null, boolean,
+        etc.).
+
+        Required:
+        list    type_keys   property keys for a specific type of SqNode
+
+        Return:
+        dict                default SqNode properties keyed on type_keys
+
+        """
+
+        properties = {}
+
+        # TODO: upgrade to python2.7, make this a dict comprehension
+        #d = dict((k,v) for (k,v) in blah blah blah)
+        #d = {k : v for k in blah blah blah}
+
+        # initialize properties to empty
+        for key in type_keys:
+            properties[key] = PROPERTY_VALUE.EMPTY
+
+        return properties
+
+
+    @staticmethod
+    def prepare_third_party_properties(type_keys, third_parties):
+        """ Return a dict with flat, valid third party properties.
+ 
+        This is intended to be called by static method
+        SqNode.prepare_node_properties(), which is invoked at SqNode
+        create/update time, but it can also function on its own.
+
+        Largely, this is a convenience method which centralizes usage of
+        PROPERTY_KEY.DELIMITER and prevents duplication of unnecessarily
+        complicated logic around flattening data from third parties into
+        our storage mechanism.
+
+        Required:
+        list    type_keys       property keys for a specific SqNode type
+        dict    third_parties   3rd party property dicts keyed on party
+
+        Return:
+        dict                    SqNode properties valid for storage
+
+        """
+
+        properties = {}
+
+        # iterate over third party property dicts
+        for tp, tp_properties in third_parties.items():
+
+            # is this a valid third party?
+            if tp not in THIRD_PARTY.ALL:
+                # TODO: raise exception on failure
+                continue
+
+            # expunge invalid key/value pairs from this third party
+            valid_properties = SqNode.validate_properties(
+                    type_keys,
+                    tp_properties,
+                    True)
+
+            # FIXME: we are blindly trusting that property keys we share with
+            # third parties like Facebook are exactly equivalent strings we use
+            # for database storage...this is very bad.
+
+            # flatten this third party's data into a storable dict
+            for tp_key, tp_value in valid_properties.items():
+
+                # create a key like "fb_first_name" by joining third party
+                # ("fb"), delimiter ("_"), and property key ("first_name").
+                key = "{0}{1}{2}".format(tp, PROPERTY_KEY.DELIMITER, tp_key)
+
+                properties[key] = tp_value
+
+        return properties
+
+
+    @staticmethod
+    def validate_properties(type_keys, properties, id_is_valid=False):
+        """ Return a dict with invalid properties expunged.
+
+        Required:
+        list    type_keys   property keys for a specific SqNode type
+        dict    properties  property values for a specific SqNode type
+
+        Optional:
+        bool    id_is_valid ignore id key when excluding locked keys?
+
+        Return:
+        dict                valid SqNode property key/value pairs
+
+        """
+
+        # these properties may not be edited directly by the API layer
+        locked_keys = SqNode.locked_property_keys()
+
+        # it is valid to store third party IDs linking our accounts to theirs,
+        # but it is not valid to attempt to overwrite our internally-created
+        # IDs, so we allow callers to explicitly specify that we ignore ID when
+        # excluding locked properties.
+        if id_is_valid:
+            type_keys.append(NODE_PROPERTY.ID)
+            locked_keys.remove(NODE_PROPERTY.ID)
+
+        # expunge disallowed keys and values
+        for key, value in properties.items():
+
+            # is this a valid key for this type?
+            if key not in type_keys:
+                # TODO: raise an error, or silently remove the property?
+                del properties[key]
+
+            # is this an immutable SqNode key?
+            if key in locked_keys:
+                # TODO: raise an error, or silently remove the property?
+                del properties[key]
+
+            # is this a valid property value?
+            if value is None:
+                # TODO: raise an error, or silently convert to EMPTY?
+                del properties[key]
+
+        return properties
+
+
 class SqEdge(SqObject):
 
     """ SqEdge is a subclass of SqObject.
@@ -232,6 +431,20 @@ class SqEdge(SqObject):
     def _get_property(self, key):
         """ Return SqEdge property denoted by key. """
         return self._properties.get(key, None)
+
+
+    @staticmethod
+    def locked_property_keys():
+        """ Return a list of uneditable SqEdge properties. """
+        return [
+                EDGE_PROPERTY.ID,
+                EDGE_PROPERTY.TYPE,
+                EDGE_PROPERTY.FROM_NODE_ID,
+                EDGE_PROPERTY.TO_NODE_ID,
+                EDGE_PROPERTY.CREATED_TS,
+                EDGE_PROPERTY.UPDATED_TS,
+                EDGE_PROPERTY.DELETED_TS,
+                ]
 
 
 class SqObjectPropertyError(Exception):

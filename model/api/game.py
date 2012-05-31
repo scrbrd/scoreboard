@@ -101,6 +101,12 @@ class Game(SqNode):
 
 
     @staticmethod
+    def property_keys():
+        """ Return a list of permitted property fields for Game. """
+        return []
+
+
+    @staticmethod
     def load_opponents(game_id):
         """ Load the Game's Opponents and attributes into a Game.
 
@@ -216,17 +222,23 @@ class Game(SqNode):
         Game                    newly created Game
 
         """
-        
+
+        # TODO: when games have properties, fill these in!
+        #
+        #raw_properties = {}
+        #
+        #properties = SqNode.prepare_node_properties(
+        #        Game.property_keys(),
+        #        raw_properties)
+
         # prepare a node prototype for this game
         prototype_node = editor.prototype_node(API_NODE_TYPE.GAME, {})
 
-        prototype_edges = []
-
         # prepare edge prototypes for schedule edges
-        prototype_edges.extend(editor.prototype_edge_and_complement(
+        prototype_edges = editor.prototype_edge_and_complement(
                 API_EDGE_TYPE.SCHEDULED_IN,
                 {},
-                league_id))
+                league_id)
 
         # prepare edge prototypes for creator edges
         prototype_edges.extend(editor.prototype_edge_and_complement(
@@ -240,6 +252,8 @@ class Game(SqNode):
         # prepare edge prototypes for result edges
         for type, result in outcome.items():
             for opponent_score in result:
+                # TODO: swap "score" and "id" for JSON constants [less likely]
+                # or properties in a Score/Outcome class [more likely].
                 prototype_edges.extend(editor.prototype_edge_and_complement(
                     type,
                     {API_EDGE_PROPERTY.SCORE: opponent_score["score"]},

@@ -76,8 +76,6 @@ class ReadCatcher(Catcher):
         return self._rivals
 
 
-
-    
 class GamesCatcher(ReadCatcher):
     
     """ Fetch and return all data necessary for a games list.
@@ -87,8 +85,8 @@ class GamesCatcher(ReadCatcher):
 
     """
 
-
     _games = []
+
 
     def __init__(self, league_id):
         """ Instantiate with League, Games, and Opponents. """

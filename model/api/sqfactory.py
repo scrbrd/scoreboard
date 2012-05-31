@@ -19,6 +19,7 @@ from sqobject import SqEdge
 import game
 import league
 import player
+import user
 
 
 def construct_node_and_edges(graph_node, graph_edges):
@@ -34,6 +35,10 @@ def construct_node_and_edges(graph_node, graph_edges):
     """
 
     node = construct_node(graph_node)
+    # FIXME: why arent we using graph_edges here? if graph_node already
+    # contains a reference to graph_edges, which would be reasonable, then we
+    # should fix this method signature and make sure it's not a problem for
+    # any of the callers.
     edges = construct_edges(graph_node.edges())
     node.set_edges(edges)
 

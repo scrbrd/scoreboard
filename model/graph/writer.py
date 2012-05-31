@@ -79,10 +79,12 @@ def create_node(prototype_node):
 
     except DbInputError as e:
         #logger.debug(e.reason)
+        print e.reason
         graph_node = None
 
     except DbWriteError as e:
         #logger.debug(e.reason)
+        print e.reason
         graph_node = None
 
     return graph_node
@@ -137,10 +139,12 @@ def update_node(node_id, new_properties):
 
     except DbInputError as e:
         #logger.debug(e.reason)
+        print(e.reason)
         graph_node = None
 
     except DbWriteError as e:
         #logger.debug(e.reason)
+        print(e.reason)
         graph_node = None
 
     return graph_node
@@ -171,10 +175,12 @@ def delete_node(node_id):
 
     except DbInputError as e:
         #logger.debug(e.reason)
+        print(e.reason)
         graph_node = None
 
     except DbWriteError as e:
         #logger.debug(e.reason)
+        print(e.reason)
         graph_node = None
 
     return graph_node
@@ -245,10 +251,12 @@ def create_edge(prototype_edge):
 
     except DbInputError as e:
         #logger.debug(e.reason)
+        print(e.reason)
         graph_edge = None
 
     except DbWriteError as e:
         #logger.debug(e.reason)
+        print(e.reason)
         graph_edge = None
 
     return graph_edge
@@ -307,10 +315,12 @@ def update_edge(edge_id, new_properties):
 
     except DbInputError as e:
         #logger.debug(e.reason)
+        print(e.reason)
         graph_edge = None
 
     except DbWriteError as e:
         #logger.debug(e.reason)
+        print(e.reason)
         graph_edge = None
 
     return graph_edge
@@ -344,10 +354,12 @@ def delete_edge(edge_id):
 
     except DbInputError as e:
         #logger.debug(e.reason)
+        print(e.reason)
         graph_edge = None
 
     except DbWriteError as e:
         #logger.debug(e.reason)
+        print(e.reason)
         graph_edge = None
 
     return graph_edge

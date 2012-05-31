@@ -89,8 +89,8 @@ class Person(SqNode):
         """ Return this Person's gender string.
 
         Enumeratued Type:
-        "e_male"
-        "e_female"
+        model.constants.GENDER.MALE
+        model.constants.GENDER.FEMALE
 
         """
 

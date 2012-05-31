@@ -13,7 +13,8 @@ from view.modules.components import UICreateGameDialog
 
 # Application constants
 #LEAGUE = 693 # The Banana Stand
-LEAGUE = 745 # Game of Thrones
+#LEAGUE = 745 # Game of Thrones
+LEAGUE = 950 # The Joy of Serving Others
 
 # Make filepaths relative to settings.
 path = lambda root,*a: os.path.join(root, *a)

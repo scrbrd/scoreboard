@@ -26,10 +26,10 @@ def get_node(node_id):
     like the following, and parse it into a GraphNode:
 
     {
-        "n_id" : node_id,
-        "n_type" : type,
-        "n_properties" : {"p0" : p0, ..., "pN" : pN},
-        "n_edges" : {edge_id0 : edge_dict0, ..., edge_idN : edge_dictN}
+        "id" : node_id,
+        "type" : type,
+        "properties" : {"p0" : p0, ..., "pN" : pN},
+        "edges" : {edge_id0 : edge_dict0, ..., edge_idN : edge_dictN}
     }
 
     Required:
@@ -133,11 +133,11 @@ def get_edge(edge_id):
     like the following, and parse it into a GraphEdge:
 
     {
-        "e_id" : edge_id,
-        "e_type" : type,
-        "e_properties" : {"p0" : p0, ..., "pN" : pN},
-        "e_from_node_id" : from_node_id,
-        "e_to_node_id" : to_node_id
+        "id" : edge_id,
+        "type" : type,
+        "properties" : {"p0" : p0, ..., "pN" : pN},
+        "from_node_id" : from_node_id,
+        "to_node_id" : to_node_id
     }
 
     Required:

@@ -5,10 +5,18 @@ members aren't strictly members [they are pulled from properties].
 
 """
 
-from model.constants import NODE_PROPERTY
+from time import time
 
-from constants import API_EDGE_TYPE
-from person import Person
+from model.constants import NODE_PROPERTY, PROPERTY_KEY, PROPERTY_VALUE
+from model.constants import VERSION
+
+from constants import API_NODE_TYPE, API_EDGE_TYPE
+from constants import API_NODE_PROPERTY, API_EDGE_PROPERTY
+
+from sqobject import SqNode
+from player import Player
+import loader
+import editor
 
 
 class User(SqNode):
@@ -76,10 +84,26 @@ class User(SqNode):
     str     _fb_email           Facebook user contact/login email
 
     str     _version                what version is this user seeing?
-    int     _account_status         INVITED/DECLINED/NEW/ACTIVE/INACTIVE
-    ts      _last_status_change_ts  when did account status last change?
+    str     _last_ip                what was the last session's ip?
     ts      _last_login_ts          when did the last session start?
-    str     _last_login_ip          what was the last session's ip?
+    ts      _last_authorized_ts     when was an auth token last created?
+    ts      _last_deauthorized_ts   when was an auth token last revoked?
+    url     _referrer_url           what url, if any, sourced this user?
+
+
+    TODO: include these member methods:
+
+        def is_new(self):
+        def is_active_daily(self):
+        def is_active_weekly(self):
+        def is_active_monthly(self):
+        def is_active_since(self, num_days):
+        def is_inactive(self):
+        def is_invited(self):
+        def is_declined(self):
+        def is_authorized(self):
+        def is_deauthorized(self):
+        def is_deleted(self):
 
     """
 
@@ -87,7 +111,11 @@ class User(SqNode):
     def outgoing_edge_types(self):
         """ Return a list of allowed outgoing SqEdge types. """
         return [
-                API_EDGE_TYPE.DEFAULTS_TO
+                API_EDGE_TYPE.SPAWNED,
+                API_EDGE_TYPE.OWNS,
+                API_EDGE_TYPE.DEFAULTS_TO,
+                #API_EDGE_TYPE.INVITED,
+                #API_EDGE_TYPE.INVITED_BY,
                 ]
 
 
@@ -106,34 +134,13 @@ class User(SqNode):
     @property
     def version(self):
         """ Return our app version string for this User. """
-
-        # TODO: should this be an enum or a float?
-
         return self._get_property(API_NODE_PROPERTY.VERSION)
 
 
     @property
-    def account_status(self):
-        """ Return this User's account status string.
-
-        Enumeratued Type:
-        "e_invited"
-        "e_declined"
-        "e_new"
-        "e_active"
-        "e_inactive"
-
-        """
-
-        # TODO: should this be an enum?
-
-        return self._get_property(API_NODE_PROPERTY.ACCOUNT_STATUS)
-
-
-    @property
-    def account_status_ts(self):
-        """ Return the last time this User's account status changed. """
-        return self._get_property(API_NODE_PROPERTY.ACCOUNT_STATUS_TS)
+    def last_ip(self):
+        """ Return this User's last ip address. """
+        return self._get_property(API_NODE_PROPERTY.LAST_IP)
 
 
     @property
@@ -143,9 +150,21 @@ class User(SqNode):
 
 
     @property
-    def last_login_ip(self):
-        """ Return this User's last ip address. """
-        return self._get_property(API_NODE_PROPERTY.LAST_LOGIN_IP)
+    def last_authorized_ts(self):
+        """ Return this User's last authorization timestamp. """
+        return self._get_property(API_NODE_PROPERTY.LAST_AUTHORIZED_TS)
+
+
+    @property
+    def last_deauthorized_ts(self):
+        """ Return this User's last deauthorization timestamp. """
+        return self._get_property(API_NODE_PROPERTY.LAST_DEAUTHORIZED_TS)
+
+
+    @property
+    def referrer_url(self):
+        """ Return the url that referred this User to be created. """
+        return self._get_property(API_NODE_PROPERTY.REFERRER_URL)
 
 
     """ The below are duplicated in Person for now. """
@@ -178,49 +197,178 @@ class User(SqNode):
     """ The above are duplicated in Person for now. """
 
 
-    # TODO FIXME XXX: convert this to create_user
+    @staticmethod
+    def property_keys():
+        """ Return a list of permitted property fields for User. """
+        return [
+                API_NODE_PROPERTY.EMAIL,
+                API_NODE_PROPERTY.PASSWORD_HASH,
+                API_NODE_PROPERTY.USERNAME,
+                API_NODE_PROPERTY.TIMEZONE,
+                API_NODE_PROPERTY.LOCALE,
+                API_NODE_PROPERTY.VERSION,
+                API_NODE_PROPERTY.LAST_IP,
+                API_NODE_PROPERTY.LAST_LOGIN_TS,
+                API_NODE_PROPERTY.LAST_AUTHORIZED_TS,
+                API_NODE_PROPERTY.LAST_DEAUTHORIZED_TS,
+                API_NODE_PROPERTY.REFERRER_URL,
+                ]
 
-    #@staticmethod
-    #def create_user(league_id, creator_id, game_score):
-    #    """ Create a Game and return it.
-    #
-    #    Required:
-    #    id      league_id       league id that game belogs to
-    #    id      creator_id      player id of game's creator
-    #    list    game_score      final score of a game
-    #                            [{"id": VALUE, "score": VALUE}]
-    #
-    #    Return the created game.
-    #
-    #    """
-    #
-    #    # prepare a node prototype for this game
-    #    prototype_node = editor.prototype_node(API_NODE_TYPE.GAME, {})
-    #
-    #    prototype_edges = []
-    #
-    #    # prepare edge prototypes for schedule edges
-    #    prototype_edges.extend(editor.prototype_edge_and_complement(
-    #            API_EDGE_TYPE.SCHEDULED_IN,
-    #            {},
-    #            league_id))
-    #
-    #    # prepare edge prototypes for creator edges
-    #    prototype_edges.extend(editor.prototype_edge_and_complement(
-    #            API_EDGE_TYPE.CREATED_BY,
-    #            {},
-    #            creator_id))
-    #
-    #    # get outcome from gamescore
-    #    outcome = Game.calculate_outcome(game_score)
-    #
-    #    # prepare edge prototypes for result edges
-    #    for type, result in outcome.items():
-    #        for opponent_score in result:
-    #            prototype_edges.extend(editor.prototype_edge_and_complement(
-    #                type,
-    #                {API_EDGE_PROPERTY.SCORE: opponent_score["score"]},
-    #                opponent_score["id"]))
-    #
-    #    return editor.create_node_and_edges(prototype_node, prototype_edges)
- 
+
+    @staticmethod
+    def create_user_and_player(
+            email,
+            password_hash,
+            referrer_url,
+            first_name,
+            last_name,
+            third_parties={},
+            inviter_id=None,
+            ip=None,
+            version=VERSION.CURRENT,
+            from_node_id=None,
+            in_edge_type=None,
+            in_edge_properties={}):
+        """ Create a User and Player atomically and return both.
+
+        Required:
+        str     email               created User's email
+        str     password_hash       created User's encrypted password
+        url     referrer_url        source link clicked to cause this
+        str     first_name          created Player's first name
+        str     last_name           created Player's last name
+
+        Optional:
+        dict    third_parties       key/val dicts keyed on 3rd party
+        id      inviter_id          User inviting/spawning User/Player
+        str     ip                  User's IP, if logged in
+        str     version             User's version number, if logged in
+        id      from_node_id        League/Team/Game to connect to Player
+        str     in_edge_type        Entity > Player edge type
+        dict    in_edge_properties  Entity > Player edge properties
+
+        Return:
+        tuple                       (User, Player)
+
+        Example:
+        Optional parameter third_parties should be defined as follows:
+
+        {
+            "fb" : {<CONVERT FROM JSON TO DICT AND LEAVE DATA AS IS>},
+            "tw" : {<CONVERT FROM JSON TO DICT AND LEAVE DATA AS IS>},
+        }
+
+        This will be flattened, validated, and culled by SqNode.
+
+        """
+
+        user = User.create_user(
+                email,
+                password_hash,
+                referrer_url,
+                third_parties,
+                inviter_id,
+                ip,
+                version)
+
+        owner_id = user.id
+        spawner_id = inviter_id if inviter_id is not None else owner_id
+
+        player = Player.create_player(
+                first_name,
+                last_name,
+                spawner_id,
+                owner_id,
+                third_parties,
+                from_node_id,
+                in_edge_type,
+                in_edge_properties)
+
+        return (user, player)
+
+
+    @staticmethod
+    def create_user(
+            email,
+            password_hash,
+            referrer_url,
+            third_parties={},
+            inviter_id=None,
+            ip=PROPERTY_VALUE.EMPTY,
+            version=VERSION.CURRENT):
+        """ Create a User and return it.
+
+        Required:
+        str     email           created User's email
+        str     password_hash   created User's encrypted password
+        url     referrer_url    source link clicked to cause this
+
+        Optional:
+        dict    third_parties   key/val dicts keyed on 3rd party
+        id      inviter_id      User inviting/spawning User/Player
+        str     ip              User's IP, if logged in
+        str     version         User's version number, if logged in
+
+        Return:
+        User                    SqNode can log in, act as other SqNodes
+
+        Example:
+        Optional parameter third_parties should be defined as follows:
+
+        {
+            "fb" : {<CONVERT FROM JSON TO DICT AND LEAVE DATA AS IS>},
+            "tw" : {<CONVERT FROM JSON TO DICT AND LEAVE DATA AS IS>},
+        }
+
+        This will be flattened, validated, and culled by SqNode.
+
+        """
+
+        # TODO: when there's an alternative to Facebook for login, revisit
+        # authorization logic. some of this logic might be context-dependent.
+
+        # email, password_hash, username, timezone, and locale are just being
+        # initialized for now; we get these values from Facebook, but they
+        # deserve placeholders in case we have to remove third party data.
+
+        # these properties are not explicitly required. one or more third
+        # parties may provide them instead.
+        raw_properties = {
+                API_NODE_PROPERTY.EMAIL : email,
+                API_NODE_PROPERTY.PASSWORD_HASH : password_hash,
+                }
+
+        # TODO: figure out what else to do with referrer_url
+
+        # no ip would mean this user isn't logged in at creation time, in which
+        # case the initialized empty values will suffice. we may choose to
+        # change this for version depending on how it will be used.
+        if ip:
+            current_ts = int(time())
+
+            raw_properties.update({
+                API_NODE_PROPERTY.REFERRER_URL : referrer_url,
+                API_NODE_PROPERTY.LAST_IP : ip,
+                API_NODE_PROPERTY.VERSION : version,
+                API_NODE_PROPERTY.LAST_LOGIN_TS : current_ts,
+                API_NODE_PROPERTY.LAST_AUTHORIZED_TS : current_ts,
+                })
+
+        # squash the two into one set of flat, valid node properties
+        properties = SqNode.prepare_node_properties(
+                User.property_keys(),
+                raw_properties,
+                third_parties)
+
+        # TODO: add a static method call to generically check required fields
+        # against statically defined lists in each class.
+
+        # prepare a node prototype for this user
+        prototype_node = editor.prototype_node(
+                API_NODE_TYPE.USER,
+                properties)
+
+        # TODO: prepare an edge prototype for the invited_id
+
+        return editor.create_node_and_edges(prototype_node, [])
+
