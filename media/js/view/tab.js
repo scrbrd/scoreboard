@@ -96,9 +96,10 @@ define(
             Hide the content and show a loading screen.
         */
         hide: function () {
-            var loading = "I know I put the results here somewhere...";
+            var loading = "<span class=\"loading\">Loading...</span>";
             
             this.$el.toggle(false);
+            Scroller.scrollTo(0, 0, 0);
             this.$el.html(loading).toggle(true);
         },
     });
