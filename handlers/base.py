@@ -10,10 +10,10 @@ logger = logging.getLogger('boilerplate.' + __name__)
 
 
 class BaseHandler(tornado.web.RequestHandler):
-    
+
     """ A class to collect common handler methods - all other handlers should
     subclass this one.
-    
+
     """
 
     def load_json(self):
@@ -22,7 +22,7 @@ class BaseHandler(tornado.web.RequestHandler):
         parameters.
 
         If JSON cannot be decoded, raises an HTTPError with status 400.
-        
+
         """
         try:
             self.request.arguments = json.loads(self.request.body)
@@ -33,9 +33,10 @@ class BaseHandler(tornado.web.RequestHandler):
 
 
     def get_json_argument(self, name, default=None):
-        """ Find and return the argument with key 'name' from JSON request data.
+        """ Find and return the argument with key 'name' from JSON request
+        data.
         Similar to Tornado's get_argument() method.
-        
+
         """
         if default is None:
             default = self._ARG_DEFAULT
@@ -56,23 +57,23 @@ class BaseHandler(tornado.web.RequestHandler):
 
     def get_current_user(self):
         """ Return current user from cookie or return None. """
-        user_json = self.get_secure_cookie("user") 
-        if user_json is None: 
+        user_json = self.get_secure_cookie("user")
+        if user_json is None:
             #cookie = self.get_cookie("fbsr_" + self.settings["facebook_api_key"], "")
             #if not cookie:
             #    print('no cookie found')
             #    return None
-            #print('cookie found') 
+            #print('cookie found')
             #app_secret = self.settings["facebook_secret"]
-            #response = BaseHandler.parse_signed_request(cookie, app_secret) 
-            #print ("WE HAVE SUCCESS! {0}: ".format(response))     
-            
+            #response = BaseHandler.parse_signed_request(cookie, app_secret)
+            #print ("WE HAVE SUCCESS! {0}: ".format(response)
+
             # return "success"
             # TODO could see if Facebook has de-authorized the user.
-            return None         
+            return None
         # else (there is a user)...then return it
         else:
-            return tornado.escape.json_decode(user_json) 
+            return tornado.escape.json_decode(user_json)
 
 
     def process_request(self):
@@ -80,15 +81,14 @@ class BaseHandler(tornado.web.RequestHandler):
         raise NotImplementedError("Abstract Method: SUBCLASS MUST OVERRIDE!")
 
 
-
     # TODO remove this method if it ends up not being needed for authentication
     @staticmethod
     def base64_url_decode(inp):
         padding_factor = (4 - len(inp) % 4) % 4
-        inp += "="*padding_factor
+        inp += "=" * padding_factor
         return base64.b64decode(unicode(inp).translate(
                 dict(zip(map(ord, u'-_'), u'+/'))))
-    
+
     # TODO remove this method if it ends up not being needed for authentication
     @staticmethod
     def parse_signed_request(signed_request, secret):
@@ -104,7 +104,7 @@ class BaseHandler(tornado.web.RequestHandler):
             return None
         else:
             expected_sig = hmac.new(
-                    secret, 
+                    secret,
                     msg=payload,
                     digestmod=hashlib.sha256).digest()
 
@@ -113,4 +113,3 @@ class BaseHandler(tornado.web.RequestHandler):
         else:
             # log.debug('valid signed request received..')
             return data
-

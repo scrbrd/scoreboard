@@ -9,7 +9,7 @@ logger = logging.getLogger('boilerplate.' + __name__)
 class HomeHandler(SplashHandler, RankingsHandler):
 
     """ Determine if the user needs to see the Splash page or the Home page.
-    
+
     Check for a logged in user and then route appropriately.
 
     """
@@ -18,7 +18,7 @@ class HomeHandler(SplashHandler, RankingsHandler):
     # differently.
     def get(self):
         """ Handle GET request for the Home page. """
-        
+
         # if the user is logged in then send him home.
         if self.current_user is not None:
             RankingsHandler.process_request(self)
@@ -28,5 +28,3 @@ class HomeHandler(SplashHandler, RankingsHandler):
         # if the user is not logged in then show him the Splash Page.
         else:
             SplashHandler.process_request(self)
-
-

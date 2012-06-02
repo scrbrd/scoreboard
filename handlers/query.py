@@ -12,16 +12,20 @@ logger = logging.getLogger('boilerplate.' + __name__)
 
 
 class QueryHandler(BaseHandler):
-   
-    """ Encapsulates all generic query functionality. 
-    
-    Any tab or read request handler should subclass from this handler.
+
+    """ Encapsulates all generic query functionality.
+
+    Any read or write request handler should subclass from this handler.
 
     """
 
     @tornado.web.authenticated
     def get(self):
-        """ Overload BaseHandler's HTTP GET responder. """
+        """ Overload BaseHandler's HTTP GET responder for reads. """
         self.process_request()
 
 
+    @tornado.web.authenticated
+    def post(self):
+        """ Overload BaseHandler's HTTP GET responder for reads. """
+        self.process_request()

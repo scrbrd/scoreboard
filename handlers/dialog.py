@@ -4,7 +4,6 @@ Handle all incoming requests for dialog creation.
 
 """
 
-
 import logging
 
 from handlers.query import QueryHandler
@@ -13,7 +12,7 @@ from handlers.query import QueryHandler
 class CreateGameDialogHandler(QueryHandler):
 
     """ Render Create Game Dialog. """
-    
+
     def process_request(self):
         """ Handle processing Dialog Request. """
 

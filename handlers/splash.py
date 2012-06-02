@@ -9,7 +9,7 @@ class SplashHandler(BaseHandler):
 
     """ Handle rendering the Splash page. """
 
-
+    # NOT tornado.web.authenticated because anybody can see Splash.
     def get(self):
         """ Handle GET request for the Splash page. """
         self.process_request()
@@ -19,4 +19,3 @@ class SplashHandler(BaseHandler):
         """ Render Splash page. """
         # TODO: turn this hardcoded file path into a constant
         self.render("mobile/splash.html")
-
