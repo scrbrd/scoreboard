@@ -30,7 +30,10 @@ require(
     // Run DOM dependent logic
     $(document).ready(function () {
         // Do all DOM initializations with Views
-        var docView = Doc.construct(pushStateRouting, appRouter);
+        var docView = Doc.construct(pushStateRouting, LoadTabController);
+
+        // intialize LoadTabController
+        LoadTabController.initialize(appRouter);
 
         // track initial page load
         LoadTabController.trackViewPage(docView);

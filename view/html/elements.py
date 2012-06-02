@@ -696,7 +696,7 @@ class Nav(Element):
     item?   special_item        an 'item' that stands out in the list
                                 (E.g., active link, action item)
     int     special_item_index  where to put the special item
-    
+
     """
 
 
@@ -760,7 +760,7 @@ class A(Element):
     def __init__(self, link):
         """ Construct a <a>. """
         super(A, self).__init__(HTML_TAG.A)
-        
+
         # TODO: these are hardcoded strings and not constants because once we
         # have a Link class [and an Item interface or some such thing for it
         # to implement] we will just be accessing properties there. this makes
@@ -786,14 +786,13 @@ class H2(Element):
 
     """ Header 2 element <h2>."""
 
-
     def __init__(self):
         """ Construct a <h2>. """
         super(H2, self).__init__(HTML_TAG.H2)
 
 
 class Header(Element):
-    
+
     """ Header element <header>. """
 
     def __init__(self):
@@ -801,8 +800,17 @@ class Header(Element):
         super(Header, self).__init__(HTML_TAG.HEADER)
 
 
+class Footer(Element):
+
+    """ Footer element <header>. """
+
+    def __init__(self):
+        """ Construct a <Footer>. """
+        super(Footer, self).__init__(HTML_TAG.FOOTER)
+
+
 class Section(Element):
-    
+
     """ Section element <section>. """
 
     def __init__(self):
@@ -811,7 +819,7 @@ class Section(Element):
 
 
 class BR(Element):
-    
+
     """ Section element <br>. """
 
     def __init__(self):

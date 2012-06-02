@@ -12,10 +12,25 @@ define(
             "js/constants",
         ],
         function (MP, Doc, Const) {
-       
-    function handleSubmit() {
+    
+    var router = null;
+
+    function initialize(appRouter) {
+        router = appRouter;
+    }
+
+    function handleSubmit(anchor, href) {
         var docView = Doc.retrieve();
+
+        // switch active tab
+        docView.tabView.navView.render(this, anchor);
+
+        // hide current content
         docView.tabView.contentView.hide();
+
+        // send request to server
+        router.navigate(href, {trigger: true});
+
     }
     
     function handleSuccess(context, content) {
@@ -47,6 +62,7 @@ define(
     }
     
     return {
+        initialize: initialize,
         handleSubmit: handleSubmit,
         handleSuccess: handleSuccess,
         trackViewPage: trackViewPage,

@@ -78,6 +78,12 @@ class _HTMLTag(object):
 
 
     @constant
+    def FOOTER(self):
+        """ FOOTER is a type of HTML tag. """
+        return "footer"
+
+
+    @constant
     def SECTION(self):
         """ SECTION is a type of HTML tag. """
         return "section"

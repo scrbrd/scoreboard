@@ -14,13 +14,13 @@ logger = logging.getLogger('boilerplate.' + __name__)
 
 
 class RankingsHandler(QueryHandler):
-    
+
     """ Render Rankings Page. """
 
     def process_request(self):
         """ Handle processing of Rankings request. Inherited from BaseHandler.
         """
-        
+
         # check for ajax request or not
         is_asynch = bool(self.get_argument("asynch", False))
 
@@ -28,7 +28,7 @@ class RankingsHandler(QueryHandler):
         league_id = self.settings['league_id']
 
         # get ranking data from model
-        rankings_model = catchers.RankingsCatcher(league_id) 
+        rankings_model = catchers.RankingsCatcher(league_id)
 
         # hand data over to view and render
         if is_asynch:
@@ -39,7 +39,7 @@ class RankingsHandler(QueryHandler):
 
     def _get_asynch(self, model):
         """ Handle the asynchronous version of the rankings request.
-        
+
         Render both the context_header and the rankings components.
 
         """
@@ -57,12 +57,11 @@ class RankingsHandler(QueryHandler):
 
 
     def _get_synch(self, model):
-        """ Handle the synchronous version of the rankings request. 
-        
+        """ Handle the synchronous version of the rankings request.
+
         Render the full rankings page.
 
         """
 
         # TODO: turn this hardcoded file path into a constant
         self.render("mobile/rankings.html", model=model)
-

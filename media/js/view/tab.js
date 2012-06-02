@@ -25,9 +25,11 @@ define(
 
         contextView: null,
         contentView: null,
+        navView: null,
 
         initialize: function () {
             this.contextView = new ContextView({el: this.options.context});
+            this.navView = new NavView({el: this.options.nav});
             this.contentView = new ContentView({el: this.options.content});
         },
 
@@ -56,6 +58,22 @@ define(
 
         rivals: function () {
             return this.$el.data(Const.DATA.RIVALS);
+        },
+    });
+
+    var NavView = Backbone.View.extend({
+        render: function (controller, activeAnchor) {
+            // remove leading period from ".active-nav"
+            noPeriodActive = Const.CLASS.ACTIVE_NAV.substr(1);
+            noPeriodInactive = Const.CLASS.INACTIVE_NAV.substr(1);
+
+            this.$(Const.CLASS.ACTIVE_NAV)
+                .removeClass(noPeriodActive) // remove current active nav
+                .addClass(noPeriodInactive); // add inactive nav class
+
+            this.$(activeAnchor)
+                .removeClass(noPeriodInactive) // remove inactive nav
+                .addClass(noPeriodActive); // add active nav 
         },
     });
 

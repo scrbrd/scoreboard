@@ -24,6 +24,21 @@ class _AppClass(object):
         """ PLAYER_SELECT is a HTML/js class. """
         return "player-select"
 
+    @constant
+    def DIALOG_LINK(self):
+        """ DIALOG_LINK is a HTML/js class. """
+        return "dialog-link"
+
+    @constant
+    def ROUTE_BYPASS(self):
+        """ ROUTE_BYPASS is a HTML/js class. """
+        return "route-bypass"
+
+    @constant
+    def INACTIVE_NAV(self):
+        """ INACTIVE_NAV is a HTML/js class. """
+        return "inactive-nav"
+
 
 class _AppID(object):
 
@@ -38,6 +53,11 @@ class _AppID(object):
     def CONTENT(self):
         """ CONTENT is the element that stores content data. """
         return "content"
+
+    @constant
+    def ADD_BUTTON(self):
+        """ ADD_BUTTON is the elment that leads to adding content. """
+        return "add-button"
 
 
 class _DesignClass(object):
@@ -63,11 +83,6 @@ class _DesignClass(object):
     def ACTIVE_NAV(self):
         """ ACTIVE_NAV is a HTML/css class. """
         return "active-nav"
-
-    @constant
-    def INACTIVE_NAV(self):
-        """ INACTIVE_NAV is a HTML/css class. """
-        return "inactive-nav"
 
     @constant
     def COUNTER(self):

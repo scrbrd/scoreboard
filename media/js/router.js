@@ -44,9 +44,6 @@ define(
                 type: "GET",
                 url: tab, 
                 data: {"asynch": true},
-                beforeSend: function () {
-                    LoadTabController.handleSubmit();
-                },
                 success: function (jsonResponse) {
                     LoadTabController.handleSuccess(
                             jsonResponse.context_header,
@@ -61,6 +58,10 @@ define(
         },
     });
 
+    // Variable: appRouter
+    // Keep track of Singleton appRouter instantiation
+    var appRouter = null;
+
     return /** @lends module:Router */ {
         /**
             Initialize NavRouter's history.
@@ -69,7 +70,7 @@ define(
         */
         initialize: function (pushState) {
             // Backbone using History API's PushState
-            var appRouter = new NavRouter();
+            appRouter = new NavRouter();
             var options = {silent: true};
             if (pushState) {
                 options.pushState = true;
@@ -77,6 +78,14 @@ define(
             
             Backbone.history.start(options);
 
+            return appRouter;
+        },
+
+        /**
+            Retrieve NavRouter
+            @returns {NavRouter} An app-wide Router.
+        */
+        retrieve: function () {
             return appRouter;
         },
     };

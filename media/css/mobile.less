@@ -32,15 +32,15 @@
 /***********************************************************
 * SIZE DEFINITIONS
 ************************************************************/
-@innerWidth: 319px;
-@outWdith: 324px;
+@innerWidth: 319px; // Width of iPhone screen inside border.
+@outerWidth: 324px; // Width of iPhone screen.
 
-@smallLineHeight: 35px;
-@bigLineHeight: 44px;
+@smallLineHeight: 35px; // Smaller Line Height (Nav)
+@bigLineHeight: 44px; // Normal Line Height (Context, LI)
 @headerHeight: @smallLineHeight + @bigLineHeight;
 
-@pagePadding: 23px;
-@linePadding: 10px;
+@pagePadding: 23px; // Left / Right padding of page content.
+@linePadding: 10px; // Padding above and below text on a line.
 
 
 /***********************************************************
@@ -52,6 +52,7 @@
 }
 
 @font-face {
+    /* Currently this is always italicized and above the line. */
     font-family: Eurostile;
     src: url('fonts/EurostileLTStd-DemiOblique.otf');
 }
@@ -62,8 +63,17 @@
 
 
 /***********************************************************
+* OTHER SETTINGS
+************************************************************/
+@numOfNavColumns: 2;
+
+
+/***********************************************************
 * REUSABLE CLASSES
 ************************************************************/
+
+/* Allows all objects that exist vertically on a page to create 
+the same border. */
 .page-border {
     border-left: 2px solid @black;
     border-right: 2px solid @black;
@@ -71,6 +81,44 @@
     box-sizing: border-box;
 }
 
+/* Hide the content when using the background image for function. */
+.hidden-content {
+    line-height: 0px; 
+    font-size: 0px;
+    color: transparent; 
+}
+
+/* Add a light drop shadow below a box. */
+.drop-shadow-box {
+    @hShadow: 0px;
+    @vShadow: 4px;
+    @blur: 15px;
+    @spread: 0px;
+    @alpha: 1.0;
+    -webkit-box-shadow: @hShadow @vShadow @blur @spread rgba(0, 0, 0, @alpha);
+    -moz-box-shadow: @hShadow @vShadow @blur @spread rgba(0, 0, 0, @alpha);
+    box-shadow: @hShadow @vShadow @blur @spread rgba(0, 0, 0, @alpha);
+}
+
+/* Emboss text slightly. */
+.emboss-text {
+    text-shadow: 0px -1px 0px rgba(0, 0, 0, 0.5);
+}
+
+/* Create columns with no spacing. */
+.columns (@number) {
+    column-count: @number;
+    -webkit-column-count: @number;
+    -moz-column-count: @number;
+    
+    column-rule: 0px;
+    -webkit-column-rule: 0px;
+    -moz-column-rule: 0px;
+
+    column-gap: 0px;
+    -webkit-column-gap: 0px;
+    -moz-column-gap: 0px;
+}
 
 /***********************************************************
 * IMPORTS
@@ -82,7 +130,6 @@
 * FRAMEWORK
 ************************************************************/
 body {
-    /* -webkit-user-select: none;*/
     font-family: 'CronosProSemibold', 'Arial', sans-serif;
     font-size: @normalFontSize;
     
@@ -95,7 +142,8 @@ body {
     /* Overrides the highlight color shown when the user taps a link or a
     /* JavaScript clickable element in Safari on iPhone. */
     -webkit-tap-highlight-color: rgba(0,0,0,0);
-
+    
+    /* -webkit-user-select: none;*/
 }
 
 header {
@@ -155,7 +203,7 @@ a {
     /* border: 0px solid #f00; */
 
     z-index: 1;
-    background: @blue;
+    background: @darkGray;
 }
 
 #content ol {
@@ -166,14 +214,13 @@ a {
 
     background-color: @darkGray;
     color: @grayishWhite;
+    
+    border-top: 2px solid @beige;
 }
 
 #content li {
     /* FIXME XXX -
-    1. move plus botton to bottom right
-    1.a - add appropriate shading to button
-    2. add images to second-header
-    4. add any shadows
+    4. add shadow below second header
     5. move on to create game dialog
     */
     padding: @linePadding @pagePadding;
@@ -193,6 +240,9 @@ a {
     height: @headerHeight;
     
     .page-border;
+
+    /* drop shadow on to content pane */
+    .drop-shadow-box;
 }
 
 .main-header {
@@ -218,56 +268,56 @@ h2 {
     /* Eurostile's vertical-align is too high */
     font-size: @biggestFontSize;
     text-transform: uppercase;
-    text-shadow: 0 -2px 0 rgba(0,0,0,0.5);
     font-style: italic;
-    
+   
     /* Vertically aligns Eurostile */
     @fontAdjust: @bigFontSize / 4;
     padding-top: @fontAdjust; // padding so that font is pushed down
+    
+    .emboss-text;
 }
 
 #tab nav ul {
     line-height: @smallLineHeight;
     height: @smallLineHeight;
-    
-    column-count: 3;
-    -webkit-column-count: 3;
-    -moz-column-count: 3;
-    
-    column-rule: 0px;
-    -webkit-column-rule: 0px;
-    -moz-column-rule: 0px;
-
-    column-gap: 0px;
-    -webkit-column-gap: 0px;
-    -moz-column-gap: 0px;
+ 
+    .columns(@numOfNavColumns);
 } 
 
 #tab nav li {
     height: @smallLineHeight;
+    background-color: @lightOrange;
+    color: @almostWhite;
 }
 
 #tab nav li a {
     color: @almostWhite;
 }
 
-.active-nav {
-
-}
-
-.inactive-nav {
-    background-color: @lightOrange;
-    color: @almostWhite;
-}
 
 
 /***********************************************************
 * TAB FOOTER 
 ************************************************************/
-/* footer {
-    position:absolute; z-index:2;
-    bottom:0; left:0;
-    width:100%;
+#tab footer {
+    position: absolute;
+    bottom: 15px; 
+    right: 15px;
+    z-index: 5;
+
+}
+
+#tab footer a {
+    .hidden-content;
+    display: block;
+
+    @addButtonSide: 44px;
+    width: @addButtonSide;
+    height: @addButtonSide;
+    -webkit-background-size: @addButtonSide @addButtonSide;
+    background: url('/static/images/addButton.png') transparent;
+}
+    /*width:100%;
     height:48px;
     background-color:#222;
     background-image:-webkit-gradient(linear, 0 0, 0 100%, color-stop(0, #999), color-stop(0.02, #666), color-stop(1, #222));
@@ -276,6 +326,43 @@ h2 {
     padding:0;
     border-top:1px solid #444;
 } */
+
+
+/***********************************************************
+* SPECIFC PAGES
+************************************************************/
+@navButtonWidth: 160px;
+@navButtonHeight: 35px;
+
+.navButton {
+    .hidden-content;
+    display: block;
+
+    width: @navButtonWidth;
+    height: @navButtonHeight;
+    -webkit-background-size: @navButtonWidth @navButtonHeight;
+}
+
+a.games.active-nav {
+    .navButton;
+    background: url('/static/images/gamesPressed.jpg') @orange;
+}
+
+a.games {
+    .navButton;
+    background: url('/static/images/gamesUnpressed.jpg') @orange;
+}
+
+a.rankings.active-nav {
+    .navButton;
+    background: url('/static/images/rankingsPressed.jpg') @orange;
+}
+
+a.rankings {
+    .navButton;
+    background: url('/static/images/rankingsUnpressed.jpg') @orange;
+}
+
 
 /***********************************************************
 * DIALOG 

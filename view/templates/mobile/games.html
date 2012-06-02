@@ -6,6 +6,10 @@
     {% include components/context_header.html %}
 {% end %}
 
+{# Nav Header with Active Games #}
+{% block nav_header %}
+   {% module UIGamesNav() %} 
+{% end %}
 
 {# Games Content #}
 {% block content %}

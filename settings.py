@@ -8,16 +8,17 @@ import environment
 import logconfig
 
 from view.modules.components import UIAppHeader, UIContextHeader, UINavHeader
+from view.modules.components import UIGamesNav, UIRankingsNav, UIAppFooter
 from view.modules.components import UIGamesList, UIRankingsList
 from view.modules.components import UICreateGameDialog
 
 # Application constants
-#LEAGUE = 693 # The Banana Stand
-#LEAGUE = 745 # Game of Thrones
-LEAGUE = 950 # The Joy of Serving Others
+# LEAGUE = 693  # The Banana Stand
+# LEAGUE = 745  # Game of Thrones
+LEAGUE = 950  # The Joy of Serving Others
 
 # Make filepaths relative to settings.
-path = lambda root,*a: os.path.join(root, *a)
+path = lambda root, *a: os.path.join(root, *a)
 ROOT = os.path.dirname(os.path.abspath(__file__))
 
 define("port", default=8000, help="run on the given port", type=int)
@@ -29,6 +30,7 @@ MEDIA_ROOT = path(ROOT, 'media')
 TEMPLATE_ROOT = path(ROOT, 'view/templates')
 
 # Deployment Configuration
+
 
 class DeploymentType:
     PRODUCTION = "PRODUCTION"
@@ -59,13 +61,16 @@ settings['facebook_secret'] = "06a89856418cad1d4ce484c159cbdafc"
 
 settings['template_loader'] = tornado.template.Loader(TEMPLATE_ROOT)
 settings['ui_modules'] = {
-        'UIAppHeader' : UIAppHeader,
-        'UIContextHeader' : UIContextHeader,
-        'UINavHeader' : UINavHeader,
-        'UIRankingsList' : UIRankingsList,
-        'UIGamesList' : UIGamesList,
-        'UICreateGameDialog' : UICreateGameDialog
-        }
+    'UIAppHeader': UIAppHeader,
+    'UIContextHeader': UIContextHeader,
+    'UINavHeader': UINavHeader,
+    'UIGamesNav': UIGamesNav,
+    'UIRankingsNav': UIRankingsNav,
+    'UIAppFooter': UIAppFooter,
+    'UIRankingsList': UIRankingsList,
+    'UIGamesList': UIGamesList,
+    'UICreateGameDialog': UICreateGameDialog
+}
 
 settings['league_id'] = LEAGUE
 

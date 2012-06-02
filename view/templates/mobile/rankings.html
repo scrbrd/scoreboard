@@ -6,6 +6,10 @@
     {% include components/context_header.html %}
 {% end %}
 
+{# Nav Header with Active Rankings #}
+{% block nav_header %}
+   {% module UIRankingsNav() %} 
+{% end %}
 
 {# Rankings Content #}
 {% block content %}

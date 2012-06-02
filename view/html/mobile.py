@@ -9,7 +9,7 @@ from view.app_copy import Copy
 
 from view.constants import APP_DATA, FORM_NAME, APP_ID, APP_CLASS
 from view.constants import DESIGN_ID, DESIGN_CLASS
-from elements import Element, Div, Span, OL, UL, LI, Nav, A, H1, H2, Header
+from elements import Div, Span, OL, UL, LI, Nav, A, H1, H2, Header, Footer
 from elements import Section, BR, Form, TextInput, HiddenInput, CheckboxInput
 from elements import SubmitButton, Button
 
@@ -110,8 +110,6 @@ class NavUL(UL):
         """ Construct a nav header element tree. """
         super(NavUL, self).__init__(items)
 
-        # TODO: add a special link parameter to account for plus button?
-
         # TODO: is there css we want applied even to this base class?
         #self.append_classes([])
 
@@ -133,11 +131,10 @@ class NavHeaderLI(LI):
     def __init__(self, item, index):
         """ Construct a nav header list item element tree. """
         super(NavHeaderLI, self).__init__(item, index)
-        self.append_classes([DESIGN_CLASS.INACTIVE_NAV])
 
         span = Span()
         self.append_child(span)
-        
+
         a = A(item)
         # TODO: this is a hardcoded string and not a constant because once we
         # have a Link class [and an Item interface or some such thing for it
@@ -147,11 +144,29 @@ class NavHeaderLI(LI):
         span.append_child(a)
 
 
+class AppFooter(Footer):
+
+    """ App footer contains a fixed add button in a <footer>. """
+
+    def __init__(self):
+        """ Construct the apps' footer element tree. """
+        super(AppFooter, self).__init__()
+
+        add_link = {
+            "text": "+",
+            "href": "/create/game",
+        }
+
+        anchor = A(add_link)
+        anchor.set_id(APP_ID.ADD_BUTTON)
+        anchor.set_classes([APP_CLASS.DIALOG_LINK])
+        self.append_child(anchor)
+
+
 class PageSection(Section):
 
     """ Page section encapsulates the generic page wrappers around i
     <section>. """
-    
 
     def __init__(self, page_name):
         """ Construct a page section element tree.
@@ -217,13 +232,13 @@ class GameLI(LI):
             # changed more obvious once we have result/outcome classes.
             id = result["id"]
             opponent = item.get_opponent(id)
-            
+
             span = Span()
             span.set_data(APP_DATA.ID, id)
             span.set_data(APP_DATA.OBJECT_TYPE, opponent.type)
             span.set_text("{0} {1}".format(opponent.name, result["score"]))
             self.append_child(span)
-            
+
             # add break between results
             br = BR()
             self.append_child(br)

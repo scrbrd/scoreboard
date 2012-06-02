@@ -6,7 +6,7 @@
         <hgroup>
             {# {% module AppHeaderView("SQOREBOARD") %} #}
             {% block context_header %} EMPTY CONTEXT HEADER {% end %} 
-            {% module UINavHeader() %}
+            {% block nav_header %} EMPTY NAV HEADER {% end %}
         </hgroup>
     </header>
 {% end %}
@@ -22,5 +22,5 @@
 
 
 {% block footer_section %}
-    <!-- <footer></footer> -->
+    {% module UIAppFooter() %}
 {% end %}

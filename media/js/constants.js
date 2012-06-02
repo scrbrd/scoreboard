@@ -29,6 +29,7 @@ define(
         DOM: {
             /** @const */ BODY:                 "body",
             /** @const */ BUTTON:               "button",
+            /** @const */ NAV:                  "nav",
         },
 
         /**
@@ -56,6 +57,8 @@ define(
             /** @const */ DIALOG_LINK:          ".dialog-link",
             /** @const */ CLOSE:                ".close",
             /** @const */ PLAYER_SELECT:        ".player-select",
+            /** @const */ ACTIVE_NAV:           ".active-nav",
+            /** @const */ INACTIVE_NAV:         ".inactive-nav",
         },
 
         /**
