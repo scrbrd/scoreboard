@@ -11,10 +11,11 @@ members aren't strictly members [they are pulled from properties].
 
 from exceptions import NotImplementedError
 
-from model.constants import NODE_PROPERTY
+from model.constants import NODE_PROPERTY, THIRD_PARTY
 
-from constants import API_NODE_TYPE, API_NODE_PROPERTY, API_CONSTANT
+from constants import API_NODE_TYPE, API_NODE_PROPERTY, API_EDGE_TYPE
 from sqobject import SqNode
+import loader
 
 
 class Person(SqNode):
@@ -34,6 +35,8 @@ class Person(SqNode):
     url     picture         profile picture url
 
     """
+
+    _leagues = None
 
 
     def outgoing_edge_types(self):
@@ -105,19 +108,44 @@ class Person(SqNode):
         return self._get_property(API_NODE_PROPERTY.PICTURE)
 
 
-    """ The below are duplicated in User for now. """
+    def get_leagues(self):
+        """ Return a list of Leagues. """
+        SqNode.assert_loaded(self._leagues)
+        return self._leagues.values()
+
+
+    def set_leagues(self, leagues):
+        """ Set a Person's loaded Leagues with a dict. """
+        self._leagues = leagues
+
+
+    @staticmethod
+    def load_leagues(person_id):
+        """ Return a Person with Leagues data loaded. """
+        (person, leagues) = loader.load_neighbors(
+                person_id,
+                [API_EDGE_TYPE.IN_LEAGUE],
+                [API_NODE_TYPE.LEAGUE])
+
+        person.set_leagues(leagues)
+
+        return person
+
+
+    # The below are duplicated in User for now.
 
 
     @property
     def fb_id(self):
         """ Return this Person's Facebook ID. """
 
-        # for now, this is guaranteed to be set. later, there may be other
+        # TODO: for now, we guarantee this is set. later, there may be other
         # third parties and some established hierarchy for checking or we may
         # have implemented our own login system.
-        return self._properties.get(
-                API_CONSTANT.FACEBOOK_NODE_PROPERTIES[NODE_PROPERTY.ID],
-                None)
+
+        # signal _get_property() to bypass NODE_PROPERTY.ID since that field is
+        # guaranteed to always be set and we explicitly want the Facebook ID.
+        return self._get_property(NODE_PROPERTY.ID, THIRD_PARTY.FACEBOOK, True)
 
 
     @property
@@ -130,7 +158,4 @@ class Person(SqNode):
     def email(self):
         """ Return this User's email address. """
         return self._get_property(API_NODE_PROPERTY.EMAIL)
-
-
-    """ The above are duplicated in User for now. """
 

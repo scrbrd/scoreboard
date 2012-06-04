@@ -46,8 +46,11 @@ def create_node_and_edges(prototype_node, prototype_edges):
         # create and store new GraphEdges to/from the new GraphNode
         new_edges = _create_edges(prototype_edges)
 
+        # the new GraphNode should contain the new GraphEdges 
+        new_node.set_edges(new_edges)
+
         # load the new GraphNode and GraphEdges into SqObjects
-        node = sqfactory.construct_node_and_edges(new_node, new_edges)
+        node = sqfactory.construct_node_and_edges(new_node)
 
     except GraphInputError as e:
         #logger.debug(e.reason)

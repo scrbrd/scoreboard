@@ -187,23 +187,55 @@ def delete_edge(edge_id, properties):
     return None
 
 
-def read_node_and_edges(node_id):
+def read_node(node_id):
     """ Read a node and its edges. 
     
     Required:
-    int node_id     id of requested Node
+    int     node_id     id of requested Node
 
-    Returns node as a dictionary or None if node not found
+    Return:
+    dict                node dict or None if no node exists
 
     Raises:
-    DbReadError     db threw error
+    DbReadError         read failure
 
     """
+
     try:
         node_data = connection_manager.read_node_and_edges(
                 DATABASE.BASE_URL, 
                 node_id)
         return node_data
+
+    except DbConnectionError:
+        raise DbReadError("Database read failed.")
+
+
+def read_nodes_by_index(key, value, node_return_filter=None):
+    """ Return a dict of nodes with edges given a non-ID node property.
+
+    Required:
+    str     key                 indexed property for node lookup
+    mixed   value               value (ideally unique) for node lookup
+
+    Optional:
+    list    node_return_filter  node types to filter for and return
+
+    Return:
+    dict                        nodes keyed on ID with edges (or None)
+
+    Raises:
+    DbReadError                 read failure
+
+    """
+
+    try:
+        return connection_manager.read_nodes_by_index(
+                DATABASE.BASE_URL,
+                key,
+                value,
+                node_return_filter)
+
     except DbConnectionError:
         raise DbReadError("Database read failed.")
 
@@ -219,22 +251,42 @@ def read_nodes_from_immediate_path(
 
     No duplicate edges in traversal. No duplicates in node lists.
 
-    Returns path    {depth:{id:node}}
+    Required:
+    id      start_node_id       ID of node to start traversing path from
+    list    edge_pruner         edge types to include in traversal
+    list    node_return_filter  node types to include in result set
+
+    Return:
+    dict            path defined as: {depth:{id:node}}
 
     Raises:
     DbInputError    if parameters are missing or incorrect
     DbReadError     db threw error
 
     """
-    required = ((start_node_id, "start_node_id"),
-            (node_return_filter, "return_node_filter"),
-            (edge_pruner, "edge_pruner"))
-    for t in required:
-        if t[0] is None:
-            raise DbInputError(
-                    t[0], 
-                    t[1], 
-                    "Required parameter not included.")
+
+    # TODO: instead of hardcoding, use constants or DbInputError subclasses.
+    # TODO: should node_return_filter and edge_pruner have default values?
+
+    if start_node_id is None:
+        raise DbInputError(
+                start_node_id,
+                "start_node_id"
+                "Required parameter not included.")
+
+    # empty list of edge types to prune for doesn't make sense
+    if edge_pruner == []:
+        raise DbInputError(
+                edge_pruner,
+                "edge_pruner"
+                "Required parameter not included.")
+
+    # empty list of node types to return doesn't make sense
+    if node_return_filter == []:
+        raise DbInputError(
+                node_return_filter,
+                "node_return_filter",
+                "Required parameter not included.")
 
     try:
         return connection_manager.read_nodes_from_immediate_path(

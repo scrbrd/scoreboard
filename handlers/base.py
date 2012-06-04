@@ -6,6 +6,10 @@ from exceptions import NotImplementedError
 
 import tornado.web
 import logging
+
+from constants import COOKIE_TYPE
+
+
 logger = logging.getLogger('boilerplate.' + __name__)
 
 
@@ -57,8 +61,15 @@ class BaseHandler(tornado.web.RequestHandler):
 
     def get_current_user(self):
         """ Return current user from cookie or return None. """
-        user_json = self.get_secure_cookie("user")
-        if user_json is None:
+        user = None
+
+        cookie = self.get_secure_cookie(COOKIE_TYPE.USER)
+
+        # no authenticated User/Player exists
+        if cookie is None:
+
+            # TODO: could see if Facebook has de-authorized the user.
+
             #cookie = self.get_cookie("fbsr_" + self.settings["facebook_api_key"], "")
             #if not cookie:
             #    print('no cookie found')
@@ -67,13 +78,15 @@ class BaseHandler(tornado.web.RequestHandler):
             #app_secret = self.settings["facebook_secret"]
             #response = BaseHandler.parse_signed_request(cookie, app_secret)
             #print ("WE HAVE SUCCESS! {0}: ".format(response)
+            pass
 
-            # return "success"
-            # TODO could see if Facebook has de-authorized the user.
-            return None
-        # else (there is a user)...then return it
+        # an authenticated User/Player exists
         else:
-            return tornado.escape.json_decode(user_json)
+            user = tornado.escape.json_decode(cookie)
+
+        # TODO: this is not a User SqNode. it is also not a User ID. instead,
+        # it is a dictionary containing user, player, and league IDs.
+        return user
 
 
     def process_request(self):

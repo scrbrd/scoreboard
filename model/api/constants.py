@@ -5,7 +5,8 @@
 """
 
 from util.decorators import constant
-from model.constants import NODE_PROPERTY, EDGE_PROPERTY, THIRD_PARTY
+from model.constants import NODE_PROPERTY, EDGE_PROPERTY
+from model.constants import THIRD_PARTY, PROPERTY_KEY
 
 
 class _APINodeType(object):
@@ -422,6 +423,8 @@ class _APIConstant(object):
 
         """
 
+        # FIXME: does this still need to exist? it is now unused.
+
         properties = [
                 NODE_PROPERTY.ID,
                 API_NODE_PROPERTY.NAME,
@@ -437,8 +440,11 @@ class _APIConstant(object):
                 API_NODE_PROPERTY.EMAIL,
                 ]
 
-        # TODO: define a constant for delimiter "_"
-        return dict((p, (THIRD_PARTY.FACEBOOK + "_" + p)) for p in properties)
+        # FIXME: dict comprehension syntax changes when we upgrade to python2.7
+
+        prefix = "{0}{1}".format(THIRD_PARTY.FACEBOOK, PROPERTY_KEY.DELIMITER)
+
+        return dict((p, (prefix + p)) for p in properties)
 
 
     @constant

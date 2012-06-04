@@ -8,7 +8,7 @@ members aren't strictly members [they are pulled from properties].
 from time import time
 
 from model.constants import NODE_PROPERTY, PROPERTY_KEY, PROPERTY_VALUE
-from model.constants import VERSION
+from model.constants import THIRD_PARTY, VERSION
 
 from constants import API_NODE_TYPE, API_EDGE_TYPE
 from constants import API_NODE_PROPERTY, API_EDGE_PROPERTY
@@ -174,12 +174,13 @@ class User(SqNode):
     def fb_id(self):
         """ Return this User's Facebook ID. """
 
-        # for now, this is guaranteed to be set. later, there may be other
+        # TODO: for now, we guarantee this is set. later, there may be other
         # third parties and some established hierarchy for checking or we may
         # have implemented our own login system.
-        return self._properties.get(
-                API_CONSTANT.FACEBOOK_NODE_PROPERTIES[NODE_TYPE.ID],
-                None)
+
+        # signal _get_property() to bypass NODE_PROPERTY.ID since that field is
+        # guaranteed to always be set and we explicitly want the Facebook ID.
+        return self._get_property(NODE_PROPERTY.ID, THIRD_PARTY.FACEBOOK, True)
 
 
     @property
@@ -196,6 +197,13 @@ class User(SqNode):
 
     """ The above are duplicated in Person for now. """
 
+
+    def get_default_person_id(self):
+        """ Return the ID of the Person to default to for this User. """
+        return self.get_to_node_ids_by_type(API_EDGE_TYPE.DEFAULTS_TO)[0]
+
+
+    """ STATIC METHODS """
 
     @staticmethod
     def property_keys():
@@ -371,4 +379,39 @@ class User(SqNode):
         # TODO: prepare an edge prototype for the invited_id
 
         return editor.create_node_and_edges(prototype_node, [])
+
+
+    @staticmethod
+    def load_by_id(id):
+        """ Return a User by its id property. """
+        return loader.load_node(id)
+
+
+    @staticmethod
+    def load_by_email(email):
+        """ Return a User by its indexed email property. """
+        return loader.load_node_by_unique_property(
+                API_NODE_PROPERTY.EMAIL,
+                email,
+                [API_NODE_TYPE.USER])
+
+
+    @staticmethod
+    def load_by_external_id(x_id, third_party):
+        """ Return a User by its indexed external id property. """
+        return loader.load_node_by_unique_property(
+                SqNode.third_party_property_key(third_party, NODE_PROPERTY.ID),
+                x_id,
+                [API_NODE_TYPE.USER])
+
+
+    @staticmethod
+    def load_by_external_email(x_email, third_party):
+        """ Return a User by its indexed external email property. """
+        key = SqNode.third_party_property_key(third_party, NODE_PROPERTY.EMAIL)
+
+        return loader.load_node_by_unique_property(
+                key,
+                x_email,
+                [API_NODE_TYPE.USER])
 

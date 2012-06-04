@@ -5,6 +5,7 @@ get and multiget actions on nodes, edges, and paths.
 
 Provides:
     def get_node
+    def get_nodes_by_index
     def multiget_node
     def get_edge
     def multiget_edge
@@ -18,6 +19,7 @@ from model.constants import NODE_PROPERTY, EDGE_PROPERTY
 
 from constants import GRAPH_PROPERTY
 from model.graph import GraphEdge, GraphNode, GraphPath, GraphOutputError
+
 
 def get_node(node_id):
     """ Return a GraphNode from a graph database.
@@ -48,59 +50,116 @@ def get_node(node_id):
     #   2/ id was bad: error raised, execution halted;
     #   3/ db fails: error caught, None assigned here.
 
-    node = None
-
-    required_fields = set([
-            NODE_PROPERTY.ID,
-            NODE_PROPERTY.TYPE,
-            NODE_PROPERTY.PROPERTIES,
-            NODE_PROPERTY.EDGES
-            ])
-
-    # TODO: deal with existing bad data. every node and edge should have a
-    # value set for each of these properties.
-
-    required_properties = set([
-            GRAPH_PROPERTY.CREATED_TS,
-            GRAPH_PROPERTY.UPDATED_TS,
-            GRAPH_PROPERTY.DELETED_TS
-            ])
+    graph_node = None
 
     try:
         node_dict = db.read_node_and_edges(node_id)
 
         if node_dict:
-            # data layer nodes only have fields explicitly required
-            errors = required_fields.symmetric_difference(set(node_dict))
-
-            if NODE_PROPERTY.PROPERTIES not in errors:
-                # ensure properties the graph layer requires are present too
-                properties = set(node_dict[NODE_PROPERTY.PROPERTIES])
-                property_errors = required_properties.difference(properties)
-                errors = errors.union(property_errors)
-
-            if errors:
-                raise GraphOutputError(
-                        errors, 
-                        "Required fields or properties missing from GraphNode.")
-
-            node = GraphNode(
-                    node_dict[NODE_PROPERTY.ID],
-                    node_dict[NODE_PROPERTY.TYPE],
-                    node_dict[NODE_PROPERTY.PROPERTIES],
-                    node_dict[NODE_PROPERTY.EDGES])
+            graph_node = _process_node(node_dict)
 
     except DbReadError as e:
         print(e.reason)
         #logger.debug(e.reason)
-        node = None
 
     except DbInputError as e:
         print(e.reason)
         #logger.debug(e.reason)
-        node = None
 
-    return node
+    return graph_node
+
+
+def get_nodes_by_index(key, value, node_type_return_filter=None):
+    """ Return a dict of GraphNodes from a graph database index.
+
+    Wrap a call to a graph database that returns a dict structured
+    like the following, and parse it into a GraphNode:
+
+    {
+        "id" : node_id,
+        "type" : type,
+        "properties" : {"p0" : p0, ..., "pN" : pN},
+        "edges" : {edge_id0 : edge_dict0, ..., edge_idN : edge_dictN}
+    }
+
+    Required:
+    str     key                         indexed property key to look up
+    mixed   value                       indexed property value to look up
+
+    Optional:
+    list    node_type_return_filter     node types to filter for
+
+    Returns:
+    dict                                GraphNodes keyed on ID
+
+    Raises:
+    GraphOutputError                    bad input
+
+    """
+
+    # cases:
+    #   1/ success: dict returned;
+    #   2/ k/v pair was bad: error raised, execution halted;
+    #   3/ db fails: error caught, None assigned here.
+
+    graph_nodes = None
+
+    try:
+        node_dicts = db.read_nodes_by_index(
+                key,
+                value,
+                node_type_return_filter)
+
+        graph_nodes = {}
+        for id, node_dict in node_dicts.items():
+            graph_nodes[id] = _process_node(node_dict)
+
+    except DbReadError as e:
+        print(e.reason)
+        #logger.debug(e.reason)
+
+    except DbInputError as e:
+        print(e.reason)
+        #logger.debug(e.reason)
+
+    return graph_nodes
+
+
+def _process_node(node_dict):
+    """ Convenience wrapper to validate and convert to a GraphNode. """
+
+    required_fields = set([
+            NODE_PROPERTY.ID,
+            NODE_PROPERTY.TYPE,
+            NODE_PROPERTY.PROPERTIES,
+            NODE_PROPERTY.EDGES,
+            ])
+
+    required_properties = set([
+            GRAPH_PROPERTY.CREATED_TS,
+            GRAPH_PROPERTY.UPDATED_TS,
+            GRAPH_PROPERTY.DELETED_TS,
+            ])
+
+    # data layer nodes only have fields explicitly required
+    errors = required_fields.symmetric_difference(set(node_dict))
+
+    if NODE_PROPERTY.PROPERTIES not in errors:
+        # ensure properties the graph layer requires are present too
+        properties = set(node_dict[NODE_PROPERTY.PROPERTIES])
+        property_errors = required_properties.difference(properties)
+        errors = errors.union(property_errors)
+
+    if errors:
+        raise GraphOutputError(
+                errors,
+                "Required fields or properties missing from GraphNode.")
+
+    return GraphNode(
+            node_dict[NODE_PROPERTY.ID],
+            node_dict[NODE_PROPERTY.TYPE],
+            node_dict[NODE_PROPERTY.PROPERTIES],
+            node_dict[NODE_PROPERTY.EDGES])
 
 
 def multiget_node(node_ids):
@@ -199,12 +258,10 @@ def get_edge(edge_id):
     except DbReadError as e:
         print(e.reason)
         #logger.debug(e.reason)
-        edge = None
 
     except DbInputError as e:
         print(e.reason)
         #logger.debug(e.reason)
-        edge = None
 
     return edge
 
@@ -238,8 +295,8 @@ def multiget_edge(edge_ids):
 
 def get_path_to_neighbor_nodes(
         start_node_id,
-        edge_type_pruner=[],
-        node_type_return_filter=[]):
+        edge_type_pruner=None,
+        node_type_return_filter=None):
     """ Traverse a depth-1 path from a start node to its neighbors.
 
     Wrap a call to a graph database that returns a dict structured 
@@ -279,20 +336,18 @@ def get_path_to_neighbor_nodes(
     except DbReadError as e:
         print(e.reason)
         #logger.debug(e.reason)
-        path = None
 
     except DbInputError as e:
         print(e.reason)
         #logger.debug(e.reason)
-        path = None
 
     return path
 
 
 def multiget_path_to_neighbor_nodes(
         start_node_ids,
-        edge_type_pruner=[],
-        node_type_return_filter=[]):
+        edge_type_pruner=None,
+        node_type_return_filter=None):
     """ Traverse depth-1 paths from start nodes to their neighbors.
 
     Wrap a set of calls to a graph database that each return a dict 

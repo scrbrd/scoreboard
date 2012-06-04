@@ -22,12 +22,11 @@ import player
 import user
 
 
-def construct_node_and_edges(graph_node, graph_edges):
+def construct_node_and_edges(graph_node):
     """ Construct a SqNode and SqEdges from a GraphNode and GraphEdges.
 
     Required:
     GraphNode   graph_node      GraphNode to convert based on type
-    dict        graph_edges     GraphEdges to convert based on type
 
     Returns:
     SqNode                      concrete subclass instance with SqEdges
@@ -35,10 +34,6 @@ def construct_node_and_edges(graph_node, graph_edges):
     """
 
     node = construct_node(graph_node)
-    # FIXME: why arent we using graph_edges here? if graph_node already
-    # contains a reference to graph_edges, which would be reasonable, then we
-    # should fix this method signature and make sure it's not a problem for
-    # any of the callers.
     edges = construct_edges(graph_node.edges())
     node.set_edges(edges)
 

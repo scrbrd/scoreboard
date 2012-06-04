@@ -12,7 +12,6 @@ from constants import API_NODE_TYPE, API_EDGE_TYPE, API_NODE_PROPERTY
 from sqobject import SqNode
 from person import Person
 from opponent import Opponent
-import loader
 import editor
 
 

@@ -14,6 +14,18 @@ class _Neo4j(object):
 
 
     @constant
+    def SCRIPT(self):
+        """ SCRIPT is a Neo4j constant. """
+        return "script"
+
+
+    @constant
+    def PARAMS(self):
+        """ PARAMS is a Neo4j constant. """
+        return "params"
+
+
+    @constant
     def SELF(self):
         """ SELF is a Neo4j constant. """
         return "self"
@@ -43,21 +55,32 @@ class _Neo4j(object):
         return "type"
 
 
-    @constant
-    def SCRIPT(self):
-        """ SCRIPT is a Neo4j constant. """
-        return "script"
+NEO4J = _Neo4j()
+
+
+class _Neo4jIndex(object):
+
+    """ _Neo4jIndex class to hold all Neo4j database indices. """
 
 
     @constant
-    def PARAMS(self):
-        """ PARAMS is a Neo4j constant. """
-        return "params"
+    def NODES(self):
+        """ NODES is a Neo4j constant. """
+        return "vertices"
+
+
+    @constant
+    def EDGES(self):
+        """ EDGES is a Neo4j constant. """
+        return "edges"
+
+
+NEO4J_INDEX = _Neo4jIndex()
 
 
 class _Gremlin(object):
 
-    """ _GremlinConstant class to hold all Gremlin constants. """
+    """ _Gremlin class to hold all Gremlin constants. """
 
 
     @constant
@@ -96,6 +119,5 @@ class _Gremlin(object):
         return "java.lang.IllegalArgumentException"
 
 
-NEO4J = _Neo4j()
 GREMLIN = _Gremlin()
 

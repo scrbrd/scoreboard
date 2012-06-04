@@ -63,8 +63,8 @@ class League(SqNode):
         """ Return a list of Opponents. """
         SqNode.assert_loaded(self._opponents)
         return self._opponents.values()
-            
-    
+
+
     def set_opponents(self, opponents):
         """ Set a League's loaded Opponents with a dict. """
         self._opponents = opponents
@@ -100,7 +100,7 @@ class League(SqNode):
 
     @staticmethod
     def load_opponents(league_id):
-        """ Return a League with opponents loaded from the data layer."""
+        """ Return a League with Opponents loaded from the data layer."""
         (league, opponents) = loader.load_neighbors(
                 league_id,
                 [API_EDGE_TYPE.HAS_LEAGUE_MEMBER], 

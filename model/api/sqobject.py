@@ -142,26 +142,62 @@ class SqNode(SqObject):
         return edges
 
 
+    def get_edges_by_type(self, edge_type):
+        """ Return a dict of SqEdges of a given type for a SqNode. """
+        return self.get_edges()[edge_type]
+
+
+    def get_edge_ids_by_type(self, edge_type):
+        """ Return a list of SqEdge IDs of a given type for a SqNode. """
+        return self.get_edges_by_type(edge_type).keys()
+
+
+    def get_to_node_ids_by_type(self, edge_type):
+        """ Return a list of to-SqNode IDs by SqEdge type for a SqNode. """
+        edges = self.get_edges_by_type(edge_type)
+        return [edge.to_node_id for id, edge in edges.items()]
+
+
     def set_edges(self, edges):
         """ Set a member variable with a dict of outgoing SqEdges. """
         self._edges = edges
 
 
-    def _get_property(self, key):
+    def _get_property(
+            self,
+            key,
+            third_party=THIRD_PARTY.FACEBOOK,
+            use_third_party=False):
         """ Return a GraphObject property as a member.
 
         If we have data stored for this property key, use it. Otherwise,
-        default [for now] to what we get from Facebook. In the future,
-        what we default to will depend on some input parameter [likely a
-        cookie] describing how this user is logged in.
+        fall back on the supplied third party. Or, when specified, use
+        the third party and ignore our data altogether.
+
+        Required:
+        str     key             SqNode property key
+
+        Optional:
+        str     third_party     third party to use or default to
+        bool    use_third_party use third party property, not SqNode
 
         """
 
-        property = self._properties.get(
-                key,
-                self._properties.get(
-                    API_CONSTANT.FACEBOOK_NODE_PROPERTIES[key],
-                    None))
+        # FIXME: create a mapping from SqNode property to third party property
+        # so that we don't rely on keys always being the same. also, maybe
+        # create a hierarchy when other third parties enter the mix.
+
+        property = None
+
+        sq_property = self._properties.get(key, None)
+
+        tp_key = SqNode.third_party_property_key(third_party, key)
+        tp_property = self._properties.get(tp_key, None)
+
+        if use_third_party:
+            property = tp_property
+        else:
+            property = sq_property if sq_property is not None else tp_property
 
         if property is None:
             raise SqObjectPropertyError(
@@ -319,10 +355,12 @@ class SqNode(SqObject):
             # flatten this third party's data into a storable dict
             for tp_key, tp_value in valid_properties.items():
 
-                # create a key like "fb_first_name" by joining third party
-                # ("fb"), delimiter ("_"), and property key ("first_name").
-                key = "{0}{1}{2}".format(tp, PROPERTY_KEY.DELIMITER, tp_key)
+                # TODO: if this becomes a trend, bake type into third party
+                # constants definitions to cast from strings more generically.
+                if tp_key == NODE_PROPERTY.ID:
+                    tp_value = int(tp_value)
 
+                key = SqNode.third_party_property_key(tp, tp_key)
                 properties[key] = tp_value
 
         return properties
@@ -355,26 +393,55 @@ class SqNode(SqObject):
             type_keys.append(NODE_PROPERTY.ID)
             locked_keys.remove(NODE_PROPERTY.ID)
 
+        valid_properties = {}
+
         # expunge disallowed keys and values
         for key, value in properties.items():
 
             # is this a valid key for this type?
             if key not in type_keys:
                 # TODO: raise an error, or silently remove the property?
-                del properties[key]
+                pass
 
             # is this an immutable SqNode key?
-            if key in locked_keys:
+            elif key in locked_keys:
                 # TODO: raise an error, or silently remove the property?
-                del properties[key]
+                pass
 
             # is this a valid property value?
-            if value is None:
+            elif value is None:
                 # TODO: raise an error, or silently convert to EMPTY?
-                del properties[key]
+                pass
 
-        return properties
+            # success!
+            else:
+                valid_properties[key] = value
 
+        return valid_properties
+
+
+    @staticmethod
+    def third_party_property_key(third_party, property_key):
+        """ Return a property key for third party data storage.
+
+        Create a key like "fb_first_name" by joining third party ("fb"),
+        delimiter ("_"), and property key ("first_name").
+
+        Required:
+        str     third_party     who is the third party? ex: "fb" or "tw"
+        str     property_key    what is the property? ex: "first_name"
+
+        Return:
+        str                     valid property key for our database
+
+        """
+
+        # TODO: raise an error when third party or property key is invalid
+
+        return "{0}{1}{2}".format(
+                third_party,
+                PROPERTY_KEY.DELIMITER,
+                property_key)
 
 class SqEdge(SqObject):
 

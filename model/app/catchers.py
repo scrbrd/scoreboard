@@ -8,9 +8,17 @@ data is retrieved and returned as a Catcher.
 from copy import deepcopy
 from exceptions import NotImplementedError
 
+from model.constants import NODE_PROPERTY, PROPERTY_VALUE, THIRD_PARTY
+
+from model.api.constants import API_NODE_PROPERTY
+
+from model.api.user import User
+from model.api.person import Person
+from model.api.player import Player
 from model.api.game import Game
 from model.api.league import League
 from model.api.opponent import Opponent
+
 
 class Catcher(object):
 
@@ -28,8 +36,8 @@ class Catcher(object):
 
 
 class ReadCatcher(Catcher):
-
-    """ Read and return  all data for a model request.
+    
+    """ Read and return all data for a model request.
 
     Required:
     League  _context    container of objects (id, name fields required)
@@ -39,6 +47,7 @@ class ReadCatcher(Catcher):
 
     _context = None
     _rivals = None
+
 
     def _load_catcher(self):
         """ Load all necessary data. """
@@ -241,6 +250,122 @@ class CreateCatcher(Catcher):
 
         """
         return Game.create_game(league_id, creator_id, game_score)
+
+
+class AuthCatcher(Catcher):
+
+    """ Authenticate a User. Prompt for authorization if needed.
+
+    Create, fetch, and/or prepare all necessary data for storing a
+    cookie that can be used for authentication and analytics tracking on
+    future requests. On first login, Create and store a new User.
+
+    """
+
+
+    def __init__(self, raw_user, ip):
+        """ Constructor for a AuthCatcher. """
+        pass
+
+
+    def get_user_by_id(self, id):
+        """ Return a User given an id. """
+        return User.load_by_id(id)
+
+
+    def get_user_by_email(self, email):
+        """ Return a User given an email. """
+        return User.load_by_email(email)
+
+
+class FacebookAuthCatcher(AuthCatcher):
+
+    """ Authenticate a Facebook User. Prompt for authorization if needed.
+    
+    Lookup and/or create/update a User on login with Facebook.
+
+    On Facebook login, we attempt to fetch a User and potentially create
+    or update our database with the user information supplied.
+
+    """
+
+    _user = None
+    _player = None
+    _league = None
+    _ip = None
+
+
+    def __init__(self, raw_user, ip, default_league_id):
+        """ Constructor for a FacebookAuthCatcher. """
+
+        self._ip = ip
+
+        # TODO: there's probably a more efficient way to do this.
+        # TODO: should this all be broken out into a couple methods?
+        # TODO: devise a naming scheme that generally works for Catchers.
+
+        fb_id = raw_user.get(NODE_PROPERTY.ID)
+
+        if fb_id is None:
+            raise tornado.web.HTTPError(500, "No Facebook User ID.")
+
+        existing_user = User.load_by_external_id(fb_id, THIRD_PARTY.FACEBOOK)
+
+        if existing_user is None:
+
+            (user, player) = User.create_user_and_player(
+                    PROPERTY_VALUE.EMPTY,
+                    PROPERTY_VALUE.EMPTY,
+                    None,
+                    PROPERTY_VALUE.EMPTY,
+                    PROPERTY_VALUE.EMPTY,
+                    {THIRD_PARTY.FACEBOOK : raw_user},
+                    None,
+                    self._ip)
+                    #self._ip,
+                    #VERSION.CURRENT,
+                    #from_node_id,
+                    #API_EDGE_TYPE.HAS_LEAGUE_MEMBER)
+
+            # TODO: uncomment and figure out where from_node_id comes from in
+            # order to automatically add the new Player to a League.
+
+            league = None
+
+        else:
+
+            # TODO: implement update and use it here!
+
+            user = existing_user
+            #(user, player) = User.update_user_and_player(
+            #        raw_user,
+            #        existing_user)
+
+            # TODO: implement joining leagues and query joined leagues here!
+
+            player = Person.load_leagues(user.get_default_person_id())
+            #league = player.get_leagues()[0]
+
+        # TODO: implement joining leagues. stop using the default global league
+
+        self._user = user
+        self._player = player
+        self._league = League.load_opponents(default_league_id)
+
+
+    def user(self):
+        """ Return a User. """
+        return self._user
+
+
+    def player(self):
+        """ Return a Player. """
+        return self._player
+
+
+    def league(self):
+        """ Return a League. """
+        return self._league
 
 
 # FIXME remove this class
