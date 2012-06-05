@@ -32,10 +32,10 @@ class _Copy(object):
         """ The copy for a player placeholer. """
         return "Who played?"
 
-    
+
     @property
     def score_placeholder(self):
         """ The copy for a score placeholder. """
-        return "And the score?"
+        return "?"
 
 Copy = _Copy()

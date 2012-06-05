@@ -69,7 +69,7 @@
 
 
 /***********************************************************
-* REUSABLE CLASSES
+* REUSABLE APP-SPECIFIC CLASSES
 ************************************************************/
 
 /* Allows all objects that exist vertically on a page to create 
@@ -77,16 +77,8 @@ the same border. */
 .page-border {
     border-left: 2px solid @black;
     border-right: 2px solid @black;
-    -webkit-box-sizing: border-box;
-    box-sizing: border-box;
 }
 
-/* Hide the content when using the background image for function. */
-.hidden-content {
-    line-height: 0px; 
-    font-size: 0px;
-    color: transparent; 
-}
 
 /* Add a light drop shadow below a box. */
 .drop-shadow-box {
@@ -105,6 +97,11 @@ the same border. */
     text-shadow: 0px -1px 0px rgba(0, 0, 0, 0.5);
 }
 
+
+/***********************************************************
+* REUSABLE GENERIC CLASSES
+************************************************************/
+
 /* Create columns with no spacing. */
 .columns (@number) {
     column-count: @number;
@@ -120,6 +117,21 @@ the same border. */
     -moz-column-gap: 0px;
 }
 
+/* Cross browser border-radius */
+.border-radius (@radius) {
+    border-radius: @radius;
+    -moz-border-radius: @radius;
+    -webkit-border-radius: @radius;
+}
+
+/* Hide the content when using the background image for function. */
+.hidden-content {
+    line-height: 0px; 
+    font-size: 0px;
+    color: transparent; 
+}
+
+
 /***********************************************************
 * IMPORTS
 ************************************************************/
@@ -129,13 +141,19 @@ the same border. */
 /***********************************************************
 * FRAMEWORK
 ************************************************************/
+
+/* I like this box model better so deal with it. */
+* {
+    box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+}
+
 body {
+    background: @darkGray;
     font-family: 'CronosProSemibold', 'Arial', sans-serif;
     font-size: @normalFontSize;
     
-    -webkit-box-sizing: border-box;
-    box-sizing: border-box;
-   
     /* stops iPhone from readjusting text size for landscape orientation. */
     -webkit-text-size-adjust: none;
     
@@ -146,6 +164,14 @@ body {
     /* -webkit-user-select: none;*/
 }
 
+ol, ul {
+    margin: 0px;
+    padding: 0px;
+    
+    list-style: none;
+    text-align: left;
+}
+
 header {
     text-align: center;
 }
@@ -154,8 +180,33 @@ header {
     overflow-y: hidden;
 }
 
+h2 {
+    font-family: 'Eurostile', 'Verdana', serif;
+    /* Eurostile's vertical-align is too high */
+    font-size: @biggestFontSize;
+    text-transform: uppercase;
+    font-style: italic;
+   
+    /* Vertically aligns Eurostile */
+    @fontAdjust: @bigFontSize / 4;
+    padding-top: @fontAdjust; // padding so that font is pushed down
+    
+    .emboss-text;
+}
+
 a {
     text-decoration: none;
+}
+
+
+input, button {
+    .border-radius(0px);
+    background-color: @white;
+    border: 1px solid @black;
+}
+
+input[type="checkbox"] {
+
 }
 
 .counter {
@@ -165,6 +216,21 @@ a {
 .counter li:before {
     content: counter(item) " ";
     counter-increment: item;
+}
+
+button.close {
+    position: absolute;
+    right: @linePadding;
+    top: @linePadding;
+    
+    width: 15px;
+    height: 15px;
+
+    .hidden-content;
+}
+
+button[type="submit"] {
+    background-color: @blue;
 }
 
 
@@ -207,33 +273,19 @@ a {
     /* border: 0px solid #f00; */
 
     z-index: 1;
-    background: @darkGray;
+    
+    color: @grayishWhite;
 }
 
 #content ol {
-    list-style: none;
-    padding: 0px;
-    margin: 0px;
-    text-align: left;
-
-    background-color: @darkGray;
-    color: @grayishWhite;
-    
     border-top: 2px solid @beige;
 }
 
 #content li {
-    /* FIXME XXX -
-    4. add shadow below second header
-    5. move on to create game dialog
-    */
     padding: @linePadding @pagePadding;
     border-bottom: 2px solid @beige;
 }
 
-.loading {
-    color: @white;
-}
 /***********************************************************
 * TAB HEADER
 ************************************************************/
@@ -269,19 +321,6 @@ a {
     background-image: -o-linear-gradient(top, #fe96c9, #d51875 5%, #7b0a2e); */
 }
 
-h2 {
-    font-family: 'Eurostile', 'Verdana', serif;
-    /* Eurostile's vertical-align is too high */
-    font-size: @biggestFontSize;
-    text-transform: uppercase;
-    font-style: italic;
-   
-    /* Vertically aligns Eurostile */
-    @fontAdjust: @bigFontSize / 4;
-    padding-top: @fontAdjust; // padding so that font is pushed down
-    
-    .emboss-text;
-}
 
 #tab nav ul {
     line-height: @smallLineHeight;
@@ -310,7 +349,6 @@ h2 {
     bottom: 15px; 
     right: 15px;
     z-index: 5;
-
 }
 
 #tab footer a {
@@ -375,19 +413,73 @@ a.rankings {
 ************************************************************/
 #dialog-container {
     position: absolute;
-    width: 100%
     height: 100%;
     z-index: 10;
+
+    background-color: @darkGray;
+    
 }
 
 .dialog {
-    background: @black;
+    height: 100%;
     color: @white;
+    display: table;
+
+}
+
+.dialog-content {
+    height: 100%;
+    padding: @pagePadding;
+
+    text-align: center;
+}
+
+.list-with-headers {
+    width: 100%;
+    float: left;
+    border: 1px solid blue;
+}
+
+.list-with-headers header {
+    text-transform: uppercase;
+    margin-bottom: 0px;
+}
+
+.headed-list-item {
+    float: left;
+    clear: left;
+    width: 100%;
+    margin-bottom: @linePadding;
+    height: @smallLineHeight - @linePadding;
+}
+
+.headed-list-item input {
+    width: 100%;
+    height: 100%;
+}
+
+.dialog .column-0 {
+    float: left;
+    width: 75%;
+    text-align: left;
+}
+
+.dialog .column-1 {
+    float: left;
+    width: 20%;
+    margin-left: @linePadding;
+    text-align: left;
+}
+
+.button-wrapper {
+    position: absolute;
+    bottom: @pagePadding;
+    left: 0px;
+    width: 100%;
 }
 
 /* REQUIRED CLASS: autocomplete jquery UI plugin */
 .ui-autocomplete {
-    background: #cccccc;
     max-height: 100px;
     overflow-y: auto;
     /* prevent horizontal scrollbar */

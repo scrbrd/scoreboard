@@ -1,6 +1,6 @@
 """ Module: elements
 
-Provide generic HTML5 tag implementations as subclasses of python's 
+Provide generic HTML5 tag implementations as subclasses of python's
 cElementTree library to be wielded for rendering by Tornado's UIModule.
 
 Mobile, web, and native application views should extend these to create
@@ -35,13 +35,15 @@ All Element subclasses have access to and may override:
     def action(self)
     def set_action(self, url)
     def type(self)
-    def set_type(self, type) 
+    def set_type(self, type)
     def value(self)
     def set_value(self, value)
     def placeholder(self)
     def set_placeholder(self, value)
+    def is_autofocus(self)
+    def set_autofocus(self, autofocus=True)
     def is_checked(self)
-    def set_checked(self, checked)
+    def set_checked(self, checked=True)
     def children(self)
     def first_child(self)
     def last_child(self)
@@ -69,6 +71,11 @@ The following tags are implemented as Element subclasses:
     input
     button
     br
+    footer
+    table
+    tr
+    td
+    th
 
 The following tags are not implemented because they are hard-coded in
 the top-level templates, which are not dynamically generated:
@@ -77,7 +84,6 @@ the top-level templates, which are not dynamically generated:
     body
     meta
     link
-    footer
     script
     hgroup
 
@@ -102,8 +108,9 @@ The following non-global html5 attributes are currently implemented:
     value           input, button
     checked         input[type="checkbox"]
     placeholder     input
+    autofocus       input, button
 
-TODO: required, autofocus
+TODO: required, pattern
 
 Note: we don't actually check for type of input.
 
@@ -122,7 +129,7 @@ from constants import HTML_TAG, HTML_ATTRIBUTE, HTML_TYPE, HTML_CONSTANT
 
 class Element(object):
 
-    """ Abstract Element proxy-subclassing xml.etree.cElementTree.Element. 
+    """ Abstract Element proxy-subclassing xml.etree.cElementTree.Element.
 
     class xml.etree.cElementTree.Element(tag, attrib={}, **extra)
 
@@ -160,7 +167,7 @@ class Element(object):
     def items()
     def keys()
     def set(key, value)
-    
+
     def append(subelement)
     def extend(subelements)         <-- New
     def find(match)
@@ -176,7 +183,7 @@ class Element(object):
     def remove(subelement)
 
     Elements also support the following sequence type methods for
-    working with subelements: __delitem__(), __getitem__(), 
+    working with subelements: __delitem__(), __getitem__(),
     __setitem__(), __len__().
 
     Caution: Elements with no subelements will test as False. This
@@ -231,13 +238,13 @@ class Element(object):
 
 
     def _attribute(self, attribute):
-        """ Return this element's requested attribute's value. 
-            
+        """ Return this element's requested attribute's value.
+
         If the requested attribute doesn't exist on the element
         then it returns None.
 
         Note: Only Element should call this method.
-        
+
         """
         return self.element().get(attribute, None)
 
@@ -253,13 +260,13 @@ class Element(object):
 
 
     def _set_attribute(self, attribute, value):
-        """ Set an attribute with the value for this element. 
-        
+        """ Set an attribute with the value for this element.
+
         Raise InvalidAttributeError if the attribute is not allowed
         for this element or the value is None.
 
         Note: Only Element should call this method.
-        
+
         """
         if value is None:
             description = "Cannot set {0} to None.".format(attribute)
@@ -274,7 +281,7 @@ class Element(object):
             self.element().set(attribute, value)
         else:
             description = "{0} cannot have attribute {1}.".format(
-                    self.tag(), 
+                    self.tag(),
                     attribute)
             raise InvalidAttributeError([attribute, value], description)
 
@@ -333,8 +340,8 @@ class Element(object):
     def append_classes(self, additional_classes):
         # TODO is this method expecting a list?
         """ Add a list of classes to the current classes list for this i
-        element. 
-        
+        element.
+
         """
         classes = self.classes()
         classes.extend(additional_classes)
@@ -342,19 +349,19 @@ class Element(object):
 
 
     def data(self, data_key):
-        """ Return this element's data-KEY attribute. 
+        """ Return this element's data-KEY attribute.
 
         Optional:
         data_key         Key of requested data.
 
         """
-        key = "{0}{1}".format(HTML_ATTRIBUTE.DATA, data-key)
+        key = "{0}{1}".format(HTML_ATTRIBUTE.DATA, data_key)
         return self._attribute(key)
-   
+
 
     def dataset(self):
-        """ Return this element's data-* attributes. 
-        
+        """ Return this element's data-* attributes.
+
         Return:
         dict of {key: value}
 
@@ -380,8 +387,8 @@ class Element(object):
         """ Remove the data-KEY attribute for this element. """
         data_attribute = "{0}{1}".format(HTML_ATTRIBUTE.DATA, data_key)
         self._remove_attribute(data_attribute)
-    
-    
+
+
     def href(self):
         """ Return this element's href attribute. """
         return self._attribute(HTML_ATTRIBUTE.HREF)
@@ -398,8 +405,8 @@ class Element(object):
 
 
     def set_name(self, name):
-        """ Set the name attribute for this element. 
-        
+        """ Set the name attribute for this element.
+
         The name attribute's value cannot be "".
 
         """
@@ -409,7 +416,7 @@ class Element(object):
         else:
             self._set_attribute(HTML_ATTRIBUTE.NAME, name)
 
-    
+
     def action(self):
         """ Return this element's action attribute. """
         return self._attribute(HTML_ATTRIBUTE.ACTION)
@@ -419,25 +426,25 @@ class Element(object):
         """ Set the action attribute for this element. """
         self._set_attribute(HTML_ATTRIBUTE.ACTION, url)
 
-    
+
     def type(self):
         """ Return this element's type attribute. """
         return self._attribute(HTML_ATTRIBUTE.TYPE)
 
 
     def set_type(self, type):
-        """ Set the type attribute for this element. 
-        
+        """ Set the type attribute for this element.
+
         Check the type against the list of allowed type values.
 
         """
-        if type in HTML_CONSTANT.TYPES: 
+        if type in HTML_CONSTANT.TYPES:
             self._set_attribute(HTML_ATTRIBUTE.TYPE, type)
         else:
             description = "Type cannot be of value {0}.".format(type)
             raise InvalidAttributeError([type], description)
 
-    
+
     def value(self):
         """ Return this element's value attribute. """
         return self._attribute(HTML_ATTRIBUTE.VALUE)
@@ -446,8 +453,8 @@ class Element(object):
     def set_value(self, value):
         """ Set the value attribute for this element. """
         self._set_attribute(HTML_ATTRIBUTE.VALUE, value)
-    
-    
+
+
     def placeholder(self):
         """ Return this element's placeholder attribute. """
         return self._attribute(HTML_ATTRIBUTE.PLACEHOLDER)
@@ -456,15 +463,34 @@ class Element(object):
     def set_placeholder(self, value):
         """ Set the placeholder attribute for this element. """
         self._set_attribute(HTML_ATTRIBUTE.PLACEHOLDER, value)
-    
-    
-    def is_checked(self):
-        """ Return True if element is set to be checked. 
-        
-        Considered True if the element has value "checked"
+
+
+    def is_autofocus(self):
+        """ Return True if element is set to autofocus.
+
+        Considered True if the element has value "autofocus".
 
         """
-        return _boolean_attribute(HTML_ATTRIBUTE.CHECKED)
+        return self._boolean_attribute(HTML_ATTRIBUTE.AUTOFOCUS)
+
+
+    def set_autofocus(self, autofocus=True):
+        """ Set the boolean autofocus attribute for this element.
+
+        Optional:
+        bool    autofocus   if omitted then set as true.
+
+        """
+        self._set_boolean_attribute(HTML_ATTRIBUTE.AUTOFOCUS, autofocus)
+
+
+    def is_checked(self):
+        """ Return True if element is set to be checked.
+
+        Considered True if the element has value "checked".
+
+        """
+        return self._boolean_attribute(HTML_ATTRIBUTE.CHECKED)
 
 
     def set_checked(self, checked=True):
@@ -475,8 +501,8 @@ class Element(object):
 
         """
         self._set_boolean_attribute(HTML_ATTRIBUTE.CHECKED, checked)
-    
-    
+
+
     def children(self):
         """ Return a list of the immediate children for this element. """
         # TODO: elementTree suggests list(element) over element.getchildren(),
@@ -497,7 +523,7 @@ class Element(object):
 
 
     def append_child(self, element):
-        """ Append a child element to this element's direct children. 
+        """ Append a child element to this element's direct children.
 
         Required:
         Element     element     an instance of elements.Element
@@ -507,8 +533,8 @@ class Element(object):
 
 
     def append_children(self, elements):
-        """ Append child elements to this element's direct children. 
-        
+        """ Append child elements to this element's direct children.
+
         Required:
         list    element     a list of elements.Elements
 
@@ -522,7 +548,7 @@ class Element(object):
 #       """ Validate data being used to create a new HTML element. """
 #
 #       for tag in tags:
-#           
+#
 #           # is this a valid tag that has been implemented?
 #           if tag not in HTML_CONSTANT.TAGS:
 #               raise InvalidTagError(tag, "HTML tag not implemented.")
@@ -606,20 +632,20 @@ class List(Element):
 
 
     def set_list_item(self, item, index):
-        """ Construct and add a list item as a child of this list. 
-        
+        """ Construct and add a list item as a child of this list.
+
         Required:
         ??? item    undefined item that each subclass LI will interpret
         int index   index of item on the list
 
         """
-        return self.append_child(LI(item, index))
+        self.append_child(LI(item, index))
 
 
 class OL(List):
 
     """ Ordered List element <ol>.
-    
+
     Attribute   Value           Description
     ---------------------------------------
     reversed    reversed        Specifies that the list order should be
@@ -643,8 +669,7 @@ class OL(List):
 class UL(List):
 
     """ Unordered List element <ul>. """
-    
- 
+
     def __init__(self, items):
         """ Construct a <ul>. """
         super(UL, self).__init__(HTML_TAG.UL, items)
@@ -653,7 +678,7 @@ class UL(List):
 class LI(Element):
 
     """ List Item element <li>.
-    
+
     Attribute   Value           Description
     ---------------------------------------
     value       number          Specifies the value of a list item. The
@@ -661,7 +686,8 @@ class LI(Element):
                                 that number (only for <ol> lists)
 
     Required:
-    int     _index              index of this list item. 
+    int     _index              index of this list item.
+
     """
 
     _index = -1
@@ -820,11 +846,123 @@ class Section(Element):
 
 class BR(Element):
 
-    """ Section element <br>. """
+    """ Break element <br>. """
 
     def __init__(self):
         """ Construct a <br>. """
         super(BR, self).__init__(HTML_TAG.BR)
+
+
+class Table(Element):
+
+    """ Table element <table>. """
+
+    def __init__(self, rows_list, header_items=None):
+        """ Construct a <table>.
+
+        Required:
+        list rows_list    list of lists - each list has td items.
+
+        Optional:
+        list header_items   list of th items
+
+        """
+        super(Table, self).__init__(HTML_TAG.TABLE)
+        if header_items is not None:
+            self.set_header(header_items)
+        self.set_rows(rows_list)
+
+
+    def set_header(self, header_items):
+        """ Add header row with a th for each item. """
+        self.append_child(HeaderTR(header_items))
+
+
+    def set_rows(self, rows_list):
+        """ Add rows to table with tr element. """
+        for items in rows_list:
+            self.set_row(items)
+
+
+    def set_row(self, items):
+        """ Add individual row with tr element.
+
+        Subclass and override to change functionality.
+
+        """
+        self.append_child(TR(items))
+
+
+class TR(Element):
+
+    """ Table Row element <tr> with <td>. """
+
+    def __init__(self, items):
+        """ Construct a <tr>. """
+        super(TR, self).__init__(HTML_TAG.TR)
+        self.set_row(items)
+
+
+    def set_row(self, items):
+        """ Add items to row with td elements.
+
+        Subclass and ovveride to use different TD.
+
+        """
+        for item in items:
+            self.append_child(TD(item))
+
+
+class HeaderTR(TR):
+
+    """ Header Table Row element <tr> with <th>. """
+
+    def set_row(self, items):
+        """ Subclass TR set_row. Add items to th elements. """
+        for item in items:
+            self.append_child(TH(item))
+
+
+
+class TRElement(Element):
+
+    """ Superclass of TD and TH for common functionality. """
+
+    def __init__(self, tag, item):
+        """ Construct either a td or th element with an item. """
+        super(TRElement, self).__init__(tag)
+        self.set_item(item)
+
+
+    def set_item(self, item):
+        """ Add an element or a string to this Element. """
+        # TODO move this to Item class that wraps text node.
+        # TODO LI can also have this functionality.
+        if isinstance(item, Element):
+            self.append_child(item)
+        elif isinstance(item, str):
+            self.set_text(item)
+        else:
+            error_msg = "TH.__init__: Item isn't an Element or string."
+            raise InvalidTagError(item, error_msg)
+
+
+class TD(TRElement):
+
+    """ Section element <td>. """
+
+    def __init__(self, item):
+        """ Construct a <td>. """
+        super(TD, self).__init__(HTML_TAG.TD, item)
+
+
+class TH(TRElement):
+
+    """ Section element <th>. """
+
+    def __init__(self, item):
+        """ Construct a <th>. """
+        super(TH, self).__init__(HTML_TAG.TH, item)
 
 
 class Form(Element):
@@ -832,8 +970,8 @@ class Form(Element):
     """ Form element <form>. """
 
     def __init__(self, name, xsrf_token, action_url=None):
-        """ Construct a <form>. 
-        
+        """ Construct a <form>.
+
         Required:
         str     name            unique identifying name of form
         str     xsrf_token      xsrf token to prevent forgery
@@ -841,7 +979,7 @@ class Form(Element):
         Optional:
         str     action_url      Form submits to this url. Can also
                                 be identified in the submit button.
-        
+
         """
         super(Form, self).__init__(HTML_TAG.FORM)
         self.set_name(name)
@@ -857,8 +995,8 @@ class Input(Element):
     """ Input element <input>. """
 
     def __init__(self, type, name, value=""):
-        """ Construct a <input>. 
-        
+        """ Construct a <input>.
+
         Required:
         str     type            type of input element
         str     name            unique name to be submitted with form
@@ -878,22 +1016,23 @@ class HiddenInput(Input):
     """ Input element of Hidden type <input type="hidden">. """
 
     def __init__(self, name, value=""):
-        """ Construct a <input type="hidden"> 
-        
+        """ Construct a <input type="hidden">
+
         Required:
         str     name            unique name to be submitted with form
 
         Optional:
         str     value           value to be submitted with form
-        
+
         """
         super(HiddenInput, self).__init__(HTML_TYPE.HIDDEN, name, value)
 
 
 class XSRFHiddenInput(HiddenInput):
 
-    """ Special Input element of Hidden type that contains the xsrf token: 
+    """ Special Input element of Hidden type that contains the xsrf token:
     <input type="hidden" name="_xsrf" value=TOKEN />
+
     """
 
     xsrf_key = "_xsrf"
@@ -950,11 +1089,11 @@ class Button(Element):
     """ Button element <button>. """
 
     def __init__(self, type=None):
-        """ Construct a <button>. 
+        """ Construct a <button>.
 
         Optional:
         str     type    the button's type
-        
+
         Button's type can be "submit", "reset", or no value.
         TODO implement "reset"
 
@@ -989,19 +1128,20 @@ class SubmitButton(Button):
 class ElementError(Exception):
 
     """ ElementError is a subclass of Exception.
-    
+
     Provide an exception superclass from which all Element errors
     should inherit.
 
     Required:
     str     reason      what went wrong?
-    
+
     """
 
     def __init__(self, parameters, description):
         """ Construct a generic, not quite abstract ElementError. """
         self.expr = ", ".join([str(p) for p in parameters])
         self.msg = description
+
 
 class InvalidTagError(ElementError):
 
@@ -1065,4 +1205,3 @@ class InvalidAttributeError(ElementError):
         super(InvalidAttributeError, self).__init__(
                 parameters,
                 description)
-

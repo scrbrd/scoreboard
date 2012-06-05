@@ -39,6 +39,41 @@ class _AppClass(object):
         """ INACTIVE_NAV is a HTML/js class. """
         return "inactive-nav"
 
+    @constant
+    def DIALOG_CONTENT(self):
+        """ DIALOG_CONTENT is a HTML/js class. """
+        return "dialog-content"
+
+    @constant
+    def COLUMN_0(self):
+        """ COLUMN_0 is a HTML/js class. """
+        return "column-0"
+
+    @constant
+    def COLUMN_1(self):
+        """ COLUMN_1 is a HTML/js class. """
+        return "column-1"
+
+    @constant
+    def COLUMN_2(self):
+        """ COLUMN_2 is a HTML/js class. """
+        return "column-2"
+
+    @constant
+    def LIST_WITH_HEADERS(self):
+        """ LIST_WITH_HEADER is a HTML/js class. """
+        return "list-with-headers"
+
+    @constant
+    def HEADED_LIST_ITEM(self):
+        """ HEADED_LIST_ITEM is a HTML/js class. """
+        return "headed-list-item"
+
+    @constant
+    def BUTTON_WRAPPER(self):
+        """ BUTTON_WRAPPER is a HTML/js class. """
+        return "button-wrapper"
+
 
 class _AppID(object):
 

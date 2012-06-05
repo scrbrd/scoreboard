@@ -96,6 +96,30 @@ class _HTMLTag(object):
 
 
     @constant
+    def TABLE(self):
+        """ TABLE is a type of HTML tag. """
+        return "table"
+
+
+    @constant
+    def TR(self):
+        """ TR is a type of HTML tag. """
+        return "tr"
+
+
+    @constant
+    def TD(self):
+        """ TD is a type of HTML tag. """
+        return "td"
+
+
+    @constant
+    def TH(self):
+        """ TH is a type of HTML tag. """
+        return "th"
+
+
+    @constant
     def FORM(self):
         """ FORM is a type of HTML tag. """
         return "form"
@@ -169,7 +193,7 @@ class _HTMLAttribute(object):
 
     @constant
     def DATA(self):
-        """ DATA is a type of HTML attribute. In fact it's the special 
+        """ DATA is a type of HTML attribute. In fact it's the special
         data-* one. """
         return "data-"
 
@@ -178,6 +202,12 @@ class _HTMLAttribute(object):
     def PLACEHOLDER(self):
         """ PLACEHOLDER is a type of HTML attribute. """
         return "placeholder"
+
+
+    @constant
+    def AUTOFOCUS(self):
+        """ AUTOFOCUSis a type of HTML attribute. """
+        return "autofocus"
 
 
 class _HTMLType(object):
@@ -221,31 +251,37 @@ class _HTMLConstant(object):
     def TAGS(self):
         """ TAGS is a list of implemented tags. """
         return [
-                HTML_TAG.DIV,
-                HTML_TAG.SPAN,
-                HTML_TAG.OL,
-                HTML_TAG.UL,
-                HTML_TAG.LI,
-                HTML_TAG.NAV,
-                HTML_TAG.A,
-                HTML_TAG.H1,
-                HTML_TAG.H2,
-                HTML_TAG.HEADER,
-                HTML_TAG.SECTION,
-                HTML_TAG.FORM,
-                HTML_TAG.INPUT,
-                HTML_TAG.BUTTON,
-                ]
+            HTML_TAG.DIV,
+            HTML_TAG.SPAN,
+            HTML_TAG.OL,
+            HTML_TAG.UL,
+            HTML_TAG.LI,
+            HTML_TAG.NAV,
+            HTML_TAG.A,
+            HTML_TAG.H1,
+            HTML_TAG.H2,
+            HTML_TAG.HEADER,
+            HTML_TAG.SECTION,
+            HTML_TAG.FORM,
+            HTML_TAG.INPUT,
+            HTML_TAG.BUTTON,
+            HTML_TAG.BR,
+            HTML_TAG.FOOTER,
+            HTML_TAG.TABLE,
+            HTML_TAG.TR,
+            HTML_TAG.TD,
+            HTML_TAG.TH
+        ]
 
 
     @constant
     def GLOBAL_ATTRIBUTES(self):
         """ GLOBAL_ATTRIBUTES is a list of allowed attributes. """
         return [
-                HTML_ATTRIBUTE.CLASS,
-                HTML_ATTRIBUTE.ID,
-                HTML_ATTRIBUTE.DATA,
-                ]
+            HTML_ATTRIBUTE.CLASS,
+            HTML_ATTRIBUTE.ID,
+            HTML_ATTRIBUTE.DATA,
+        ]
 
 
     @constant
@@ -271,14 +307,15 @@ class _HTMLConstant(object):
         attributes[HTML_TAG.INPUT].append(HTML_ATTRIBUTE.VALUE)
         attributes[HTML_TAG.INPUT].append(HTML_ATTRIBUTE.PLACEHOLDER)
         attributes[HTML_TAG.INPUT].append(HTML_ATTRIBUTE.CHECKED)
-        
+        attributes[HTML_TAG.INPUT].append(HTML_ATTRIBUTE.AUTOFOCUS)
+
         # button tags can also have these attributes:
         attributes[HTML_TAG.BUTTON].append(HTML_ATTRIBUTE.NAME)
         attributes[HTML_TAG.BUTTON].append(HTML_ATTRIBUTE.ACTION)
         attributes[HTML_TAG.BUTTON].append(HTML_ATTRIBUTE.TYPE)
         attributes[HTML_TAG.BUTTON].append(HTML_ATTRIBUTE.VALUE)
-        
-        
+        attributes[HTML_TAG.BUTTON].append(HTML_ATTRIBUTE.AUTOFOCUS)
+
         return attributes
 
 
@@ -286,12 +323,12 @@ class _HTMLConstant(object):
     def TYPES(self):
         """ TYPES is a list of allowed types. """
         return [
-                HTML_TYPE.TEXT,
-                HTML_TYPE.CHECKBOX,
-                HTML_TYPE.SUBMIT,
-                HTML_TYPE.HIDDEN,
-                ]
-    
+            HTML_TYPE.TEXT,
+            HTML_TYPE.CHECKBOX,
+            HTML_TYPE.SUBMIT,
+            HTML_TYPE.HIDDEN,
+        ]
+
 
     @constant
     def CLASSES(self):
@@ -309,4 +346,3 @@ class _HTMLConstant(object):
 
 
 HTML_CONSTANT = _HTMLConstant()
-

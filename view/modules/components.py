@@ -247,4 +247,5 @@ class UICreateGameDialog(tornado.web.UIModule):
 
         header_str = Element.to_string(header_tree)
         form_str = Element.to_string(form_tree)
-        return header_str + form_str
+        dialog_str = header_str + form_str
+        return dialog_str
