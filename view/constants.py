@@ -15,9 +15,14 @@ class _AppClass(object):
     """ _AppClass holds all function HTML/js classes. """
 
     @constant
-    def CLOSE(self):
-        """ CLOSE is a HTML/js class. """
-        return "close"
+    def CLOSE_BUTTON(self):
+        """ CLOSE_BUTTON is a HTML/js class. """
+        return "close-button"
+
+    @constant
+    def SUBMIT_BUTTON(self):
+        """ SUBMIT_BUTTON is a HTML/js class. """
+        return "submit-button"
 
     @constant
     def PLAYER_SELECT(self):
@@ -25,9 +30,9 @@ class _AppClass(object):
         return "player-select"
 
     @constant
-    def DIALOG_LINK(self):
-        """ DIALOG_LINK is a HTML/js class. """
-        return "dialog-link"
+    def JS_LINK(self):
+        """ JS_LINK is a HTML/js class. """
+        return "js-link"
 
     @constant
     def ROUTE_BYPASS(self):
@@ -70,9 +75,34 @@ class _AppClass(object):
         return "headed-list-item"
 
     @constant
-    def BUTTON_WRAPPER(self):
-        """ BUTTON_WRAPPER is a HTML/js class. """
-        return "button-wrapper"
+    def SUBMIT_BUTTON_WRAPPER(self):
+        """ SUBMIT_BUTTON_WRAPPER is a HTML/js class. """
+        return "submit-button-wrapper"
+
+    @constant
+    def ADD_BUTTON(self):
+        """ ADD_BUTTON is an HTML class. """
+        return "add-button"
+
+    @constant
+    def MAIN_HEADER(self):
+        """ MAIN_HEADER is a HTML/css class. """
+        return "main-header"
+
+    @constant
+    def SECOND_HEADER(self):
+        """ SECOND_HEADER is a HTML/css class. """
+        return "second-header"
+
+    @constant
+    def AUTOCOMPLETE_LABEL(self):
+        """ AUTOCOMPLETE_LABEL is a HTML/css class. """
+        return "autocomplete-label"
+
+    @constant
+    def AUTOCOMPLETE_VALUE(self):
+        """ AUTOCOMPLETE_VALUE is a HTML/css class. """
+        return "autocomplete-value"
 
 
 class _AppID(object):
@@ -89,30 +119,10 @@ class _AppID(object):
         """ CONTENT is the element that stores content data. """
         return "content"
 
-    @constant
-    def ADD_BUTTON(self):
-        """ ADD_BUTTON is the elment that leads to adding content. """
-        return "add-button"
-
 
 class _DesignClass(object):
 
     """ _DesignClass to hold all design oriented HTML/css classes. """
-
-    @constant
-    def HEADER_SECTION(self):
-        """ HEADER_SECTION is a HTML/css class. """
-        return "header-section"
-
-    @constant
-    def MAIN_HEADER(self):
-        """ MAIN_HEADER is a HTML/css class. """
-        return "main-header"
-
-    @constant
-    def SECOND_HEADER(self):
-        """ SECOND_HEADER is a HTML/css class. """
-        return "second-header"
 
     @constant
     def ACTIVE_NAV(self):

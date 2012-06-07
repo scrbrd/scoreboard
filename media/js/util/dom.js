@@ -57,23 +57,37 @@ define(
             Set the player input boxes to autocomplete.
 
             Parameters:
+                elem - ($) a jQuery div element 
                 rivals - (list) List of objects representing rivals
                         with the keys "id", "name".
-                form - (string) Identifier of which form to act on.
-                inputClass - (string) Class of input fields to act on.
         */
-        autocompletePlayer: function(rivals, form, inputClass) {
+        autocomplete: function(elem, rivals) {
             // remap rivals and sort by name/label
-            selectData = $.map(rivals, remapRival);
+            var selectData = $.map(rivals, remapRival);
             selectData.sort(sortByLabel);
+
+            var labelInput = $(elem).children(Const.CLASS.AUTOCOMPLETE_LABEL);
+            var valueInput = $(elem).children(Const.CLASS.AUTOCOMPLETE_VALUE);
             
-            playerSelection = form + ' ' + inputClass;
-            $(playerSelection).autocomplete({
+            labelInput.autocomplete({
                 autoFocus: true, // autofocus on first value
                 delay: 0, // immediately
                 source: selectData, // autocomplete on this data
+                minLength: 1, // start autocomplete on third character
+                appendTo: elem, // append dropdown to input element
+                // pushes selection to hidden helper element and shows label
+                select: function (event, ui) {
+                    var selectedPlayer = ui.item;
+                    labelInput.val(selectedPlayer.label);
+                    valueInput.val(selectedPlayer.value);
+                    return false;
+                },
+                // makes changes to display box when opened
+                open: function (event, ui) {
+                    var a = $(elem).children(".ui-autocomplete").css("width", "");
+                    return false;
+                },
             });
-            // TODO: add other fields, css, grab select and focus
         },
     };
 });

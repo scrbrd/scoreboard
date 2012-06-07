@@ -54,11 +54,14 @@ define(
         */
         // TODO: make this link sink with Python HTML_CLASS constants
         CLASS: {
-            /** @const */ DIALOG_LINK:          ".dialog-link",
-            /** @const */ CLOSE:                ".close",
+            /** @const */ JS_LINK:              ".js-link",
+            /** @const */ CLOSE_BUTTON:         ".close-button",
             /** @const */ PLAYER_SELECT:        ".player-select",
             /** @const */ ACTIVE_NAV:           ".active-nav",
             /** @const */ INACTIVE_NAV:         ".inactive-nav",
+            /** @const */ AUTOCOMPLETE_LABEL:   ".autocomplete-label",
+            /** @const */ AUTOCOMPLETE_VALUE:   ".autocomplete-value",
+            /** @const */ LIST_WITH_HEADERS:    ".list-with-headers",
         },
 
         /**

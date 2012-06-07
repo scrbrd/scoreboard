@@ -338,7 +338,6 @@ class Element(object):
 
 
     def append_classes(self, additional_classes):
-        # TODO is this method expecting a list?
         """ Add a list of classes to the current classes list for this i
         element.
 

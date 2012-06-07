@@ -103,7 +103,7 @@ define(
             Add all event handlers.
 
             Events:
-                click .dialog-link --> showDialog
+                click JS_LINK --> showDialog
             
             Note: Keep _events notation to allow event keys to be 
             variables.
@@ -111,8 +111,8 @@ define(
         events: function () {
             var _events = {};
 
-            _events["touchstart " + Const.CLASS.DIALOG_LINK] = "showDialog";
-            _events["click " + Const.CLASS.DIALOG_LINK] = "showDialog";
+            _events["touchstart " + Const.CLASS.JS_LINK] = "showDialog";
+            _events["click " + Const.CLASS.JS_LINK] = "showDialog";
             return _events;
         },
 

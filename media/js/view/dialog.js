@@ -43,7 +43,7 @@ define(
             Options:
                 html - (string) HTML to add to the dialog element.
                 height - (int) Dialog element's height.
-                context_id - (int) Api id of the context of the dialog.
+                    context_id - (int) Api id of the context of the dialog.
                 rivals - (json) List of objects representing rivals. 
                             These objects have keys "id", "name".
 
@@ -73,9 +73,10 @@ define(
         events: function () {
             var _events = {};
             var submitForm = Const.NAME.CREATE_GAME;
-            var closeButton = Const.DOM.BUTTON + Const.CLASS.CLOSE;
+            var closeButton = Const.CLASS.CLOSE_BUTTON;
             
             _events["submit " + submitForm] = "submit";
+            _events["touchstart " + closeButton] = "hide"; 
             _events["click " + closeButton] = "hide";
             return _events;
         },
@@ -99,11 +100,12 @@ define(
             // TODO: add additional row functionality
             // diabled row, gets enabled, add new row
 
-            // set up autocomplete for player selection
-            DomUtil.autocompletePlayer(
-                    rivals,
-                    Const.NAME.CREATE_GAME,
-                    Const.CLASS.PLAYER_SELECT);
+            // set up autocomplete for each player selection
+            $(Const.NAME.CREATE_GAME + ' ' + Const.CLASS.PLAYER_SELECT)
+                .each(function (index, elem) {
+                    DomUtil.autocomplete(elem, rivals);
+                });
+    
         },
         
                     
@@ -130,6 +132,8 @@ define(
         */
         hide: function () {
             var form = this.form;
+            // FIXME make this blurring work and clear the autocomplete.
+            $('input:focus').blur(); // blurring the focus should hide keyboard
             this.$el.slideUp('fast', function() {
                 // TODO: make this nicer...
                 form[0].reset();
@@ -144,12 +148,16 @@ define(
         */
         render: function (leagueID, rivals, path) {
             this.setupForm(leagueID, rivals);
-            this.$el.slideDown('fast');
+            this.$el.slideDown('fast', function () {
+                //var a = this.$('.ui-autocomplete-input').first();
+                //a.focus();
+            });
 
             this.trigger(
                     Const.EVENT.DISPLAYED_DIALOG, 
                     Const.PAGE_NAME.CREATE_GAME, 
                     path);
+            return false;
         },
 
 

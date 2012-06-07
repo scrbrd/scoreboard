@@ -25,11 +25,13 @@ import tornado.web
 
 from view.app_copy import Copy
 from view.constants import PAGE_NAME, DESIGN_CLASS, APP_CLASS
-from html.elements import Element
-from html.mobile import AppHeader, ContextHeader, AppFooter
-from html.mobile import NavHeader, GamesOL, RankingsOL
-from html.mobile import DialogHeader, CreateGameForm
-from html.mobile import PageSection
+from view.html.elements import Element
+from view.html.tab.framework import AppHeader, AppFooter, NavHeader
+from view.html.tab.framework import ContextHeader
+from view.html.tab.games import GamesTabSection
+from view.html.tab.rankings import RankingsTabSection
+from view.html.dialog.framework import DialogHeader
+from view.html.dialog.create_game import CreateGameForm
 
 
 class UIAppHeader(tornado.web.UIModule):
@@ -88,6 +90,7 @@ class UIContextHeader(tornado.web.UIModule):
 
         except AttributeError as e:
             #logger.debug(e.reason)
+            raise e;
             element_tree = None
 
         return Element.to_string(element_tree)
@@ -177,10 +180,7 @@ class UIGamesList(tornado.web.UIModule):
 
         try:
             games = model.games
-
-            section = PageSection(PAGE_NAME.GAMES)
-            section.append_child(GamesOL(games))
-            element_tree = section.element()
+            element_tree = GamesTabSection(games).element()
 
         except AttributeError as e:
             #logger.debug(e.reason)
@@ -202,10 +202,7 @@ class UIRankingsList(tornado.web.UIModule):
 
         try:
             rankings = model.rankings
-
-            section = PageSection(PAGE_NAME.RANKINGS)
-            section.append_child(RankingsOL(rankings))
-            element_tree = section.element()
+            element_tree = RankingsTabSection(rankings).element()
 
         except AttributeError as e:
             #logger.debug(e.reason)

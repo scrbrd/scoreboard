@@ -71,8 +71,8 @@ define(
                 // when already scrolled down. The pageYOffset is of no use, since it always
                 // returns 0 while the address bar is displayed.
                 window.onscroll = function() {
-                    page.style.height = window.innerHeight + 'px'
-                } 
+                    page.style.height = window.innerHeight + 'px';
+                };
             }
             var setupScroll = window.onload = function() {
                 // Start out by adding the height of the location bar to the width, so that
@@ -84,30 +84,35 @@ define(
                     var height = document.documentElement.clientHeight;
                     // Only add extra padding to the height on iphone / ipod, since the ipad
                     // browser doesn't scroll off the location bar.
-                    if (iphone && !fullscreen) height += 60;
+                    if (iphone && !fullscreen) {
+                        height += 60;
+                    }
                     page.style.height = height + 'px';
                 } else if (android) {
                     // The stock Android browser has a location bar height of 56 pixels, but
                     // this very likely could be broken in other Android browsers.
-                    page.style.height = (window.innerHeight + 56) + 'px'
+                    page.style.height = (window.innerHeight + 56) + 'px';
                 }
                 // Scroll after a timeout, since iOS will scroll to the top of the page
                 // after it fires the onload event
                 setTimeout(scrollTo, 0, 0, 1);
 
-                // rehide address bar on touch
-                document.addEventListener(
-                        'touchstart',
-                        function(e) {
-                            scrollTo(0,1);
-                        });
+                // rehide address bar on touch (UNNECESSARY, plus it makes
+                // certain selection quirky)
+                //document.addEventListener(
+                //        'touchstart',
+                //        function(e) {
+                //            scrollTo(0,1);
+                //        });
 
             };
             (window.onresize = function() {
             var pageWidth = page.offsetWidth;
             // Android doesn't support orientation change, so check for when the width
             // changes to figure out when the orientation changes
-            if (lastWidth == pageWidth) return;
+            if (lastWidth === pageWidth) {
+                return;
+            }
             lastWidth = pageWidth;
             setupScroll();
             })();
