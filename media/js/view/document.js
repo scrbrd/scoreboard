@@ -80,11 +80,6 @@ define(
                         DialogController,
                         dialogHTML);
             });
-
-            // FIXME XXX remove this - it's only for debugging.
-            setTimeout(function () {
-                thisDocView.showDialog(); 
-            }, 300);
         },
         
         setTabView: function () {

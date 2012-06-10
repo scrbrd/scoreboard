@@ -85,6 +85,21 @@ class _AppClass(object):
         return "add-button"
 
     @constant
+    def LOGIN_BUTTON(self):
+        """ LOGIN_BUTTON is an HTML class. """
+        return "login-button"
+
+    @constant
+    def LOGIN_BUTTON_WRAPPER(self):
+        """ LOGIN_BUTTON_WRAPPER is an HTML class. """
+        return "login-button-wrapper"
+
+    @constant
+    def FACEBOOK_LOGIN_BUTTON(self):
+        """ FACEBOOK_LOGIN_BUTTON is an HTML class. """
+        return "facebook-login-button"
+
+    @constant
     def MAIN_HEADER(self):
         """ MAIN_HEADER is a HTML/css class. """
         return "main-header"

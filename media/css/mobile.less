@@ -32,6 +32,9 @@
 /***********************************************************
 * SIZE DEFINITIONS
 ************************************************************/
+@screenWidth: 320px;
+@screenHeight: 480px;
+
 @innerWidth: 319px; // Width of iPhone screen inside border.
 @outerWidth: 324px; // Width of iPhone screen.
 
@@ -131,9 +134,20 @@ the same border. */
     color: transparent; 
 }
 
+/* Header section needs to cut off long text. */
 .header-section {
     overflow-y: hidden;
 }
+
+/* Use a background-image in a consistent way. */
+.background-image-wrapper (@width, @height, @imageSource, @backgroundColor) {
+    width: @width;
+    height: @height;
+    -webkit-background-size: @width @height;
+    background: url('/static/images/@{imageSource}') @backgroundColor;
+}
+
+
 /***********************************************************
 * IMPORTS
 ************************************************************/
@@ -180,6 +194,8 @@ header {
 
 
 h2 {
+    .emboss-text;
+    
     font-family: 'Eurostile', 'Verdana', serif;
     /* Eurostile's vertical-align is too high */
     font-size: @biggestFontSize;
@@ -190,22 +206,27 @@ h2 {
     @fontAdjust: @bigFontSize / 4;
     padding-top: @fontAdjust; // padding so that font is pushed down
     
-    .emboss-text;
 }
 
-a {
+a, a:link, a:visited {
     text-decoration: none;
+    color: @blue;
+}
+
+a:hover {
+    color: @darkBlue;
+}
+
+a:active {
+    opacity: 0.8;
 }
 
 
 input, button {
     .border-radius(0px);
+   
     background-color: @white;
     border: 1px solid @black;
-}
-
-input[type="checkbox"] {
-
 }
 
 .counter {
@@ -232,41 +253,53 @@ input[type="checkbox"] {
 }
 
 .add-button {
-    .hidden-content;
-    
-    display: block;
-
     @addButtonSide: 44px;
-    width: @addButtonSide;
-    height: @addButtonSide;
-    -webkit-background-size: @addButtonSide @addButtonSide;
-    background: url('/static/images/addButton.png') transparent;
+    
+    .hidden-content;
+    .background-image-wrapper(
+            @addButtonSide,
+            @addButtonSide,
+            'addButton.png',
+            transparent);
+
+    display: block;
+}
+
+.login-button {
+    .hidden-content;
+
+    display: inline-block;
+}
+
+.facebook-login-button {
+    .background-image-wrapper(
+            158px,
+            39px,
+            'facebookLoginButton.png',
+            transparent);
 }
 
 .main-header {
     .header-section;
+    .background-image-wrapper(
+            @innerWidth,
+            @bigLineHeight,
+            'mainHeaderRibbon.jpg',
+            @blue);
 
     line-height: @bigLineHeight;
     height: @bigLineHeight;
     vertical-align: middle;
     
-    width: @innerWidth;
-    height: @bigLineHeight;
-    -webkit-background-size: @innerWidth @bigLineHeight;
-    background: url('/static/images/mainHeaderRibbon.jpg') @blue;
-    
     color: @bluishWhite;
-
-    /* background-color: #d51875;
-    background-image: -webkit-gradient(linear, 0 0, 0 100%, color-stop(0, #fe96c9), color-stop(0.05, #d51875), color-stop(1, #7b0a2e));
-    background-image: -moz-linear-gradient(top, #fe96c9, #d51875 5%, #7b0a2e);
-    background-image: -o-linear-gradient(top, #fe96c9, #d51875 5%, #7b0a2e); */
 }
 
 /***********************************************************
 * ISCROLL
 ************************************************************/
 #iscroll-wrapper {
+    .page-border;
+    
     position: absolute; 
     width: 100%;
     top: @headerHeight; 
@@ -275,7 +308,6 @@ input[type="checkbox"] {
     z-index: 3;
     overflow: auto;
 
-    .page-border;
     border-bottom: 2px solid @black;
 }
 
@@ -369,13 +401,14 @@ input[type="checkbox"] {
 @navButtonWidth: 160px;
 @navButtonHeight: 35px;
 
-.navButton {
+.navButton (@imageSource, @backgroundColor) {
     .hidden-content;
+    .background-image-wrapper(
+            @navButtonWidth,
+            @navButtonHeight,
+            @imageSource,
+            @backgroundColor);
     display: block;
-
-    width: @navButtonWidth;
-    height: @navButtonHeight;
-    -webkit-background-size: @navButtonWidth @navButtonHeight;
 }
 
 
@@ -383,13 +416,11 @@ input[type="checkbox"] {
 * GAMES TAB SECTION
 ************************************************************/
 a.games.active-nav {
-    .navButton;
-    background: url('/static/images/gamesPressed.jpg') @orange;
+    .navButton('gamesPressed.jpg', @orange);
 }
 
 a.games {
-    .navButton;
-    background: url('/static/images/gamesUnpressed.jpg') @orange;
+    .navButton('gamesUnpressed.jpg', @orange);
 }
 
 
@@ -397,13 +428,11 @@ a.games {
 * RANKINGS TAB SECTION
 ************************************************************/
 a.rankings.active-nav {
-    .navButton;
-    background: url('/static/images/rankingsPressed.jpg') @orange;
+    .navButton('rankingsPressed.jpg', @orange);
 }
 
 a.rankings {
-    .navButton;
-    background: url('/static/images/rankingsUnpressed.jpg') @orange;
+    .navButton('rankingsUnpressed.jpg', @orange);
 }
 
 
@@ -485,6 +514,32 @@ a.rankings {
     width: 20%;
     margin-left: @linePadding;
     text-align: left;
+}
+
+
+/***********************************************************
+* GENERIC PAGE
+************************************************************/
+.login-button-wrapper {
+    position: absolute;
+    left: 0px;
+    top: 220px;
+    width: 100%;
+}
+
+
+/***********************************************************
+* LANDING PAGE
+************************************************************/
+#landing {
+    .background-image-wrapper(
+           @screenWidth,
+           @screenHeight,
+           'splash.jpg',
+           @black);
+
+    position: absolute;
+    text-align: center;
 }
 
 

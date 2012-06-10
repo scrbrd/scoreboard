@@ -32,6 +32,7 @@ from view.html.tab.games import GamesTabSection
 from view.html.tab.rankings import RankingsTabSection
 from view.html.dialog.framework import DialogHeader
 from view.html.dialog.create_game import CreateGameForm
+from view.html.page.landing import LandingPage
 
 
 class UIAppHeader(tornado.web.UIModule):
@@ -246,3 +247,29 @@ class UICreateGameDialog(tornado.web.UIModule):
         form_str = Element.to_string(form_tree)
         dialog_str = header_str + form_str
         return dialog_str
+
+
+class UILandingPage(tornado.web.UIModule):
+
+    """ Splash Page UI Module. """
+
+    def render(self, model=None, state=None):
+        """ Render a Splash Page. """
+
+        splash_tree = None
+
+        login_link = {
+            "text": "Login",
+            "href": "/login",
+        }
+
+        try:
+
+            splash_tree = LandingPage(login_link).element()
+
+        except AttributeError as e:
+            #logger.debug(e.reason)
+            raise e
+            splash_tree = None
+
+        return Element.to_string(splash_tree)

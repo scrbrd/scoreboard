@@ -22,6 +22,30 @@ class AddButton(A):
         self.set_classes([APP_CLASS.ADD_BUTTON, APP_CLASS.JS_LINK])
 
 
+class LoginButton(A):
+
+    """ Login Button anchor that extends <a>. """
+
+    def __init__(self, login_link):
+        """ Construct a login button anchor tag. """
+        super(LoginButton, self).__init__(login_link)
+
+        self.set_text(Copy.login)
+        self.append_classes([APP_CLASS.LOGIN_BUTTON])
+
+
+class FacebookLoginButton(LoginButton):
+
+    """ Facebook Login Button anchor that extends LoginButton. """
+
+    def __init__(self, login_link):
+        """ Construct a facebook login button anchor tag. """
+        super(FacebookLoginButton, self).__init__(login_link)
+
+        self.set_text(Copy.facebook_login)
+        self.append_classes([APP_CLASS.FACEBOOK_LOGIN_BUTTON])
+
+
 class DefaultCloseButton(Button):
 
     """ Default Close Button button that extends <button>. """

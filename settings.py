@@ -10,7 +10,7 @@ import logconfig
 from view.modules.components import UIAppHeader, UIContextHeader, UINavHeader
 from view.modules.components import UIGamesNav, UIRankingsNav, UIAppFooter
 from view.modules.components import UIGamesList, UIRankingsList
-from view.modules.components import UICreateGameDialog
+from view.modules.components import UICreateGameDialog, UILandingPage
 
 # Application constants
 # LEAGUE = 693  # The Banana Stand
@@ -69,7 +69,8 @@ settings['ui_modules'] = {
     'UIAppFooter': UIAppFooter,
     'UIRankingsList': UIRankingsList,
     'UIGamesList': UIGamesList,
-    'UICreateGameDialog': UICreateGameDialog
+    'UICreateGameDialog': UICreateGameDialog,
+    'UILandingPage': UILandingPage,
 }
 
 settings['league_id'] = LEAGUE

@@ -5,17 +5,17 @@ from handlers.base import BaseHandler
 logger = logging.getLogger('boilerplate.' + __name__)
 
 
-class SplashHandler(BaseHandler):
+class LandingHandler(BaseHandler):
 
-    """ Handle rendering the Splash page. """
+    """ Handle rendering the Landing page. """
 
     # NOT tornado.web.authenticated because anybody can see Splash.
     def get(self):
-        """ Handle GET request for the Splash page. """
+        """ Handle GET request for the Landing page. """
         self.process_request()
 
 
     def process_request(self):
-        """ Render Splash page. """
+        """ Render Landing page. """
         # TODO: turn this hardcoded file path into a constant
-        self.render("mobile/splash.html")
+        self.render("mobile/landing.html")

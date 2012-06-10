@@ -22,6 +22,18 @@ class _Copy(object):
 
 
     @property
+    def login(self):
+        """ The copy for the login button. """
+        return "Login"
+
+
+    @property
+    def facebook_login(self):
+        """ The copy for the Facebook login button. """
+        return "Login with Facebook"
+
+
+    @property
     def create_game_dialog_header(self):
         """ The copy for the creat game dialog's header. """
         return "Add Game"

@@ -1,14 +1,14 @@
 import logging
 
-from handlers.splash import SplashHandler
+from handlers.landing import LandingHandler
 from handlers.rankings import RankingsHandler
 
 logger = logging.getLogger('boilerplate.' + __name__)
 
 
-class HomeHandler(SplashHandler, RankingsHandler):
+class HomeHandler(LandingHandler, RankingsHandler):
 
-    """ Determine if the user needs to see the Splash page or the Home page.
+    """ Determine if the user needs to see the Landing page or the Home page.
 
     Check for a logged in user and then route appropriately.
 
@@ -25,6 +25,6 @@ class HomeHandler(SplashHandler, RankingsHandler):
 
         # TODO could check with facebook to see if the user's still logged in
 
-        # if the user is not logged in then show him the Splash Page.
+        # if the user is not logged in then show the Landing Page.
         else:
-            SplashHandler.process_request(self)
+            LandingHandler.process_request(self)
