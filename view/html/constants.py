@@ -13,7 +13,7 @@ from util.decorators import constant
 
 
 class _HTMLTag(object):
-    
+
     """ _HTMLTag class to hold all implemented HTML tags. """
 
 
@@ -241,6 +241,7 @@ class _HTMLType(object):
 HTML_TAG = _HTMLTag()
 HTML_ATTRIBUTE = _HTMLAttribute()
 HTML_TYPE = _HTMLType()
+
 
 class _HTMLConstant(object):
 

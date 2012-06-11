@@ -119,10 +119,7 @@ they change the functionality of their element.
     type
 
 """
-
 import xml.etree.cElementTree as ET
-
-from exceptions import NotImplementedError
 
 from constants import HTML_TAG, HTML_ATTRIBUTE, HTML_TYPE, HTML_CONSTANT
 
@@ -695,11 +692,13 @@ class LI(Element):
         """ Construct a <li>. """
         super(LI, self).__init__(HTML_TAG.LI)
         self._index = index
+        self.set_content(item)
 
-        # TODO: are there special members we want applied to a generic list
-        # item, such as special_item or this_is_you?
 
+    def set_content(self, item):
+        """ Add content to <li>. """
         # TODO: make a generic implementation of <li>
+        raise NotImplementedError()
 
 
 class Nav(Element):

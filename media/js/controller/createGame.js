@@ -9,13 +9,16 @@
 */
 define(
         [
+            "js/constants",
             "MP",
             "js/crud",
             "view/document",
         ],
-        function (MP, Crud, Doc) {
+        function (Const, MP, Crud, Doc) {
        
     function handleSubmit(gameParams) {
+        gameParams = readyGameForSubmit(gameParams);
+
         Crud.createGame(gameParams, this);
         var docView = Doc.retrieve();
         docView.hideDialog();
@@ -29,6 +32,21 @@ define(
         var docView = Doc.retrieve();
         // TODO: refresh the Docview with by grabbing new data
         //docView.refresh();
+    }
+
+    function readyGameForSubmit(gameParams) {
+        // for each player, if no score then append score 0.
+        var gamescore = gameParams[Const.DATA.GAME_SCORE];
+        var i;
+        var player;
+        for (i = 0; i < gamescore.length; i += 1) {
+            player = gamescore[i];
+            if (!player.hasOwnProperty(Const.DATA.SCORE)) {
+                player[Const.DATA.SCORE] = 0;
+            }
+        }
+
+        return gameParams;
     }
     
     return {

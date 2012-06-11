@@ -3,11 +3,13 @@
 Element components for Create Game dialog.
 
 """
-from view.constants import APP_DATA, FORM_NAME, APP_ID, APP_CLASS
+from view.constants import SQ_DATA, FORM_NAME
 from view.app_copy import Copy
-from view.html.elements import Div, UL, LI, Header
-from view.html.elements import BR, Form, TextInput, HiddenInput, CheckboxInput
+from view.html.elements import UL
+from view.html.elements import Form, HiddenInput, CheckboxInput
+from view.html.components import HeadedList, HeadedListItem
 
+from constants import DIALOG_CLASS
 from framework import SubmitButtonSection
 from components import AutocompleteInput
 
@@ -27,7 +29,7 @@ class CreateGameForm(Form):
 
         """
         super(CreateGameForm, self).__init__(name, xsrf_token, action_url)
-        self.append_classes([APP_CLASS.DIALOG_CONTENT])
+        self.append_classes([DIALOG_CLASS.DIALOG_CONTENT])
 
         # FIXME take out hard coded values
         self.append_child(HiddenInput(FORM_NAME.LEAGUE, ""))
@@ -35,54 +37,24 @@ class CreateGameForm(Form):
 
         # create game score form section with Player and Winner headings
         headings = ["Player", "W"]
-        self.append_child(GameScoreDiv(headings))
+        numberOfRows = 4
+        rows = []
+        for x in xrange(numberOfRows):
+            rows.append(x)
+        self.append_child(GameScoreHL(headings, rows))
 
         # add form submit and close buttons
         self.append_child(SubmitButtonSection())
 
 
-class GameScoreDiv(Div):
+class GameScoreHL(HeadedList):
 
-    """ Game Score List with header extending <div>. """
+    """ Game Score List with header extending HeadedList. """
 
-    def __init__(self, headings):
-        """ Construct a GameScore header and list container <div>. """
-        super(GameScoreDiv, self).__init__()
 
-        # create Header object
-        game_score_header = GameScoreHeader(headings)
-        self.append_child(game_score_header)
-
-        # create List
-        numberOfRows = 4
-        rows = []
-        for x in xrange(numberOfRows):
-            rows.append(x)
+    def set_list(self, rows):
+        """ Set the list element for this list. """
         self.append_child(GameScoreUL(rows))
-
-        self.set_classes([APP_CLASS.LIST_WITH_HEADERS])
-
-
-class GameScoreHeader(Header):
-
-    """ Game Score column headings extending <header>. """
-
-    def __init__(self, headings):
-        """ Construct a GameScore header element <header>. """
-        super(GameScoreHeader, self).__init__()
-
-        col_head_0 = Div()
-        col_head_0.set_text(headings[0])
-        col_head_0.set_classes([APP_CLASS.COLUMN_0])
-
-        col_head_1 = Div()
-        col_head_1.set_text(headings[1])
-        col_head_1.set_classes([APP_CLASS.COLUMN_1])
-
-        self.append_child(col_head_0)
-        self.append_child(col_head_1)
-
-        self.set_classes([APP_CLASS.HEADED_LIST_ITEM])
 
 
 class GameScoreUL(UL):
@@ -95,31 +67,23 @@ class GameScoreUL(UL):
         self.append_child(GameScoreLI(item, index))
 
 
-class GameScoreLI(LI):
+class GameScoreLI(HeadedListItem):
 
-    """ Game Score list item extending <li>. """
-
-
-    def __init__(self, item, index):
-        """ Construct a player score list item element tree. """
-        super(GameScoreLI, self).__init__(item, index)
-        self.create_content(item)
+    """ Game Score list item extending HeadedListItem. """
 
 
-    def create_content(self, item):
+    def set_content(self, item):
         """ Generate the content for this game score list item. """
         # list names format: NAME[INDEX][DATA_TYPE]
         # id
         game_score_id = "{0}[{1}][{2}]".format(
                 FORM_NAME.GAME_SCORE,
                 self._index,
-                APP_DATA.ID)
+                SQ_DATA.ID)
         id_input = AutocompleteInput(
                 game_score_id,
-                APP_CLASS.PLAYER_SELECT,
                 Copy.player_placeholder)
-        id_input.append_classes([APP_CLASS.COLUMN_0])
-        self.append_child(id_input)
+        self.set_column(id_input)
 
         # winner
         # translated to score to work with the backend
@@ -127,9 +91,6 @@ class GameScoreLI(LI):
         game_score_winner = "{0}[{1}][{2}]".format(
                 FORM_NAME.GAME_SCORE,
                 self._index,
-                APP_DATA.SCORE)
+                SQ_DATA.SCORE)
         winner_input = CheckboxInput(game_score_winner, winner_value)
-        winner_input.set_classes([APP_CLASS.COLUMN_1])
-        self.append_child(winner_input)
-
-        self.set_classes([APP_CLASS.HEADED_LIST_ITEM])
+        self.set_column(winner_input)

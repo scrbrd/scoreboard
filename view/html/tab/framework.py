@@ -5,11 +5,13 @@ Element components that are for the tab framework.
 """
 import json
 
-from view.constants import APP_CLASS, APP_DATA, APP_ID
+from view.constants import SQ_DATA 
 from view.html.elements import H1, Nav, Footer, Section
 from view.html.elements import UL, LI
 from view.html.elements import A
 from view.html.components import AddButton, MainHeaderDiv
+
+from constants import TAB_CLASS, TAB_ID
 
 
 class AppHeader(H1):
@@ -33,15 +35,15 @@ class ContextHeader(MainHeaderDiv):
         super(ContextHeader, self).__init__(context.name)
 
         # set context data
-        self.set_id(APP_ID.CONTEXT)
-        self.set_data(APP_DATA.ID, context.id)
-        self.set_data(APP_DATA.OBJECT_TYPE, context.type)
+        self.set_id(TAB_ID.CONTEXT)
+        self.set_data(SQ_DATA.ID, context.id)
+        self.set_data(SQ_DATA.OBJECT_TYPE, context.type)
 
         # set rivals data
         view_rivals = []
         for r in rivals:
-            view_rivals.append({APP_DATA.ID: r.id, APP_DATA.NAME: r.name})
-        self.set_data(APP_DATA.RIVALS, json.dumps(view_rivals))
+            view_rivals.append({SQ_DATA.ID: r.id, SQ_DATA.NAME: r.name})
+        self.set_data(SQ_DATA.RIVALS, json.dumps(view_rivals))
 
 
 class NavHeader(Nav):
@@ -56,7 +58,7 @@ class NavHeader(Nav):
                 special_item,
                 special_item_index)
 
-        self.append_classes([APP_CLASS.SECOND_HEADER])
+        self.append_classes([TAB_CLASS.SECOND_HEADER])
 
 
     def set_list(self, items):
@@ -91,10 +93,8 @@ class NavHeaderLI(LI):
     """
 
 
-    def __init__(self, item, index):
-        """ Construct a nav header list item element tree. """
-        super(NavHeaderLI, self).__init__(item, index)
-
+    def set_content(self, item):
+        """ Set content for the NavHeaderLI. """
         a = A(item)
         # TODO: this is a hardcoded string and not a constant because once we
         # have a Link class [and an Item interface or some such thing for it
@@ -136,5 +136,5 @@ class TabSection(Section):
 
         """
         super(TabSection, self).__init__()
-        self.set_id(APP_ID.CONTENT)
-        self.set_data(APP_DATA.PAGE_NAME, page_name)
+        self.set_id(TAB_ID.CONTENT)
+        self.set_data(SQ_DATA.PAGE_NAME, page_name)

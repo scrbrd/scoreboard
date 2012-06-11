@@ -5,10 +5,11 @@ used for positioning (unlike the components which should not be used for
 positioning.
 
 """
-from view.constants import APP_CLASS
 from view.html.elements import Header, Div
 from view.html.components import MainHeaderDiv
 from view.html.components import DefaultCloseButton, DefaultSubmitButton
+
+from constants import DIALOG_CLASS
 
 
 class DialogHeader(Header):
@@ -32,6 +33,6 @@ class SubmitButtonSection(Div):
     def __init__(self):
         """ Construct a dialog component for a submit button. """
         super(SubmitButtonSection, self).__init__()
-        self.set_classes([APP_CLASS.SUBMIT_BUTTON_WRAPPER])
+        self.set_classes([DIALOG_CLASS.SUBMIT_BUTTON_WRAPPER])
 
         self.append_child(DefaultSubmitButton())

@@ -24,7 +24,7 @@ import xml.etree.cElementTree as ET
 import tornado.web
 
 from view.app_copy import Copy
-from view.constants import PAGE_NAME, DESIGN_CLASS, APP_CLASS
+from view.constants import PAGE_NAME, APP_CLASS
 from view.html.elements import Element
 from view.html.tab.framework import AppHeader, AppFooter, NavHeader
 from view.html.tab.framework import ContextHeader
@@ -135,7 +135,7 @@ class UINavHeader(tornado.web.UIModule):
         else:
             print("ERROR in render UINavHeader")
 
-        sp_classes = special_link["class"] + " " + DESIGN_CLASS.ACTIVE_NAV
+        sp_classes = special_link["class"] + " " + APP_CLASS.ACTIVE_NAV
         special_link["class"] = sp_classes
 
         for link in nav_links:

@@ -56,9 +56,9 @@ define(
         CLASS: {
             /** @const */ JS_LINK:              ".js-link",
             /** @const */ CLOSE_BUTTON:         ".close-button",
-            /** @const */ PLAYER_SELECT:        ".player-select",
             /** @const */ ACTIVE_NAV:           ".active-nav",
             /** @const */ INACTIVE_NAV:         ".inactive-nav",
+            /** @const */ AUTOCOMPLETE:         ".autocomplete",
             /** @const */ AUTOCOMPLETE_LABEL:   ".autocomplete-label",
             /** @const */ AUTOCOMPLETE_VALUE:   ".autocomplete-value",
             /** @const */ LIST_WITH_HEADERS:    ".list-with-headers",
@@ -72,11 +72,12 @@ define(
         */
         // TODO: make this link sink with Python HTML_DATA constants
         DATA: {
-            /** @const */ ID:                     "id",
-            /** @const */ NAME:                   "name",
-            /** @const */ RIVALS:                 "rivals",
-            /** @const */ PAGE_NAME:              "page-name",
-            /** @const */ GAME_SCORE:             "game-score",
+            /** @const */ ID:                   "id",
+            /** @const */ SCORE:                "score",
+            /** @const */ NAME:                 "name",
+            /** @const */ RIVALS:               "rivals",
+            /** @const */ PAGE_NAME:            "page-name",
+            /** @const */ GAME_SCORE:           "game-score",
         },
                 
         /**

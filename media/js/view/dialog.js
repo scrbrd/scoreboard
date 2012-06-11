@@ -101,7 +101,7 @@ define(
             // diabled row, gets enabled, add new row
 
             // set up autocomplete for each player selection
-            $(Const.NAME.CREATE_GAME + ' ' + Const.CLASS.PLAYER_SELECT)
+            $(Const.NAME.CREATE_GAME + ' ' + Const.CLASS.AUTOCOMPLETE)
                 .each(function (index, elem) {
                     DomUtil.autocomplete(elem, rivals);
                 });

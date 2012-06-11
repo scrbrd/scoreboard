@@ -81,7 +81,9 @@ define(
         requestData[REQUEST_KEY.ASYNCH] = true; 
         requestData[REQUEST_KEY.XSRF] = xsrfToken;
         requestData[REQUEST_KEY.PARAMS] = escapedParams;
-        
+
+        console.log(objParams);
+
         $.post(
                 CREATE_URL + type, 
                 requestData, 

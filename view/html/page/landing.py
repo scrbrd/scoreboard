@@ -3,9 +3,11 @@
 Element components for Landing Page.
 
 """
-from view.constants import PAGE_NAME, APP_CLASS
+from view.constants import PAGE_NAME
 from view.html.elements import Section, Div
 from view.html.components import FacebookLoginButton
+
+from constants import PAGE_CLASS
 
 
 class LandingPage(Section):
@@ -18,7 +20,7 @@ class LandingPage(Section):
         self.set_id(PAGE_NAME.LANDING)
 
         login_button_section = LoginButtonSection(
-                FacebookLoginButton(login_link));
+                FacebookLoginButton(login_link))
         self.append_child(login_button_section)
 
 
@@ -29,6 +31,6 @@ class LoginButtonSection(Div):
     def __init__(self, login_button):
         """ Construct a dialog component for a login button. """
         super(LoginButtonSection, self).__init__()
-        self.append_classes([APP_CLASS.LOGIN_BUTTON_WRAPPER])
+        self.append_classes([PAGE_CLASS.LOGIN_BUTTON_WRAPPER])
 
         self.append_child(login_button)

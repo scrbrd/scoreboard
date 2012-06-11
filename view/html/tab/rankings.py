@@ -3,11 +3,12 @@
 Rankings tab components.
 
 """
-from view.constants import APP_CLASS, APP_DATA, APP_ID, DESIGN_CLASS
+from view.constants import SQ_DATA
 from view.constants import PAGE_NAME
-from view.html.elements import OL, LI, Span
-from view.html.tab.framework import TabSection
+from view.html.elements import LI, Span
+from view.html.components import NumberedList
 
+from framework import TabSection
 
 class RankingsTabSection(TabSection):
 
@@ -16,18 +17,12 @@ class RankingsTabSection(TabSection):
     def __init__(self, rankings):
         """ Construct a rankings tab content section element tree. """
         super(RankingsTabSection, self).__init__(PAGE_NAME.RANKINGS)
-        self.append_child(RankingsOL(rankings))
+        self.append_child(RankingsList(rankings))
 
 
-class RankingsOL(OL):
+class RankingsList(NumberedList):
 
-    """ Rankings List extending <ol>. """
-
-
-    def __init__(self, items):
-        """ Construct a Rankings of type <ol>. """
-        super(RankingsOL, self).__init__(items)
-        self.set_classes([DESIGN_CLASS.COUNTER])
+    """ Rankings List extending NumberedList. """
 
 
     def set_list_item(self, item, index):
@@ -39,20 +34,16 @@ class RankingLI(LI):
 
     """ Ranking list item extending <li>. """
 
-
     def __init__(self, item, index):
         """ Construct a ranking list item element tree. """
         super(RankingLI, self).__init__(item, index)
-
         # TODO: add css and remove id.
-
-        self.set_data(APP_DATA.ID, item.id)
-        self.set_data(APP_DATA.OBJECT_TYPE, item.type)
-        self.create_content(item)
+        self.set_data(SQ_DATA.ID, item.id)
+        self.set_data(SQ_DATA.OBJECT_TYPE, item.type)
 
 
-    def create_content(self, item):
-        """ Generate the content for this ranking list item. """
+    def set_content(self, item):
+        """ Set content for Rankings LI. """
         span = Span()
         span.set_text("{0} {1}".format(item.name, item.win_count))
         self.append_child(span)

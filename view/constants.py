@@ -1,158 +1,42 @@
-""" Application Constants
+""" Module: constants
 
-Provide constants for view.
+Provide Application constants for view.
 
     HTML_ID
     HTML_CLASS
 
 """
-
 from util.decorators import constant
 
 
 class _AppClass(object):
 
-    """ _AppClass holds all function HTML/js classes. """
-
-    @constant
-    def CLOSE_BUTTON(self):
-        """ CLOSE_BUTTON is a HTML/js class. """
-        return "close-button"
-
-    @constant
-    def SUBMIT_BUTTON(self):
-        """ SUBMIT_BUTTON is a HTML/js class. """
-        return "submit-button"
-
-    @constant
-    def PLAYER_SELECT(self):
-        """ PLAYER_SELECT is a HTML/js class. """
-        return "player-select"
+    """ _AppClass holds app-wide w3c classes. """
 
     @constant
     def JS_LINK(self):
-        """ JS_LINK is a HTML/js class. """
+        """ JS_LINK is a w3c class. """
         return "js-link"
 
     @constant
     def ROUTE_BYPASS(self):
-        """ ROUTE_BYPASS is a HTML/js class. """
+        """ ROUTE_BYPASS is a w3c class. """
         return "route-bypass"
 
     @constant
     def INACTIVE_NAV(self):
-        """ INACTIVE_NAV is a HTML/js class. """
+        """ INACTIVE_NAV is a w3c class. """
         return "inactive-nav"
 
     @constant
-    def DIALOG_CONTENT(self):
-        """ DIALOG_CONTENT is a HTML/js class. """
-        return "dialog-content"
-
-    @constant
-    def COLUMN_0(self):
-        """ COLUMN_0 is a HTML/js class. """
-        return "column-0"
-
-    @constant
-    def COLUMN_1(self):
-        """ COLUMN_1 is a HTML/js class. """
-        return "column-1"
-
-    @constant
-    def COLUMN_2(self):
-        """ COLUMN_2 is a HTML/js class. """
-        return "column-2"
-
-    @constant
-    def LIST_WITH_HEADERS(self):
-        """ LIST_WITH_HEADER is a HTML/js class. """
-        return "list-with-headers"
-
-    @constant
-    def HEADED_LIST_ITEM(self):
-        """ HEADED_LIST_ITEM is a HTML/js class. """
-        return "headed-list-item"
-
-    @constant
-    def SUBMIT_BUTTON_WRAPPER(self):
-        """ SUBMIT_BUTTON_WRAPPER is a HTML/js class. """
-        return "submit-button-wrapper"
-
-    @constant
-    def ADD_BUTTON(self):
-        """ ADD_BUTTON is an HTML class. """
-        return "add-button"
-
-    @constant
-    def LOGIN_BUTTON(self):
-        """ LOGIN_BUTTON is an HTML class. """
-        return "login-button"
-
-    @constant
-    def LOGIN_BUTTON_WRAPPER(self):
-        """ LOGIN_BUTTON_WRAPPER is an HTML class. """
-        return "login-button-wrapper"
-
-    @constant
-    def FACEBOOK_LOGIN_BUTTON(self):
-        """ FACEBOOK_LOGIN_BUTTON is an HTML class. """
-        return "facebook-login-button"
-
-    @constant
-    def MAIN_HEADER(self):
-        """ MAIN_HEADER is a HTML/css class. """
-        return "main-header"
-
-    @constant
-    def SECOND_HEADER(self):
-        """ SECOND_HEADER is a HTML/css class. """
-        return "second-header"
-
-    @constant
-    def AUTOCOMPLETE_LABEL(self):
-        """ AUTOCOMPLETE_LABEL is a HTML/css class. """
-        return "autocomplete-label"
-
-    @constant
-    def AUTOCOMPLETE_VALUE(self):
-        """ AUTOCOMPLETE_VALUE is a HTML/css class. """
-        return "autocomplete-value"
+    def ACTIVE_NAV(self):
+        """ ACTIVE_NAV is a w3c class. """
+        return "active-nav"
 
 
 class _AppID(object):
 
-    """ _AppID holds all function HTML/js ids. """
-
-    @constant
-    def CONTEXT(self):
-        """ CONTEXT is the element that stores context data. """
-        return "context"
-
-    @constant
-    def CONTENT(self):
-        """ CONTENT is the element that stores content data. """
-        return "content"
-
-
-class _DesignClass(object):
-
-    """ _DesignClass to hold all design oriented HTML/css classes. """
-
-    @constant
-    def ACTIVE_NAV(self):
-        """ ACTIVE_NAV is a HTML/css class. """
-        return "active-nav"
-
-    @constant
-    def COUNTER(self):
-        """ COUNTER is a HTML/css class. """
-        return "counter"
-
-
-class _DesignID(object):
-
-    """ _DesignID class to hold all design oriented HTML/js ids. """
+    """ _AppID holds all function w3c ids. """
 
     pass
 
@@ -177,9 +61,9 @@ class _FormName(object):
         return "game-score"
 
 
-class _AppData(object):
+class _SqData(object):
 
-    """ _AppData class to hold all 'Data-' atttribute keys.
+    """ _SqData class to hold all 'Data-' atttribute keys.
 
     Note: These constants have dashes because the html5 spec says they must.
     Note: These can be used for json data as well.
@@ -239,8 +123,6 @@ class _PageName(object):
 
 APP_CLASS = _AppClass()
 APP_ID = _AppID()
-APP_DATA = _AppData()
-DESIGN_CLASS = _DesignClass()
-DESIGN_ID = _DesignID()
+SQ_DATA = _SqData()
 FORM_NAME = _FormName()
 PAGE_NAME = _PageName()
