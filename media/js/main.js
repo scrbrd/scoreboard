@@ -30,6 +30,7 @@ require.config({
         lib: "static/js/lib",
         util: "static/js/util",
         view: "static/js/view",
+        model: "static/js/model",
         controller: "static/js/controller",
         order: "static/js/lib/require/order",
         text: "static/js/lib/require/text",

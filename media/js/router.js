@@ -39,16 +39,13 @@ define(
             @param {string} tab "/rankings", "/games"
         */
         loadTab: function (tab) {
-            console.log("ajax load tab: " + tab);
+            // FIXME ARE WE USING THIS ANYMORE?
+            console.log("ajax load tab requested: " + tab);
             $.ajax({
                 type: "GET",
                 url: tab, 
                 data: {"asynch": true},
                 success: function (jsonResponse) {
-                    LoadTabController.handleSuccess(
-                            jsonResponse.context_header,
-                            jsonResponse.content
-                    );
                 },
             });
         },

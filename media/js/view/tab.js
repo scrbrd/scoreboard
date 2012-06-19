@@ -13,12 +13,13 @@
 */
 define(
         [
+            "Underscore",
             "jQuery",
             "Backbone",
             "js/constants",
             "iScroll",
         ],
-        function($, Backbone, Const, Scroller) {
+        function(_, $, Backbone, Const, Scroller) {
 
     
     var TabView = Backbone.View.extend({
@@ -27,41 +28,39 @@ define(
         contentView: null,
         navView: null,
 
-        initialize: function () {
-            this.contextView = new ContextView({el: this.options.context});
-            this.navView = new NavView({el: this.options.nav});
-            this.contentView = new ContentView({el: this.options.content});
+        initialize: function (model) {
+            this.contextView = new ContextView(model);
+            this.navView = new NavView();
+            this.contentView = new ContentView(model);
         },
-
-        render: function (newContext, newContent) {
-            this.contextView.render(newContext);
-            this.contentView.render(newContent);
-        },
-
-        pageName: function () {
-            return this.contentView.$el.data(Const.DATA.PAGE_NAME);
-        },
-
 
     });
 
     var ContextView = Backbone.View.extend({
-        render: function (newHTML) {
-            var newEl = $(newHTML).insertBefore(this.$el);
+
+
+        initialize: function (model) {
+            this.setElement(Const.ID.CONTEXT);
+
+            this.model = model;
+            _.bindAll(this, "render");
+            this.model.bind("change:context", this.render);
+        },
+
+        render: function () {
+            var newEl = $(this.model.context()).insertBefore(this.$el);
             this.$el.remove();
             this.setElement(newEl);
         },
 
-        contextID: function () {
-            return this.$el.data(Const.DATA.ID);
-        },
-
-        rivals: function () {
-            return this.$el.data(Const.DATA.RIVALS);
-        },
     });
 
     var NavView = Backbone.View.extend({
+       
+        initialize: function () {
+            this.setElement(Const.DOM.NAV);
+        },
+
         render: function (controller, activeAnchor) {
             // remove leading period from ".active-nav"
             noPeriodActive = Const.CLASS.ACTIVE_NAV.substr(1);
@@ -79,16 +78,26 @@ define(
 
     var ContentView = Backbone.View.extend({
 
-        render: function (newHTML) {
+
+        initialize: function (model) {
+            this.setElement(Const.ID.CONTENT);
+
+            this.model = model;
+            _.bindAll(this, "render");
+            this.model.bind("change:content", this.render);
+        },
+        
+        render: function () {
             this.$el.toggle(false);
             Scroller.scrollTo(0, 0, 0);  // scroll to x, y, time (ms)
-
-            var newEl = $(newHTML).insertBefore(this.$el);
+            
+            var newEl = $(this.model.content()).insertBefore(this.$el);
             this.$el.remove();
             this.setElement(newEl);
-
             this.$el.fadeIn('fast');
             Scroller.refresh();
+
+            return this;
         },
 
         /*

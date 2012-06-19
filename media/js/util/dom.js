@@ -69,6 +69,19 @@ define(
             var labelInput = $(elem).children(Const.CLASS.AUTOCOMPLETE_LABEL);
             var valueInput = $(elem).children(Const.CLASS.AUTOCOMPLETE_VALUE);
             
+            // clear label and value on focus
+            labelInput.focus(function (event) {
+                labelInput.val("");
+                valueInput.val("");
+            });
+
+            // clear label if blur but no selection through autocomplete
+            labelInput.blur(function (event) {
+                if (valueInput.val() === "") {
+                    labelInput.val("");
+                }
+            });
+
             labelInput.autocomplete({
                 autoFocus: true, // autofocus on first value
                 delay: 0, // immediately
@@ -80,6 +93,9 @@ define(
                     var selectedPlayer = ui.item;
                     labelInput.val(selectedPlayer.label);
                     valueInput.val(selectedPlayer.value);
+
+                    // unfocus after selection
+                    labelInput.blur();
                     return false;
                 },
                 // makes changes to display box when opened

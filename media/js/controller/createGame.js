@@ -29,9 +29,9 @@ define(
                 numberOfTags,
                 null,
                 null);
+        // refresh the Docview with by grabbing new data
         var docView = Doc.retrieve();
-        // TODO: refresh the Docview with by grabbing new data
-        //docView.refresh();
+        docView.refresh();
     }
 
     function readyGameForSubmit(gameParams) {

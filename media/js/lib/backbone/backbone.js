@@ -8,7 +8,9 @@
 
 define(["order!lib/backbone/backbone-min"], function() {
     // Call noConflct to remove globals
-    _.noConflict();
+    // TODO make undercore a real module using:
+    // https://github.com/dzejkej/modular-backbone
+    //_.noConflict();
     $.noConflict();
     return Backbone.noConflict();
 });

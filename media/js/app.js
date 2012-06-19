@@ -7,6 +7,7 @@
     @requires Doc
     @requires Router
     @requires LoadTabController
+    @requires HTMLReader
 */
 require(
         [
@@ -14,8 +15,9 @@ require(
             "view/document",
             "js/router",
             "controller/loadTab",
+            "model/htmlReader",
         ],
-        function ($, Doc, Router, LoadTabController) {
+        function ($, Doc, Router, LoadTabController, HTMLReader) {
 
     // Setup application before DOM loads
     $.ajaxSetup({
@@ -29,8 +31,12 @@ require(
 
     // Run DOM dependent logic
     $(document).ready(function () {
-        // Do all DOM initializations with Views
-        var docView = Doc.construct(pushStateRouting, LoadTabController);
+        // Do all DOM initializations with Model and Views
+        var tabModel = new HTMLReader();
+        var docView = Doc.construct(
+                pushStateRouting, 
+                LoadTabController, 
+                tabModel);
 
         // intialize LoadTabController
         LoadTabController.initialize(appRouter);

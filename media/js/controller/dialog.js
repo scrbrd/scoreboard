@@ -12,10 +12,12 @@ define(
         ],
         function (MP, Const) {
       
-    function initialize(dialog) {
-        dialog.on(Const.EVENT.DISPLAYED_DIALOG, function (pageName, path) {
-            MP.trackViewDialog(pageName, path);
-        });
+    function initialize(documentView) {
+        documentView.on(
+                Const.EVENT.DISPLAY_DIALOG, 
+                function (pageName, id, rivals, path) {
+                    MP.trackViewDialog(pageName, path);
+                });
     }
 
     return {

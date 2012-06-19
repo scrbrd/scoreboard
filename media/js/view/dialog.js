@@ -30,7 +30,7 @@ define(
             <Backbone.View at http://documentcloud.github.com/backbone/#View>
     */
     var DialogView = Backbone.View.extend({
-        
+       
         // Variable: form
         // The jQuery object of the included form
         form: null,
@@ -51,11 +51,21 @@ define(
             stretches it to the proper height, and finally initializes its
             form.
         */
-        initialize: function () {
+        initialize: function (document, html, height) {
+            this.setElement(Const.ID.DIALOG_CONTAINER);
+
             this.$el.hide();
-            this.$el.append(this.options.html); 
-            this.$el.height(this.options.height); 
+            this.$el.append(html); 
+            this.$el.height(height); 
             this.form = this.$(Const.NAME.CREATE_GAME);
+            
+            _.bindAll(this, "render");
+            var dialogView = this;
+            document.on(
+                    Const.EVENT.DISPLAY_DIALOG, 
+                    function (pageName, id, rivals, path) {
+                        dialogView.render(id, rivals);
+                    });
         },
 
 
@@ -105,7 +115,6 @@ define(
                 .each(function (index, elem) {
                     DomUtil.autocomplete(elem, rivals);
                 });
-    
         },
         
                     
@@ -146,18 +155,14 @@ define(
             Function: render
             Show this View with proper bells and whistles.
         */
-        render: function (leagueID, rivals, path) {
+        render: function (leagueID, rivals) {
             this.setupForm(leagueID, rivals);
             this.$el.slideDown('fast', function () {
                 //var a = this.$('.ui-autocomplete-input').first();
                 //a.focus();
             });
 
-            this.trigger(
-                    Const.EVENT.DISPLAYED_DIALOG, 
-                    Const.PAGE_NAME.CREATE_GAME, 
-                    path);
-            return false;
+            return this;
         },
 
 
@@ -165,8 +170,8 @@ define(
     });
 
     return {
-        construct: function (options) {
-            return new DialogView(options);
+        construct: function (document, dialogHTML, pageHeight) {
+            return new DialogView(document, dialogHTML, pageHeight);
         },
 
     };

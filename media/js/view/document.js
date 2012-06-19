@@ -37,7 +37,6 @@ define(
     
         // Variable: el
         // Element of this View.
-        el: $(Const.DOM.BODY),
 
         // Variable: dialog
         // DialogView under DocView.
@@ -47,13 +46,21 @@ define(
 
         // Function: initialize
         // Setup DialogView with dialog html file.
-        initialize: function (initDOMForRouting, loadTabController) {
-            this.setTabView();
+        initialize: function (initDOMForRouting, loadTabController, model) {
+            this.setElement(Const.DOM.BODY);
+            this.model = model;
+            this.setTabView(model);
 
             if (initDOMForRouting) {
-                this.initializeDOMForRouting(loadTabController);
+                this.initializeDOMForRouting(loadTabController, model);
             }
 
+            // get initial context and content for model
+            // jQuery doesn't have an outerHTML function so i'm using [0]
+            loadTabController.setModelFromHTML(
+                    this.model,
+                    this.tabView.contextView.$el.clone()[0],
+                    this.tabView.contentView.$el.clone()[0]);
         },
 
     
@@ -82,14 +89,8 @@ define(
             });
         },
         
-        setTabView: function () {
-            var tabViewParams = {
-                context: Const.ID.CONTEXT,
-                nav: Const.DOM.NAV,
-                content: Const.ID.CONTENT,
-            };
-            this.tabView = Tab.construct(tabViewParams);
-
+        setTabView: function (model) {
+            this.tabView = Tab.construct(model);
         },
 
 
@@ -123,12 +124,11 @@ define(
         */
         setDialog: function (Dialog, DialogController, dialogHTML) {
             var pageHeight = $(Const.ID.TAB).height(); // page height
-            var createGameView = Dialog.construct({
-                el: Const.ID.DIALOG_CONTAINER,
-                html: dialogHTML,
-                height: pageHeight,
-            });
-            DialogController.initialize(createGameView);
+            var createGameView = Dialog.construct(
+                    this, 
+                    dialogHTML, 
+                    pageHeight);
+            DialogController.initialize(this);
             return createGameView;
         }, 
 
@@ -138,10 +138,14 @@ define(
             Show the dialog portion of the DOM.
         */
         showDialog: function () {
-            console.log(this);
-            var id = this.tabView.contextView.contextID();
-            var rivals = this.tabView.contextView.rivals();
-            this.dialog.render(id, rivals, this.path());
+            var contextID = this.model.contextID();
+            var rivals = this.model.rivals();
+            this.trigger(
+                    Const.EVENT.DISPLAY_DIALOG,
+                    Const.PAGE_NAME.CREATE_GAME,
+                    contextID, 
+                    rivals, 
+                    this.path());
         },
 
 
@@ -155,24 +159,11 @@ define(
 
         
 
-        /* 
-            Function: updateTab
-            Update both the context and the content with new html. 
-            Then update mixpanel with a Tab View Page.
-
-            Parameters:
-                contextHTML - (string) new html for updating context
-                contentHTML - (string) new html for udpating content
-        */
-        updateTab: function (contextHTML, contentHTML) {
-            this.tabView.render(contextHTML, contentHTML);
-        },
-        
         /*
         
 
         */
-        initializeDOMForRouting: function (loadTabController) {
+        initializeDOMForRouting: function (loadTabController, model) {
             // SRC = https://github.com/tbranyen/backbone-boilerplate
             // All navigation that is relative should be passed through 
             // the navigate method, to be processed by the router.  If 
@@ -199,10 +190,23 @@ define(
                     // can use something separate from routing by labeling
                     // route-bypass
                     if ($(this).hasClass(Const.CLASS.INACTIVE_NAV.substr(1))) {
-                        loadTabController.handleSubmit(this, href);
+                        loadTabController.handleSubmit(this, href, model);
                     }
                 }
             });
+
+            this.reloadPage = function (model) {
+                href = "/" + model.pageName();
+                loadTabController.handleSubmit(null, href, model);
+            };
+        },
+
+        /**
+        
+
+        */
+        refresh: function () {
+           this.reloadPage(this.model);
         },
 
     });
@@ -212,15 +216,18 @@ define(
     var docView = null;
 
     return {
-        construct: function (initDOMForRouting, loadTabController) {
+        construct: function (initDOMForRouting, loadTabController, model) {
             if (docView === null) {
-                docView = new DocView(initDOMForRouting, loadTabController);
+                docView = new DocView(initDOMForRouting, loadTabController, model);
 
             }
             return docView;
         },
-        retrieve: function() {
+        retrieve: function () {
             return docView;
+        },
+        refresh: function () {
+            docView.refresh();
         },
     };
 });

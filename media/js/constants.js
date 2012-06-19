@@ -110,7 +110,7 @@ define(
             @const
         */
         EVENT: {
-            /** @const */ DISPLAYED_DIALOG:       "displayed-dialog",
+            /** @const */ DISPLAY_DIALOG:           "display-dialog",
         },
     };
 
