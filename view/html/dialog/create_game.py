@@ -82,6 +82,7 @@ class GameScoreLI(HeadedListItem):
                 SQ_DATA.ID)
         id_input = AutocompleteInput(
                 game_score_id,
+                DIALOG_CLASS.AUTOCOMPLETE_PLAYERS,
                 Copy.player_placeholder)
         self.set_column(id_input)
 

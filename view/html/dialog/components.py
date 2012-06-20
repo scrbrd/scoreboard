@@ -14,18 +14,24 @@ class AutocompleteInput(Div):
     needed to handle autocomplete. """
 
 
-    def __init__(self, name, placeholder=""):
+    def __init__(
+            self,
+            name,
+            autocomplete_class=DIALOG_CLASS.AUTOCOMPLETE,
+            placeholder=""):
         """ Construct a Autocomplete input set.
 
         Required:
         str     name                name of key to be submited as part of form
 
         Optional:
+        str     autocomple_class    class representing which type of
+                                    autocomplete
         str     placeholder         placeholder to put inside TextInput
 
         """
         super(AutocompleteInput, self).__init__()
-        self.append_class(DIALOG_CLASS.AUTOCOMPLETE)
+        self.append_class(autocomplete_class)
 
         # textinput doesn't actually contain data but does autocomplete.
         input = TextInput(name + "-" + DIALOG_CLASS.AUTOCOMPLETE_LABEL)

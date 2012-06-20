@@ -17,10 +17,10 @@ define(
             "jQuery",
             "Backbone",
             "js/constants",
-            "util/dom",
+            "util/autocomplete",
             "controller/createGame",
         ],
-        function($, Backbone, Const, DomUtil, CreateGameController) {
+        function($, Backbone, Const, Autocomplete, CreateGameController) {
 
     /*
         Class: DialogView
@@ -111,9 +111,9 @@ define(
             // diabled row, gets enabled, add new row
 
             // set up autocomplete for each player selection
-            $(Const.NAME.CREATE_GAME + ' ' + Const.CLASS.AUTOCOMPLETE)
+            $(Const.NAME.CREATE_GAME + ' ' + Const.CLASS.AUTOCOMPLETE_PLAYERS)
                 .each(function (index, elem) {
-                    DomUtil.autocomplete(elem, rivals);
+                    Autocomplete.autocompletePlayers(elem, rivals);
                 });
         },
         

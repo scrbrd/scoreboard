@@ -1,9 +1,20 @@
 /**
-    Setup Require.js and load application.
+    Setup RequireJS and load application.
     
-    Main is run first as part of the require.js framework. Require
-    the App, require the non-AMD javascript modules in the correct
-    order, and load the plugins (text, domReady, order).
+    main.js is the first script that RequireJS runs. We're using RequireJS
+    to manage a module based framework that has no globals.
+   
+    Check out RequireJS: http://requirejs.org
+
+    main's responsibilties are fairly limited:
+    1. Load and run the main application module (App).
+    2. Define 'paths' that can be used as shortcuts around the application.
+    3. Load all third party libraries that are non-AMD.
+
+    A note on non-AMD modules. Many libraries are not AMD modules so they
+    end up becoming part of the global namespace. We wrap these libraries
+    in custom AMD modules and then delete the global variables. That's all
+    going down in 'lib'.
 
     @module main
     @requires app

@@ -17,9 +17,10 @@ define(
             "jQuery",
             "Backbone",
             "js/constants",
+            "util/dom",
             "iScroll",
         ],
-        function(_, $, Backbone, Const, Scroller) {
+        function(_, $, Backbone, Const, DOMUtil, Scroller) {
 
     
     var TabView = Backbone.View.extend({
@@ -62,17 +63,19 @@ define(
         },
 
         render: function (controller, activeAnchor) {
-            // remove leading period from ".active-nav"
-            noPeriodActive = Const.CLASS.ACTIVE_NAV.substr(1);
-            noPeriodInactive = Const.CLASS.INACTIVE_NAV.substr(1);
+            // remove leading period from selectors
+            activeClass = DOMUtil.getClassFromClassSelector(
+                    Const.CLASS.ACTIVE_NAV);
+            inactiveClass = DOMUtil.getClassFromClassSelector(
+                    Const.CLASS.INACTIVE_NAV);
 
             this.$(Const.CLASS.ACTIVE_NAV)
-                .removeClass(noPeriodActive) // remove current active nav
-                .addClass(noPeriodInactive); // add inactive nav class
+                .removeClass(activeClass) // remove current active nav
+                .addClass(inactiveClass); // add inactive nav class
 
             this.$(activeAnchor)
-                .removeClass(noPeriodInactive) // remove inactive nav
-                .addClass(noPeriodActive); // add active nav 
+                .removeClass(inactiveClass) // remove inactive nav
+                .addClass(activeClass); // add active nav 
         },
     });
 

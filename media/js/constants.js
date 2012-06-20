@@ -58,7 +58,7 @@ define(
             /** @const */ CLOSE_BUTTON:         ".close-button",
             /** @const */ ACTIVE_NAV:           ".active-nav",
             /** @const */ INACTIVE_NAV:         ".inactive-nav",
-            /** @const */ AUTOCOMPLETE:         ".autocomplete",
+            /** @const */ AUTOCOMPLETE_PLAYERS: ".autocomplete-players",
             /** @const */ AUTOCOMPLETE_LABEL:   ".autocomplete-label",
             /** @const */ AUTOCOMPLETE_VALUE:   ".autocomplete-value",
             /** @const */ LIST_WITH_HEADERS:    ".list-with-headers",

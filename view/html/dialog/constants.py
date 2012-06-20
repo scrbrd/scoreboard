@@ -40,6 +40,12 @@ class _DialogClass(object):
         return "autocomplete-value"
 
 
+    @constant
+    def AUTOCOMPLETE_PLAYERS(self):
+        """ AUTOCOMPLETE_PLAYERS is a w3c class. """
+        return "autocomplete-players"
+
+
 class _DialogID(object):
 
     """ _DialogID holds all w3c ids for the dialog package. """
