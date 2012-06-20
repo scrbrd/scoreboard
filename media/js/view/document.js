@@ -20,10 +20,12 @@ define(
             "jQuery",
             "Backbone",
             "js/constants",
+            "js/event",
+            "js/eventDispatcher",
             "view/tab",
             
         ],
-        function($, Backbone, Const, Tab) {
+        function($, Backbone, Const, Event, EventDispatcher, Tab) {
 
     /*
         Class: DocView
@@ -46,21 +48,23 @@ define(
 
         // Function: initialize
         // Setup DialogView with dialog html file.
-        initialize: function (initDOMForRouting, loadTabController, model) {
+        initialize: function (initDOMForRouting, model) {
             this.setElement(Const.DOM.BODY);
             this.model = model;
             this.setTabView(model);
 
             if (initDOMForRouting) {
-                this.initializeDOMForRouting(loadTabController, model);
+                this.initializeDOMForRouting(model);
             }
 
             // get initial context and content for model
             // jQuery doesn't have an outerHTML function so i'm using [0]
-            loadTabController.setModelFromHTML(
+            EventDispatcher.trigger(
+                    Event.SERVER.VIEWED_PAGE,
                     this.model,
                     this.tabView.contextView.$el.clone()[0],
-                    this.tabView.contentView.$el.clone()[0]);
+                    this.tabView.contentView.$el.clone()[0],
+                    this);
         },
 
     
@@ -140,8 +144,8 @@ define(
         showDialog: function () {
             var contextID = this.model.contextID();
             var rivals = this.model.rivals();
-            this.trigger(
-                    Const.EVENT.DISPLAY_DIALOG,
+            EventDispatcher.trigger(
+                    Event.CLIENT.DISPLAY_DIALOG,
                     Const.PAGE_NAME.CREATE_GAME,
                     contextID, 
                     rivals, 
@@ -163,7 +167,7 @@ define(
         
 
         */
-        initializeDOMForRouting: function (loadTabController, model) {
+        initializeDOMForRouting: function (model) {
             // SRC = https://github.com/tbranyen/backbone-boilerplate
             // All navigation that is relative should be passed through 
             // the navigate method, to be processed by the router.  If 
@@ -190,14 +194,21 @@ define(
                     // can use something separate from routing by labeling
                     // route-bypass
                     if ($(this).hasClass(Const.CLASS.INACTIVE_NAV.substr(1))) {
-                        loadTabController.handleSubmit(this, href, model);
+                        EventDispatcher.trigger(
+                                Event.CLIENT.VIEW_PAGE,
+                                this,
+                                href,
+                                model);
                     }
                 }
             });
 
             this.reloadPage = function (model) {
                 href = "/" + model.pageName();
-                loadTabController.handleSubmit(null, href, model);
+                        EventDispatcher.trigger(
+                                Event.CLIENT.RELOAD_PAGE,
+                                href,
+                                model);
             };
         },
 

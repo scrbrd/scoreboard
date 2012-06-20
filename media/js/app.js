@@ -7,6 +7,8 @@
     @requires Doc
     @requires Router
     @requires LoadTabController
+    @requires CreateGameController
+    @requires DialogController
     @requires HTMLReader
 */
 require(
@@ -15,9 +17,18 @@ require(
             "view/document",
             "js/router",
             "controller/loadTab",
+            "controller/createGame",
+            "controller/dialog",
             "model/htmlReader",
         ],
-        function ($, Doc, Router, LoadTabController, HTMLReader) {
+        function (
+                $, 
+                Doc, 
+                Router, 
+                LoadTabController, 
+                CreateGameController,
+                DialogController,
+                HTMLReader) {
 
     // Setup application before DOM loads
     $.ajaxSetup({
@@ -28,6 +39,10 @@ require(
     var appRouter = Router.initialize(pushStateRouting);
     // TODO remove facebook's #_=_ insertion that happens at login
     
+    // intialize Controllers
+    LoadTabController.initialize(appRouter);
+    CreateGameController.initialize();
+    DialogController.initialize();
 
     // Run DOM dependent logic
     $(document).ready(function () {
@@ -35,14 +50,7 @@ require(
         var tabModel = new HTMLReader();
         var docView = Doc.construct(
                 pushStateRouting, 
-                LoadTabController, 
                 tabModel);
-
-        // intialize LoadTabController
-        LoadTabController.initialize(appRouter);
-
-        // track initial page load
-        LoadTabController.trackViewPage(docView);
 
         // only load dialog after the rest of it
         docView.lazyInitialize();

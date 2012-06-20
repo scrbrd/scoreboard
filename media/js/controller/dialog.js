@@ -9,15 +9,17 @@ define(
         [
             "MP",
             "js/constants",
+            "js/event",
+            "js/eventDispatcher",
         ],
-        function (MP, Const) {
+        function (MP, Const, Event, EventDispatcher) {
       
     function initialize(documentView) {
-        documentView.on(
-                Const.EVENT.DISPLAY_DIALOG, 
-                function (pageName, id, rivals, path) {
-                    MP.trackViewDialog(pageName, path);
-                });
+        EventDispatcher.on(Event.CLIENT.DISPLAY_DIALOG, handleDisplayDialog);
+    }
+
+    function handleDisplayDialog(pageName, id, rivals, path) {
+        MP.trackViewDialog(pageName, path);
     }
 
     return {

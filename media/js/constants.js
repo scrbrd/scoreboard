@@ -104,14 +104,6 @@ define(
             /** @const */ CREATE_GAME:            "create-game",
         },
 
-        /**
-            Enum for triggerable events. 
-            @enum {string}
-            @const
-        */
-        EVENT: {
-            /** @const */ DISPLAY_DIALOG:           "display-dialog",
-        },
     };
 
     return constants;

@@ -9,17 +9,24 @@
 */
 define(
         [
-            "js/constants",
             "MP",
+            "js/constants",
+            "js/event",
+            "js/eventDispatcher",
             "js/crud",
             "view/document",
         ],
-        function (Const, MP, Crud, Doc) {
+        function (MP, Const, Event, EventDispatcher, Crud, Doc) {
        
+    function initialize() {
+        EventDispatcher.on(Event.CLIENT.CREATE_GAME, handleSubmit);
+        EventDispatcher.on(Event.SERVER.CREATED_GAME, handleSuccess);
+    }
+    
     function handleSubmit(gameParams) {
         gameParams = readyGameForSubmit(gameParams);
 
-        Crud.createGame(gameParams, this);
+        Crud.createGame(gameParams);
         var docView = Doc.retrieve();
         docView.hideDialog();
     }
@@ -50,7 +57,6 @@ define(
     }
     
     return {
-        handleSubmit: handleSubmit,
-        handleSuccess: handleSuccess,
+        initialize: initialize,
     };
 });

@@ -17,10 +17,18 @@ define(
             "jQuery",
             "Backbone",
             "js/constants",
+            "js/event",
+            "js/eventDispatcher",
             "util/autocomplete",
             "controller/createGame",
         ],
-        function($, Backbone, Const, Autocomplete, CreateGameController) {
+        function(
+                $, 
+                Backbone, 
+                Const, 
+                Event,
+                EventDispatcher, 
+                Autocomplete) {
 
     /*
         Class: DialogView
@@ -61,8 +69,8 @@ define(
             
             _.bindAll(this, "render");
             var dialogView = this;
-            document.on(
-                    Const.EVENT.DISPLAY_DIALOG, 
+            EventDispatcher.on(
+                    Event.CLIENT.DISPLAY_DIALOG, 
                     function (pageName, id, rivals, path) {
                         dialogView.render(id, rivals);
                     });
@@ -130,7 +138,10 @@ define(
         */
         submit: function (event) {
             var createGameParams = $(event.target).toObject();
-            CreateGameController.handleSubmit(createGameParams);
+            console.log("submit");
+            EventDispatcher.trigger(
+                Event.CLIENT.CREATE_GAME,
+                createGameParams);
             return false;
         },
 

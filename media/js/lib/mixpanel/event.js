@@ -40,7 +40,7 @@ define(["js/constants"], function (Const) {
         // CREATE_OBJECT - any object created.
         VIEW_PAGE:      "View Page", 
         CREATE_OBJECT:  "Create Object",
-    }
+    };
 
 
     /*
@@ -59,7 +59,7 @@ define(["js/constants"], function (Const) {
         NAME:               "name",
         PATH:               "path",
         NUMBER_OF_TAGS:     "number of tags"
-    }
+    };
     
     
     /*

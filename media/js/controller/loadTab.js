@@ -11,33 +11,46 @@ define(
             "MP",
             "view/document",
             "js/constants",
+            "js/event",
+            "js/eventDispatcher",
         ],
-        function ($, MP, Doc, Const) {
+        function ($, MP, Doc, Const, Event, EventDispatcher) {
     
     var router = null;
 
     function initialize(appRouter) {
+        // FIXME XXX - remove router
         router = appRouter;
+        EventDispatcher.on(Event.CLIENT.VIEW_PAGE, handleViewPage);
+        EventDispatcher.on(Event.CLIENT.RELOAD_PAGE, handleReloadPage);
+        EventDispatcher.on(Event.SERVER.VIEWED_PAGE, handleSuccess);
     }
 
-    function handleSubmit(anchor, href, model) {
+    function handleViewPage(anchor, href, model) {
         var docView = Doc.retrieve();
 
         // switch active tab
-        if (anchor !== null) {
-            docView.tabView.navView.render(this, anchor);
-        }
+        docView.tabView.navView.render(this, anchor);
+
+        // Update URL
+        router.navigate(href, {trigger: false});
+
+        handleSubmit(href, model);
+    }
+
+    function handleReloadPage(href, model) {
+        handleSubmit(href, model);
+    }
+
+    function handleSubmit(href, model) {
+        var docView = Doc.retrieve();
 
         // hide current content
         docView.tabView.contentView.hide();
-
-        // send request to server
-        router.navigate(href, {trigger: false});
-
+        
         // update the model by reseting the pagename and fetching
         model.setPageName(href.substring(1));
         var start = new Date().getTime();
-        var loadTabCont = this;
         model.fetch({
             data: $.param({
                 "asynch": true,
@@ -46,27 +59,26 @@ define(
                 var end = new Date().getTime();
                 var time = end - start;
                 console.log("success response: " + time + "ms");
-                loadTabCont.setModelFromHTML(
-                    model,
-                    response.context_header,
-                    response.content);
-                loadTabCont.trackViewPage(Doc.retrieve(), model.pageName());
+                EventDispatcher.on(
+                        Event.SERVER.VIEWED_PAGE,
+                        model,
+                        response.context_header, 
+                        response.content,
+                        docView);
             },
             error: function (model, response) {
                 console.log("error on model fetch");
             },
         });
+
     }
 
-    
-    function handleSuccess(context, content) {
-        // FIXME DELETE THIS FUNCTION
-        console.log("DELETE THIS FUNCTION NOW!!!");
-        var docView = Doc.retrieve();
-        var currModel = docView.model;
-        this.setModelFromHTML(currModel, context, content);
-        //docView.updateTab(context, content);
-        this.trackViewPage(docView, currModel.pageName);
+    function handleSuccess(model, context, content, docView) {
+        setModelFromHTML(
+            model,
+            context,
+            content);
+        trackViewPage(docView, model.pageName());
     }
 
     /*
@@ -104,9 +116,5 @@ define(
 
     return {
         initialize: initialize,
-        handleSubmit: handleSubmit,
-        handleSuccess: handleSuccess,
-        trackViewPage: trackViewPage,
-        setModelFromHTML: setModelFromHTML,
     };
 });

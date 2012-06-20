@@ -2,7 +2,6 @@ define(
         [
             "jQuery",
             "Backbone",
-            "controller/loadTab",
         ], 
         /**
             A module for server routing.
@@ -11,9 +10,8 @@ define(
 
             @requires $
             @requires Backbone
-            @requires LoadTabController
         */
-        function ($, Backbone, LoadTabController) {
+        function ($, Backbone) {
 
     /**
         Handle all routing interactions with server by using Backbone.
@@ -33,21 +31,8 @@ define(
             "*error":           "error"         // error catch all
         },
 
-        /** 
-            Route: Load the requested tab.
-            @private 
-            @param {string} tab "/rankings", "/games"
-        */
         loadTab: function (tab) {
-            // FIXME ARE WE USING THIS ANYMORE?
-            console.log("ajax load tab requested: " + tab);
-            $.ajax({
-                type: "GET",
-                url: tab, 
-                data: {"asynch": true},
-                success: function (jsonResponse) {
-                },
-            });
+            console.log("tab should be loaded without hitting this function");
         },
 
         error: function (error) {

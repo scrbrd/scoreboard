@@ -2,6 +2,8 @@ define(
         [
             "jQuery",
             "js/constants",
+            "js/event",
+            "js/eventDispatcher",
         ],
         /** 
             Handle all Create, Read, Update, Delete actions on specific model objects.
@@ -10,8 +12,10 @@ define(
 
             @requires $
             @requires Const
+            @requires Event
+            @requires EventDispatcher
         */
-        function ($, Const) {
+        function ($, Const, Event, EventDispatcher) {
 
     /**
         Constants for sending server requests.
@@ -61,10 +65,8 @@ define(
         @private
         @param {string} type The object type to create.
         @param {Object} objParams The parameters that define this object.
-        @param {Object} controller The controller that initiated this 
-            create request.
     */
-    function create(type, objParams, controller) {
+    function create(type, objParams) {
 
         // move xsrf token to request parameters
         var xsrfToken = objParams[REQUEST_KEY.XSRF];
@@ -82,8 +84,6 @@ define(
         requestData[REQUEST_KEY.XSRF] = xsrfToken;
         requestData[REQUEST_KEY.PARAMS] = escapedParams;
 
-        console.log(objParams);
-
         $.post(
                 CREATE_URL + type, 
                 requestData, 
@@ -92,7 +92,9 @@ define(
                     // TODO: send response object to grab relevent MP data
                     // from
                     if (success) {
-                        controller.handleSuccess(numberOfTags);
+                        EventDispatcher.trigger(
+                                Event.SERVER.CREATED_GAME,
+                                numberOfTags);
                     } else {
                         //TODO: alert user on fail
                         console.log('failed to create game');
@@ -105,12 +107,10 @@ define(
         /**
             Create a new Game.
             @param {Object} gameParams The parameters that define this game.
-            @param {Object} controller The controller that initiated this
-                create game request.
         */
-        createGame: function (gameParams, controller) {
+        createGame: function (gameParams) {
             // TODO: make the gameParams more specific
-            create(Const.API_OBJECT.GAME, gameParams, controller);
+            create(Const.API_OBJECT.GAME, gameParams);
         },
     };
 });
