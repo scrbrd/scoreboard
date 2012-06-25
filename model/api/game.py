@@ -18,15 +18,15 @@ import editor
 
 class Game(SqNode):
 
-    """ Game is a subclass of SqObject for representing games. 
+    """ Game is a subclass of SqObject for representing games.
 
     Provide access to the attributes of a Game, including fields,
     relationships, and nearby nodes.
 
-    A Game cannot exist without CREATED_BY and SCHEDULED_IN outgoing 
-    SqEdges and either a WON_BY and one or more LOST_BY outgoing 
-    SqEdges, two or more TIED_BY outgoing SqEdges, or one PLAYED_BY 
-    outgoing SqEdge. In all cases, the incoming SqEdge complements 
+    A Game cannot exist without CREATED_BY and SCHEDULED_IN outgoing
+    SqEdges and either a WON_BY and one or more LOST_BY outgoing
+    SqEdges, two or more TIED_BY outgoing SqEdges, or one PLAYED_BY
+    outgoing SqEdge. In all cases, the incoming SqEdge complements
     are also required.
 
     Optional:
@@ -69,7 +69,7 @@ class Game(SqNode):
         """
 
         outcome = []
- 
+
         for edge_type in API_CONSTANT.RESULT_EDGE_TYPES:
             for edge in self.get_edges().get(edge_type, {}).values():
                 score = edge._get_property(API_EDGE_PROPERTY.SCORE)
@@ -90,8 +90,8 @@ class Game(SqNode):
         """ Return a list of Opponents. """
         SqNode.assert_loaded(self._opponents)
         return self._opponents.values()
-            
-    
+
+
     def set_opponents(self, opponents):
         """ Set a Game's loaded Opponents from a dict. """
         self._opponents = opponents
@@ -117,7 +117,7 @@ class Game(SqNode):
         Game            Game SqNode
 
         """
-        
+
         (game, opponents) = loader.load_neighbors(
                 game_id,
                 API_CONSTANT.RESULT_EDGE_TYPES,
@@ -158,12 +158,12 @@ class Game(SqNode):
 
         If 0 Opponents: {}
         If 1 Opponent: PLAYED_BY
-        If more Opponents: 
+        If more Opponents:
         WON_BY (highest score), LOST_BY, TIED_BY (even)
 
         Currently, the highest score wins.
 
-        Return 
+        Return:
         Outcome
         {RESULT_EDGE_TYPE: [{"id": VALUE, "score": VALUE}]}
 
@@ -178,26 +178,26 @@ class Game(SqNode):
         # if one opponent, then no win or loss
         elif num_of_opponents == 1:
             outcome[API_EDGE_TYPE.PLAYED_BY] = game_score
-        
+
         # if two or more opponents, then calculate results
         else:
             # sort and group opponents by their scores
             opp_scores_by_score = Game._sort_and_group_opponents_by_score(
                     game_score)
-           
+
             # TIE v WINNER/LOSERS
             num_of_results = len(opp_scores_by_score)
-             
+
             # if 1 result, then the game was a tie
             if num_of_results == 1:
                 outcome[API_EDGE_TYPE.TIED_BY] = game_score
-           
+
             # if more results, then win is high score & the rest losses
             else:
                 # winners
                 winner_scores = opp_scores_by_score[0][1]
                 outcome[API_EDGE_TYPE.WON_BY] = winner_scores
-               
+
                 # losers
                 outcome[API_EDGE_TYPE.LOST_BY] = []
                 for score, loser_scores in opp_scores_by_score[1:]:
@@ -236,13 +236,13 @@ class Game(SqNode):
 
         # prepare edge prototypes for schedule edges
         prototype_edges = editor.prototype_edge_and_complement(
-                API_EDGE_TYPE.SCHEDULED_IN,
+                API_EDGE_TYPE.HAS_SCHEDULED,
                 {},
                 league_id)
 
         # prepare edge prototypes for creator edges
         prototype_edges.extend(editor.prototype_edge_and_complement(
-                API_EDGE_TYPE.CREATED_BY,
+                API_EDGE_TYPE.CREATED,
                 {},
                 creator_id))
 
@@ -257,13 +257,14 @@ class Game(SqNode):
                 prototype_edges.extend(editor.prototype_edge_and_complement(
                     type,
                     {API_EDGE_PROPERTY.SCORE: opponent_score["score"]},
+                    None,
                     opponent_score["id"]))
 
         return editor.create_node_and_edges(prototype_node, prototype_edges)
-    
+
     @staticmethod
     def _sort_and_group_opponents_by_score(game_score):
-        """ Sort and group opponents in game_score by score. 
+        """ Sort and group opponents in game_score by score.
 
         itertools.groupby requires a sorted list.
 
@@ -289,4 +290,3 @@ class Game(SqNode):
             opponent_scores_by_score.append((score, opponent_scores))
 
         return opponent_scores_by_score
-

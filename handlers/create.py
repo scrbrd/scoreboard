@@ -4,15 +4,9 @@ Handle all incoming requests for object creation.
 
 """
 
-import logging
-import json
+from model.app.catchers import CreateGameCatcher
 
 from handlers.query import QueryHandler
-
-from model.app import catchers
-
-# TODO figure out how logging works
-logger = logging.getLogger('boilerplate.' + __name__)
 
 
 class CreateGameHandler(QueryHandler):
@@ -20,48 +14,55 @@ class CreateGameHandler(QueryHandler):
     """ Render Create Game Dialog. """
 
 
-    def process_request(self):
-        """ Handle processing request to create a new game. """
-
-        # check for ajax request or not
-        is_asynch = bool(self.get_argument("asynch", False))
-
-        # only allow asynch request
-        if is_asynch:
-            self._post_asynch()
-        else:
-            pass
-
-
-    def _post_asynch(self):
+    def process_asynchronous_request(self):
         """ Handle the asynchronous version of the create game dialog.
 
         Required:
         int     league      Game's league id
-        int     creator     Game's creator id
         list    game_score  Game's final score
                             [{"id": VALUE, "score": VALUE}]
 
         Return:
         bool is_success     if game creation was successful (None from fail)
+
         """
 
         # get game parameters from request
-        params_str = self.get_argument("parameters", None)
-        params_dict = json.loads(params_str)
-        league_id = params_dict["league"]
-        creator_id = params_dict["creator"]
-        game_score = params_dict["game-score"]
+        parameters = self.get_request_parameters()
+
+        # TODO: make request parameters a class or at least constants!
+        league_id = parameters["league"]
+        game_score = parameters["game-score"]
 
         # create game in model
-        creator = catchers.CreateCatcher()
-        new_game = creator.create_game(
-                league_id,
-                creator_id,
-                game_score)
+        model = CreateGameCatcher(self.current_user)
+        model.set_league_id(league_id)
+        model.set_score(game_score)
+        model.dispatch()
 
-        is_success = True
-        if new_game is None:
-            is_success = False
+        self.write({"is_success": model.success})
 
-        self.write({"is_success": is_success})
+
+    def process_synchronous_request(self):
+        """ Override specifies this case effectively doesn't exist. """
+        raise NotImplementedError("Unused Method: DO NOT CALL OR OVERRIDE!")
+
+
+    def get_model(self):
+        """ Define the controller's generic connection to the model. """
+        raise NotImplementedError("Unused Method: DO NOT CALL OR OVERRIDE!")
+
+
+    def get_context_header_url(self):
+        """ Generate a URL for rendering a context header. """
+        raise NotImplementedError("Unused Method: DO NOT CALL OR OVERRIDE!")
+
+
+    def get_asynchronous_content_url(self):
+        """ Generate a URL for handling asynchronous content requests. """
+        raise NotImplementedError("Unused Method: DO NOT CALL OR OVERRIDE!")
+
+
+    def get_synchronous_content_url(self):
+        """ Generate a URL for handling synchronous content requests. """
+        raise NotImplementedError("Unused Method: DO NOT CALL OR OVERRIDE!")

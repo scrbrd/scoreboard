@@ -1,6 +1,6 @@
 """ Module: Handler Constants
 
-Provide a set of top-level constants for the Controller.
+Provide a set of handler constants for the Controller.
 
 """
 
@@ -13,27 +13,30 @@ class _CookieType(object):
 
 
     @constant
-    def USER(self):
-        """ USER is a Type of Cookie. """
-        return "user"
+    def SESSION(self):
+        """ SESSION is a Type of Cookie. """
+        return "session"
 
 
     @constant
-    def STATE(self):
-        """ STATE is a Type of Cookie. """
+    def AUTH_STATE(self):
+        """ AUTH_STATE is a Type of Cookie. """
         return "state"
 
 
 COOKIE_TYPE = _CookieType()
 
 
-class _CookieKey(object):
+class _Cookie(object):
 
-    """ _CookieKey class to describe all Cookie Properties. """
+    """ _Cookie class to describe all Cookie Properties. """
 
-    # FIXME: none of this should exist...it should instead be a collaboration
-    # of the LoginHandler and AuthCatcher to pre-populate the model on every
-    # request with some minimal User/Player. League is just a stopgap.
+
+    @constant
+    def ACCESS_TOKEN(self):
+        """ ACCESS_TOKEN is a Cookie Property. """
+        return "access_token"
+
 
     @constant
     def USER_ID(self):
@@ -42,15 +45,15 @@ class _CookieKey(object):
 
 
     @constant
-    def PLAYER_ID(self):
-        """ PLAYER_ID is a Cookie Property. """
-        return "player_id"
+    def PERSON_ID(self):
+        """ PERSON_ID is a Cookie Property. """
+        return "person_id"
 
 
     @constant
-    def LEAGUE_ID(self):
-        """ LEAGUE_ID is a Cookie Property. """
-        return "league_id"
+    def FACEBOOK_ID(self):
+        """ FACEBOOK_ID is a Cookie Property. """
+        return "facebook_id"
 
 
     @constant
@@ -65,31 +68,202 @@ class _CookieKey(object):
         return "timezone"
 
 
-COOKIE_KEY = _CookieKey()
+    @constant
+    def IP(self):
+        """ IP is a Type of Cookie. """
+        return "ip"
 
 
-class _ArgumentType(object):
+    @constant
+    def LOCALE(self):
+        """ LOCALE is a Type of Cookie. """
+        return "locale"
 
-    """ _ArgumentType class to describe all GET/POST URL Arguments. """
+
+    @constant
+    def FACEBOOK_LOCALE(self):
+        """ FACEBOOK_LOCALE is a Type of Cookie. """
+        return "facebook_locale"
+
+
+    @constant
+    def VERSION(self):
+        """ VERSION is a Type of Cookie. """
+        return "version"
+
+
+COOKIE = _Cookie()
+
+
+class _Argument(object):
+
+    """ _Argument class to describe all GET/POST URL Arguments. """
+
+
+    @constant
+    def ASYNCHRONOUS(self):
+        """ ASYNCHRONOUS is a Type of URL Argument. """
+        return "asynchronous"
+
+
+    @constant
+    def PARAMETERS(self):
+        """ PARAMETERS is a Type of URL Argument. """
+        return "parameters"
 
 
     @constant
     def NEXT(self):
-        """ NEXT is a Type of Argument. """
+        """ NEXT is a Type of URL Argument. """
         return "next"
 
 
     @constant
     def CODE(self):
-        """ CODE is a Type of Argument. """
+        """ CODE is a Type of URL Argument. """
         return "code"
 
 
     @constant
-    def STATE(self):
-        """ STATE is a Type of Argument. """
+    def AUTH_STATE(self):
+        """ AUTH_STATE is a Type of URL Argument. """
         return "state"
 
 
-ARGUMENT_TYPE = _ArgumentType()
+ARGUMENT = _Argument()
 
+
+class _Parameter(object):
+
+    """ _Parameter class to describe GET/POST URL Argument Parameters. """
+
+
+    @constant
+    def LEAGUE_ID(self):
+        """ LEAGUE_ID is a Parameter Property. """
+        return "league"
+
+
+    @constant
+    def SCORE(self):
+        """ SCORE is a Parameter Property. """
+        return "game-score"
+
+
+PARAMETER = _Parameter()
+
+
+class _Setting(object):
+
+    """ _Setting enumerates Controller settings keys. """
+
+
+    @constant
+    def FACEBOOK_API_KEY(self):
+        """ FACEBOOK_API_KEY is a Tornado settings property key. """
+        return "facebook_api_key"
+
+
+    @constant
+    def FACEBOOK_SECRET(self):
+        """ FACEBOOK_SECRET is a Tornado settings property key. """
+        return "facebook_secret"
+
+
+    @constant
+    def DEFAULT_LEAGUE_ID(self):
+        """ DEFAULT_LEAGUE_ID is a Tornado settings property key. """
+        return "league_id"
+
+
+SETTING = _Setting()
+
+
+class _FacebookAuth(object):
+
+    """ _FacebookAuth enumerates Facebook Authentication keys. """
+
+
+    @constant
+    def SCOPE(self):
+        """ SCOPE is a Facebook Authentication key. """
+        return "scope"
+
+
+    @constant
+    def STATE(self):
+        """ STATE is a Facebook Authentication key. """
+        return "state"
+
+
+FACEBOOK_AUTH = _FacebookAuth()
+
+
+class _FacebookAuthScope(object):
+
+    """ _FacebookAuthScope enumerates Facebook Authentication scope keys. """
+
+
+    @constant
+    def ACCESS_TOKEN(self):
+        """ ACCESS_TOKEN is a Facebook Authentication scope key. """
+        return "access_token"
+
+
+    @constant
+    def GENDER(self):
+        """ GENDER is a Facebook Authentication scope key. """
+        return "gender"
+
+
+    @constant
+    def EMAIL(self):
+        """ EMAIL is a Facebook Authentication scope key. """
+        return "email"
+
+
+    @constant
+    def USER_INTERESTS(self):
+        """ USER_INTERESTS is a Facebook Authentication scope key. """
+        return "user_interests"
+
+
+FACEBOOK_AUTH_SCOPE = _FacebookAuthScope()
+
+
+class _Version(object):
+
+    """ _Version enumerates software version number strings. """
+
+
+    @constant
+    def CURRENT(self):
+        """ CURRENT is a string Version Number. """
+        return "0.0"
+
+
+    @constant
+    def BETA(self):
+        """ BETA is a string Version Number. """
+        return "0.0"
+
+
+    @constant
+    def LAST(self):
+        """ LAST is a string Version Number. """
+        return "0.0"
+
+
+    @constant
+    def LAST_GOOD(self):
+        """ LAST_GOOD is a string Version Number. """
+        return "0.0"
+
+
+    @constant
+    def OLD(self):
+        """ OLD is a string Version Number. """
+        return "0.0"
+
+
+VERSION = _Version()

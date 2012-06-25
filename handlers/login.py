@@ -1,3 +1,7 @@
+""" Module: login
+
+"""
+
 import os
 import hashlib
 
@@ -6,7 +10,8 @@ import tornado.auth
 
 from model.app.catchers import FacebookAuthCatcher
 
-from constants import ARGUMENT_TYPE, COOKIE_TYPE, COOKIE_KEY
+from constants import COOKIE_TYPE, COOKIE, ARGUMENT, SETTING
+from constants import FACEBOOK_AUTH, FACEBOOK_AUTH_SCOPE, VERSION
 
 from handlers.base import BaseHandler
 
@@ -15,6 +20,7 @@ from handlers.base import BaseHandler
 class LoginHandler(BaseHandler, tornado.auth.FacebookGraphMixin):
 
     """ Handle User login. Currently handles Facebook Graph Login only. """
+
 
     # NOT tornado.web.authenticated because this creates the user info.
     @tornado.web.asynchronous
@@ -25,58 +31,63 @@ class LoginHandler(BaseHandler, tornado.auth.FacebookGraphMixin):
 
     def process_request(self):
         """ Process login request. Inherited from BaseHandler. """
+        code = self.get_auth_code()
 
-        code = self.get_argument(ARGUMENT_TYPE.CODE, False)
-
-        # TODO: make constants so we don't have to hardcode any of this.
-        # TODO: does this belong in the LoginCatcher?
         extra_fields = [
-                #"gender",
-                "email",
-                "user_interests",
+                #FACEBOOK_AUTH_SCOPE.GENDER,
+                FACEBOOK_AUTH_SCOPE.EMAIL,
+                FACEBOOK_AUTH_SCOPE.USER_INTERESTS,
                 ]
+
+        client_id = self.settings.get(SETTING.FACEBOOK_API_KEY)
+        client_secret = self.settings.get(SETTING.FACEBOOK_SECRET)
 
         # if there is no "code" then do Facebook app authorization
         if not code:
 
-            # create a unique state to prevent XSRF
-            state = self.create_unique_state()
-            self.set_secure_cookie(COOKIE_TYPE.STATE, state)
-            scope = ",".join(extra_fields)
+            # create a unique state to prevent XSRF on auth/login
+            state = self.generate_auth_state()
+            self.create_auth_state(state)
+
+            # TODO: is state supposed to be passed with extra_params?
+            extra_params = {
+                    FACEBOOK_AUTH.SCOPE: ",".join(extra_fields),
+                    FACEBOOK_AUTH.STATE: state,
+                    }
 
             # request authorization from Facebook and redirect as desired
             self.authorize_redirect(
-                    redirect_uri=self.redirect_uri(),
-                    client_id=self.settings["facebook_api_key"],
-                    extra_params={"scope": scope, "state": state})
+                    self.redirect_uri(),
+                    client_id,
+                    client_secret,
+                    extra_params)
 
         # Facebook has provided a "code," so get the "access token"
         else:
 
-            request_state = self.get_argument(ARGUMENT_TYPE.STATE, None)
-            session_state = self.get_secure_cookie(COOKIE_TYPE.STATE)
+            request_auth_state = self.get_request_auth_state()
+            cookie_auth_state = self.pop_auth_state()
 
             # if request and session state don't exist and match, this is CSRF
             if all([
-                    request_state is not None,
-                    session_state is not None,
-                    request_state == session_state]):
-
-                # TODO: make a constant so we don't have to hardcode any of this.
+                    request_auth_state is not None,
+                    cookie_auth_state is not None,
+                    request_auth_state == cookie_auth_state]):
 
                 self.get_authenticated_user(
-                        redirect_uri=self.redirect_uri(),
-                        client_id=self.settings["facebook_api_key"],
-                        client_secret=self.settings["facebook_secret"],
-                        code=code,
-                        callback=self._on_auth)
-                        #callback=self._on_auth,
-                        #extra_fields=set(extra_fields))
+                        self.redirect_uri(),
+                        client_id,
+                        client_secret,
+                        code,
+                        self._on_auth)
+                        #self._on_auth,
+                        #set(extra_fields))
 
                 return
 
             else:
 
+                # TODO: log this appropriately too.
                 self.write("CSRF!")
                 self.finish()
 
@@ -89,48 +100,105 @@ class LoginHandler(BaseHandler, tornado.auth.FacebookGraphMixin):
         if not raw_user:
             raise tornado.web.HTTPError(500, "Facebook auth failed.")
 
-        # TODO: implement join-league and remove league_id argument!
+        model = FacebookAuthCatcher(self.current_user)
+        model.set_facebook_user(raw_user)
+        model.set_ip(self.request.remote_ip)
+        model.set_locale(self.locale.code)
 
-        auth = FacebookAuthCatcher(
-                raw_user,
-                self.request.remote_ip,
-                self.settings['league_id'])
-        cookie = self.secure_cookie(auth.user(), auth.player(), auth.league())
-        self.set_secure_cookie(COOKIE_TYPE.USER, cookie)
+        # TODO: default league should come from invitation to join
+        model.set_default_league_id(
+                self.settings.get(SETTING.DEFAULT_LEAGUE_ID))
 
-        self.redirect(
-                self.get_argument(ARGUMENT_TYPE.NEXT, self.get_login_url()))
+        model.load_and_dispatch()
+
+        self.create_session(
+                model.user,
+                model.person,
+                raw_user.get(FACEBOOK_AUTH_SCOPE.ACCESS_TOKEN))
+
+        self.redirect(self.get_next_url())
 
 
     def redirect_uri(self):
         """ Generate a URI to redirect to after login/authorization. """
         # query argument "next" indicates the user's intended destination
-        path = self.get_argument(ARGUMENT_TYPE.NEXT, self.get_login_url())
+        next_url = self.get_next_url()
+
+        # TODO: build a URL class and use it here!
 
         # build URI to redirect to upon successful login/authorization
         return "{0}://{1}{2}?{3}={4}".format(
                 self.request.protocol,  # http
                 self.request.host,      # www.sqoreboard.com
                 self.request.path,      # /login
-                ARGUMENT_TYPE.NEXT,
-                tornado.escape.url_escape(path))
+                ARGUMENT.NEXT,
+                tornado.escape.url_escape(next_url))
 
 
-    def secure_cookie(self, user, player, league):
-        """ Return a json-encoded dictionary to be set as a cookie. """
-        league_id = league.id if league is not None else None
+    def create_session(self, user, person, access_token=None):
+        """ Return a dictionary to be set as a cookie. """
+        session = {
+                COOKIE.USER_ID: user.id,
+                COOKIE.PERSON_ID: person.id,
+                COOKIE.FACEBOOK_ID: user.fb_id,
+                COOKIE.GENDER: person.gender,
+                COOKIE.TIMEZONE: user.timezone,
+                COOKIE.IP: user.last_ip,
+                COOKIE.LOCALE: user.locale,
+                COOKIE.VERSION: VERSION.CURRENT,
+                }
 
-        return tornado.escape.json_encode({
-                COOKIE_KEY.USER_ID   : user.id,
-                COOKIE_KEY.TIMEZONE  : user.timezone,
-                COOKIE_KEY.PLAYER_ID : player.id,
-                COOKIE_KEY.GENDER    : player.gender,
-                COOKIE_KEY.LEAGUE_ID : league_id,
-                })
+        if access_token is not None:
+            session[FACEBOOK_AUTH_SCOPE.ACCESS_TOKEN] = access_token
+
+        return self.set_encrypted_cookie(COOKIE_TYPE.SESSION, session)
 
 
-    @staticmethod
-    def create_unique_state():
-        """ Create a unique string that can be used as a state. """
-        # TODO: make a more rigorous algorithm
+    def create_auth_state(self, state):
+        """ Save a secure authorization status cookie. """
+        # TODO: when adding other third party login solutions besides Facebook,
+        # consider raising NotImplementedError and overriding in subclasses.
+        self.set_encrypted_cookie(COOKIE_TYPE.AUTH_STATE, state)
+
+
+    def pop_auth_state(self):
+        """ Return and clear a secure authorization status cookie. """
+        # TODO: when adding other third party login solutions besides Facebook,
+        # consider raising NotImplementedError and overriding in subclasses.
+        return self.pop_decrypted_cookie(COOKIE_TYPE.AUTH_STATE)
+
+
+    def generate_auth_state(self):
+        """ Return a unique string to be set as the auth state cookie. """
+        # TODO: do we need a more rigorous algorithm?
         return hashlib.md5(os.urandom(32)).hexdigest()
+
+
+    def get_auth_code(self):
+        """ Return the auth code for this request. """
+        return self.get_code_argument()
+
+
+    def get_request_auth_state(self):
+        """ Return the auth state for this request. """
+        return self.get_auth_state_argument()
+
+
+    def get_next_url(self):
+        """ Return the next url to forward to from this request. """
+        return self.get_next_argument()
+
+
+    def get_code_argument(self):
+        """ Return the "code" request argument. """
+        return self.get_argument(ARGUMENT.CODE, False)
+
+
+    def get_auth_state_argument(self):
+        """ Return the "state" request argument. """
+        return self.get_argument(ARGUMENT.AUTH_STATE, None)
+
+
+    def get_next_argument(self):
+        """ Return the "next" request argument. """
+        return self.get_argument(ARGUMENT.NEXT, self.get_login_url())

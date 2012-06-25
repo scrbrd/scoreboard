@@ -10,19 +10,19 @@ from view.constants import SQ_DATA, MODEL_ID
 from view.html.elements import DataInput
 
 
-class ViewerContextModel(DataInput):
+class SessionModel(DataInput):
 
-    """ Viewer Context Model container that extends DataInput. """
+    """ Session Model container that extends DataInput. """
 
-    def __init__(self, viewer_context):
-        """ Construct a viewer context model div element tree. """
-        super(ViewerContextModel, self).__init__()
-        self.set_id(MODEL_ID.VIEWER_CONTEXT)
+    def __init__(self, session):
+        """ Construct a session model div element tree. """
+        super(SessionModel, self).__init__()
+        self.set_id(MODEL_ID.SESSION)
 
         # set rivals data for friend/rival player selection
         view_rivals = []
-        # TODO make viewer_context an object instead of a dictionary
-        for r in viewer_context[SQ_DATA.RIVALS]:
+        # TODO make session an object instead of a dictionary
+        for r in session[SQ_DATA.RIVALS]:
             view_rivals.append({SQ_DATA.ID: r.id, SQ_DATA.NAME: r.name})
         self.set_data(SQ_DATA.RIVALS, json.dumps(view_rivals))
 

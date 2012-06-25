@@ -8,10 +8,10 @@
 
 
     MODELS:
-    We are using a very limited model. ViewerContext is being fetched once to
-    provide some properties about the user/viewer. PageState is being fetched
-    on every page load and keeps track of important contextual information
-    as well as providing blocks of html to the Views.
+    We are using a very limited model. Session is being fetched once to provide
+    some properties about the User. PageState is being fetched on every
+    pageload and keeps track of important contextual information as well as
+    providing blocks of html to the Views.
 
     ROUTER/CRUD:
     We use Backbone's Router for URL updating, but all data fetching is being
@@ -60,7 +60,7 @@
     @requires CreateGameController
     @requires DialogController
     @requires LoginController
-    @requires ViewerContextModel
+    @requires SessionModel
     @requires PageStateModel
 */
 require(
@@ -72,7 +72,7 @@ require(
     'controller/createGame',
     'controller/dialog',
     'controller/login',
-    'model/viewerContextModel',
+    'model/sessionModel',
     'model/pageStateModel'
 ],
 function (
@@ -83,7 +83,7 @@ function (
         CreateGameController,
         DialogController,
         LoginController,
-        ViewerContextModel,
+        SessionModel,
         PageStateModel) {
 
 
@@ -95,7 +95,7 @@ function initializeApp() {
     $.ajaxSetup({
         cache: false
     });
-    
+
     // TODO remove facebook's #_=_ insertion that happens at login
     Router.initializeWithPushState();
 
@@ -104,14 +104,14 @@ function initializeApp() {
     // Run DOM dependent logic - Models and Views initialization
     $(document).ready(function () {
         var docView,
-            pageStateModel,
-            viewerContextModel;
+            sessionModel,
+            pageStateModel;
 
-        viewerContextModel = ViewerContextModel.retrieve();
+        sessionModel = SessionModel.retrieve();
         pageStateModel = PageStateModel.retrieve();
         
         docView = Doc.construct(
-                viewerContextModel,
+                sessionModel,
                 pageStateModel);
 
         // initialize pushState in the DOM
@@ -119,7 +119,7 @@ function initializeApp() {
                 
         // only load dialog after the User has access to the application.
         // FIXME rearchitect how lazy load should work.
-        docView.lazyInitialize(viewerContextModel, pageStateModel);
+        docView.lazyInitialize(sessionModel, pageStateModel);
     });
 }
 

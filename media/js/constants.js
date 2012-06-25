@@ -44,7 +44,6 @@ var constants = {
         SCROLLER:               "#iscroll-wrapper"
     },
 
-
     /**
         Enum for Class selectors. (Prefixed with '.')
         @enum {string}
@@ -86,7 +85,7 @@ var constants = {
         @enum {string}
     */
     MODEL_ID: {
-        VIEWER_CONTEXT:         "#model-viewer-context",
+        SESSION:                "#model-session",
         CONTEXT:                "#model-context",
         PAGE_STATE:             "#model-page-state"
     },

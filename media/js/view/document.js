@@ -50,18 +50,18 @@ var DocView = Backbone.View.extend({
 
     /**
         Initialize View, pull data for models, and setup page.
-        @param {Object} viewerContextModel
+        @param {Object} sessionModel
         @param {Object} pageStateModel
     */
     initialize: function (
-            viewerContextModel,
+            sessionModel,
             pageStateModel) {
 
         this.setElement(Const.DOM.BODY);
-        this.viewerContextModel = viewerContextModel;
+        this.sessionModel = sessionModel;
         this.pageStateModel = pageStateModel;
 
-        this.updateViewerContextModel(viewerContextModel);
+        this.updateSessionModel(sessionModel);
         this.updatePageStateModel(pageStateModel);
 
         if (pageStateModel.pageType() === Const.PAGE_TYPE.TAB) {
@@ -80,12 +80,12 @@ var DocView = Backbone.View.extend({
     },
 
     /**
-        Pull data from HTML and insert into ViewerContextModel.
+        Pull data from HTML and insert into SessionModel.
         @param {Object} model
     */
-    updateViewerContextModel: function (model) {
-        var viewerElem = $(Const.MODEL_ID.VIEWER_CONTEXT);
-        model.setRivals(viewerElem.data(Const.DATA.RIVALS));
+    updateSessionModel: function (model) {
+        var sessionElem = $(Const.MODEL_ID.SESSION);
+        model.setRivals(sessionElem.data(Const.DATA.RIVALS));
     },
 
     /**
@@ -113,13 +113,13 @@ var DocView = Backbone.View.extend({
     /**
         Initialize parts of page that aren't initially required.
         Add DialogView and dialog's HTML to DOM
-        @param {Object} viewerContextModel
+        @param {Object} sessionModel
         @param {Object} pageStateModel
 
         @requires DialogView
         @requires text:dialog.creategame
     */
-    lazyInitialize: function (viewerContextModel, pageStateModel) {
+    lazyInitialize: function (sessionModel, pageStateModel) {
         var that = this;
         require(
                 [
@@ -130,7 +130,7 @@ var DocView = Backbone.View.extend({
             that.dialog = that.setDialog(
                     Dialog,
                     dialogHTML,
-                    viewerContextModel,
+                    sessionModel,
                     pageStateModel);
         });
     },
@@ -153,19 +153,19 @@ var DocView = Backbone.View.extend({
         Add dialog html to the DOM and initialize DialogView.
         @param {Object} Dialog DialogView
         @param {string} dialogHTML the html that makes up the dialog
-        @param {Object} viewerContextModel
+        @param {Object} sessionModel
         @param {Object} pageStateModel
     */
     setDialog: function (
             Dialog,
             dialogHTML,
-            viewerContextModel,
+            sessionModel,
             pageStateModel) {
         // make the dialog height = current page height
         var pageHeight = $(Const.ID.TAB).height();
         var createGameView = Dialog.construct(
                 dialogHTML,
-                viewerContextModel,
+                sessionModel,
                 pageStateModel,
                 pageHeight);
         return createGameView;

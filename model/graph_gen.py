@@ -9,6 +9,7 @@ Implicitly, this is a composite unit test for:
 
 """
 
+import os
 import random
 
 from model.constants import PROPERTY_VALUE
@@ -23,14 +24,12 @@ NUMBER_OF_GAMES = 10000
 
 # XXX: add a new League name to the end of this list when generating a new
 # graph so that test Leagues are uniquely named and more easily identifiable.
-LEAGUE_NAMES = [
-        "The Banana Stand",
-        "Game of Thrones",
-        "The Joy of Serving Others",
-        "Oh No!",
-        ]
-import os
-s = os.times()[4]
+#LEAGUE_NAME = "The Banana Stand"
+#LEAGUE_NAME = "Game of Thrones"
+#LEAGUE_NAME = "The Joy of Serving Others"
+LEAGUE_NAME = "SPORTS!"
+
+timer_start = os.times()[4]
 
 # USER/PLAYER CREATION
 
@@ -1034,7 +1033,7 @@ print("{0} Players created successfully.".format(len(player_ids)))
 # LEAGUE CREATION
 
 league = League.create_league(
-        LEAGUE_NAMES.pop(),
+        LEAGUE_NAME,
         random.choice(player_ids),
         player_ids)
 
@@ -1076,7 +1075,6 @@ for n in range(0, NUMBER_OF_GAMES):
 
 print("{0} Games created successfully.".format(len(games)))
 
-e = os.times()[4]
-diff = e - s
-print("THE OVERALL TIME is: {0}s".format(diff))
+timer_end = os.times()[4]
 
+print("THE OVERALL TIME is: {0}s".format(timer_end - timer_start))

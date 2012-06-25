@@ -6,25 +6,38 @@ from handlers.rankings import RankingsHandler
 logger = logging.getLogger('boilerplate.' + __name__)
 
 
-class HomeHandler(LandingHandler, RankingsHandler):
+class HomeHandler(RankingsHandler, LandingHandler):
 
     """ Determine if the user needs to see the Landing page or the Home page.
 
     Check for a logged in user and then route appropriately.
 
+    IMPORTANT: RankingsHandler must be inherited before LandingHandler
+    in order to make sure that self.current_user refers to the
+    RankingsHandler implementation, which will always return a
+    Session if one exists.
+
+    from http://docs.python.org/release/1.5/tut/node66.html
+
+    It is clear that indiscriminate use of multiple inheritance is a
+    maintenance nightmare, given the reliance in Python on conventions
+    to avoid accidental name conflicts. A well-known problem with
+    multiple inheritance is a class derived from two classes that happen
+    to have a common base class. While it is easy enough to figure out
+    what happens in this case (the instance will have a single copy of
+    ``instance variables'' or data attributes used by the common base
+    class), it is not clear that these semantics are in any way useful.
+
     """
 
-    # NOT @tornado.web.authenticated so that it can handle unknown users
-    # differently.
+    # NOT @tornado.web.authenticated because LandingHandler is not.
     def get(self):
         """ Handle GET request for the Home page. """
 
-        # if the user is logged in then send him home.
+        # if the user is logged, go to the home page.
         if self.current_user is not None:
             RankingsHandler.process_request(self)
 
-        # TODO could check with facebook to see if the user's still logged in
-
-        # if the user is not logged in then show the Landing Page.
+        # otherwise, go to the landing page.
         else:
             LandingHandler.process_request(self)

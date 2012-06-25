@@ -5,8 +5,6 @@ members aren't strictly members [they are pulled from properties].
 
 """
 
-from model.constants import NODE_PROPERTY, THIRD_PARTY
-
 from constants import API_NODE_TYPE, API_EDGE_TYPE, API_NODE_PROPERTY
 
 from sqobject import SqNode
@@ -19,7 +17,7 @@ class Player(Person, Opponent):
 
     """ Player is a subclass of SqNode.
 
-    Provide access to the attributes of a Player, including fields and 
+    Provide access to the attributes of a Player, including fields and
     edges connecting to other nodes.
 
     Required:
@@ -49,7 +47,7 @@ class Player(Person, Opponent):
 
     def count_wins(self):
         """ Return the number of Games this Player has won. """
-        # it's possible for a player not to have any wins, in which case there 
+        # it's possible for a player not to have any wins, in which case there
         # won't be an entry in the edges dict, so default to the empty dict
         return len(self.get_edges().get(API_EDGE_TYPE.WON, {}))
 
@@ -79,10 +77,7 @@ class Player(Person, Opponent):
             last_name,
             spawner_id,
             owner_id=None,
-            third_parties={},
-            from_node_id=None,
-            in_edge_type=None,
-            in_edge_properties={}):
+            third_parties={}):
         """ Create a Player and return it.
 
         Required:
@@ -93,9 +88,6 @@ class Player(Person, Opponent):
         Optional:
         id      owner_id            id of User controlling this Player
         dict    third_parties       key/val dicts keyed on 3rd party
-        id      from_node_id        League/Team/Game to connect to Player
-        str     in_edge_type        Entity > Player edge type
-        dict    in_edge_properties  Entity > Player edge properties
 
         Return:
         Player                      is a Person, acts as an Opponent
@@ -114,16 +106,24 @@ class Player(Person, Opponent):
 
         player_keys = Player.property_keys()
 
-        # FIXME: for now, we co-locate third party username/email with each
-        # associated User and Player...it's kinda bad.
+        # TODO: everything below should happen generically in Person._create()
+        #return Person.create(
+        #        raw_properties,
+        #        Player.property_keys(),
+        #        spawner_id,
+        #        owner_id,
+        #        third_parties)
+
+        # FIXME: for now, we co-locate third party username/email with both
+        # the associated User and Person...it's kinda bad.
         player_keys.extend([
                 API_NODE_PROPERTY.USERNAME,
                 API_NODE_PROPERTY.EMAIL,
                 ])
 
         raw_properties = {
-                API_NODE_PROPERTY.FIRST_NAME : first_name,
-                API_NODE_PROPERTY.LAST_NAME : last_name,
+                API_NODE_PROPERTY.FIRST_NAME: first_name,
+                API_NODE_PROPERTY.LAST_NAME: last_name,
                 }
 
         properties = SqNode.prepare_node_properties(
@@ -141,7 +141,7 @@ class Player(Person, Opponent):
 
         # prepare edge prototypes for spawner edges
         prototype_edges = editor.prototype_edge_and_complement(
-                API_EDGE_TYPE.SPAWNED_BY,
+                API_EDGE_TYPE.SPAWNED,
                 {},
                 spawner_id)
 
@@ -150,31 +150,20 @@ class Player(Person, Opponent):
 
         # prepare edge prototypes for owner edges
         prototype_edges.extend(editor.prototype_edge_and_complement(
-                API_EDGE_TYPE.OWNED_BY,
+                API_EDGE_TYPE.OWNS,
                 {},
                 owner_id))
 
-        prototype_edges.append(editor.prototype_outgoing_edge(
+        prototype_edges.append(editor.prototype_edge(
                 API_EDGE_TYPE.HAS_PRIMARY,
                 {},
+                None,
                 owner_id))
 
-        prototype_edges.append(editor.prototype_incoming_edge(
+        prototype_edges.append(editor.prototype_edge(
                 API_EDGE_TYPE.DEFAULTS_TO,
                 {},
-                owner_id))
-
-        # prepare edge prototypes for optionally specified entity edges
-        if from_node_id is not None and in_edge_type is not None:
-
-            # make sure not to pass on invalid edge properties
-            if in_edge_properties is None:
-                in_edge_properties = {}
-
-            prototype_edges.extend(editor.prototype_edge_and_complement(
-                    in_edge_type,
-                    in_edge_properties,
-                    from_node_id))
+                owner_id,
+                None))
 
         return editor.create_node_and_edges(prototype_node, prototype_edges)
-

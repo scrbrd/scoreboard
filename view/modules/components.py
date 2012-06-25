@@ -28,7 +28,7 @@ from view.constants import PAGE_TYPE, PAGE_NAME, APP_CLASS, SQ_DATA
 from view.html.elements import Element
 from view.html.tab.framework import AppHeader, AppFooter, NavHeader
 from view.html.tab.framework import ContextHeader
-from view.html.tab.model import ViewerContextModel
+from view.html.tab.model import SessionModel
 from view.html.tab.model import ContextModel, PageModel
 from view.html.tab.games import GamesTabSection
 from view.html.tab.rankings import RankingsTabSection
@@ -87,14 +87,14 @@ class UIContextModel(tornado.web.UIModule):
         return Element.to_string(element_tree)
 
 
-class UIViewerContextModel(tornado.web.UIModule):
+class UISessionModel(tornado.web.UIModule):
 
-    """ Viewer Context Model UI Module. """
+    """ Session Model UI Module. """
 
     def render(self, model=None, state=None):
-        """ Render a Viewer Context Model. """
-        viewer_context = {SQ_DATA.RIVALS: model.rivals}
-        element_tree = ViewerContextModel(viewer_context).element()
+        """ Render a Session Model. """
+        session = {SQ_DATA.RIVALS: model.rivals}
+        element_tree = SessionModel(session).element()
 
         return Element.to_string(element_tree)
 

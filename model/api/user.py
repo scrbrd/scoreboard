@@ -7,11 +7,9 @@ members aren't strictly members [they are pulled from properties].
 
 from time import time
 
-from model.constants import NODE_PROPERTY, PROPERTY_KEY, PROPERTY_VALUE
-from model.constants import THIRD_PARTY, VERSION
+from model.constants import NODE_PROPERTY, THIRD_PARTY, PROPERTY_VALUE
 
-from constants import API_NODE_TYPE, API_EDGE_TYPE
-from constants import API_NODE_PROPERTY, API_EDGE_PROPERTY
+from constants import API_NODE_TYPE, API_EDGE_TYPE, API_NODE_PROPERTY
 
 from sqobject import SqNode
 from player import Player
@@ -23,7 +21,7 @@ class User(SqNode):
 
     """ User is a subclass of SqNode.
 
-    Provide access to the attributes of a User, including fields and 
+    Provide access to the attributes of a User, including fields and
     edges connecting to other nodes.
 
     Sqoreboard bases its user and account, for now, on Facebook in order
@@ -80,10 +78,10 @@ class User(SqNode):
     int     _fb_timezone        Facebook current user UTC offset
     str     _fb_locale          Facebook user locale: ISO lang+country
     url     _fb_picture         Facebook user profile picture url
-    
+
     str     _fb_email           Facebook user contact/login email
 
-    str     _version                what version is this user seeing?
+    str     _locale                 user locale: ISO lang+country
     str     _last_ip                what was the last session's ip?
     ts      _last_login_ts          when did the last session start?
     ts      _last_authorized_ts     when was an auth token last created?
@@ -129,12 +127,6 @@ class User(SqNode):
     def locale(self):
         """ Return a this User's locale string (ISO lang + country). """
         return self._get_property(API_NODE_PROPERTY.LOCALE)
-
-
-    @property
-    def version(self):
-        """ Return our app version string for this User. """
-        return self._get_property(API_NODE_PROPERTY.VERSION)
 
 
     @property
@@ -214,7 +206,6 @@ class User(SqNode):
                 API_NODE_PROPERTY.USERNAME,
                 API_NODE_PROPERTY.TIMEZONE,
                 API_NODE_PROPERTY.LOCALE,
-                API_NODE_PROPERTY.VERSION,
                 API_NODE_PROPERTY.LAST_IP,
                 API_NODE_PROPERTY.LAST_LOGIN_TS,
                 API_NODE_PROPERTY.LAST_AUTHORIZED_TS,
@@ -233,10 +224,7 @@ class User(SqNode):
             third_parties={},
             inviter_id=None,
             ip=None,
-            version=VERSION.CURRENT,
-            from_node_id=None,
-            in_edge_type=None,
-            in_edge_properties={}):
+            locale=None):
         """ Create a User and Player atomically and return both.
 
         Required:
@@ -250,10 +238,7 @@ class User(SqNode):
         dict    third_parties       key/val dicts keyed on 3rd party
         id      inviter_id          User inviting/spawning User/Player
         str     ip                  User's IP, if logged in
-        str     version             User's version number, if logged in
-        id      from_node_id        League/Team/Game to connect to Player
-        str     in_edge_type        Entity > Player edge type
-        dict    in_edge_properties  Entity > Player edge properties
+        str     locale              User's locale (ISO language+country)
 
         Return:
         tuple                       (User, Player)
@@ -277,7 +262,7 @@ class User(SqNode):
                 third_parties,
                 inviter_id,
                 ip,
-                version)
+                locale)
 
         owner_id = user.id
         spawner_id = inviter_id if inviter_id is not None else owner_id
@@ -287,10 +272,7 @@ class User(SqNode):
                 last_name,
                 spawner_id,
                 owner_id,
-                third_parties,
-                from_node_id,
-                in_edge_type,
-                in_edge_properties)
+                third_parties)
 
         return (user, player)
 
@@ -303,7 +285,7 @@ class User(SqNode):
             third_parties={},
             inviter_id=None,
             ip=PROPERTY_VALUE.EMPTY,
-            version=VERSION.CURRENT):
+            locale=PROPERTY_VALUE.EMPTY):
         """ Create a User and return it.
 
         Required:
@@ -313,9 +295,9 @@ class User(SqNode):
 
         Optional:
         dict    third_parties   key/val dicts keyed on 3rd party
-        id      inviter_id      User inviting/spawning User/Player
+        id      inviter_id      User inviting/spawning User/Person
         str     ip              User's IP, if logged in
-        str     version         User's version number, if logged in
+        str     locale          User's locale (ISO language+country)
 
         Return:
         User                    SqNode can log in, act as other SqNodes
@@ -342,24 +324,23 @@ class User(SqNode):
         # these properties are not explicitly required. one or more third
         # parties may provide them instead.
         raw_properties = {
-                API_NODE_PROPERTY.EMAIL : email,
-                API_NODE_PROPERTY.PASSWORD_HASH : password_hash,
+                API_NODE_PROPERTY.EMAIL: email,
+                API_NODE_PROPERTY.PASSWORD_HASH: password_hash,
                 }
 
         # TODO: figure out what else to do with referrer_url
 
-        # no ip would mean this user isn't logged in at creation time, in which
-        # case the initialized empty values will suffice. we may choose to
-        # change this for version depending on how it will be used.
+        # no ip address would mean this user isn't logged in at creation time,
+        # in which case the initialized empty values suffice.
         if ip:
             current_ts = int(time())
 
             raw_properties.update({
-                API_NODE_PROPERTY.REFERRER_URL : referrer_url,
-                API_NODE_PROPERTY.LAST_IP : ip,
-                API_NODE_PROPERTY.VERSION : version,
-                API_NODE_PROPERTY.LAST_LOGIN_TS : current_ts,
-                API_NODE_PROPERTY.LAST_AUTHORIZED_TS : current_ts,
+                API_NODE_PROPERTY.REFERRER_URL: referrer_url,
+                API_NODE_PROPERTY.LAST_IP: ip,
+                API_NODE_PROPERTY.LOCALE: locale,
+                API_NODE_PROPERTY.LAST_LOGIN_TS: current_ts,
+                API_NODE_PROPERTY.LAST_AUTHORIZED_TS: current_ts,
                 })
 
         # squash the two into one set of flat, valid node properties
@@ -376,7 +357,7 @@ class User(SqNode):
                 API_NODE_TYPE.USER,
                 properties)
 
-        # TODO: prepare an edge prototype for the invited_id
+        # TODO: prepare an edge prototype for the inviter_id
 
         return editor.create_node_and_edges(prototype_node, [])
 
@@ -414,4 +395,3 @@ class User(SqNode):
                 key,
                 x_email,
                 [API_NODE_TYPE.USER])
-

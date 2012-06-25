@@ -1,7 +1,7 @@
 """ Module: sqfactory
 
-A simple factory pattern implementation for churning out concrete 
-instances of SqNode and SqEdge subclasses based on the types stored by 
+A simple factory pattern implementation for churning out concrete
+instances of SqNode and SqEdge subclasses based on the types stored by
 GraphNodes and GraphEdges.
 
 Provides:
@@ -12,8 +12,8 @@ Provides:
 
 """
 
-from model.graph import GraphEdge, GraphNode
-from constants import API_NODE_TYPE, API_EDGE_TYPE
+# TODO: when SqEdge subclasses exist, uncomment this
+from constants import API_NODE_TYPE  # , API_EDGE_TYPE
 # TODO: when SqEdge subclasses exist, don't import SqEdge
 from sqobject import SqEdge
 import game
@@ -61,7 +61,7 @@ def construct_node(graph_node):
 
     elif graph_node.type() == API_NODE_TYPE.GAME:
         node = game.Game(graph_node)
-    
+
     elif graph_node.type() == API_NODE_TYPE.USER:
         node = user.User(graph_node)
 
@@ -131,6 +131,5 @@ def construct_edges(graph_edges):
 
         # TODO: decide whether returning None on any failure is better?
         edges[type][id] = construct_edge(graph_edge)
-    
-    return edges
 
+    return edges

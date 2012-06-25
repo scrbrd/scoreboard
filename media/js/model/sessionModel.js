@@ -1,10 +1,10 @@
 /**
-    Represent the Viewer/User's context - we're talking application
-    logic and not View/Page State.
+    Represent the User's context - we're talking application logic, not
+    View/Page State.
 
     These Models aren't using Prototypal inheritance to comply with Backbone.
 
-    @exports ViewerContextModel
+    @exports SessionModel
     
     @requires Const
     @requires Backbone
@@ -16,12 +16,11 @@ define(
         ],
         function (Const, Backbone) {
 
-
 /**
-    Model to hold Viewer Context.
+    Model to hold Session.
     @constructor
 */
-var ViewerContextModel = Backbone.Model.extend({
+var SessionModel = Backbone.Model.extend({
     
     /**
         Provide access to viewer's rivals.
@@ -51,12 +50,11 @@ var ViewerContextModel = Backbone.Model.extend({
 
 });
 
-var viewerContextModel = new ViewerContextModel();
+var sessionModel = new SessionModel();
 return {
     retrieve: function () {
-        return viewerContextModel;
+        return sessionModel;
     }
 };
-
 
 });

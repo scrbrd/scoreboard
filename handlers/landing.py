@@ -1,15 +1,15 @@
-import logging
+""" Module: landing
+
+"""
 
 from handlers.base import BaseHandler
-
-logger = logging.getLogger('boilerplate.' + __name__)
 
 
 class LandingHandler(BaseHandler):
 
     """ Handle rendering the Landing page. """
 
-    # NOT tornado.web.authenticated because anybody can see Splash.
+    # explicitly NOT tornado.web.authenticated because anybody can see this.
     def get(self):
         """ Handle GET request for the Landing page. """
         self.process_request()

@@ -37,7 +37,7 @@ var JSON_RESPONSE = "json";
 */
 var REQUEST_KEY = {
     XSRF:           "_xsrf",
-    ASYNCH:         "asynch",
+    ASYNCHRONOUS:   "asynchronous",
     PARAMS:         "parameters"
 };
 
@@ -69,7 +69,7 @@ function create(type, objParams, successFunction) {
     xsrfToken = objParams[REQUEST_KEY.XSRF];
     delete objParams[REQUEST_KEY.XSRF];
 
-    requestData[REQUEST_KEY.ASYNCH] = true;
+    requestData[REQUEST_KEY.ASYNCHRONOUS] = true;
     requestData[REQUEST_KEY.XSRF] = xsrfToken;
     requestData[REQUEST_KEY.PARAMS] = escapedParams;
 
@@ -99,7 +99,7 @@ function create(type, objParams, successFunction) {
 */
 function read(url, successFunction) {
     var requestData = {};
-    requestData[REQUEST_KEY.ASYNCH] = true;
+    requestData[REQUEST_KEY.ASYNCHRONOUS] = true;
 
     var start = new Date().getTime();
     $.get(

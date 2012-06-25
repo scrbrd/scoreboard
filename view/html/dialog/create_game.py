@@ -31,10 +31,9 @@ class CreateGameForm(Form):
         super(CreateGameForm, self).__init__(name, xsrf_token, action_url)
         self.append_classes([DIALOG_CLASS.DIALOG_CONTENT])
 
-        # FIXME take out hard coded values
         self.append_child(HiddenInput(FORM_NAME.LEAGUE, ""))
-        self.append_child(HiddenInput(FORM_NAME.CREATOR, "700"))
 
+        # TODO: take out hard coded values
         # create game score form section with Player and Winner headings
         headings = ["Player", "W"]
         numberOfRows = 4

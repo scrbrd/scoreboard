@@ -5,19 +5,16 @@ data is retrieved and returned as a Catcher.
 
 """
 
-from copy import deepcopy
+import tornado.web
+
 from exceptions import NotImplementedError
 
 from model.constants import NODE_PROPERTY, PROPERTY_VALUE, THIRD_PARTY
 
-from model.api.constants import API_NODE_PROPERTY
-
 from model.api.user import User
 from model.api.person import Person
-from model.api.player import Player
 from model.api.game import Game
 from model.api.league import League
-from model.api.opponent import Opponent
 
 
 class Catcher(object):
@@ -29,14 +26,32 @@ class Catcher(object):
 
     """
 
+    _session = None
 
-    def __init__(self):
+
+    def __init__(self, session):
         """ Catcher is an abstract superclass. """
-        raise NotImplementedError("Catcher must be extended by a subclass.")
+        self._session = session
+
+
+    @property
+    def session(self):
+        """ Return a Session with some User/Person session data. """
+        return self._session
+
+
+    def load(self):
+        """ Return a model. """
+        raise NotImplementedError("Abstract Class: SUBCLASS MUST OVERRIDE!")
+
+
+    def dispatch(self):
+        """ Propagate a write to a model. """
+        raise NotImplementedError("Abstract Class: SUBCLASS MUST OVERRIDE!")
 
 
 class ReadCatcher(Catcher):
-    
+
     """ Read and return all data for a model request.
 
     Required:
@@ -49,9 +64,21 @@ class ReadCatcher(Catcher):
     _rivals = None
 
 
-    def _load_catcher(self):
-        """ Load all necessary data. """
-        raise NotImplementedError("Catcher must be extended by a subclass.")
+    def dispatch(self):
+        """ Propagate a write to a model. """
+        raise NotImplementedError("Unused Method: DO NOT CALL OR OVERRIDE!")
+
+
+    @property
+    def context(self):
+        """ Context/Container of fetched data. """
+        return self._context
+
+
+    @property
+    def rivals(self):
+        """ List of Opponents with name and id. """
+        return self._rivals
 
 
     def _load_rivals(self, league_id, opponents=None):
@@ -72,16 +99,27 @@ class ReadCatcher(Catcher):
             self._rivals = opponents
 
 
-    @property
-    def context(self):
-        """ Context/Container of fetched data. """
-        return self._context
+class WriteCatcher(Catcher):
+
+    """ Write data to a model and return success.
+
+    Required:
+    bool    success     was this dispatched write successful?
+
+    """
+
+    _model = None
+
+
+    def load(self):
+        """ Return a model. """
+        raise NotImplementedError("Unused Method: DO NOT CALL OR OVERRIDE!")
 
 
     @property
-    def rivals(self):
-        """ List of Opponents with name and id. """
-        return self._rivals
+    def success(self):
+        """ Return whether this Catcher successfully dispatched a write. """
+        return bool(self._model)
 
 
 class GamesCatcher(ReadCatcher):
@@ -93,25 +131,27 @@ class GamesCatcher(ReadCatcher):
 
     """
 
-    _games = []
+    _games = None
 
 
-    def __init__(self, league_id):
-        """ Instantiate with League, Games, and Opponents. """
-        self._load_catcher(league_id)
+    def load(self):
+        """ Load League, its Games, and its Games' Opponents. """
 
+        # TODO: we should be able to do all this in one or two queries. given
+        # player id, traverse to a league. from there get games and opponents
+        # for those games. the only tricky thing is just getting one league. it
+        # shouldn't be tricky to avoid manually loading opponents.
 
-    def _load_catcher(self, league_id):
-        """ Load League, its Games, and its Games' Opponenets. """
+        person = Person.load_leagues(self.session.person_id)
+
+        # TODO: do better than simply getting someone's first league.
+        league = person.get_leagues()[0]
 
         # Load league with games into generic context
-        self._context = League.load_games(league_id)
-        league = self._context
-
-        # TODO: make it a depth-2 traversal. don't manually load opponents.
+        self._context = League.load_games(league.id)
 
         # list of games that were loaded into league
-        games = league.get_games()
+        games = self._context.get_games()
 
         # iterating through this list is only temporary
         # because the multiload should have happened in the API
@@ -132,7 +172,7 @@ class GamesCatcher(ReadCatcher):
         for g in games_with_opponents.values():
             for o in g.get_opponents():
                 unique_opponents[o.id] = o
-        self._load_rivals(league_id, unique_opponents.values())
+        self._load_rivals(self._context.id, unique_opponents.values())
 
 
     @property
@@ -186,23 +226,29 @@ class RankingsCatcher(ReadCatcher):
     _opponents = None
     _rank_field = "win_count"
 
-    def __init__(self, league_id):
-        """ Instantiate Rankings with Leagues & Opponents. """
-        self._load_catcher(league_id)
 
-
-    def _load_catcher(self, league_id):
+    def load(self):
         """ Load League, its Opponents, and sort by Win Count. """
 
-        self._context = League.load_opponents(league_id)
-        league = self._context
+        # TODO: we should be able to do all this in one or two queries. given
+        # player id, traverse to a league. from there get games and opponents
+        # for those games. the only tricky thing is just getting one league. it
+        # shouldn't be tricky to avoid manually loading opponents.
 
-        # leagues' opponents by Win Count
-        self._opponents = league.get_opponents()
+        person = Person.load_leagues(self.session.person_id)
+
+        # TODO: do better than simply getting someone's first league.
+        league = person.get_leagues()[0]
+
+        # Load league with games into generic context
+        self._context = League.load_opponents(league.id)
+
+        # league's opponents by Win Count
+        self._opponents = self._context.get_opponents()
         self._opponents.sort(key=lambda x: x.win_count, reverse=True)
 
         # load opponents into rivals as well
-        self._load_rivals(league_id, self._opponents)
+        self._load_rivals(self._context.id, self._opponents)
 
 
     @property
@@ -217,39 +263,50 @@ class RankingsCatcher(ReadCatcher):
         return self._rank_field
 
 
-class CreateCatcher(Catcher):
+class CreateGameCatcher(WriteCatcher):
 
     """ Create a game and return it.
 
-    Catcher for handling all Node Creation. We might want to
-    make a catcher for each creation type. We might also want
-    to make this more generic.
+    Dispatch Game node creation. We might want to make a Catcher for
+    each node type, or we might want to keep this more generic.
 
     """
 
-
-    def __init__(self):
-        """ Instantiate new CreateCatcher. """
-        pass
+    _league_id = None
+    _score = None
 
 
-    def create_game(self, league_id, creator_id, game_score):
-        """ Create new Game in database and return it.
+    def dispatch(self):
+        """ Create new Game in database and return it. """
+        self._model = Game.create_game(
+                self._league_id,
+                self.session.person_id,
+                self._score)
+
+
+    def set_league_id(self, league_id):
+        """ Set the League ID for the Game to be created. """
+        self._league_id = league_id
+
+
+    def set_score(self, score):
+        """ Set the Score for the Game to be created.
 
         Required:
-        id      league_id       league id that game belogs to
-        id      creator_id      player id of game's creator
         list    game_score      final score of a game
                                 [{"id": id1, "score": score1},
                                  {"id": id2, "score": score2},
                                  ...
                                  {"id": idN, "score": scoreN}]
 
-        Return:
-        Game                    instance of SqNode subclass Game
-
         """
-        return Game.create_game(league_id, creator_id, game_score)
+        self._score = score
+
+
+    @property
+    def game(self):
+        """ Return a newly created Game. """
+        return self._model
 
 
 class AuthCatcher(Catcher):
@@ -260,28 +317,105 @@ class AuthCatcher(Catcher):
     cookie that can be used for authentication and analytics tracking on
     future requests. On first login, Create and store a new User.
 
+    This is set up so that there should be a subclass for each third
+    party login implementation we support. These Subclasses need only
+    override the credentials-related methods described herein. Further,
+    to implement our own login, we need only implement those same
+    credentials-related methods here.
+
     """
 
+    MAX_ATTEMPTS = 5
 
-    def __init__(self, raw_user, ip):
-        """ Constructor for a AuthCatcher. """
-        pass
+    _user = None
+    _person = None
+    _existing_user = None
+    _raw_user = None
+    _ip = None
+    _locale = None
+    _default_league_id = None
 
 
-    def get_user_by_id(self, id):
-        """ Return a User given an id. """
-        return User.load_by_id(id)
+    def set_raw_user(self, raw_user):
+        """ Set the raw User credentials for the Session to be created. """
+        self._raw_user = raw_user
 
 
-    def get_user_by_email(self, email):
-        """ Return a User given an email. """
-        return User.load_by_email(email)
+    def set_ip(self, ip):
+        """ Set the IP address for the Session to be created. """
+        self._ip = ip
+
+
+    def set_locale(self, locale):
+        """ Set the browser locale for the Session to be created. """
+        self._locale = locale
+
+
+    # TODO: remove this when no longer needed!
+    def set_default_league_id(self, default_league_id):
+        """ Set the default League ID to join for new Users. """
+        self._default_league_id = default_league_id
+
+
+    def load_and_dispatch(self):
+        """ Load a User from credentials and dispatch creates/updates. """
+        self.load()
+        self.dispatch()
+
+
+    def load(self):
+        """ Load an existing User from supplied login credentials. """
+        # retry lookup from credentials a couple times to avoid duplicates.
+        for attempt in range(self.MAX_ATTEMPTS):
+            self._existing_user = self._load_credentials(self._raw_user)
+            if self._existing_user:
+                break
+
+
+    def dispatch(self):
+        """ Dispatch a create/update based on whether a User exists. """
+        if self._existing_user:
+            (self._user, self._person) = self._update_credentials(
+                    self._raw_user,
+                    self._existing_user)
+        else:
+            (self._user, self._person) = self._create_credentials(
+                    self._raw_user,
+                    self._default_league_id)
+
+
+    def _load_credentials(self, raw_user):
+        """ Try to return an existing user for a set of credentials. """
+        raise NotImplementedError("Not Yet Implemented: SUBCLASS, OVERRIDE!")
+
+
+    def _update_credentials(self, old_user, raw_user):
+        """ Update an existing User with new raw user credentials. """
+        raise NotImplementedError("Not Yet Implemented: SUBCLASS, OVERRIDE!")
+
+
+    # TODO: drop league_id from this signature when leagues are better!
+    def _create_credentials(self, raw_user, league_id=None):
+        """ Create a new User and Player from raw user credentials. """
+        raise NotImplementedError("Not Yet Implemented: SUBCLASS, OVERRIDE!")
+
+
+    @property
+    def user(self):
+        """ Return the User for this request. """
+        return self._user
+
+
+    @property
+    def person(self):
+        """ Return the Person for this request. """
+        return self._person
 
 
 class FacebookAuthCatcher(AuthCatcher):
 
     """ Authenticate a Facebook User. Prompt for authorization if needed.
-    
+
     Lookup and/or create/update a User on login with Facebook.
 
     On Facebook login, we attempt to fetch a User and potentially create
@@ -289,83 +423,57 @@ class FacebookAuthCatcher(AuthCatcher):
 
     """
 
-    _user = None
-    _player = None
-    _league = None
-    _ip = None
 
-
-    def __init__(self, raw_user, ip, default_league_id):
-        """ Constructor for a FacebookAuthCatcher. """
-
-        self._ip = ip
-
-        # TODO: there's probably a more efficient way to do this.
-        # TODO: should this all be broken out into a couple methods?
-        # TODO: devise a naming scheme that generally works for Catchers.
-
+    def _load_credentials(self, raw_user):
+        """ Return an existing user for a set of credentials. """
         fb_id = raw_user.get(NODE_PROPERTY.ID)
 
         if fb_id is None:
             raise tornado.web.HTTPError(500, "No Facebook User ID.")
 
-        existing_user = User.load_by_external_id(fb_id, THIRD_PARTY.FACEBOOK)
-
-        if existing_user is None:
-
-            (user, player) = User.create_user_and_player(
-                    PROPERTY_VALUE.EMPTY,
-                    PROPERTY_VALUE.EMPTY,
-                    None,
-                    PROPERTY_VALUE.EMPTY,
-                    PROPERTY_VALUE.EMPTY,
-                    {THIRD_PARTY.FACEBOOK : raw_user},
-                    None,
-                    self._ip)
-                    #self._ip,
-                    #VERSION.CURRENT,
-                    #from_node_id,
-                    #API_EDGE_TYPE.HAS_LEAGUE_MEMBER)
-
-            # TODO: uncomment and figure out where from_node_id comes from in
-            # order to automatically add the new Player to a League.
-
-            league = None
-
-        else:
-
-            # TODO: implement update and use it here!
-
-            user = existing_user
-            #(user, player) = User.update_user_and_player(
-            #        raw_user,
-            #        existing_user)
-
-            # TODO: implement joining leagues and query joined leagues here!
-
-            player = Person.load_leagues(user.get_default_person_id())
-            #league = player.get_leagues()[0]
-
-        # TODO: implement joining leagues. stop using the default global league
-
-        self._user = user
-        self._player = player
-        self._league = League.load_opponents(default_league_id)
+        return User.load_by_external_id(fb_id, THIRD_PARTY.FACEBOOK)
 
 
-    def user(self):
-        """ Return a User. """
-        return self._user
+    def _update_credentials(self, raw_user, user):
+        """ Update an existing User with new raw user credentials. """
+        # TODO: implement update and use it here!
+        #return User.update_user_and_player(user, raw_user)
+        return (user, Person.load_leagues(user.get_default_person_id()))
 
 
-    def player(self):
-        """ Return a Player. """
-        return self._player
+    # TODO: drop league_id from this signature when leagues are better!
+    def _create_credentials(self, raw_user, league_id=None, inviter_id=None):
+        """ Create a new User and Player from raw user credentials. """
+
+        # TODO: there are a lot of open questions here:
+        # 1/ maybe fix this parameter list...it's ridiculous!
+        # 2/ what about when we want to create a Person who isn't a Player?
+        # 3/ when other credentialing options exist, it might not be good to
+        #    assume exclusively.
+        # 4/ is it more sensible to keep these methods separate if it turns out
+        #    we can't easily generalize across other Person subclasses?
+
+        (user, player) = User.create_user_and_player(
+                PROPERTY_VALUE.EMPTY,
+                PROPERTY_VALUE.EMPTY,
+                None,
+                PROPERTY_VALUE.EMPTY,
+                PROPERTY_VALUE.EMPTY,
+                {THIRD_PARTY.FACEBOOK: raw_user},
+                inviter_id,
+                self._ip,
+                self._locale)
+
+        # TODO: uncomment TAGGED SqEdge type and pass optional third argument.
+        if league_id is not None:
+            Person.join_league(player.id, league_id)
+
+        return (user, player)
 
 
-    def league(self):
-        """ Return a League. """
-        return self._league
+    def set_facebook_user(self, fb_user):
+        """ Set the Facebook User for the Session to be created. """
+        self.set_raw_user(fb_user)
 
 
 # FIXME remove this class

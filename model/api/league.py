@@ -131,6 +131,8 @@ class League(SqNode):
         Required:
         str     name            name of League to be created
         id      creator_id      id of Person creating this League
+
+        Optional:
         list    opponent_ids    ids of Teams/Players to add by default
 
         Return:
@@ -154,16 +156,15 @@ class League(SqNode):
 
         # prepare edge prototypes for creator edges
         prototype_edges = editor.prototype_edge_and_complement(
-            API_EDGE_TYPE.CREATED_BY,
+            API_EDGE_TYPE.CREATED,
             {},
             creator_id)
 
         # prepare edge prototypes for default opponents
         for opponent_id in opponent_ids:
             prototype_edges.extend(editor.prototype_edge_and_complement(
-                API_EDGE_TYPE.HAS_LEAGUE_MEMBER,
+                API_EDGE_TYPE.IN_LEAGUE,
                 {},
                 opponent_id))
 
         return editor.create_node_and_edges(prototype_node, prototype_edges)
-

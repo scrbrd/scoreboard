@@ -5,12 +5,13 @@
 """
 
 from util.decorators import constant
-from model.constants import NODE_PROPERTY, EDGE_PROPERTY
+
+from model.constants import NODE_PROPERTY
 from model.constants import THIRD_PARTY, PROPERTY_KEY
 
 
 class _APINodeType(object):
-    
+
     """ _APINodeType class to hold all Node Types. """
 
 
@@ -75,7 +76,7 @@ class _APIEdgeType(object):
     def HAS_SCHEDULED(self):
         """ HAS_SCHEDULED is a Type of Edge. """
         return "has_scheduled"
-    
+
 
     @constant
     def WON(self):
@@ -336,12 +337,6 @@ class _APINodeProperty(object):
 
 
     @constant
-    def VERSION(self):
-        """ VERSION is a Property of Node. """
-        return "version"
-
-
-    @constant
     def LAST_IP(self):
         """ LAST_IP is a Property of Node. """
         return "last_ip"
@@ -416,7 +411,7 @@ class _APIConstant(object):
     @constant
     def FACEBOOK_NODE_PROPERTIES(self):
         """ FACEBOOK_NODE_PROPERTIES is a dict of Facebook Properties.
-        
+
         For all properties we get from Facebook, prefix the
         corresponding Node property we have internally with "fb_" and
         map one to the other.
@@ -466,35 +461,34 @@ class _APIConstant(object):
     def EDGE_TYPE_COMPLEMENTS(self):
         """ EDGE_TYPE_COMPLEMENTS is a dict mapping of Edge Types. """
         return {
-                API_EDGE_TYPE.IN_LEAGUE : API_EDGE_TYPE.HAS_LEAGUE_MEMBER,
-                API_EDGE_TYPE.HAS_LEAGUE_MEMBER : API_EDGE_TYPE.IN_LEAGUE,
+                API_EDGE_TYPE.IN_LEAGUE: API_EDGE_TYPE.HAS_LEAGUE_MEMBER,
+                API_EDGE_TYPE.HAS_LEAGUE_MEMBER: API_EDGE_TYPE.IN_LEAGUE,
 
-                API_EDGE_TYPE.SCHEDULED_IN : API_EDGE_TYPE.HAS_SCHEDULED,
-                API_EDGE_TYPE.HAS_SCHEDULED : API_EDGE_TYPE.SCHEDULED_IN,
+                API_EDGE_TYPE.SCHEDULED_IN: API_EDGE_TYPE.HAS_SCHEDULED,
+                API_EDGE_TYPE.HAS_SCHEDULED: API_EDGE_TYPE.SCHEDULED_IN,
 
-                API_EDGE_TYPE.WON : API_EDGE_TYPE.WON_BY,
-                API_EDGE_TYPE.WON_BY : API_EDGE_TYPE.WON,
+                API_EDGE_TYPE.WON: API_EDGE_TYPE.WON_BY,
+                API_EDGE_TYPE.WON_BY: API_EDGE_TYPE.WON,
 
-                API_EDGE_TYPE.LOST : API_EDGE_TYPE.LOST_BY,
-                API_EDGE_TYPE.LOST_BY : API_EDGE_TYPE.LOST,
+                API_EDGE_TYPE.LOST: API_EDGE_TYPE.LOST_BY,
+                API_EDGE_TYPE.LOST_BY: API_EDGE_TYPE.LOST,
 
-                API_EDGE_TYPE.TIED : API_EDGE_TYPE.TIED_BY,
-                API_EDGE_TYPE.TIED_BY : API_EDGE_TYPE.TIED,
+                API_EDGE_TYPE.TIED: API_EDGE_TYPE.TIED_BY,
+                API_EDGE_TYPE.TIED_BY: API_EDGE_TYPE.TIED,
 
-                API_EDGE_TYPE.PLAYED : API_EDGE_TYPE.PLAYED_BY,
-                API_EDGE_TYPE.PLAYED_BY : API_EDGE_TYPE.PLAYED,
+                API_EDGE_TYPE.PLAYED: API_EDGE_TYPE.PLAYED_BY,
+                API_EDGE_TYPE.PLAYED_BY: API_EDGE_TYPE.PLAYED,
 
-                API_EDGE_TYPE.CREATED : API_EDGE_TYPE.CREATED_BY,
-                API_EDGE_TYPE.CREATED_BY : API_EDGE_TYPE.CREATED,
+                API_EDGE_TYPE.CREATED: API_EDGE_TYPE.CREATED_BY,
+                API_EDGE_TYPE.CREATED_BY: API_EDGE_TYPE.CREATED,
 
-                API_EDGE_TYPE.SPAWNED : API_EDGE_TYPE.SPAWNED_BY,
-                API_EDGE_TYPE.SPAWNED_BY : API_EDGE_TYPE.SPAWNED,
+                API_EDGE_TYPE.SPAWNED: API_EDGE_TYPE.SPAWNED_BY,
+                API_EDGE_TYPE.SPAWNED_BY: API_EDGE_TYPE.SPAWNED,
 
-                API_EDGE_TYPE.OWNS : API_EDGE_TYPE.OWNED_BY,
-                API_EDGE_TYPE.OWNED_BY : API_EDGE_TYPE.OWNS,
+                API_EDGE_TYPE.OWNS: API_EDGE_TYPE.OWNED_BY,
+                API_EDGE_TYPE.OWNED_BY: API_EDGE_TYPE.OWNS,
 
                 }
 
 
 API_CONSTANT = _APIConstant()
-

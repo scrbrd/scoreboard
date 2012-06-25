@@ -4,17 +4,31 @@ Handle all incoming requests for dialog creation.
 
 """
 
-import logging
-
 from handlers.query import QueryHandler
 
 
 class CreateGameDialogHandler(QueryHandler):
 
-    """ Render Create Game Dialog. """
+    """ Handle rendering the empty Create Game Dialog. """
 
-    def process_request(self):
-        """ Handle processing Dialog Request. """
 
+    def process_asynchronous_request(self):
+        """ Override forces the dialog to render synchronously. """
+        self.process_synchronous_request()
+
+
+    def get_model(self):
+        """ Override avoids raising an error, but no model is needed. """
+        # TODO: might be better to return None?
+        pass
+
+
+    def get_asynchronous_content_url(self):
+        """ Generate a URL for handling asynchronous content requests. """
+        raise NotImplementedError("Unused Method: DO NOT CALL OR OVERRIDE!")
+
+
+    def get_synchronous_content_url(self):
+        """ Generate a URL for handling synchronous content requests. """
         # TODO: turn this hardcoded file path into a constant
-        self.render("mobile/components/create_game.html")
+        return "mobile/components/create_game.html"

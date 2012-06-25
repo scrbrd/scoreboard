@@ -63,12 +63,6 @@ class _FormName(object):
 
 
     @constant
-    def CREATOR(self):
-        """ CREATOR is the name of a form element that stores creator id. """
-        return "creator"
-
-
-    @constant
     def GAME_SCORE(self):
         """ GAME_SCORE is the name of a set of form elements. """
         return "game-score"
@@ -184,9 +178,9 @@ class _ModelID(object):
 
 
     @constant
-    def VIEWER_CONTEXT(self):
-        """ VIEWER_CONTEXT is and w3c id for storing data. """
-        return "model-viewer-context"
+    def SESSION(self):
+        """ SESSION is and w3c id for storing data. """
+        return "model-session"
 
 
     @constant

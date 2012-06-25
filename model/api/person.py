@@ -16,13 +16,14 @@ from model.constants import NODE_PROPERTY, THIRD_PARTY
 from constants import API_NODE_TYPE, API_NODE_PROPERTY, API_EDGE_TYPE
 from sqobject import SqNode
 import loader
+import editor
 
 
 class Person(SqNode):
 
     """ Person is an abstract subclass of SqNode.
 
-    Provide access to the attributes of a Person, including fields and 
+    Provide access to the attributes of a Person, including fields and
     edges connecting to other nodes.
 
     Required:
@@ -132,6 +133,33 @@ class Person(SqNode):
         return person
 
 
+    @staticmethod
+    def join_league(person_id, league_id, tagger_id=None):
+        """ Add a Person to a League.
+
+        Required:
+        id  person_id   ID of Person to add to League
+        id  league_id   ID of League the Person is joining
+
+        Optional:
+        id  tagger_id   ID of Person who tagged/added/invited the joiner
+
+        Return:
+        bool            success
+
+        """
+        # TODO: for now, tagger_id is unused. fix this when we implement
+        # tagging and/or invites. also, figure out whether we will need to
+        # track the tagging/inviting User in addition to Person. for now, the
+        # only call to this method is from create_player(), but there we don't
+        # actually have access to the tagging/inviting Player. fix that too.
+        return editor.create_edges(editor.prototype_edge_and_complement(
+                API_EDGE_TYPE.IN_LEAGUE,
+                {},
+                person_id,
+                league_id))
+
+
     # The below are duplicated in User for now.
 
 
@@ -158,4 +186,3 @@ class Person(SqNode):
     def email(self):
         """ Return this User's email address. """
         return self._get_property(API_NODE_PROPERTY.EMAIL)
-
