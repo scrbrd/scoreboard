@@ -40,6 +40,7 @@ define(["js/constants"], function (Const) {
         // CREATE_OBJECT - any object created.
         VIEW_PAGE:      "View Page", 
         CREATE_OBJECT:  "Create Object",
+        REQUEST_LOGIN: "Request Login",
     };
 
 
@@ -55,10 +56,10 @@ define(["js/constants"], function (Const) {
         // NAME - the specific name 
         // PATH - Path to specific page
         // NUMBER_OF_TAGS - number of folks tagged in an object
-        TYPE:               "type",
+        TYPE:               "type", 
         NAME:               "name",
         PATH:               "path",
-        NUMBER_OF_TAGS:     "number of tags"
+        NUMBER_OF_TAGS:     "number of tags",
     };
     
     
@@ -149,6 +150,7 @@ define(["js/constants"], function (Const) {
 
         that.mpEvent = EVENT.CREATE_OBJECT;
 
+        
 
         /*
             Function: trackCreateObject
@@ -176,9 +178,36 @@ define(["js/constants"], function (Const) {
         return that;
     }());
 
+
+    var requestLogin = (function () {
+        // createObject inherits from mixPanelEvent
+        var that = Object.create(mixPanelEvent); 
+
+        that.mpEvent = EVENT.REQUEST_LOGIN;
+
+        that.TYPE = {
+            FACEBOOK:        "facebook",
+        };
+
+        /**
+            Track any login request.
+            @param {string} login_type The type of login request.
+        */
+        that.trackRequestLogin = function (login_type) {
+            var properties = {};
+            properties[PROPERTY.TYPE] = login_type;
+            
+            that.track(properties);
+        };
+
+        return that;
+    }());
+
+    
     return {
         viewPage: viewPage, 
         createObject: createObject,
+        requestLogin: requestLogin,
     };
 
 

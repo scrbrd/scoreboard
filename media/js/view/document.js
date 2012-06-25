@@ -22,10 +22,11 @@ define(
             "js/constants",
             "js/event",
             "js/eventDispatcher",
+            "util/dom",
             "view/tab",
             
         ],
-        function($, Backbone, Const, Event, EventDispatcher, Tab) {
+        function($, Backbone, Const, Event, EventDispatcher, DOMUtil, Tab) {
 
     /*
         Class: DocView
@@ -44,30 +45,51 @@ define(
         // DialogView under DocView.
         dialog: null,
 
-        tabView: null,
+        tab: null,
 
         // Function: initialize
         // Setup DialogView with dialog html file.
-        initialize: function (initDOMForRouting, model) {
+        initialize: function (
+                initDOMForRouting,
+                viewerContextModel,
+                pageStateModel) {
+
             this.setElement(Const.DOM.BODY);
-            this.model = model;
-            this.setTabView(model);
+
+            this.updateViewerContextModel(viewerContextModel);
+            this.updatePageStateModel(pageStateModel);
+
+            if (pageStateModel.pageType() === Const.PAGE_TYPE.TAB) {
+                this.setTabView(pageStateModel);
+            }
 
             if (initDOMForRouting) {
-                this.initializeDOMForRouting(model);
+                this.initializeDOMForRouting(pageStateModel);
             }
 
             // get initial context and content for model
             // jQuery doesn't have an outerHTML function so i'm using [0]
             EventDispatcher.trigger(
                     Event.SERVER.VIEWED_PAGE,
-                    this.model,
-                    this.tabView.contextView.$el.clone()[0],
-                    this.tabView.contentView.$el.clone()[0],
-                    this);
+                    pageStateModel,
+                    this.path());
         },
 
-    
+        updateViewerContextModel: function (model) {
+            var viewerElem = $(Const.MODEL_ID.VIEWER_CONTEXT);
+            model.setRivals(viewerElem.data(Const.DATA.RIVALS));
+        },
+
+        updatePageStateModel: function (model) {
+            // on initial load i'm leaving content and context fields empty.
+            var pageStateElem = $(Const.MODEL_ID.PAGE_STATE);
+            var contextElem = $(Const.MODEL_ID.CONTEXT);
+            
+            model.setPageType(pageStateElem.data(Const.DATA.PAGE_TYPE));
+            model.setPageName(pageStateElem.data(Const.DATA.PAGE_NAME));
+            model.setContextID(contextElem.data(Const.DATA.ID));
+        },
+
         path: function () {
             return $(location).attr('href');
         },
@@ -78,7 +100,7 @@ define(
         // Dependencies:
         // DialogView - view.DialogView
         // dialogHTML - (string) text.dialog.creategame
-        lazyInitialize: function () {
+        lazyInitialize: function (viewerContext, pageState) {
             var thisDocView = this;
             require(
                     [
@@ -89,12 +111,14 @@ define(
                 thisDocView.dialog = thisDocView.setDialog(
                         Dialog, 
                         DialogController,
-                        dialogHTML);
+                        dialogHTML,
+                        viewerContext, 
+                        pageState);
             });
         },
         
         setTabView: function (model) {
-            this.tabView = Tab.construct(model);
+            this.tab = Tab.construct(model);
         },
 
 
@@ -126,13 +150,19 @@ define(
             Set element to '#dialog-containe', and grab the
             height from the current page.
         */
-        setDialog: function (Dialog, DialogController, dialogHTML) {
+        setDialog: function (
+                Dialog, 
+                DialogController, 
+                dialogHTML, 
+                viewerContext, 
+                pageState) {
             var pageHeight = $(Const.ID.TAB).height(); // page height
             var createGameView = Dialog.construct(
-                    this, 
-                    dialogHTML, 
+                    dialogHTML,
+                    viewerContext,
+                    pageState,
                     pageHeight);
-            DialogController.initialize(this);
+            DialogController.initialize();
             return createGameView;
         }, 
 
@@ -142,14 +172,11 @@ define(
             Show the dialog portion of the DOM.
         */
         showDialog: function () {
-            var contextID = this.model.contextID();
-            var rivals = this.model.rivals();
             EventDispatcher.trigger(
                     Event.CLIENT.DISPLAY_DIALOG,
                     Const.PAGE_NAME.CREATE_GAME,
-                    contextID, 
-                    rivals, 
                     this.path());
+            return true;
         },
 
 
@@ -175,7 +202,7 @@ define(
             // delegation completely.
             $(document).on(
                     "touchstart click", 
-                    "a:not(.data-bypass)", 
+                    "a:not(" + Const.CLASS.EXTERNAL_LINK + ")", 
                     function (event) {
                 // Get the anchor href and protcol
                 var href = $(this).attr("href");
@@ -184,16 +211,20 @@ define(
                 // Ensure the protocol is not part of URL, meaning its relative.
                 if (href && href.slice(0, protocol.length) !== protocol) {
             
-                    // Stop the default event to ensure the link will not cause a page
-                    // refresh.
+                    // Stop the default event to ensure the link will not cause
+                    // a page refresh.
+                    console.log('prevent default');
                     event.preventDefault();
 
-                    // `Backbone.history.navigate` is sufficient for all Routers and will
+                    // `Backbone.history.navigate` is sufficient for all 
+                    // Routers and will
                     // trigger the correct events.  The Router's internal 
                     // `navigate` method calls this anyways.
                     // can use something separate from routing by labeling
                     // route-bypass
-                    if ($(this).hasClass(Const.CLASS.INACTIVE_NAV.substr(1))) {
+                    var inactiveClass = DOMUtil.getClassFromSelector(
+                        Const.CLASS.INACTIVE_NAV);
+                    if ($(this).hasClass(inactiveClass)) {
                         EventDispatcher.trigger(
                                 Event.CLIENT.VIEW_PAGE,
                                 this,
@@ -203,13 +234,22 @@ define(
                 }
             });
 
-            this.reloadPage = function (model) {
+            this.reloadPage = function () {
                 href = "/" + model.pageName();
-                        EventDispatcher.trigger(
-                                Event.CLIENT.RELOAD_PAGE,
-                                href,
-                                model);
+                EventDispatcher.trigger(
+                        Event.CLIENT.RELOAD_PAGE,
+                        href,
+                        model);
             };
+
+            $(document).on(
+                    "touchstart click", 
+                    Const.CLASS.FACEBOOK_LOGIN_BUTTON, 
+                    function (event) {
+                EventDispatcher.trigger(Event.CLIENT.REQUEST_FACEBOOK_LOGIN);
+                return true;
+            });
+
         },
 
         /**
@@ -217,7 +257,7 @@ define(
 
         */
         refresh: function () {
-           this.reloadPage(this.model);
+           this.reloadPage();
         },
 
     });

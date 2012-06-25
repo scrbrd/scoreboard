@@ -5,7 +5,7 @@ Element components that are for the tab framework.
 """
 import json
 
-from view.constants import SQ_DATA 
+from view.constants import SQ_DATA
 from view.html.elements import H1, Nav, Footer, Section
 from view.html.elements import UL, LI
 from view.html.elements import A
@@ -37,13 +37,6 @@ class ContextHeader(MainHeaderDiv):
         # set context data
         self.set_id(TAB_ID.CONTEXT)
         self.set_data(SQ_DATA.ID, context.id)
-        self.set_data(SQ_DATA.OBJECT_TYPE, context.type)
-
-        # set rivals data
-        view_rivals = []
-        for r in rivals:
-            view_rivals.append({SQ_DATA.ID: r.id, SQ_DATA.NAME: r.name})
-        self.set_data(SQ_DATA.RIVALS, json.dumps(view_rivals))
 
 
 class NavHeader(Nav):
@@ -137,4 +130,3 @@ class TabSection(Section):
         """
         super(TabSection, self).__init__()
         self.set_id(TAB_ID.CONTENT)
-        self.set_data(SQ_DATA.PAGE_NAME, page_name)

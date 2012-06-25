@@ -1,11 +1,6 @@
 {% extends tab.html %}
 
 
-{# Games Header #}
-{% block context_header %}
-    {% include components/context_header.html %}
-{% end %}
-
 {# Nav Header with Active Games #}
 {% block nav_header %}
    {% module UIGamesNav() %} 
@@ -15,3 +10,9 @@
 {% block content %}
     {% include components/games.html %}
 {% end %}
+
+{# Games Content Model #}
+{% block content_model %}
+    {% include components/games_model.html %}
+{% end %}
+

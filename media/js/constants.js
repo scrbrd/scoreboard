@@ -54,14 +54,16 @@ define(
         */
         // TODO: make this link sink with Python HTML_CLASS constants
         CLASS: {
-            /** @const */ JS_LINK:              ".js-link",
-            /** @const */ CLOSE_BUTTON:         ".close-button",
-            /** @const */ ACTIVE_NAV:           ".active-nav",
-            /** @const */ INACTIVE_NAV:         ".inactive-nav",
+            /** @const */ JS_LINK: ".js-link",
+            /** @const */ EXTERNAL_LINK: ".external-link",
+            /** @const */ CLOSE_BUTTON: ".close-button",
+            /** @const */ ACTIVE_NAV: ".active-nav",
+            /** @const */ INACTIVE_NAV: ".inactive-nav",
             /** @const */ AUTOCOMPLETE_PLAYERS: ".autocomplete-players",
-            /** @const */ AUTOCOMPLETE_LABEL:   ".autocomplete-label",
-            /** @const */ AUTOCOMPLETE_VALUE:   ".autocomplete-value",
-            /** @const */ LIST_WITH_HEADERS:    ".list-with-headers",
+            /** @const */ AUTOCOMPLETE_LABEL: ".autocomplete-label",
+            /** @const */ AUTOCOMPLETE_VALUE: ".autocomplete-value",
+            /** @const */ LIST_WITH_HEADERS: ".list-with-headers",
+            /** @const */ FACEBOOK_LOGIN_BUTTON: ".facebook-login-button",
         },
 
         /**
@@ -76,10 +78,21 @@ define(
             /** @const */ SCORE:                "score",
             /** @const */ NAME:                 "name",
             /** @const */ RIVALS:               "rivals",
+            /** @const */ PAGE_TYPE:            "page-type",
             /** @const */ PAGE_NAME:            "page-name",
             /** @const */ GAME_SCORE:           "game-score",
         },
                 
+        /** Enum for model ids.
+            @enum {string}
+            @const
+        */
+        MODEL_ID: {
+            /** @const */ VIEWER_CONTEXT: "#model-viewer-context",
+            /** @const */ CONTEXT: "#model-context",
+            /** @const */ PAGE_STATE: "#model-page-state",
+        }, 
+
         /**
             Enum for values of name attributes. (Wrapped in [name=VALUE].)
             values.
@@ -93,6 +106,17 @@ define(
         },
 
         /**
+            Enum for page types.
+            @enum {string}
+            @const
+        */
+        PAGE_TYPE: {
+            /** @const */ TAB:               "tab",
+            /** @const */ DIALOG:                  "dialog",
+            /** @const */ LANDING:                "landing",
+        },
+
+        /**
             Enum for page names. 
             @enum {string}
             @const
@@ -103,7 +127,6 @@ define(
             /** @const */ LANDING:                "landing",
             /** @const */ CREATE_GAME:            "create-game",
         },
-
     };
 
     return constants;

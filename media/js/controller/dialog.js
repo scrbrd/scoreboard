@@ -14,11 +14,11 @@ define(
         ],
         function (MP, Const, Event, EventDispatcher) {
       
-    function initialize(documentView) {
+    function initialize() {
         EventDispatcher.on(Event.CLIENT.DISPLAY_DIALOG, handleDisplayDialog);
     }
 
-    function handleDisplayDialog(pageName, id, rivals, path) {
+    function handleDisplayDialog(pageName, path) {
         MP.trackViewDialog(pageName, path);
     }
 

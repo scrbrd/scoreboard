@@ -44,16 +44,30 @@ class RankingsHandler(QueryHandler):
 
         """
 
-        context_header = self.render_string(
-                "mobile/components/context_header.html",
+        # TODO: turn this hardcoded file path into a constant
+        context = self.render_string(
+                "mobile/components/context.html",
+                model=model)
+        context_model = self.render_string(
+                "mobile/components/context_model.html",
+                model=model)
+        viewer_context_model = self.render_string(
+                "mobile/components/viewer_context_model.html",
                 model=model)
         content = self.render_string(
                 "mobile/components/rankings.html",
                 model=model)
+        page_state_model = self.render_string(
+                "mobile/components/rankings_model.html",
+                model=model)
 
         self.write({
-            "context_header": context_header,
-            "content": content})
+            "context": context,
+            "context_model": context_model,
+            "viewer_context_model": viewer_context_model,
+            "content": content,
+            "page_state_model": page_state_model,
+        })
 
 
     def _get_synch(self, model):

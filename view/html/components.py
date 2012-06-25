@@ -45,7 +45,10 @@ class FacebookLoginButton(LoginButton):
         super(FacebookLoginButton, self).__init__(login_link)
 
         self.set_text(Copy.facebook_login)
-        self.append_classes([COMPONENT_CLASS.FACEBOOK_LOGIN_BUTTON])
+        self.append_classes([
+            COMPONENT_CLASS.FACEBOOK_LOGIN_BUTTON,
+            APP_CLASS.EXTERNAL_LINK,
+        ])
 
 
 class DefaultCloseButton(Button):

@@ -27,6 +27,8 @@ define(
             /** @const */ CREATE_GAME: "client-create-game",
             /** @const */ VIEW_PAGE: "client-view-page",
             /** @const */ RELOAD_PAGE: "client-reload-page",
+            /** @const */ REQUEST_FACEBOOK_LOGIN:
+                "client-request-facebook-login",
         },
         
         

@@ -24,10 +24,12 @@ import xml.etree.cElementTree as ET
 import tornado.web
 
 from view.app_copy import Copy
-from view.constants import PAGE_NAME, APP_CLASS
+from view.constants import PAGE_TYPE, PAGE_NAME, APP_CLASS, SQ_DATA
 from view.html.elements import Element
 from view.html.tab.framework import AppHeader, AppFooter, NavHeader
 from view.html.tab.framework import ContextHeader
+from view.html.tab.model import ViewerContextModel
+from view.html.tab.model import ContextModel, PageModel
 from view.html.tab.games import GamesTabSection
 from view.html.tab.rankings import RankingsTabSection
 from view.html.dialog.framework import DialogHeader
@@ -43,14 +45,7 @@ class UIAppHeader(tornado.web.UIModule):
         """ Render a App Header. """
         # TODO: if we ever use this, there should be an App object that
         # contains things like the name, icon, etc.
-        element_tree = None
-
-        try:
-            element_tree = AppHeader("SQOREBOARD").element()
-
-        except AttributeError as e:
-            raise e
-            element_tree = None
+        element_tree = AppHeader("SQOREBOARD").element()
 
         return Element.to_string(element_tree)
 
@@ -61,14 +56,7 @@ class UIAppFooter(tornado.web.UIModule):
 
     def render(self, model=None, state=None):
         """ Render an App Footer. """
-        element_tree = None
-
-        try:
-            element_tree = AppFooter().element()
-
-        except AttributeError as e:
-            raise e
-            element_tree = None
+        element_tree = AppFooter().element()
 
         return Element.to_string(element_tree)
 
@@ -79,20 +67,34 @@ class UIContextHeader(tornado.web.UIModule):
 
     def render(self, model=None, state=None):
         """ Render a Context Header. """
+        context = model.context
+        rivals = model.rivals
 
-        element_tree = None
+        element_tree = ContextHeader(context, rivals).element()
 
-        # TODO: do more rigorous error checking on this type of model
+        return Element.to_string(element_tree)
 
-        try:
-            context = model.context
-            rivals = model.rivals
-            element_tree = ContextHeader(context, rivals).element()
 
-        except AttributeError as e:
-            #logger.debug(e.reason)
-            raise e;
-            element_tree = None
+class UIContextModel(tornado.web.UIModule):
+
+    """ Context Model UI Module. """
+
+    def render(self, model=None, state=None):
+        """ Render a Context Model. """
+        context = model.context
+        element_tree = ContextModel(context).element()
+
+        return Element.to_string(element_tree)
+
+
+class UIViewerContextModel(tornado.web.UIModule):
+
+    """ Viewer Context Model UI Module. """
+
+    def render(self, model=None, state=None):
+        """ Render a Viewer Context Model. """
+        viewer_context = {SQ_DATA.RIVALS: model.rivals}
+        element_tree = ViewerContextModel(viewer_context).element()
 
         return Element.to_string(element_tree)
 
@@ -168,24 +170,57 @@ class UIRankingsNav(UINavHeader):
         return super(UIRankingsNav, self).render(model, PAGE_NAME.RANKINGS)
 
 
+class UIPageModel(tornado.web.UIModule):
+
+    """ Generic Content Model View. """
+
+    def render(self, model=None, state=None):
+        """ Render a Content Model View. """
+        element_tree = PageModel(state).element()
+
+        return Element.to_string(element_tree)
+
+
+class UITabModel(UIPageModel):
+
+    """ Generic Content Model View. """
+
+    def render(self, model=None, state=None):
+        """ Render a Content Model View. """
+        return super(UITabModel, self).render(
+                None,
+                {
+                    SQ_DATA.PAGE_NAME: state,
+                    SQ_DATA.PAGE_TYPE: PAGE_TYPE.TAB,
+                })
+
+
+class UIGamesModel(UITabModel):
+
+    """ Games Content Model View. """
+
+    def render(self, model=None, state=None):
+        """ Render a Games Content Model View. """
+        return super(UIGamesModel, self).render(None, PAGE_NAME.GAMES)
+
+
+class UIRankingsModel(UITabModel):
+
+    """ Rankings Content Model View. """
+
+    def render(self, model=None, state=None):
+        """ Render a Rankigns Content Model View. """
+        return super(UIRankingsModel, self).render(None, PAGE_NAME.RANKINGS)
+
+
 class UIGamesList(tornado.web.UIModule):
 
     """ Games List UI Module. """
 
     def render(self, model=None, state=None):
         """ Render a Games List. """
-
-        element_tree = None
-
-        # TODO: do more rigorous error checking on this type of model
-
-        try:
-            games = model.games
-            element_tree = GamesTabSection(games).element()
-
-        except AttributeError as e:
-            #logger.debug(e.reason)
-            element_tree = None
+        games = model.games
+        element_tree = GamesTabSection(games).element()
 
         return Element.to_string(element_tree)
 
@@ -196,18 +231,8 @@ class UIRankingsList(tornado.web.UIModule):
 
     def render(self, model=None, state=None):
         """ Render a Rankings List. """
-
-        element_tree = None
-
-        # TODO: do more rigorous error checking on this type of model
-
-        try:
-            rankings = model.rankings
-            element_tree = RankingsTabSection(rankings).element()
-
-        except AttributeError as e:
-            #logger.debug(e.reason)
-            element_tree = None
+        rankings = model.rankings
+        element_tree = RankingsTabSection(rankings).element()
 
         return Element.to_string(element_tree)
 
@@ -218,35 +243,19 @@ class UICreateGameDialog(tornado.web.UIModule):
 
     def render(self, model=None, state=None):
         """ Render a Create Game Dialog Screen. """
-
-        header_tree = None
-        form_tree = None
-
         # block xsrf for forms. required for Tornado posts.
         # get the input element and pass the token only.
         xsrf_tag = self.handler.xsrf_form_html()
         xsrf_token = ET.fromstring(xsrf_tag).attrib.get("value")
 
-        try:
-            header_elem = DialogHeader(Copy.create_game_dialog_header)
-            header_tree = header_elem.element()
+        header_tree = DialogHeader(Copy.create_game_dialog_header).element()
+        form_tree = CreateGameForm(
+                "create-game",
+                xsrf_token,
+                "/create/game"
+                ).element()
 
-            form_tree = CreateGameForm(
-                    "create-game",
-                    xsrf_token,
-                    "/create/game"
-                    ).element()
-
-        except AttributeError as e:
-            #logger.debug(e.reason)
-            raise e
-            header_tree = None
-            form_tree = None
-
-        header_str = Element.to_string(header_tree)
-        form_str = Element.to_string(form_tree)
-        dialog_str = header_str + form_str
-        return dialog_str
+        return Element.to_string(header_tree) + Element.to_string(form_tree)
 
 
 class UILandingPage(tornado.web.UIModule):
@@ -255,21 +264,11 @@ class UILandingPage(tornado.web.UIModule):
 
     def render(self, model=None, state=None):
         """ Render a Splash Page. """
-
-        splash_tree = None
-
         login_link = {
             "text": "Login",
             "href": "/login",
         }
 
-        try:
-
-            splash_tree = LandingPage(login_link).element()
-
-        except AttributeError as e:
-            #logger.debug(e.reason)
-            raise e
-            splash_tree = None
+        splash_tree = LandingPage(login_link).element()
 
         return Element.to_string(splash_tree)

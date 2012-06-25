@@ -1,6 +1,5 @@
 define(
         [
-            "jQuery",
             "Backbone",
         ], 
         /**
@@ -8,10 +7,9 @@ define(
 
             @exports Router
 
-            @requires $
             @requires Backbone
         */
-        function ($, Backbone) {
+        function (Backbone) {
 
     /**
         Handle all routing interactions with server by using Backbone.
@@ -40,9 +38,6 @@ define(
         },
     });
 
-    // Variable: appRouter
-    // Keep track of Singleton appRouter instantiation
-    var appRouter = null;
 
     return /** @lends module:Router */ {
         /**
@@ -52,23 +47,14 @@ define(
         */
         initialize: function (pushState) {
             // Backbone using History API's PushState
-            appRouter = new NavRouter();
+            var appRouter = new NavRouter();
             var options = {silent: true};
             if (pushState) {
                 options.pushState = true;
             }
             
             Backbone.history.start(options);
-
-            return appRouter;
         },
 
-        /**
-            Retrieve NavRouter
-            @returns {NavRouter} An app-wide Router.
-        */
-        retrieve: function () {
-            return appRouter;
-        },
     };
 });

@@ -120,13 +120,17 @@ define(
         }
 
         hide_address_bar();
-        
-        var scroller = new Scroller();
 
-        // adjust length of scroller after address bar is hidden
-        scroller.refresh();
+        return {
+            construct: function () {
+                var scroller = new Scroller();
 
-        return scroller;
+                // adjust length of scroller after address bar is hidden
+                scroller.refresh();
+
+                return scroller;
+            },
+        };    
     }
 );
 

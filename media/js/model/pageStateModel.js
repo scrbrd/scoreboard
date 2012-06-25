@@ -1,34 +1,25 @@
 define(
         [
+            "js/constants",
             "Backbone",
         ],
         /**
-            Represent a generic model for html reader models.
+            Represent a the Page State. A presentation model if you will.
 
-            @exports HTMLReader
+            TODO - the context id should be in a ContextModel, and these models
+            should be organized into Collections.
 
+            @exports PageStateModel
+
+            @requires Const
             @requires Backbone
         */
-       function (Backbone) {
+        function (Const, Backbone) {
 
     CONTEXT = "context";
     CONTENT = "content";
-    CONTEXT_ID = "context-id";
-    RIVALS = "rivals";
-    PAGE_NAME = "page-name";
 
-    HTMLReader = Backbone.Model.extend({
-
-        defaults: {
-            context: null,
-            content: null,
-            contextID: null,
-            rivals: null,
-            pageName: null,
-        },
-
-        initialize: function () {
-        },
+    PageStateModel = Backbone.Model.extend({
 
         urlRoot: function () {
             console.log("urlRoot");
@@ -46,7 +37,7 @@ define(
         },
 
         setContext: function (context) {
-            this.setAttribute(CONTEXT, context);
+            this.set(CONTEXT, context);
         },
 
         content: function () {
@@ -54,31 +45,31 @@ define(
         },
 
         setContent: function (content) {
-            this.setAttribute(CONTENT, content);
+            this.set(CONTENT, content);
         },
 
         contextID: function () {
-            return this.get(CONTEXT_ID);
+            return this.get(Const.DATA.ID);
         },
 
         setContextID: function (id) {
-            this.setAttribute(CONTEXT_ID, id);
+            this.set(Const.DATA.ID, id);
         },
 
-        rivals: function () {
-            return this.get(RIVALS);
+        pageType: function () {
+            return this.get(Const.DATA.PAGE_TYPE);
         },
 
-        setRivals: function (rivals) {
-            this.setAttribute(RIVALS, rivals);
+        setPageType: function (pageType) {
+            this.set(Const.DATA.PAGE_TYPE, pageType);
         },
 
         pageName: function () {
-            return this.get(PAGE_NAME);
+            return this.get(Const.DATA.PAGE_NAME);
         },
 
         setPageName: function (pageName) {
-            this.setAttribute(PAGE_NAME, pageName);
+            this.set(Const.DATA.PAGE_NAME, pageName);
         },
 
         // if it's the initial set then don't fire change event
@@ -93,5 +84,11 @@ define(
 
     });
 
-    return HTMLReader;
+    var pageStateModel = new PageStateModel();
+
+    return {
+        retrieve: function () {
+            return pageStateModel;
+        },
+    };
 });

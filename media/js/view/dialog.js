@@ -43,7 +43,9 @@ define(
         // The jQuery object of the included form
         form: null,
         
-        
+        changeRivalsEvent: "change:" + Const.DATA.RIVALS,
+        changeContextIDEvent: "change:" + Const.DATA.ID,
+
         /*
             Function: initialize
             Initialize all sub-elements of DialogView.
@@ -59,21 +61,37 @@ define(
             stretches it to the proper height, and finally initializes its
             form.
         */
-        initialize: function (document, html, height) {
+        initialize: function (
+                html, 
+                viewerContext, 
+                pageState,
+                height) {
             this.setElement(Const.ID.DIALOG_CONTAINER);
+            this.viewerContextModel = viewerContext;
+            this.pageStateModel = pageState;
 
             this.$el.hide();
             this.$el.append(html); 
             this.$el.height(height); 
             this.form = this.$(Const.NAME.CREATE_GAME);
             
-            _.bindAll(this, "render");
-            var dialogView = this;
+            this.viewerContextModel.bind(
+                    this.changeRivalsEvent, 
+                    this.render, 
+                    this);
+            this.pageStateModel.bind(
+                    this.changeContextIDEvent, 
+                    this.render,
+                    this);
+            
             EventDispatcher.on(
                     Event.CLIENT.DISPLAY_DIALOG, 
-                    function (pageName, id, rivals, path) {
-                        dialogView.render(id, rivals);
-                    });
+                    function (pageName, path) {
+                        this.show();
+                    },
+                    this);
+
+            this.render();
         },
 
 
@@ -100,6 +118,14 @@ define(
         },
 
 
+
+        render: function() {
+            var leagueID = this.pageStateModel.contextID();
+            var rivals = this.viewerContextModel.rivals();
+            
+            this.setupForm(leagueID, rivals);
+        },
+                    
         /* 
             Function: setupForm
             Sets up the dialog's form with contextual 
@@ -111,9 +137,8 @@ define(
                         with the keys "id", "name"
 
         */
-        setupForm: function(league_id, rivals) {
-            // Pull page's league id value from context object
-            this.form.find(Const.NAME.LEAGUE).val(league_id);
+        setupForm: function(leagueID, rivals) {
+            this.form.find(Const.NAME.LEAGUE).val(leagueID);
         
             // TODO: add additional row functionality
             // diabled row, gets enabled, add new row
@@ -124,8 +149,6 @@ define(
                     Autocomplete.autocompletePlayers(elem, rivals);
                 });
         },
-        
-                    
         /* 
             Function: submit
             Submit dialog's form and hangle all data manipulation.
@@ -166,8 +189,7 @@ define(
             Function: render
             Show this View with proper bells and whistles.
         */
-        render: function (leagueID, rivals) {
-            this.setupForm(leagueID, rivals);
+        show: function (leagueID, rivals) {
             this.$el.slideDown('fast', function () {
                 //var a = this.$('.ui-autocomplete-input').first();
                 //a.focus();
@@ -181,8 +203,16 @@ define(
     });
 
     return {
-        construct: function (document, dialogHTML, pageHeight) {
-            return new DialogView(document, dialogHTML, pageHeight);
+        construct: function (
+                dialogHTML, 
+                viewerContext, 
+                pageState, 
+                pageHeight) {
+            return new DialogView(
+                    dialogHTML, 
+                    viewerContext, 
+                    pageState, 
+                    pageHeight);
         },
 
     };

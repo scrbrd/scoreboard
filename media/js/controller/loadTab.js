@@ -8,77 +8,53 @@
 define(
         [
             "jQuery",
+            "Backbone",
             "MP",
-            "view/document",
             "js/constants",
             "js/event",
             "js/eventDispatcher",
+            "js/crud",
         ],
-        function ($, MP, Doc, Const, Event, EventDispatcher) {
+        function ($, Backbone, MP, Const, Event, EventDispatcher, Crud) {
     
-    var router = null;
 
-    function initialize(appRouter) {
-        // FIXME XXX - remove router
-        router = appRouter;
+    function initialize() {
         EventDispatcher.on(Event.CLIENT.VIEW_PAGE, handleViewPage);
         EventDispatcher.on(Event.CLIENT.RELOAD_PAGE, handleReloadPage);
         EventDispatcher.on(Event.SERVER.VIEWED_PAGE, handleSuccess);
     }
 
-    function handleViewPage(anchor, href, model) {
-        var docView = Doc.retrieve();
-
+    function handleViewPage(anchor, href, pageStateModel) {
         // switch active tab
-        docView.tabView.navView.render(this, anchor);
+        var pageName = "";
+        if ($(anchor).hasClass(Const.PAGE_NAME.RANKINGS)) {
+            pageName = Const.PAGE_NAME.RANKINGS;
+        } else if ($(anchor).hasClass(Const.PAGE_NAME.GAMES)) {
+            pageName = Const.PAGE_NAME.GAMES;
+        }
+        pageStateModel.setPageName(pageName);
 
         // Update URL
-        router.navigate(href, {trigger: false});
+        Backbone.history.navigate(href, {trigger: false});
 
-        handleSubmit(href, model);
+        handleSubmit(href, pageStateModel);
     }
 
-    function handleReloadPage(href, model) {
-        handleSubmit(href, model);
+    function handleReloadPage(href, pageStateModel) {
+        handleSubmit(href, pageStateModel);
     }
 
-    function handleSubmit(href, model) {
-        var docView = Doc.retrieve();
-
-        // hide current content
-        docView.tabView.contentView.hide();
+    function handleSubmit(href, pageStateModel) {
+        // set loading screen
+        var loading = "<div class=\"loading\">Loading...</div>";
+        pageStateModel.setContent(loading);
         
-        // update the model by reseting the pagename and fetching
-        model.setPageName(href.substring(1));
-        var start = new Date().getTime();
-        model.fetch({
-            data: $.param({
-                "asynch": true,
-            }),
-            success: function (model, response) {
-                var end = new Date().getTime();
-                var time = end - start;
-                console.log("success response: " + time + "ms");
-                EventDispatcher.on(
-                        Event.SERVER.VIEWED_PAGE,
-                        model,
-                        response.context_header, 
-                        response.content,
-                        docView);
-            },
-            error: function (model, response) {
-                console.log("error on model fetch");
-            },
-        });
+        Crud.fetchTab(href, pageStateModel);
 
     }
 
-    function handleSuccess(model, context, content, docView) {
-        setModelFromHTML(
-            model,
-            context,
-            content);
-        trackViewPage(docView, model.pageName());
+    function handleSuccess(model, path) {
+        trackViewPage(model.pageName(), path);
     }
 
     /*
@@ -89,29 +65,18 @@ define(
             name - specific name of tab page
             path - path to page
     */
-    function trackViewPage(docView, pageName) {
-        var path = docView.path();
-
+    function trackViewPage(pageName, path) {
+        // FIXME check Page Type
         if (pageName === Const.PAGE_NAME.RANKINGS ||
             pageName === Const.PAGE_NAME.GAMES) {
             MP.trackViewTab(pageName, path);
         } else if (pageName === Const.PAGE_NAME.CREATE_GAME) {
             MP.trackViewDialog(pageName, path);
-        } else {
+        } else  {
+            // TODO add in landing page qualifier
+            console.log("landing page viewed");
             MP.trackViewLanding(pageName, path);
-        }
-    }
-
-    function setModelFromHTML(model, contextHTML, contentHTML) {
-        var contextID = $(contextHTML).data(Const.DATA.ID);
-        var rivals = $(contextHTML).data(Const.DATA.RIVALS);
-        var pageName = $(contentHTML).data(Const.DATA.PAGE_NAME);
-
-        model.setContext(contextHTML);
-        model.setContent(contentHTML);
-        model.setContextID(contextID);
-        model.setRivals(rivals);
-        model.setPageName(pageName);
+        } 
     }
 
     return {

@@ -1,11 +1,6 @@
 {% extends tab.html %}
 
 
-{# Rankings Header #}
-{% block context_header %}
-    {% include components/context_header.html %}
-{% end %}
-
 {# Nav Header with Active Rankings #}
 {% block nav_header %}
    {% module UIRankingsNav() %} 
@@ -15,3 +10,9 @@
 {% block content %}
     {% include components/rankings.html %}
 {% end %}
+
+{# Rankings Content Model #}
+{% block content_model %}
+    {% include components/rankings_model.html %}
+{% end %}
+

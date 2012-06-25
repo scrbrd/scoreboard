@@ -19,6 +19,11 @@ class _AppClass(object):
         return "js-link"
 
     @constant
+    def EXTERNAL_LINK(self):
+        """ EXTERNAL_LINK is a w3c class. """
+        return "external-link"
+
+    @constant
     def ROUTE_BYPASS(self):
         """ ROUTE_BYPASS is a w3c class. """
         return "route-bypass"
@@ -95,10 +100,39 @@ class _SqData(object):
         """ RIVALS is a key of the HTML attribute Data. """
         return "rivals"
 
+
+    @constant
+    def PAGE_TYPE(self):
+        """ PAGE_TYPE is a key of the HTML attribute Data. """
+        return "page-type"
+
     @constant
     def PAGE_NAME(self):
         """ PAGE_NAME is a key of the HTML attribute Data. """
         return "page-name"
+
+
+class _PageType(object):
+
+    """ _PageType class to hold all possible values for data-page-type. """
+
+    @constant
+    def LANDING(self):
+        """ LANDING is a page type. """
+        return "landing"
+
+
+    @constant
+    def TAB(self):
+        """ TAB is a page type. """
+        return "tab"
+
+
+    @constant
+    def DIALOG(self):
+        """ DIALOG is a page type. """
+        return "dialog"
+
 
 
 class _PageName(object):
@@ -107,22 +141,52 @@ class _PageName(object):
 
     @constant
     def LANDING(self):
-        """ LANDING is the rankings page. """
+        """ LANDING is the landing page. """
         return "landing"
 
     @constant
     def GAMES(self):
-        """ GAMES is the rankings page. """
+        """ GAMES is the games tab page. """
         return "games"
 
     @constant
     def RANKINGS(self):
-        """ RANKINGS is the rankings page. """
+        """ RANKINGS is the rankings tab page. """
         return "rankings"
+
+
+    @constant
+    def CREATE_GAME(self):
+        """ CREATE_GAME is the create game dialog page. """
+        return "create-game"
+
+
+class _ModelID(object):
+
+    """ _ModelID class to hold all IDs that will contain model info. """
+
+    @constant
+    def VIEWER_CONTEXT(self):
+        """ VIEWER_CONTEXT is and w3c id for storing data. """
+        return "model-viewer-context"
+
+
+    @constant
+    def CONTEXT(self):
+        """ CONTEXT is and w3c id for storing data. """
+        return "model-context"
+
+
+    @constant
+    def PAGE_STATE(self):
+        """ PAGE_STATE is and w3c id for storing data. """
+        return "model-page-state"
 
 
 APP_CLASS = _AppClass()
 APP_ID = _AppID()
 SQ_DATA = _SqData()
 FORM_NAME = _FormName()
+PAGE_TYPE = _PageType()
 PAGE_NAME = _PageName()
+MODEL_ID = _ModelID()

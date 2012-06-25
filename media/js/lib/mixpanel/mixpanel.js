@@ -103,6 +103,13 @@ define(
                     was_scored);
         },
 
+        /*
+            Function: trackRequestFacebookLogin
+        */
+        trackRequestFacebookLogin: function () {
+            Event.requestLogin.trackRequestLogin(
+                    Event.requestLogin.TYPE.FACEBOOK);
+        },
     };
 });
 

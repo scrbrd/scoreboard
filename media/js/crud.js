@@ -58,7 +58,7 @@ define(
         @type {string}
         @const
     */
-    var POST_JSON = "json";
+    var JSON_RESPONSE = "json";
 
     /** 
         Create a new object.
@@ -100,7 +100,41 @@ define(
                         console.log('failed to create game');
                     }
                 },
-                POST_JSON);
+                JSON_RESPONSE);
+    }
+
+    function read(url, successFunction) {
+        var requestData = {};
+        requestData[REQUEST_KEY.ASYNCH] = true; 
+
+        var start = new Date().getTime(); 
+        $.get(
+                url,
+                requestData,
+                function (jsonResponse) {
+                    var end = new Date().getTime();
+                    var time = end - start;
+                    console.log("request took " + time + "ms");
+                    successFunction(jsonResponse); 
+                },
+                JSON_RESPONSE);
+    }
+
+
+    function updatePageState(jsonResponse, model) {
+        // FIXME have this PageState update viewer context (rivals) too
+        var contextID = $(jsonResponse.context_model)
+            .data(Const.DATA.ID);
+        var pageType= $(jsonResponse.page_state_model)
+            .data(Const.DATA.PAGE_TYPE);
+        var pageName = $(jsonResponse.page_state_model)
+            .data(Const.DATA.PAGE_NAME);
+        
+        model.setContent(jsonResponse.content);
+        model.setContext(jsonResponse.context);
+        model.setContextID(contextID);
+        model.setPageType(pageType);
+        model.setPageName(pageName);
     }
 
     return /** @lends module:Crud */{
@@ -111,6 +145,16 @@ define(
         createGame: function (gameParams) {
             // TODO: make the gameParams more specific
             create(Const.API_OBJECT.GAME, gameParams);
+        },
+
+        fetchTab: function (url, model) {
+            read(url, function (response) {
+                updatePageState(response, model);
+                EventDispatcher.trigger(
+                        Event.SERVER.VIEWED_PAGE,
+                        model,
+                        url);
+            });
         },
     };
 });

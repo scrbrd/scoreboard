@@ -29,23 +29,23 @@ define(
         contentView: null,
         navView: null,
 
-        initialize: function (model) {
-            this.contextView = new ContextView(model);
-            this.navView = new NavView();
-            this.contentView = new ContentView(model);
+        initialize: function (pageStateModel) {
+            this.contextView = new ContextView(pageStateModel);
+            this.navView = new NavView(pageStateModel);
+            this.contentView = new ContentView(pageStateModel);
         },
 
     });
 
     var ContextView = Backbone.View.extend({
 
+        changeContextEvent: "change:context",
 
         initialize: function (model) {
             this.setElement(Const.ID.CONTEXT);
 
             this.model = model;
-            _.bindAll(this, "render");
-            this.model.bind("change:context", this.render);
+            this.model.bind(this.changeContextEvent, this.render, this);
         },
 
         render: function () {
@@ -57,23 +57,29 @@ define(
     });
 
     var NavView = Backbone.View.extend({
-       
-        initialize: function () {
+     
+        changePageNameEvent: "change:" + Const.DATA.PAGE_NAME,
+
+        initialize: function (model) {
             this.setElement(Const.DOM.NAV);
+
+            this.model = model;
+            this.model.bind(this.changePageNameEvent, this.render, this);
         },
 
-        render: function (controller, activeAnchor) {
-            // remove leading period from selectors
-            activeClass = DOMUtil.getClassFromClassSelector(
+        render: function (activeAnchor) {
+            activeClass = DOMUtil.getClassFromSelector(
                     Const.CLASS.ACTIVE_NAV);
-            inactiveClass = DOMUtil.getClassFromClassSelector(
+            inactiveClass = DOMUtil.getClassFromSelector(
                     Const.CLASS.INACTIVE_NAV);
 
             this.$(Const.CLASS.ACTIVE_NAV)
                 .removeClass(activeClass) // remove current active nav
                 .addClass(inactiveClass); // add inactive nav class
 
-            this.$(activeAnchor)
+            // TODO change this to an ID (it will make the controller logic
+            // simpler
+            this.$(DOMUtil.getSelectorFromClass(this.model.pageName()))
                 .removeClass(inactiveClass) // remove inactive nav
                 .addClass(activeClass); // add active nav 
         },
@@ -81,39 +87,30 @@ define(
 
     var ContentView = Backbone.View.extend({
 
+        changeContentEvent: "change:content",
 
         initialize: function (model) {
             this.setElement(Const.ID.CONTENT);
 
             this.model = model;
-            _.bindAll(this, "render");
-            this.model.bind("change:content", this.render);
+            this.model.bind(this.changeContentEvent, this.render, this);
+
+            this.scroller = Scroller.construct();
         },
         
         render: function () {
             this.$el.toggle(false);
-            Scroller.scrollTo(0, 0, 0);  // scroll to x, y, time (ms)
+            this.scroller.scrollTo(0, 0, 0);  // scroll to x, y, time (ms)
             
             var newEl = $(this.model.content()).insertBefore(this.$el);
             this.$el.remove();
             this.setElement(newEl);
             this.$el.fadeIn('fast');
-            Scroller.refresh();
+            this.scroller.refresh();
 
             return this;
         },
 
-        /*
-            Function: hide
-            Hide the content and show a loading screen.
-        */
-        hide: function () {
-            var loading = "<span class=\"loading\">Loading...</span>";
-            
-            this.$el.toggle(false);
-            Scroller.scrollTo(0, 0, 0);
-            this.$el.html(loading).toggle(true);
-        },
     });
 
     return {

@@ -1026,6 +1026,17 @@ class HiddenInput(Input):
         super(HiddenInput, self).__init__(HTML_TYPE.HIDDEN, name, value)
 
 
+class DataInput(HiddenInput):
+
+    """ Input element of Hidden type to store data <input type="hidden">."""
+
+    name = "hidden-data"
+
+    def __init__(self):
+        """ Construct a <input type="hidden">. """
+        super(DataInput, self).__init__(self.name)
+
+
 class XSRFHiddenInput(HiddenInput):
 
     """ Special Input element of Hidden type that contains the xsrf token:
