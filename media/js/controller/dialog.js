@@ -1,5 +1,5 @@
 /** 
-    Handle events that relate to the dialog actions.
+    Handle events that relate to the dialog pages.
 
     DialogController.controller inherits from BaseController.controller.
 
@@ -27,22 +27,19 @@ define(
         var that = Object.create(BaseController.controller);
 
         /** 
-            Bind DISPLAY_DIALOG event.
+            Bind ENTER_DATA event.
         */
         that.initialize = function () {
             var events = {};
 
-            events[Event.CLIENT.DISPLAY_DIALOG] = that.handleSubmit;
+            events[Event.CLIENT.ENTER_GAME_DATA] = that.handleSubmit;
             that.initializeEvents(events);
         };
 
         /**
-            Handle event tracking for dialog display.
-            @param {string} pageName name of the dialog
-            @param {string} path path to url of the tab that the dialog's on.
         */
-        that.handleSubmit = function(pageName, path) {
-            MP.trackViewDialog(pageName, path);
+        that.handleSubmit = function(dataType, inputValue, pageName) {
+            MP.trackEnterDataForGame(dataType, inputValue, pageName); 
         };
         
         return that;

@@ -29,6 +29,7 @@ define(
         function (Const, MPEvent) {
     // Imports
     var createObject = MPEvent.createObject;
+    var enterData = MPEvent.enterData;
     var requestLogin = MPEvent.requestLogin;
     var viewPage = MPEvent.viewPage;
     var GAME = Const.API_OBJECT.GAME; 
@@ -63,6 +64,20 @@ define(
                     numberOfTags,
                     creatorsOutcome,
                     wasScored);
+        },
+
+        /**
+            Track data entered by the user to construct a game.
+            @param {string} dataType The type of inputted data.
+            @param {string} inputValue The inputted data.
+            @param {string} pageName The page the user is on.
+        */
+        trackEnterDataForGame: function (dataType, inputValue, pageName) {
+            enterData.trackEnterData(
+                    GAME,
+                    dataType,
+                    inputValue,
+                    pageName);
         },
 
         /**

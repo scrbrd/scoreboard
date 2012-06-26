@@ -1,9 +1,10 @@
 /**
-    Handle requesting a new tab and its effect on the page state.
+    Handle requesting a new page, its effect on the page state, and tracking
+    with MixPanel.
 
-    LoadTabController.controller inherits from BaseController.controller.
+    LoadPageController.controller inherits from BaseController.controller.
 
-    @exports LoadTabController
+    @exports LoadPageController
 
     @requires $
     @requires Backbone
@@ -26,10 +27,10 @@ define(
         function ($, Backbone, MP, Const, Event, BaseController, Crud) {
     
     /**
-        Controller instance for tab and page loading.
+        Controller instance for page and and dialog loading.
         @constructor
     */
-    var loadTabController = (function () {
+    var loadPageController = (function () {
         var that = Object.create(BaseController.controller);
 
         /** 
@@ -38,9 +39,12 @@ define(
         that.initialize = function () {
             var events = {};
 
-            events[Event.CLIENT.VIEW_PAGE] = that.handleViewPage;
+            events[Event.CLIENT.DISPLAY_DIALOG] = that.handleViewedDialog;
             events[Event.CLIENT.RELOAD_PAGE] = that.handleReloadPage;
+            events[Event.CLIENT.VIEW_PAGE] = that.handleViewPage;
+            
             events[Event.SERVER.VIEWED_PAGE] = that.handleSuccess;
+            
             that.initializeEvents(events);
         };
    
@@ -69,10 +73,23 @@ define(
                 MP.trackViewTab(pageName, path);
             } else if (pageType === Const.PAGE_TYPE.LANDING) {
                 MP.trackViewLanding(pageName, path);
-            } else  {
-                console.log("never called");
+            } else if (pageType === Const.PAGE_TYPE.DIALOG) {
                 MP.trackViewDialog(pageName, path);
-            } 
+            } else {
+                console.log("never called");
+            }
+        };
+
+        /**
+            Update MixPanel for a display dialog event.
+
+            TODO does routing from a CLIENT event to a handleSubmit break 
+            some encapsualtion?
+            @param {string} pageName
+            @param {string} path
+        */
+        that.handleViewedDialog = function (pageName, path) {
+            that.handleSuccess(Const.PAGE_TYPE.DIALOG, pageName, path);
         };
 
         /**
@@ -110,6 +127,6 @@ define(
     }());
 
     return {
-        controller: loadTabController,
+        controller: loadPageController,
     };
 });

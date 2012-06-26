@@ -25,32 +25,37 @@ define(
         @enum {string}     
     */
     var EVENT = {
-        VIEW_PAGE:          "View Page", 
         CREATE_OBJECT:      "Create Object",
+        ENTER_DATA:         "Enter Data",
         REQUEST_LOGIN:      "Request Login",
+        VIEW_PAGE:          "View Page", 
     };
 
 
     /**
         Enum for all mixpanel property parmaeters. (lowercase.)
         @enum {string} 
+        FIXME XXX make these more descriptive.
     */
     var PROPERTY = {
-        TYPE:               "type", // subcategory of event
+        DATA_TYPE:          "data type",
         NAME:               "name", // specific name
-        PATH:               "path", // path to page
         NUMBER_OF_TAGS:     "number of tags", // number of tagged folks
+        OBJECT_TYPE:        "object type",
+        PATH:               "path", // path to page
+        TYPE:               "type", // subcategory of event
+        INPUT:              "input", // user input
     };
    
 
     /**
-        MixPanel Event prototype object for specific events to subclass.
+        MixPanel Event prototype object for specific events to subinstance.
         @constructor
     */
     var mixPanelEvent = (function () {
         var that = {};
        
-        // Subclass will have specific event constant.
+        // Subinstance will have specific event constant.
         that.mpEvent =  null;
 
         /** 
@@ -66,7 +71,7 @@ define(
       
     
     /**
-        CREATE_OBJECT event that subclasses mixPanelEvent.
+        CREATE_OBJECT event that inherits from mixPanelEvent.
         
         This generic event has properties for all object types.
         TODO - Consider if each Object should have its own event.
@@ -102,7 +107,40 @@ define(
 
 
     /**
-        REQUEST_LOGIN event that subclasses mixPanelEvent.
+        ENTER_DATA event that inherits from mixPanelEvent.
+        @constructor
+    */
+    var enterData = (function () {
+        var that = Object.create(mixPanelEvent);
+
+        that.mpEvent = EVENT.ENTER_DATA;
+
+        /**
+            Track ENTER_DATA event.
+            @param {string} objectType The object that the data adds to.
+            @param {string} dataType The type of inputted data.
+            @param {string} inputValue The user inputted data.
+            @param {string} pageName The page the user is on.
+        */
+        that.trackEnterData = function (
+                objectType,
+                dataType,
+                inputValue,
+                pageName) {
+            var properties = {};
+            properties[PROPERTY.OBJECT_TYPE] = objectType;
+            properties[PROPERTY.DATA_TYPE] = dataType;
+            properties[PROPERTY.INPUT] = inputValue;
+            properties[PROPERTY.NAME] = pageName;
+
+            that.track(properties);
+        };
+
+        return that;
+    }());
+
+    /**
+        REQUEST_LOGIN event that inherits from mixPanelEvent.
         @constructor
     */
     var requestLogin = (function () {
@@ -130,7 +168,7 @@ define(
 
     
     /**
-        VIEW_PAGE event that subclasses mixPanelEvent.
+        VIEW_PAGE event that inherits from mixPanelEvent.
         @constructor
     */
     var viewPage = (function () {
@@ -165,6 +203,7 @@ define(
     
     return {
         createObject: createObject,
+        enterData: enterData,
         requestLogin: requestLogin,
         viewPage: viewPage, 
     };

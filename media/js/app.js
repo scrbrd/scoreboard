@@ -56,7 +56,7 @@
     @requires jQuery
     @requires Doc
     @requires Router
-    @requires LoadTabController
+    @requires LoadPageController
     @requires CreateGameController
     @requires DialogController
     @requires LoginController
@@ -68,7 +68,7 @@ require(
             "jQuery",
             "view/document",
             "js/router",
-            "controller/loadTab",
+            "controller/loadPage",
             "controller/createGame",
             "controller/dialog",
             "controller/login",
@@ -79,7 +79,7 @@ require(
                 $, 
                 Doc,
                 Router, 
-                LoadTabController, 
+                LoadPageController, 
                 CreateGameController,
                 DialogController,
                 LoginController,
@@ -126,7 +126,7 @@ require(
         Initialize all controllers.
     */
     function initializeControllers() {
-        LoadTabController.controller.initialize();
+        LoadPageController.controller.initialize();
         CreateGameController.controller.initialize();
         DialogController.controller.initialize();
         LoginController.controller.initialize();

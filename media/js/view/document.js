@@ -270,9 +270,9 @@ define(
     var docView = null;
 
     return {
-        construct: function (loadTabController, model) {
+        construct: function (loadPageController, model) {
             if (docView === null) {
-                docView = new DocView(loadTabController, model);
+                docView = new DocView(loadPageController, model);
             }
             return docView;
         },

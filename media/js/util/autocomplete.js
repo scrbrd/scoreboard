@@ -51,6 +51,7 @@ define(
                 var selectedPlayer = ui.item;
                 labelInput.val(selectedPlayer.label);
                 valueInput.val(selectedPlayer.value);
+                valueInput.change();
 
                 // unfocus after selection
                 labelInput.blur();

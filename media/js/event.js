@@ -29,6 +29,7 @@ define(
         */
         CLIENT: {
             DISPLAY_DIALOG:         "client-display-dialog",
+            ENTER_GAME_DATA:        "client-enter-game-data",
             CREATE_GAME:            "client-create-game",
             VIEW_PAGE:              "client-view-page",
             RELOAD_PAGE:            "client-reload-page",

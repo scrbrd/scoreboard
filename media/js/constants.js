@@ -72,6 +72,8 @@ define(
         DATA: {
             ID:                     "id",
             SCORE:                  "score",
+            RESULT:                 "result",
+            PLAYER:                 "player",
             NAME:                   "name",
             RIVALS:                 "rivals",
             PAGE_TYPE:              "page-type",
@@ -89,13 +91,15 @@ define(
         }, 
 
         /**
-            Enum for values of name attributes. (Wrapped in [name=VALUE].)
+            Enum for values of name attributes. (Wrapped in attribute selectors.)
             @enum {string}
         */
         // TODO: make this link sink with Python HTML_NAME constants
         NAME: {
             LEAGUE:                 "[name='league']",
             CREATE_GAME:            "[name='create-game']",
+            GAME_SCORE_ID:          "[name^='game-score'][name$='[id]']",
+            GAME_SCORE_SCORE:       "[name^='game-score'][name$='[score]']",
         },
 
         /**

@@ -42,7 +42,9 @@ define(
         // Variable: form
         // The jQuery object of the included form
         form: null,
-        
+       
+        pageName: Const.PAGE_NAME.CREATE_GAME,
+
         changeRivalsEvent: "change:" + Const.DATA.RIVALS,
         changeContextIDEvent: "change:" + Const.DATA.ID,
 
@@ -138,8 +140,9 @@ define(
 
         */
         setupForm: function(leagueID, rivals) {
+            var formPageName = this.pageName;
             this.form.find(Const.NAME.LEAGUE).val(leagueID);
-        
+
             // TODO: add additional row functionality
             // diabled row, gets enabled, add new row
 
@@ -147,6 +150,26 @@ define(
             $(Const.NAME.CREATE_GAME + ' ' + Const.CLASS.AUTOCOMPLETE_PLAYERS)
                 .each(function (index, elem) {
                     AutocompleteUtil.autocompletePlayers(elem, rivals);
+                });
+
+            // add event handler for player data entry.
+            $(Const.NAME.CREATE_GAME + ' ' + Const.NAME.GAME_SCORE_ID)
+                .change( function (evt) {
+                    EventDispatcher.trigger(
+                            Event.CLIENT.ENTER_GAME_DATA,
+                            Const.DATA.PLAYER,
+                            evt.target.value,
+                            formPageName);
+                });
+            
+            // add event handler for result (W/L) data entry.
+            $(Const.NAME.CREATE_GAME + ' ' + Const.NAME.GAME_SCORE_SCORE)
+                .change( function (evt) {
+                    EventDispatcher.trigger(
+                            Event.CLIENT.ENTER_GAME_DATA,
+                            Const.DATA.RESULT,
+                            evt.target.value,
+                            formPageName);
                 });
         },
         /* 
