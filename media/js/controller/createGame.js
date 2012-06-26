@@ -1,62 +1,100 @@
-/* 
-    Module: controller/createGame
-    Handle tab updating by a returning a stateless object.
+/** 
+    Handle events that relate to the game creation workflow.
 
-    Dependencies:
-        MP
-        crud
-        view/document
+    CreateGameController.controller inherits from BaseController.controller.
+
+    @exports CreateGameController
+
+    @requires MP
+    @requires Const
+    @requires Event
+    @requires BaseController 
+    @requires Crud
+    @requires Doc
 */
 define(
         [
             "MP",
             "js/constants",
             "js/event",
-            "js/eventDispatcher",
+            "controller/base",
             "js/crud",
             "view/document",
         ],
-        function (MP, Const, Event, EventDispatcher, Crud, Doc) {
-       
-    function initialize() {
-        EventDispatcher.on(Event.CLIENT.CREATE_GAME, handleSubmit);
-        EventDispatcher.on(Event.SERVER.CREATED_GAME, handleSuccess);
-    }
-    
-    function handleSubmit(gameParams) {
-        gameParams = readyGameForSubmit(gameParams);
+        function (MP, Const, Event, BaseController, Crud, Doc) {
 
-        Crud.createGame(gameParams);
-        var docView = Doc.retrieve();
-        docView.hideDialog();
-    }
-    
-    function handleSuccess(numberOfTags) {
-        MP.trackCreateGame(
-                numberOfTags,
-                null,
-                null);
-        // refresh the Docview with by grabbing new data
-        var docView = Doc.retrieve();
-        docView.refresh();
-    }
+    /**
+        Controller instance for creating a game on the server.
+        @constructor
+    */
+    var createGameController = (function () {
+        var that = Object.create(BaseController.controller);
 
-    function readyGameForSubmit(gameParams) {
-        // for each player, if no score then append score 0.
-        var gamescore = gameParams[Const.DATA.GAME_SCORE];
-        var i;
-        var player;
-        for (i = 0; i < gamescore.length; i += 1) {
-            player = gamescore[i];
-            if (!player.hasOwnProperty(Const.DATA.SCORE)) {
-                player[Const.DATA.SCORE] = 0;
+        /** 
+            Bind CREATE_GAME and CREATED_GAME events.
+        */
+        that.initialize = function () {
+            var events = {};
+
+            events[Event.CLIENT.CREATE_GAME] = that.handleSubmit;
+            events[Event.SERVER.CREATED_GAME] = that.handleSuccess;
+            that.initializeEvents(events);
+        };
+   
+        /**
+            Handle creating game form to server processing and submission.
+            @param {Object} gameParams All the Game parameters:
+                tags, scores, etc.
+        */
+        that.handleSubmit = function (gameParams) {
+            var docView = Doc.retrieve();
+         
+            // process game data to prepare it for the server.
+            gameParams = readyGameForSubmit(gameParams);
+            Crud.createGame(gameParams);
+            docView.hideDialog();
+        };
+        
+        /** 
+            Respond to successfull game creation on the server.
+            @param {number} numberOfTags number of tagged players
+        */
+        that.handleSuccess = function (numberOfTags) {
+            var docView = Doc.retrieve();
+            
+            MP.trackCreateGame(
+                    numberOfTags,
+                    null,
+                    null);
+            // refresh the Docview with by grabbing new data
+            // FIXME trigger RELOAD_PAGE event should accomplish this too.
+            docView.refresh();
+        };
+
+        /**
+           Process and alter Game parameters to ready them for the server.
+           @param {Object} gameParams
+           @return {Obejct} The altered game parameters.  
+        */
+        function readyGameForSubmit(gameParams) {
+            // each player need to have a game score but the checkbox
+            // excludes losses, so add them in on that condition.
+            var gamescore = gameParams[Const.DATA.GAME_SCORE];
+            var i;
+            var player;
+            for (i = 0; i < gamescore.length; i += 1) {
+                player = gamescore[i];
+                if (!player.hasOwnProperty(Const.DATA.SCORE)) {
+                    player[Const.DATA.SCORE] = 0;
+                }
             }
-        }
 
-        return gameParams;
-    }
-    
+            return gameParams;
+        }
+        return that;
+    }());
+
     return {
-        initialize: initialize,
+        controller: createGameController,
     };
 });

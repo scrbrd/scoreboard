@@ -1,45 +1,48 @@
+/**
+    All triggerable application events for publish/subscribe.
+
+    Events are triggered by any module that needs to send out an 
+    app-wide alert. Then other modules can subscribe to these events.
+
+    The Views are directly bound to model change events. That communication
+    does not use this framework. Also, these events do not need to
+    correspond to mixpanel events, though they usually do.
+
+    I've used present tense for Client events and past tense for Server 
+    events. This respects how the handlers typically respond to these events
+    and also make it easy to connect initial Client events and later Server
+    response events.
+
+    TODO: Make Events objects with initialization parameters.
+
+    @exports Event
+*/
 define(
         [], 
-        /**
-            Event Constants
-
-            Client events are usually in present tense to indicate that the 
-            handler is responsible for creating the functionality of event. 
-            In general, try to handle eveything at trigger time so a second 
-            past tense event isn't required.
-
-            Server events are typically past tense to indicate that the main
-            handlers will be responding to events that happened elsewhere.
-
-            @exports Event
-        */
         function () {
     
-    var event = /** @lends module:Event */ { 
+    var event = { 
 
         /**
             Enum for client initiated events. 
             @enum {string}
-            @const
         */
         CLIENT: {
-            /** @const */ DISPLAY_DIALOG: "client-display-dialog",
-            /** @const */ CREATE_GAME: "client-create-game",
-            /** @const */ VIEW_PAGE: "client-view-page",
-            /** @const */ RELOAD_PAGE: "client-reload-page",
-            /** @const */ REQUEST_FACEBOOK_LOGIN:
-                "client-request-facebook-login",
+            DISPLAY_DIALOG:         "client-display-dialog",
+            CREATE_GAME:            "client-create-game",
+            VIEW_PAGE:              "client-view-page",
+            RELOAD_PAGE:            "client-reload-page",
+            REQUEST_FACEBOOK_LOGIN: "client-request-facebook-login",
         },
         
         
         /**
             Enum for server initiated events. 
             @enum {string}
-            @const
         */
         SERVER: {
-            /** @const */ CREATED_GAME: "server-created-game",
-            /** @const */ VIEWED_PAGE: "server-viewed-page",
+            CREATED_GAME:           "server-created-game",
+            VIEWED_PAGE:            "server-viewed-page",
         },
     };
 

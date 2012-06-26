@@ -28,7 +28,7 @@ define(
                 Const, 
                 Event,
                 EventDispatcher, 
-                Autocomplete) {
+                AutocompleteUtil) {
 
     /*
         Class: DialogView
@@ -146,7 +146,7 @@ define(
             // set up autocomplete for each player selection
             $(Const.NAME.CREATE_GAME + ' ' + Const.CLASS.AUTOCOMPLETE_PLAYERS)
                 .each(function (index, elem) {
-                    Autocomplete.autocompletePlayers(elem, rivals);
+                    AutocompleteUtil.autocompletePlayers(elem, rivals);
                 });
         },
         /* 
@@ -161,7 +161,6 @@ define(
         */
         submit: function (event) {
             var createGameParams = $(event.target).toObject();
-            console.log("submit");
             EventDispatcher.trigger(
                 Event.CLIENT.CREATE_GAME,
                 createGameParams);
@@ -195,7 +194,7 @@ define(
                 //a.focus();
             });
 
-            return this;
+            return false;
         },
 
 

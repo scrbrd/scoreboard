@@ -50,28 +50,30 @@ define(
         // Function: initialize
         // Setup DialogView with dialog html file.
         initialize: function (
-                initDOMForRouting,
                 viewerContextModel,
                 pageStateModel) {
 
             this.setElement(Const.DOM.BODY);
+            this.viewerContextModel = viewerContextModel;
+            this.pageStateModel = pageStateModel;
 
             this.updateViewerContextModel(viewerContextModel);
             this.updatePageStateModel(pageStateModel);
 
             if (pageStateModel.pageType() === Const.PAGE_TYPE.TAB) {
                 this.setTabView(pageStateModel);
-            }
-
-            if (initDOMForRouting) {
-                this.initializeDOMForRouting(pageStateModel);
+            } else {
+                // TODO have this happen automatically.
+                this.pageStateModel.setPageType(Const.PAGE_TYPE.LANDING);
             }
 
             // get initial context and content for model
             // jQuery doesn't have an outerHTML function so i'm using [0]
+            console.log("initial load page type: ", pageStateModel.pageType());
             EventDispatcher.trigger(
                     Event.SERVER.VIEWED_PAGE,
-                    pageStateModel,
+                    pageStateModel.pageType(),
+                    pageStateModel.pageName(),
                     this.path());
         },
 
@@ -162,7 +164,6 @@ define(
                     viewerContext,
                     pageState,
                     pageHeight);
-            DialogController.initialize();
             return createGameView;
         }, 
 
@@ -194,12 +195,14 @@ define(
         
 
         */
-        initializeDOMForRouting: function (model) {
+        initializePushStateDOM: function () {
             // SRC = https://github.com/tbranyen/backbone-boilerplate
             // All navigation that is relative should be passed through 
             // the navigate method, to be processed by the router.  If 
             // the link has a data-bypass attribute, bypass the 
             // delegation completely.
+            var model = this.pageStateModel;
+
             $(document).on(
                     "touchstart click", 
                     "a:not(" + Const.CLASS.EXTERNAL_LINK + ")", 
@@ -267,12 +270,14 @@ define(
     var docView = null;
 
     return {
-        construct: function (initDOMForRouting, loadTabController, model) {
+        construct: function (loadTabController, model) {
             if (docView === null) {
-                docView = new DocView(initDOMForRouting, loadTabController, model);
-
+                docView = new DocView(loadTabController, model);
             }
             return docView;
+        },
+        initializePushStateDOM: function () {
+            docView.initializePushStateDOM();
         },
         retrieve: function () {
             return docView;

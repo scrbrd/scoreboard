@@ -16,6 +16,11 @@
     in custom AMD modules and then delete the global variables. That's all
     going down in 'lib'.
 
+    RequireJS Plugins:
+    1. order: Allows for a specific order for loading non-AMD modules.
+    2. text: Allows for non-js files to be loaded as dependencies.
+    3. domReady: Allows for the one of the dependencies to be DOM ready.
+
     @module main
     @requires app
 */
@@ -31,7 +36,6 @@ require.config({
         @property {Object} paths
     */
     paths: {
-        // TODO - apparently there is an AMD version of jquery
         jQuery: "static/js/lib/jquery/jquery",
         Underscore: "static/js/lib/underscore/underscore",
         Backbone: "static/js/lib/backbone/backbone",
@@ -49,19 +53,19 @@ require.config({
     },
 });
 
-require(
-    [
-        // all app logic
-        "js/app",
+require([
+    // all app logic
+    "js/app",
 
-        // non-AMD 'modules'
-        "order!lib/jquery/jquery-min",
-        "order!lib/jquery/jquery-ui/jquery-ui-min",
-        "order!lib/jquery/form2js/form2js",
-        "order!lib/jquery/form2js/jquery.toObject",
-        "order!lib/underscore/underscore-min",
-        "order!lib/backbone/backbone-min",
-        "lib/iscroll/iscroll-min",
-        "lib/mixpanel/mixpanel-min",
-    ]
-);
+    // non-AMD 'modules'
+    // TODO - apparently there is an AMD version of jquery, underscore, and
+    // backbone
+    "order!lib/jquery/jquery-min",
+    "order!lib/jquery/jquery-ui/jquery-ui-min",
+    "order!lib/jquery/form2js/form2js",
+    "order!lib/jquery/form2js/jquery.toObject",
+    "order!lib/underscore/underscore-min",
+    "order!lib/backbone/backbone-min",
+    "lib/iscroll/iscroll-min",
+    "lib/mixpanel/mixpanel-min",
+]);

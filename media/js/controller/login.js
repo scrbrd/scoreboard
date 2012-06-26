@@ -1,37 +1,57 @@
-/* 
-    Module: login
-    Manage any login events
+/**
+    Handle login events.
 
-    Dependencies:
-        view/document
+    LoginController.controller inherits from BaseController.controller.
+
+    @exports LoginController
+
+    @requires MP
+    @requires Event
+    @requires BaseController
 */
 define(
         [
-            "jQuery",
-            "Backbone",
             "MP",
-            "view/document",
-            "js/constants",
             "js/event",
-            "js/eventDispatcher",
+            "controller/base",
         ],
-        function ($, Backbone, MP, Doc, Const, Event, EventDispatcher) {
+        function (MP, Event, BaseController) {
     
+    /**
+        Controller instance for login event handling.
+        @constructor
+    */
+    var loginController = (function () {
+        var that = Object.create(BaseController.controller);
 
-    function initialize() {
-        EventDispatcher.on(Event.CLIENT.REQUEST_FACEBOOK_LOGIN, handleSubmit);
-    }
+        /** 
+            Bind REQUEST_FACEBOOK_LOGIN event.
+        */
+        that.initialize = function () {
+            var events = {};
 
+            events[Event.CLIENT.REQUEST_FACEBOOK_LOGIN] = that.handleSubmit;
+            that.initializeEvents(events);
+        };
+   
+        /**
+            Handle Facebook login submission.
+        */
+        that.handleSubmit = function () {
+            console.log("handle request facebook login submit");
+            MP.trackRequestFacebookLogin();
+        };
+        
+        /** 
+        */
+        that.handleSuccess = function (numberOfTags) {
+            // TODO handle authorization events here.
+        };
 
-    function handleSubmit() {
-        console.log("handle request facebook login submit");
-        MP.trackRequestFacebookLogin();
-    }
-
-    function handleSuccess() {
-    }
+        return that;
+    }());
 
     return {
-        initialize: initialize,
+        controller: loginController,
     };
 });

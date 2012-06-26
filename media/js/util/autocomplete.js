@@ -1,23 +1,20 @@
 /**
-    @namespace
-    @name util
+    A set of widgets for adding autocomplete functionality.
+
+    AutocompleteUtil is a wrapper around the autocomplete widget for jquery-ui.
+
+    @exports AutocompleteUtil
+
+    @requires $
+    @requires Const
 */
 define(
         [
             "jQuery",
             "js/constants",
         ],
-        /**
-            A set of widgets foradding autocomplete functionality.
-
-            @exports Autocomplete
-
-            @requires $
-            @requires Const
-        */
         function($, Const) {
 
-        
     /**
         Provide generic autocomplete functionality.
 
@@ -25,9 +22,6 @@ define(
         @param {Object} selectData A list of objects with keys label, value.
     */
     function autocomplete(elem, selectData) {
-        // sort select data by label
-        selectData.sort(sortByLabel);
-        
         var labelInput = $(elem).children(Const.CLASS.AUTOCOMPLETE_LABEL);
         var valueInput = $(elem).children(Const.CLASS.AUTOCOMPLETE_VALUE);
         
@@ -43,6 +37,8 @@ define(
                 labelInput.val("");
             }
         });
+        
+        selectData.sort(sortByLabel);
 
         labelInput.autocomplete({
             autoFocus: true, // autofocus on first value
@@ -84,7 +80,6 @@ define(
             
     /**
         Remap player object ("id" --> "value", "name" --> "label").
-        @private
         @param {Object} r An object keyed "id" and "name"
         @return {Object} An object keyed "label" and "value".
     */
@@ -99,7 +94,6 @@ define(
     /**
         Used by sort function to sort the objects by their label
         attributes.
-        @private
         @param {Object} a An object with a "label" field.
         @param {Object} b Another object with a "label" field.
         @return {number} 0 if even, 1 if a>b, and -1 if b>a. 
@@ -116,7 +110,7 @@ define(
         return returnVal;
     }
 
-    return /** @lends module:util.Dom */ {
+    return {
         autocomplete: autocomplete,
         autocompletePlayers: autocompletePlayers,
     };

@@ -1,85 +1,61 @@
-/*
-    Module: event
-    All Mixpanel events are specified here.
+/**
+    A list of specific MixPanel events that define how we communicate with
+    MixPanel.
+    
+    These events all have a subcategory called type that mixpanel.js can use 
+    to create a fairly granular framework of events for the application can 
+    call. This decoupling stops external users from creating new MixPanel
+    events adhoc and disrupting the dataset.
+    
+    See Douglas Crockford's Prototypal Inheritance:
+    http://javascript.crockford.com/prototypal.html
 
-    Dependencies:
-       constants
-       
-    Global:
-        mixpanel
+    @exports MPEvent
+    
+    @return {Object} A set of mixPanelEvents with different track functions.
+
 */
-define(["js/constants"], function (Const) {
+define(
+        [], 
+        function () {
 
-    // TODO: put this Object.create method in a util package
-    /*
-        Function: Object.create
-        Adds a create function to every Object, making prototypal inheritance
-        easier.
-        
-        See:
-            http://javascript.crockford.com/prototypal.html
-    */
-    if (typeof Object.create !== 'function') {
-        Object.create = function (o) {
-            function F() {}
-            F.prototype = o;
-            return new F();
-        };
-    }
-    
-    
-    /*
-        Class: EVENT
-        All mixpanel events.
-    
-        Mixpanel event values are capitalized.
+
+    /**
+        Enum for all mixpanel events. (Capitalized)
+        @enum {string}     
     */
     var EVENT = {
-        // Constants: Mixpanel Events
-        // VIEW_PAGE - any view page event.
-        // CREATE_OBJECT - any object created.
-        VIEW_PAGE:      "View Page", 
-        CREATE_OBJECT:  "Create Object",
-        REQUEST_LOGIN: "Request Login",
+        VIEW_PAGE:          "View Page", 
+        CREATE_OBJECT:      "Create Object",
+        REQUEST_LOGIN:      "Request Login",
     };
 
 
-    /*
-        Class: PROPERTY
-        All mixpanel property parmaeters.
-    
-        Mixpanel properties are lowercase.
+    /**
+        Enum for all mixpanel property parmaeters. (lowercase.)
+        @enum {string} 
     */
     var PROPERTY = {
-        // Constants: Mixpanel Property Parameters
-        // TYPE - Subcategory of event
-        // NAME - the specific name 
-        // PATH - Path to specific page
-        // NUMBER_OF_TAGS - number of folks tagged in an object
-        TYPE:               "type", 
-        NAME:               "name",
-        PATH:               "path",
-        NUMBER_OF_TAGS:     "number of tags",
+        TYPE:               "type", // subcategory of event
+        NAME:               "name", // specific name
+        PATH:               "path", // path to page
+        NUMBER_OF_TAGS:     "number of tags", // number of tagged folks
     };
-    
-    
-    /*
-        Object: MixPanelEvent
-        Prototype object for specific Mix Panels events to subclass.
+   
+
+    /**
+        MixPanel Event prototype object for specific events to subclass.
+        @constructor
     */
     var mixPanelEvent = (function () {
         var that = {};
-        
-        // Variable: mpEvent
-        // (string) the selector for the mixpanel event.
+       
+        // Subclass will have specific event constant.
         that.mpEvent =  null;
 
-        /* 
-            Function: track
+        /** 
             Wrapper around mixpanel track event.
-
-            Parameters:
-                eventProperties - (dict) Event properties.
+            @param {Object} eventProperties A dict for the event.
         */
         that.track = function (eventProperties) {
             mixpanel.track(this.mpEvent, eventProperties);
@@ -87,29 +63,80 @@ define(["js/constants"], function (Const) {
 
         return that;
     }());
+      
+    
+    /**
+        CREATE_OBJECT event that subclasses mixPanelEvent.
+        
+        This generic event has properties for all object types.
+        TODO - Consider if each Object should have its own event.
+        @constructor
+    */
+    var createObject = (function () {
+        var that = Object.create(mixPanelEvent); 
+
+        that.mpEvent = EVENT.CREATE_OBJECT;
+
+        /**
+            Track CREATE_OBJECT event.
+            @param {string} objectType The type of object.
+            @param {string} numberOfTags The number of folks tagged.
+            @param {string} creatorsOutcome The Outcome of the object's creator.
+            @param {string} wasScored Was the object given a Score.
+        */
+        that.trackCreateObject = function (
+                objectType, 
+                numberOfTags, 
+                creatorsOutcome, 
+                wasScored) {
+            var properties = {};
+            properties[PROPERTY.TYPE] = objectType;
+            properties[PROPERTY.NUMBER_OF_TAGS] = numberOfTags;
+            // TODO: fill in creators_outcome and was_scored
+            
+            that.track(properties);
+        };
+
+        return that;
+    }());
 
 
-    /*
-        Object: viewPage 
-        A Singleton for tracking VIEW_PAGE.
+    /**
+        REQUEST_LOGIN event that subclasses mixPanelEvent.
+        @constructor
+    */
+    var requestLogin = (function () {
+        var that = Object.create(mixPanelEvent); 
 
-        Subclass from mixPanelEvent.
+        that.mpEvent = EVENT.REQUEST_LOGIN;
+
+        that.TYPE = {
+            FACEBOOK:        "facebook",
+        };
+
+        /**
+            Track REQUEST_LOGIN event.
+            @param {string} loginType The type of login request.
+        */
+        that.trackRequestLogin = function (loginType) {
+            var properties = {};
+            properties[PROPERTY.TYPE] = loginType;
+            
+            that.track(properties);
+        };
+
+        return that;
+    }());
+
+    
+    /**
+        VIEW_PAGE event that subclasses mixPanelEvent.
+        @constructor
     */
     var viewPage = (function () {
-        // viewPage inherits from mixPanelEvent
         var that = Object.create(mixPanelEvent); 
         
-        // Class: TYPE
-        // The page type of the VIEW_PAGE event.
-        // TODO: make this part of the presentation model
-        // e.g., pages should know what type they are (like PAGE_NAME)
         that.TYPE = {
-            /*
-                Constants: Page Types
-                TAB - a tab page is a view for a logged in user
-                LANDING - a landing page is the initial marketing page
-                DIALOG - a dialog page is an interface for user response
-            */
             TAB:        "tab",
             LANDING:    "landing",
             DIALOG:     "dialog",
@@ -117,15 +144,11 @@ define(["js/constants"], function (Const) {
 
         that.mpEvent = EVENT.VIEW_PAGE;
 
-
-        /* 
-            Function: trackViewPage
-            Track event type VIEW_PAGE.
-         
-            Parameters:
-                type - a small selection of possible types
-                name - a specific name for the page/dialog
-                path - the path to the page
+        /** 
+            Track VIEW_PAGE event.
+            @param {string} type The type of the viewed page.
+            @param {string} name The name of the viewed page.
+            @param {string} path The path (not URL) of the viewed page.
         */
         that.trackViewPage = function (type, name, path) {
             var properties = {};
@@ -138,77 +161,11 @@ define(["js/constants"], function (Const) {
         
         return that;
     }());
-      
     
-    /*
-        Object: createObject 
-        A Singleton for tracking CREATE_OBJECT
-    */
-    var createObject = (function () {
-        // createObject inherits from mixPanelEvent
-        var that = Object.create(mixPanelEvent); 
-
-        that.mpEvent = EVENT.CREATE_OBJECT;
-
-        
-
-        /*
-            Function: trackCreateObject
-            Track event type CREATE_OBJECT
-
-            Parameters:
-                type - (string) the type of object being created
-                numer_of_tags - (int) number of players tagged
-                creators_outcome - (string) the player WON, LOST, or TIED
-                was_scored - (boolean) if a score was attached to the game
-        */
-        that.trackCreateObject = function (
-                type, 
-                number_of_tags, 
-                creators_outcome, 
-                was_scored) {
-            var properties = {};
-            properties[PROPERTY.TYPE] = type;
-            properties[PROPERTY.NUMBER_OF_TAGS] = number_of_tags;
-            // TODO: fill in creators_outcome and was_scored
-            
-            that.track(properties);
-        };
-
-        return that;
-    }());
-
-
-    var requestLogin = (function () {
-        // createObject inherits from mixPanelEvent
-        var that = Object.create(mixPanelEvent); 
-
-        that.mpEvent = EVENT.REQUEST_LOGIN;
-
-        that.TYPE = {
-            FACEBOOK:        "facebook",
-        };
-
-        /**
-            Track any login request.
-            @param {string} login_type The type of login request.
-        */
-        that.trackRequestLogin = function (login_type) {
-            var properties = {};
-            properties[PROPERTY.TYPE] = login_type;
-            
-            that.track(properties);
-        };
-
-        return that;
-    }());
-
     
     return {
-        viewPage: viewPage, 
         createObject: createObject,
         requestLogin: requestLogin,
+        viewPage: viewPage, 
     };
-
-
 });

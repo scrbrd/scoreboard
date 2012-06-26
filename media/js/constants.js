@@ -1,69 +1,65 @@
 define(
         [], 
         /**
-            A module for containing all js, css, and html constants.
-            
-            Note: All constant values should contain dashes to comply with
+            All client side constants.
+
+            w3c constant values should contain dashes to comply with
             html5 standards. E.g., "class-name".
             
             @exports Const
         */
         function () {
     
-    var constants = /** @lends module:Const */ { 
+    var constants = { 
 
         /**
             Enum for API object types.
             @enum {string} 
-            @const
         */
         API_OBJECT: {
-            /** @const */ GAME:                 "game",
+            GAME:                   "game",
         },
 
         /**
             Enum for DOM object selectors.
             @enum {string} 
-            @const
         */
         DOM: {
-            /** @const */ BODY:                 "body",
-            /** @const */ BUTTON:               "button",
-            /** @const */ NAV:                  "nav",
+            BODY:                   "body",
+            BUTTON:                 "button",
+            NAV:                    "nav",
         },
 
         /**
             Enum for ID selectors. (Prefixed with '#')
             @enum {string} 
-            @const
         */
         // TODO: make this link sink with Python HTML_ID constants
         ID: {
-            /** @const */ TAB:                  "#tab",
-            /** @const */ CONTEXT:              "#context",
-            /** @const */ CONTENT:              "#content",
-            /** @const */ DIALOG_CONTAINER:     "#dialog-container",
-            /** @const */ SCROLLER:             "#iscroll-wrapper",
+            TAB:                    "#tab",
+            CONTEXT:                "#context",
+            CONTENT:                "#content",
+            DIALOG_CONTAINER:       "#dialog-container",
+            SCROLLER:               "#iscroll-wrapper",
         },
 
 
         /**
             Enum for Class selectors. (Prefixed with '.')
             @enum {string}
-            @const
         */
         // TODO: make this link sink with Python HTML_CLASS constants
         CLASS: {
-            /** @const */ JS_LINK: ".js-link",
-            /** @const */ EXTERNAL_LINK: ".external-link",
-            /** @const */ CLOSE_BUTTON: ".close-button",
-            /** @const */ ACTIVE_NAV: ".active-nav",
-            /** @const */ INACTIVE_NAV: ".inactive-nav",
-            /** @const */ AUTOCOMPLETE_PLAYERS: ".autocomplete-players",
-            /** @const */ AUTOCOMPLETE_LABEL: ".autocomplete-label",
-            /** @const */ AUTOCOMPLETE_VALUE: ".autocomplete-value",
-            /** @const */ LIST_WITH_HEADERS: ".list-with-headers",
-            /** @const */ FACEBOOK_LOGIN_BUTTON: ".facebook-login-button",
+            JS_LINK:                ".js-link",
+            EXTERNAL_LINK:          ".external-link",
+            CLOSE_BUTTON:           ".close-button",
+            ACTIVE_NAV:             ".active-nav",
+            INACTIVE_NAV:           ".inactive-nav",
+            AUTOCOMPLETE_PLAYERS:   ".autocomplete-players",
+            AUTOCOMPLETE_LABEL:     ".autocomplete-label",
+            AUTOCOMPLETE_VALUE:     ".autocomplete-value",
+            LIST_WITH_HEADERS:      ".list-with-headers",
+            FACEBOOK_LOGIN_BUTTON:  ".facebook-login-button",
         },
 
         /**
@@ -74,58 +70,53 @@ define(
         */
         // TODO: make this link sink with Python HTML_DATA constants
         DATA: {
-            /** @const */ ID:                   "id",
-            /** @const */ SCORE:                "score",
-            /** @const */ NAME:                 "name",
-            /** @const */ RIVALS:               "rivals",
-            /** @const */ PAGE_TYPE:            "page-type",
-            /** @const */ PAGE_NAME:            "page-name",
-            /** @const */ GAME_SCORE:           "game-score",
+            ID:                     "id",
+            SCORE:                  "score",
+            NAME:                   "name",
+            RIVALS:                 "rivals",
+            PAGE_TYPE:              "page-type",
+            PAGE_NAME:              "page-name",
+            GAME_SCORE:             "game-score",
         },
                 
         /** Enum for model ids.
             @enum {string}
-            @const
         */
         MODEL_ID: {
-            /** @const */ VIEWER_CONTEXT: "#model-viewer-context",
-            /** @const */ CONTEXT: "#model-context",
-            /** @const */ PAGE_STATE: "#model-page-state",
+            VIEWER_CONTEXT:         "#model-viewer-context",
+            CONTEXT:                "#model-context",
+            PAGE_STATE:             "#model-page-state",
         }, 
 
         /**
             Enum for values of name attributes. (Wrapped in [name=VALUE].)
-            values.
             @enum {string}
-            @const
         */
         // TODO: make this link sink with Python HTML_NAME constants
         NAME: {
-            /** @const */ LEAGUE:                 "[name='league']",
-            /** @const */ CREATE_GAME:            "[name='create-game']",
+            LEAGUE:                 "[name='league']",
+            CREATE_GAME:            "[name='create-game']",
         },
 
         /**
             Enum for page types.
             @enum {string}
-            @const
         */
         PAGE_TYPE: {
-            /** @const */ TAB:               "tab",
-            /** @const */ DIALOG:                  "dialog",
-            /** @const */ LANDING:                "landing",
+            TAB:                    "tab",
+            DIALOG:                 "dialog",
+            LANDING:                "landing",
         },
 
         /**
             Enum for page names. 
             @enum {string}
-            @const
         */
         PAGE_NAME: {
-            /** @const */ RANKINGS:               "rankings",
-            /** @const */ GAMES:                  "games",
-            /** @const */ LANDING:                "landing",
-            /** @const */ CREATE_GAME:            "create-game",
+            RANKINGS:               "rankings",
+            GAMES:                  "games",
+            LANDING:                "landing",
+            CREATE_GAME:            "create-game",
         },
     };
 

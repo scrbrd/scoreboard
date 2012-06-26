@@ -1,23 +1,16 @@
 /**
-    @namespace
-    @name util
+    A set of function for DOM manipulations.
+
+    @exports DOMUtil
+
+    @requires $
 */
 define(
         [
             "jQuery",
-            "js/constants",
         ],
-        /**
-            A utility for generic DOM manipulations.
+        function($) {
 
-            @exports DOM
-
-            @requires $
-            @requires Const
-        */
-        function($, Const) {
-
-        
     /**
         Get id name from a id selector by stripping leading '#'.
         @param {string} idSelector A single id selector. 
@@ -58,7 +51,7 @@ define(
     }
 
 
-    return /** @lends module:util.Dom */ {
+    return { 
         getIDFromSelector: getIDFromSelector,
         getSelectorFromID: getSelectorFromID,
         getClassFromSelector: getClassFromSelector,
