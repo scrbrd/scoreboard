@@ -119,5 +119,10 @@ class _Gremlin(object):
         return "java.lang.IllegalArgumentException"
 
 
-GREMLIN = _Gremlin()
+    @constant
+    def ERROR_MESSAGE(self):
+        """ ERROR_MESSAGE is a Gremlin constant. """
+        return "message"
 
+
+GREMLIN = _Gremlin()

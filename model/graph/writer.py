@@ -12,11 +12,11 @@ Provides:
     def delete_edge
 
 """
-
 from time import time
 
-from model.data import db, DbInputError, DbReadError, DbWriteError
 from model.constants import NODE_PROPERTY, EDGE_PROPERTY
+from model.data import database_manager
+from model.data.data_errors import DbInputError, DbWriteError
 
 from constants import GRAPH_PROPERTY
 from model.graph import GraphEdge, GraphNode, GraphInputError
@@ -24,11 +24,16 @@ from model.graph import GraphEdge, GraphNode, GraphInputError
 
 # TODO: change functions and definitions to use GraphProto*
 
+def database():
+    """ Get a database from the data layer's database_manager. """
+    return database_manager.database()
+
+
 def create_node(prototype_node):
     """ Create a node in a graph database.
 
     Required:
-    GraphProtoNode  prototype_node  unwritten version of GraphNode 
+    GraphProtoNode  prototype_node  unwritten version of GraphNode
 
     Returns:
     GraphNode                       newly created GraphNode
@@ -37,7 +42,6 @@ def create_node(prototype_node):
     GraphInputError                 bad input
 
     """
-
     graph_node = None
 
     try:
@@ -69,7 +73,7 @@ def create_node(prototype_node):
         properties[GRAPH_PROPERTY.DELETED_TS] = False
 
         # issue a call to the data layer
-        node = db.create_node(prototype_node.type(), properties)
+        node = database().create_node(prototype_node.type(), properties)
 
         graph_node = GraphNode(
                 node[NODE_PROPERTY.ID],
@@ -105,7 +109,6 @@ def update_node(node_id, new_properties):
     GraphInputError         bad input
 
     """
-
     graph_node = None
 
     try:
@@ -117,9 +120,9 @@ def update_node(node_id, new_properties):
                 GRAPH_PROPERTY.UPDATED_TS,
                 GRAPH_PROPERTY.DELETED_TS
                 ]
-        
+
         input_errors = set(bad_properties).intersection(set(new_properties))
-        
+
         if input_errors:
             raise GraphInputError(
                     input_errors,
@@ -129,7 +132,7 @@ def update_node(node_id, new_properties):
         new_properties[GRAPH_PROPERTY.UPDATED_TS] = int(time())
 
         # issue a call to the data layer
-        node = db.update_node(node_id, new_properties)
+        node = database().update_node(node_id, new_properties)
 
         graph_node = GraphNode(
                 node[NODE_PROPERTY.ID],
@@ -160,12 +163,11 @@ def delete_node(node_id):
     GraphNode               deleted GraphNode
 
     """
-
     graph_node = None
 
     try:
         # issue a call to the data layer with the required changes
-        node = db.delete_node(node_id, {"deleted_ts" : int(time())})
+        node = database().delete_node(node_id, {"deleted_ts": int(time())})
 
         graph_node = GraphNode(
                 node[NODE_PROPERTY.ID],
@@ -199,7 +201,6 @@ def create_edge(prototype_edge):
     GraphInputError                 bad input
 
     """
-
     graph_edge = None
 
     try:
@@ -236,7 +237,7 @@ def create_edge(prototype_edge):
         properties[GRAPH_PROPERTY.DELETED_TS] = False
 
         # issue a call to the data layer
-        edge = db.create_edge(
+        edge = database().create_edge(
                 prototype_edge.from_node_id(),
                 prototype_edge.to_node_id(),
                 prototype_edge.type(),
@@ -261,6 +262,7 @@ def create_edge(prototype_edge):
 
     return graph_edge
 
+
 # TODO: replace new_properties with GraphProtoEdge
 def update_edge(edge_id, new_properties):
     """ Update an edge connecting two nodes in a graph database.
@@ -276,7 +278,6 @@ def update_edge(edge_id, new_properties):
     GraphInputError             bad input
 
     """
-
     graph_edge = None
 
     try:
@@ -304,7 +305,7 @@ def update_edge(edge_id, new_properties):
         new_properties[GRAPH_PROPERTY.UPDATED_TS] = int(time())
 
         # issue a call to the data layer
-        edge = db.update_edge(edge_id, new_properties)
+        edge = database().update_edge(edge_id, new_properties)
 
         graph_edge = GraphEdge(
                 edge[EDGE_PROPERTY.ID],
@@ -336,14 +337,13 @@ def delete_edge(edge_id):
     GraphEdge               deleted GraphEdge
 
     """
-
     graph_edge = None
-        
+
     try:
-        # issue a call to the data layer with the required changes 
-        edge = db.delete_edge(
+        # issue a call to the data layer with the required changes
+        edge = database().delete_edge(
                 edge_id,
-                {GRAPH_PROPERTY.DELETED_TS : int(time())})
+                {GRAPH_PROPERTY.DELETED_TS: int(time())})
 
         graph_edge = GraphEdge(
                 edge[EDGE_PROPERTY.ID],
@@ -363,4 +363,3 @@ def delete_edge(edge_id):
         graph_edge = None
 
     return graph_edge
-

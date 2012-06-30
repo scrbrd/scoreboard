@@ -1,6 +1,6 @@
 """ Module: reader
 
-Provide an API for retrieving data from a graph database, including 
+Provide an API for retrieving data from a graph database, including
 get and multiget actions on nodes, edges, and paths.
 
 Provides:
@@ -13,18 +13,23 @@ Provides:
     def multiget_path_to_neighbor_nodes
 
 """
-
-from model.data import db, DbInputError, DbReadError, DbWriteError
 from model.constants import NODE_PROPERTY, EDGE_PROPERTY
+from model.data import database_manager
+from model.data.data_errors import DbInputError, DbReadError
 
 from constants import GRAPH_PROPERTY
 from model.graph import GraphEdge, GraphNode, GraphPath, GraphOutputError
 
 
+def database():
+    """ Get a database from the data layer's database_manager. """
+    return database_manager.database()
+
+
 def get_node(node_id):
     """ Return a GraphNode from a graph database.
 
-    Wrap a call to a graph database that returns a dict structured 
+    Wrap a call to a graph database that returns a dict structured
     like the following, and parse it into a GraphNode:
 
     {
@@ -44,7 +49,6 @@ def get_node(node_id):
     GraphOutputError    bad input
 
     """
-
     # cases:
     #   1/ success: dict returned;
     #   2/ id was bad: error raised, execution halted;
@@ -53,7 +57,7 @@ def get_node(node_id):
     graph_node = None
 
     try:
-        node_dict = db.read_node_and_edges(node_id)
+        node_dict = database().read_node_and_edges(node_id)
 
         if node_dict:
             graph_node = _process_node(node_dict)
@@ -103,12 +107,13 @@ def get_nodes_by_index(key, value, node_type_return_filter=None):
     #   3/ db fails: error caught, None assigned here.
 
     graph_nodes = None
-
     try:
-        node_dicts = db.read_nodes_by_index(
+        node_dicts = database().read_nodes_by_index(
                 key,
                 value,
                 node_type_return_filter)
+        if node_dicts == None:
+            node_dicts = {}
 
         graph_nodes = {}
         for id, node_dict in node_dicts.items():
@@ -165,8 +170,8 @@ def _process_node(node_dict):
 def multiget_node(node_ids):
     """ Return a dict of GraphNodes from a database keyed on id.
 
-    Wrap a set of calls to a graph database that each return a dict 
-    structured like the one referenced in get_node(), and parse them 
+    Wrap a set of calls to a graph database that each return a dict
+    structured like the one referenced in get_node(), and parse them
     into GraphNodes.
 
     Required:
@@ -188,7 +193,7 @@ def multiget_node(node_ids):
 def get_edge(edge_id):
     """ Return a GraphEdge from a graph database.
 
-    Wrap a call to a graph database that returns a dict structured 
+    Wrap a call to a graph database that returns a dict structured
     like the following, and parse it into a GraphEdge:
 
     {
@@ -231,7 +236,7 @@ def get_edge(edge_id):
             ])
 
     try:
-        edge_dict = db.read_edge(edge_id)
+        edge_dict = database().read_edge(edge_id)
 
         if edge_dict:
             # data layer edges only have fields explicitly required
@@ -245,7 +250,7 @@ def get_edge(edge_id):
 
             if errors:
                 raise GraphOutputError(
-                        errors, 
+                        errors,
                         "Required fields or properties missing from GraphEdge.")
 
             edge = GraphEdge(
@@ -269,8 +274,8 @@ def get_edge(edge_id):
 def multiget_edge(edge_ids):
     """ Return a dict of GraphEdges from a database keyed on id.
 
-    Wrap a set of calls to a graph database that each return a dict 
-    structured like the one referenced in get_edge(), and parse them 
+    Wrap a set of calls to a graph database that each return a dict
+    structured like the one referenced in get_edge(), and parse them
     into GraphEdges.
 
     Required:
@@ -299,7 +304,7 @@ def get_path_to_neighbor_nodes(
         node_type_return_filter=None):
     """ Traverse a depth-1 path from a start node to its neighbors.
 
-    Wrap a call to a graph database that returns a dict structured 
+    Wrap a call to a graph database that returns a dict structured
     like the following, and parse it into a GraphPath:
 
     {
@@ -323,8 +328,8 @@ def get_path_to_neighbor_nodes(
 
     try:
         # issue a db query to generate a path to neighbors
-        path_dict = db.read_nodes_from_immediate_path(
-                start_node_id, 
+        path_dict = database().read_nodes_from_immediate_path(
+                start_node_id,
                 edge_type_pruner,
                 node_type_return_filter)
 
@@ -350,8 +355,8 @@ def multiget_path_to_neighbor_nodes(
         node_type_return_filter=None):
     """ Traverse depth-1 paths from start nodes to their neighbors.
 
-    Wrap a set of calls to a graph database that each return a dict 
-    structured like the one referenced in get_path_to_neighbor_nodes(), 
+    Wrap a set of calls to a graph database that each return a dict
+    structured like the one referenced in get_path_to_neighbor_nodes(),
     and parse them into GraphPaths.
 
     Required:
@@ -375,4 +380,3 @@ def multiget_path_to_neighbor_nodes(
                 node_type_return_filter)
 
     return paths
-

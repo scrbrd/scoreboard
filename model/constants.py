@@ -24,7 +24,6 @@ class _NodeProperty(object):
         """ TYPE is a Property of Node. """
         return "type"
 
-
     @constant
     def PROPERTIES(self):
         """ PROPERTIES is a Property of Node. """

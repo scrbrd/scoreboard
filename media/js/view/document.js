@@ -216,7 +216,6 @@ define(
             
                     // Stop the default event to ensure the link will not cause
                     // a page refresh.
-                    console.log('prevent default');
                     event.preventDefault();
 
                     // `Backbone.history.navigate` is sufficient for all 
