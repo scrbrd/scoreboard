@@ -13,25 +13,30 @@ class _AppClass(object):
 
     """ _AppClass holds app-wide w3c classes. """
 
+
     @constant
     def JS_LINK(self):
         """ JS_LINK is a w3c class. """
         return "js-link"
+
 
     @constant
     def EXTERNAL_LINK(self):
         """ EXTERNAL_LINK is a w3c class. """
         return "external-link"
 
+
     @constant
     def ROUTE_BYPASS(self):
         """ ROUTE_BYPASS is a w3c class. """
         return "route-bypass"
 
+
     @constant
     def INACTIVE_NAV(self):
         """ INACTIVE_NAV is a w3c class. """
         return "inactive-nav"
+
 
     @constant
     def ACTIVE_NAV(self):
@@ -50,15 +55,18 @@ class _FormName(object):
 
     """ _FormName class holds all name attributes' possible values. """
 
+
     @constant
     def LEAGUE(self):
         """ LEAGUE is the name of a form element that stores league id. """
         return "league"
 
+
     @constant
     def CREATOR(self):
         """ CREATOR is the name of a form element that stores creator id. """
         return "creator"
+
 
     @constant
     def GAME_SCORE(self):
@@ -75,25 +83,30 @@ class _SqData(object):
 
     """
 
+
     @constant
     def ID(self):
         """ ID is a key of the HTML attribute Data. """
         return "id"
+
 
     @constant
     def NAME(self):
         """ NAME is a key of the HTML attribute Data. """
         return "name"
 
+
     @constant
     def OBJECT_TYPE(self):
         """ OBJECT_TYPE is a key of the HTML attribute Data. """
         return "object-type"
 
+
     @constant
     def SCORE(self):
         """ SCORE is a key of the HTML attribute Data. """
         return "score"
+
 
     @constant
     def RIVALS(self):
@@ -106,6 +119,7 @@ class _SqData(object):
         """ PAGE_TYPE is a key of the HTML attribute Data. """
         return "page-type"
 
+
     @constant
     def PAGE_NAME(self):
         """ PAGE_NAME is a key of the HTML attribute Data. """
@@ -115,6 +129,7 @@ class _SqData(object):
 class _PageType(object):
 
     """ _PageType class to hold all possible values for data-page-type. """
+
 
     @constant
     def LANDING(self):
@@ -134,20 +149,22 @@ class _PageType(object):
         return "dialog"
 
 
-
 class _PageName(object):
 
     """ _PageName class to hold all possible values for data-page-name. """
+
 
     @constant
     def LANDING(self):
         """ LANDING is the landing page. """
         return "landing"
 
+
     @constant
     def GAMES(self):
         """ GAMES is the games tab page. """
         return "games"
+
 
     @constant
     def RANKINGS(self):
@@ -164,6 +181,7 @@ class _PageName(object):
 class _ModelID(object):
 
     """ _ModelID class to hold all IDs that will contain model info. """
+
 
     @constant
     def VIEWER_CONTEXT(self):

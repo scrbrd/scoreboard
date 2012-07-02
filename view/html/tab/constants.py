@@ -21,10 +21,12 @@ class _TabID(object):
 
     """ _TabID holds all w3c ids for the tab package. """
 
+
     @constant
     def CONTEXT(self):
         """ CONTEXT is the element that stores context data. """
         return "context"
+
 
     @constant
     def CONTENT(self):

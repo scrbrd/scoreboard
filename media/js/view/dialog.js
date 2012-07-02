@@ -1,16 +1,18 @@
-/* 
-    Module: Dialog
-    Manage DOM manipulations of Dialog by extending Backbone's View.
+/**
+    A specific (TODO: generic) implementation of a Dialog View.
 
-    Package:
-        view
+    dialog.js subclasses Backbone.View to provide DOM manipulation of
+    a dialog. Views should be passed Models and only interact with Controllers
+    through Events. DialogView doesn't need to know about any other Views.
 
-    Dependencies:
-        $
-        Backbone
-        Const
-        Crud - Create, Read, Update, Delete
-        DomUtil - util.DomUtil
+    @exports DialogView
+
+    @requires $
+    @requires Backbone
+    @requires Const
+    @requires Event
+    @requires EventDispatcher
+    @requires AutocompleteUtil
 */
 define(
         [
@@ -19,224 +21,194 @@ define(
             "js/constants",
             "js/event",
             "js/eventDispatcher",
-            "util/autocomplete",
-            "controller/createGame",
+            "util/autocomplete"
         ],
-        function(
-                $, 
-                Backbone, 
-                Const, 
+        function (
+                $,
+                Backbone,
+                Const,
                 Event,
-                EventDispatcher, 
+                EventDispatcher,
                 AutocompleteUtil) {
 
-    /*
-        Class: DialogView
-        Manage all DOM manipulations under "#dialog".
 
-        Subclasses:
-            <Backbone.View at http://documentcloud.github.com/backbone/#View>
-    */
-    var DialogView = Backbone.View.extend({
-       
-        // Variable: form
-        // The jQuery object of the included form
-        form: null,
-       
-        pageName: Const.PAGE_NAME.CREATE_GAME,
+var MODEL_EVENT = {
+    CHANGE_RIVALS: "change:" + Const.DATA.RIVALS,
+    CHANGE_CONTEXT_ID: "change:" + Const.DATA.ID
+};
 
-        changeRivalsEvent: "change:" + Const.DATA.RIVALS,
-        changeContextIDEvent: "change:" + Const.DATA.ID,
-
-        /*
-            Function: initialize
-            Initialize all sub-elements of DialogView.
-
-            Options:
-                html - (string) HTML to add to the dialog element.
-                height - (int) Dialog element's height.
-                    context_id - (int) Api id of the context of the dialog.
-                rivals - (json) List of objects representing rivals. 
-                            These objects have keys "id", "name".
-
-            First hides the dialog element, then adds the new markup, then
-            stretches it to the proper height, and finally initializes its
-            form.
-        */
-        initialize: function (
-                html, 
-                viewerContext, 
-                pageState,
-                height) {
-            this.setElement(Const.ID.DIALOG_CONTAINER);
-            this.viewerContextModel = viewerContext;
-            this.pageStateModel = pageState;
-
-            this.$el.hide();
-            this.$el.append(html); 
-            this.$el.height(height); 
-            this.form = this.$(Const.NAME.CREATE_GAME);
-            
-            this.viewerContextModel.bind(
-                    this.changeRivalsEvent, 
-                    this.render, 
-                    this);
-            this.pageStateModel.bind(
-                    this.changeContextIDEvent, 
-                    this.render,
-                    this);
-            
-            EventDispatcher.on(
-                    Event.CLIENT.DISPLAY_DIALOG, 
-                    function (pageName, path) {
-                        this.show();
-                    },
-                    this);
-
-            this.render();
-        },
-
-
-        /* 
-            Function: events
-            Add all event handlers.
-
-            Events:
-                submit form[name='.create-game'] --> submit
-                click button.close --> hide
-
-            Note: Keep _events notation to allow event keys to be 
-            variables.
-        */
-        events: function () {
-            var _events = {};
-            var submitForm = Const.NAME.CREATE_GAME;
-            var closeButton = Const.CLASS.CLOSE_BUTTON;
-            
-            _events["submit " + submitForm] = "submit";
-            _events["touchstart " + closeButton] = "hide"; 
-            _events["click " + closeButton] = "hide";
-            return _events;
-        },
-
-
-
-        render: function() {
-            var leagueID = this.pageStateModel.contextID();
-            var rivals = this.viewerContextModel.rivals();
-            
-            this.setupForm(leagueID, rivals);
-        },
-                    
-        /* 
-            Function: setupForm
-            Sets up the dialog's form with contextual 
-            values and autocomplete functionality.
-
-            Parameters:
-                league_id - (int) Api id for page's League object.
-                rivals - (list) List of objects representing rivals,
-                        with the keys "id", "name"
-
-        */
-        setupForm: function(leagueID, rivals) {
-            var formPageName = this.pageName;
-            this.form.find(Const.NAME.LEAGUE).val(leagueID);
-
-            // TODO: add additional row functionality
-            // diabled row, gets enabled, add new row
-
-            // set up autocomplete for each player selection
-            $(Const.NAME.CREATE_GAME + ' ' + Const.CLASS.AUTOCOMPLETE_PLAYERS)
-                .each(function (index, elem) {
-                    AutocompleteUtil.autocompletePlayers(elem, rivals);
-                });
-
-            // add event handler for player data entry.
-            $(Const.NAME.CREATE_GAME + ' ' + Const.NAME.GAME_SCORE_ID)
-                .change( function (evt) {
-                    EventDispatcher.trigger(
-                            Event.CLIENT.ENTER_GAME_DATA,
-                            Const.DATA.PLAYER,
-                            evt.target.value,
-                            formPageName);
-                });
-            
-            // add event handler for result (W/L) data entry.
-            $(Const.NAME.CREATE_GAME + ' ' + Const.NAME.GAME_SCORE_SCORE)
-                .change( function (evt) {
-                    EventDispatcher.trigger(
-                            Event.CLIENT.ENTER_GAME_DATA,
-                            Const.DATA.RESULT,
-                            evt.target.value,
-                            formPageName);
-                });
-        },
-        /* 
-            Function: submit
-            Submit dialog's form and hangle all data manipulation.
-
-            Parameters:
-                event - the event that caused this handler to trigger
-
-            See:
-                form2js.toObject
-        */
-        submit: function (event) {
-            var createGameParams = $(event.target).toObject();
-            EventDispatcher.trigger(
-                Event.CLIENT.CREATE_GAME,
-                createGameParams);
-            return false;
-        },
-
-
-        /* 
-            Function: hideDialog
-            Hides dialog.
-        */
-        hide: function () {
-            var form = this.form;
-            // FIXME make this blurring work and clear the autocomplete.
-            $('input:focus').blur(); // blurring the focus should hide keyboard
-            this.$el.slideUp('fast', function() {
-                // TODO: make this nicer...
-                form[0].reset();
-            });
-            return false;
-        },
+/**
+    Manage all DOM manipulations under "#dialog".
+    @constructor
+*/
+var DialogView = Backbone.View.extend({
     
+    // the dialog's form
+    form: null,
+    
+    // page name of the dialog
+    // TODO: put this in DialogStateModel
+    pageName: Const.PAGE_NAME.CREATE_GAME,
 
-        /* 
-            Function: render
-            Show this View with proper bells and whistles.
-        */
-        show: function (leagueID, rivals) {
-            this.$el.slideDown('fast', function () {
-                //var a = this.$('.ui-autocomplete-input').first();
-                //a.focus();
+    /**
+        Hide and stretch dialog, initialize its form, and bind change
+        events from Models.
+        @param {string} html html that this View contains
+        @param {Object} viewerContextModel
+        @param {Object} pageStateModel
+        @param {string} height height of the dialog
+    */
+    initialize: function (
+            html,
+            viewerContextModel,
+            pageStateModel,
+            height) {
+        this.setElement(Const.ID.DIALOG_CONTAINER);
+        this.viewerContextModel = viewerContextModel;
+        this.pageStateModel = pageStateModel;
+
+        this.$el.hide();
+        this.$el.append(html);
+        this.$el.height(height);
+        this.form = this.$(Const.NAME.CREATE_GAME);
+        
+        this.viewerContextModel.on(
+                MODEL_EVENT.CHANGE_RIVALS,
+                this.render,
+                this);
+        this.pageStateModel.on(
+                MODEL_EVENT.CHANGE_CONTEXT_ID,
+                this.render,
+                this);
+        
+        this.render();
+    },
+
+    /**
+        Setup DialogView event triggers.
+        Keep _events notation to allow event keys to be variables.
+    */
+    events: function () {
+        var _events = {};
+        var submitForm = Const.NAME.CREATE_GAME;
+        var closeButton = Const.CLASS.CLOSE_BUTTON;
+        
+        // TODO: make the event types constants
+        _events["submit " + submitForm] = "submit";
+        _events["touchstart " + closeButton] = "hide";
+        _events["click " + closeButton] = "hide";
+        return _events;
+    },
+
+
+    /**
+        Render this dialog.
+    */
+    render: function () {
+        var leagueID = this.pageStateModel.contextID();
+        var rivals = this.viewerContextModel.rivals();
+        
+        this.setupForm(leagueID, rivals);
+        
+        return this;
+    },
+
+    /**
+        Setup dialog's form with event bindings and autocomplete
+        functionality.
+        @param {string} leagueID the league that the Game will be part of
+        @param {Array} rivals An array of rivals for autocomplete
+    */
+    setupForm: function (leagueID, rivals) {
+        var formPageName = this.pageName;
+        this.form.find(Const.NAME.LEAGUE).val(leagueID);
+
+        // TODO: add additional row functionality
+        // diabled row, gets enabled, add new row
+
+        // set up autocomplete for each player selection
+        $(Const.NAME.CREATE_GAME + ' ' + Const.CLASS.AUTOCOMPLETE_PLAYERS)
+            .each(function (index, elem) {
+                AutocompleteUtil.autocompletePlayers(elem, rivals);
             });
 
-            return false;
-        },
+        // add event handler for player data entry.
+        $(Const.NAME.CREATE_GAME + ' ' + Const.NAME.GAME_SCORE_ID)
+            .change( function (evt) {
+                EventDispatcher.trigger(
+                        Event.CLIENT.ENTER_GAME_DATA,
+                        Const.DATA.PLAYER,
+                        evt.target.value,
+                        formPageName);
+            });
+        
+        // add event handler for result (W/L) data entry.
+        $(Const.NAME.CREATE_GAME + ' ' + Const.NAME.GAME_SCORE_SCORE)
+            .change( function (evt) {
+                EventDispatcher.trigger(
+                        Event.CLIENT.ENTER_GAME_DATA,
+                        Const.DATA.RESULT,
+                        evt.target.value,
+                        formPageName);
+            });
+    },
+
+    /**
+        Submit dialog's form and handle all data manipulation.
+        @param {Object} evt the event that triggered submit
+    */
+    submit: function (evt) {
+        // See: form2js.toObject
+        var createGameParams = $(evt.target).toObject();
+        EventDispatcher.trigger(
+            Event.CLIENT.CREATE_GAME,
+            createGameParams);
+        return false;
+    },
 
 
+    /*
+        Hide dialog.
+    */
+    hide: function () {
+        var form = this.form;
+        // FIXME make this blurring work and clear the autocomplete.
+        $('input:focus').blur(); // blurring the focus should hide keyboard
+        this.$el.slideUp('fast', function () {
+            // TODO: make this nicer...
+            form[0].reset();
+        });
+        return false;
+    },
 
-    });
 
-    return {
-        construct: function (
-                dialogHTML, 
-                viewerContext, 
-                pageState, 
-                pageHeight) {
-            return new DialogView(
-                    dialogHTML, 
-                    viewerContext, 
-                    pageState, 
-                    pageHeight);
-        },
+    /**
+        Display dialog.
+    */
+    show: function () {
+        this.$el.slideDown('fast', function () {
+            // TODO: auto-focus and make the keyboard come up.
+            //var a = this.$('.ui-autocomplete-input').first();
+            //a.focus();
+        });
 
-    };
+        return false;
+    }
 });
 
+return {
+    construct: function (
+            dialogHTML,
+            viewerContext,
+            pageState,
+            pageHeight) {
+        return new DialogView(
+                dialogHTML,
+                viewerContext,
+                pageState,
+                pageHeight);
+    }
+};
+
+
+});

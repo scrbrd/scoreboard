@@ -137,7 +137,6 @@ class _HTMLTag(object):
         return "button"
 
 
-
 class _HTMLAttribute(object):
 
     """ _HTMLAttribute class to hold all implemented HTML attributes. """

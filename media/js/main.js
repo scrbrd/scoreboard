@@ -49,8 +49,8 @@ require.config({
         controller: "static/js/controller",
         order: "static/js/lib/require/order",
         text: "static/js/lib/require/text",
-        domReady: "static/js/lib/require/domReady",
-    },
+        domReady: "static/js/lib/require/domReady"
+    }
 });
 
 require([
@@ -67,5 +67,5 @@ require([
     "order!lib/underscore/underscore-min",
     "order!lib/backbone/backbone-min",
     "lib/iscroll/iscroll-min",
-    "lib/mixpanel/mixpanel-min",
+    "lib/mixpanel/mixpanel-min"
 ]);

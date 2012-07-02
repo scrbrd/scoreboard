@@ -1,94 +1,135 @@
+/**
+    Represent the Page State. A presentation model if you will.
+
+    These Models aren't using Prototypal inheritance to comply with Backbone.
+    
+    TODO - the context id should be in a ContextModel, and these models
+    should be organized into Collections.
+
+    @exports PageStateModel
+
+    @requires Const
+    @requires Backbone
+*/
 define(
         [
             "js/constants",
-            "Backbone",
+            "Backbone"
         ],
-        /**
-            Represent a the Page State. A presentation model if you will.
-
-            TODO - the context id should be in a ContextModel, and these models
-            should be organized into Collections.
-
-            @exports PageStateModel
-
-            @requires Const
-            @requires Backbone
-        */
         function (Const, Backbone) {
 
-    CONTEXT = "context";
-    CONTENT = "content";
 
-    PageStateModel = Backbone.Model.extend({
+var CONTEXT = "context";
+var CONTENT = "content";
 
-        urlRoot: function () {
-            console.log("urlRoot");
-            return "/" + this.pageName();
-        },
-        
-        url: function () {
-            console.log("url");
-            console.log("/" + this.pageName());
-            return "/" + this.pageName();
-        },
+/**
+    Model to hold Page State and replacable html chunks.
+    @constructor
+*/
+var PageStateModel = Backbone.Model.extend({
 
-        context: function () {
-            return this.get(CONTEXT);
-        },
+    /**
+        Provide access to url for CRUD operations.
 
-        setContext: function (context) {
-            this.set(CONTEXT, context);
-        },
+        Only used when the Model is part of a collection.
+    */
+    urlRoot: function () {
+        console.log("urlRoot");
+        return "/" + this.pageName();
+    },
+    
+    /**
+        Provide access to url for CRUD operations.
+    */
+    url: function () {
+        console.log("url");
+        console.log("/" + this.pageName());
+        return "/" + this.pageName();
+    },
 
-        content: function () {
-            return this.get(CONTENT);
-        },
+    /**
+        Provide access to the current context html.
+    */
+    context: function () {
+        return this.get(CONTEXT);
+    },
 
-        setContent: function (content) {
-            this.set(CONTENT, content);
-        },
+    /**
+        Provide mutator for context html.
+        @param {string} context
+    */
+    setContext: function (context) {
+        this.set(CONTEXT, context);
+    },
 
-        contextID: function () {
-            return this.get(Const.DATA.ID);
-        },
+    /**
+        Provide access to the current content html.
+    */
+    content: function () {
+        return this.get(CONTENT);
+    },
 
-        setContextID: function (id) {
-            this.set(Const.DATA.ID, id);
-        },
+    /**
+        Provide mutator for content html.
+        @param {string} content
+    */
+    setContent: function (content) {
+        this.set(CONTENT, content);
+    },
 
-        pageType: function () {
-            return this.get(Const.DATA.PAGE_TYPE);
-        },
+    /**
+        Provide access to the page's context ID.
+    */
+    contextID: function () {
+        return this.get(Const.DATA.ID);
+    },
 
-        setPageType: function (pageType) {
-            this.set(Const.DATA.PAGE_TYPE, pageType);
-        },
+    /**
+        Provide mutator for the page's context ID.
+        @param {string} id
+    */
+    setContextID: function (id) {
+        this.set(Const.DATA.ID, id);
+    },
 
-        pageName: function () {
-            return this.get(Const.DATA.PAGE_NAME);
-        },
+    /**
+        Provide access to the page type. (e.g. dialog, tab, etc.)
+    */
+    pageType: function () {
+        return this.get(Const.DATA.PAGE_TYPE);
+    },
 
-        setPageName: function (pageName) {
-            this.set(Const.DATA.PAGE_NAME, pageName);
-        },
+    /**
+        Provide mutator for the page's type
+        @param {string} pageType
+    */
+    setPageType: function (pageType) {
+        this.set(Const.DATA.PAGE_TYPE, pageType);
+    },
 
-        // if it's the initial set then don't fire change event
-        setAttribute: function (key, value) {
-            var silent = false;
-            if (this.get(key) === null) {
-                silent = true;
-            }
+    /**
+        Provide access to the page's name.
+    */
+    pageName: function () {
+        return this.get(Const.DATA.PAGE_NAME);
+    },
 
-            this.set(key, value, {silent: silent});
-        },
+    /**
+        Provide mutator for the page's name.
+        @param {string} pageName
+    */
+    setPageName: function (pageName) {
+        this.set(Const.DATA.PAGE_NAME, pageName);
+    }
 
-    });
+});
 
-    var pageStateModel = new PageStateModel();
+var pageStateModel = new PageStateModel();
+return {
+    retrieve: function () {
+        return pageStateModel;
+    }
+};
 
-    return {
-        retrieve: function () {
-            return pageStateModel;
-        },
-    };
+
 });

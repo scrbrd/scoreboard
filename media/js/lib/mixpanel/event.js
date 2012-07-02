@@ -2,13 +2,15 @@
     A list of specific MixPanel events that define how we communicate with
     MixPanel.
     
-    These events all have a subcategory called type that mixpanel.js can use 
-    to create a fairly granular framework of events for the application can 
+    These events all have a subcategory called type that mixpanel.js can use
+    to create a fairly granular framework of events for the application can
     call. This decoupling stops external users from creating new MixPanel
     events adhoc and disrupting the dataset.
     
     See Douglas Crockford's Prototypal Inheritance:
     http://javascript.crockford.com/prototypal.html
+
+    event.js and mixpanel.js are the only modules that access the GLOBAL mixpanel.
 
     @exports MPEvent
     
@@ -16,25 +18,25 @@
 
 */
 define(
-        [], 
+        [],
         function () {
 
 
     /**
         Enum for all mixpanel events. (Capitalized)
-        @enum {string}     
+        @enum {string}
     */
     var EVENT = {
         CREATE_OBJECT:      "Create Object",
         ENTER_DATA:         "Enter Data",
         REQUEST_LOGIN:      "Request Login",
-        VIEW_PAGE:          "View Page", 
+        VIEW_PAGE:          "View Page"
     };
 
 
     /**
         Enum for all mixpanel property parmaeters. (lowercase.)
-        @enum {string} 
+        @enum {string}
         FIXME XXX make these more descriptive.
     */
     var PROPERTY = {
@@ -44,7 +46,7 @@ define(
         OBJECT_TYPE:        "object type",
         PATH:               "path", // path to page
         TYPE:               "type", // subcategory of event
-        INPUT:              "input", // user input
+        INPUT:              "input" // user input
     };
    
 
@@ -58,7 +60,7 @@ define(
         // Subinstance will have specific event constant.
         that.mpEvent =  null;
 
-        /** 
+        /**
             Wrapper around mixpanel track event.
             @param {Object} eventProperties A dict for the event.
         */
@@ -78,7 +80,7 @@ define(
         @constructor
     */
     var createObject = (function () {
-        var that = Object.create(mixPanelEvent); 
+        var that = Object.create(mixPanelEvent);
 
         that.mpEvent = EVENT.CREATE_OBJECT;
 
@@ -90,9 +92,9 @@ define(
             @param {string} wasScored Was the object given a Score.
         */
         that.trackCreateObject = function (
-                objectType, 
-                numberOfTags, 
-                creatorsOutcome, 
+                objectType,
+                numberOfTags,
+                creatorsOutcome,
                 wasScored) {
             var properties = {};
             properties[PROPERTY.TYPE] = objectType;
@@ -144,12 +146,12 @@ define(
         @constructor
     */
     var requestLogin = (function () {
-        var that = Object.create(mixPanelEvent); 
+        var that = Object.create(mixPanelEvent);
 
         that.mpEvent = EVENT.REQUEST_LOGIN;
 
         that.TYPE = {
-            FACEBOOK:        "facebook",
+            FACEBOOK:        "facebook"
         };
 
         /**
@@ -172,17 +174,17 @@ define(
         @constructor
     */
     var viewPage = (function () {
-        var that = Object.create(mixPanelEvent); 
+        var that = Object.create(mixPanelEvent);
         
         that.TYPE = {
             TAB:        "tab",
             LANDING:    "landing",
-            DIALOG:     "dialog",
+            DIALOG:     "dialog"
         };
 
         that.mpEvent = EVENT.VIEW_PAGE;
 
-        /** 
+        /**
             Track VIEW_PAGE event.
             @param {string} type The type of the viewed page.
             @param {string} name The name of the viewed page.
@@ -205,6 +207,6 @@ define(
         createObject: createObject,
         enterData: enterData,
         requestLogin: requestLogin,
-        viewPage: viewPage, 
+        viewPage: viewPage
     };
 });

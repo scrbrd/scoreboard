@@ -90,7 +90,7 @@ class SqDatabase(object):
                         "No new node returned from database.")
             return new_node
         except DbConnectionError as err:
-            raise DbWriteError("create_node", err.read())
+            raise DbWriteError("create_node", err.reason)
 
 
     def _query_create_node(self, type, properties):
@@ -135,7 +135,7 @@ class SqDatabase(object):
                         "No new edge returned from database.")
             return new_edge
         except DbConnectionError as err:
-            raise DbWriteError("create_edge", err.read())
+            raise DbWriteError("create_edge", err.reason)
 
 
     def _query_create_edge(self, from_node_id, to_node_id, type, properties):
@@ -184,7 +184,7 @@ class SqDatabase(object):
                         "No updated node returned from database.")
             return updated_node
         except DbConnectionError as err:
-            raise DbWriteError("update_node", err.read())
+            raise DbWriteError("update_node", err.reason)
 
 
     def _query_update_node(self, node_id, properties):
@@ -233,7 +233,7 @@ class SqDatabase(object):
                         "No updated edge returned from database.")
             return updated_edge
         except DbConnectionError as err:
-            raise DbWriteError("update_edge", err.read())
+            raise DbWriteError("update_edge", err.reason)
 
 
     def _query_update_edge(self, edge_id, properties):
@@ -268,7 +268,7 @@ class SqDatabase(object):
             return self._query_read_node_and_edges(node_id)
 
         except DbConnectionError as err:
-            raise DbReadError("read_node_and_edges", err.read())
+            raise DbReadError("read_node_and_edges", err.reason)
 
 
     def _query_read_node_and_edges(self, node_id):
@@ -300,7 +300,7 @@ class SqDatabase(object):
                     node_return_filter)
 
         except DbConnectionError as err:
-            raise DbReadError("read_nodes_by_index", err.read())
+            raise DbReadError("read_nodes_by_index", err.reason)
 
 
     def _query_read_nodes_by_index(self, key, value, node_return_filter):
@@ -365,7 +365,7 @@ class SqDatabase(object):
                     node_return_filter)
 
         except DbConnectionError as err:
-            raise DbReadError("read_nodes_from_immediate_path", err.read())
+            raise DbReadError("read_nodes_from_immediate_path", err.reason)
 
 
     def _query_read_node_from_immediate_path(

@@ -287,16 +287,19 @@ class Neo4jDatabase(SqDatabase):
         serialized_response = None
         try:
             serialized_response = self._connect(request)
-        except (urllib2.HTTPError, urllib2.URLError) as err:
+        except (urllib2.HTTPError) as err:
             # object not found
             if self._isNeo4jNullPointerError(err):
                 print("Neo4j Null Pointer error caught. Returning None.")
                 print("CURRENTLY THE INDEX ISN'T WORKING...PROLLY.")
                 print script
                 return None
-            # misc connection error
+            # some other type of HTTPError
             else:
-                raise DbConnectionError(err.read())
+                raise DbConnectionError("HTTPError: {0}".format(err.read()))
+        except (urllib2.URLError) as err:
+            # a URLError without an HTTP response code
+            raise DbConnectionError("URLError: {0}".format(err.reason))
 
         response = None
         # input failed

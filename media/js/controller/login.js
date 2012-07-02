@@ -13,45 +13,56 @@ define(
         [
             "MP",
             "js/event",
-            "controller/base",
+            "controller/base"
         ],
         function (MP, Event, BaseController) {
     
+
+/**
+    Controller instance for login event handling.
+    @constructor
+*/
+var loginController = (function () {
+    var that = Object.create(BaseController.controller);
+
     /**
-        Controller instance for login event handling.
-        @constructor
+        Bind REQUEST_FACEBOOK_LOGIN event.
     */
-    var loginController = (function () {
-        var that = Object.create(BaseController.controller);
+    that.initialize = function () {
+        var events = {};
 
-        /** 
-            Bind REQUEST_FACEBOOK_LOGIN event.
-        */
-        that.initialize = function () {
-            var events = {};
-
-            events[Event.CLIENT.REQUEST_FACEBOOK_LOGIN] = that.handleSubmit;
-            that.initializeEvents(events);
-        };
-   
-        /**
-            Handle Facebook login submission.
-        */
-        that.handleSubmit = function () {
-            console.log("handle request facebook login submit");
-            MP.trackRequestFacebookLogin();
-        };
-        
-        /** 
-        */
-        that.handleSuccess = function (numberOfTags) {
-            // TODO handle authorization events here.
-        };
-
-        return that;
-    }());
-
-    return {
-        controller: loginController,
+        events[Event.CLIENT.REQUEST_FACEBOOK_LOGIN] = that.handleSubmit;
+        that.initializeEvents(events);
     };
+
+    /**
+        Handle Facebook login submission.
+    */
+    that.handleSubmit = function () {
+        console.log("handle request facebook login submit");
+        MP.trackRequestFacebookLogin();
+    };
+    
+    /**
+        Handle a successful user authorization.
+    */
+    that.handleSuccess = function () {
+        // TODO handle authorization events here.
+    };
+
+    /**
+        Handle an unsuccessful user authorization.
+    */
+    that.handleError = function () {
+        // TODO handle failure events here.
+    };
+
+    return that;
+}());
+
+return {
+    controller: loginController
+};
+
+
 });

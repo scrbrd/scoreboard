@@ -10,6 +10,7 @@ class _DialogClass(object):
 
     """ _DialogClass holds all w3c classes for the dialog package. """
 
+
     @constant
     def DIALOG_CONTENT(self):
         """ DIALOG_CONTENT is a w3c class. """
