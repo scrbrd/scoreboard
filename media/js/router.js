@@ -18,6 +18,9 @@ define(
         function (Backbone) {
 
 
+// String used to identify ugly portion of facebook redirect.
+var UGLY_PATH = '#_=_';
+
 /**
     Handle all routing interactions with browser by extending Backbone
     Router.
@@ -42,14 +45,30 @@ var NavRouter = Backbone.Router.extend({
     effectively allows you to not use hash tags for AJAX requests.
 */
 function initializeWithPushState() {
+    //remove ugly hash before initializing router
+    removeEmptyHash();
+
     // Backbone using History API's PushState
     var appRouter = new NavRouter();
     var options = {
         silent: true,
         pushState: true
     };
-    
     Backbone.history.start(options);
+}
+
+/**
+    Remove the empty hash ("#_=_") from facebook login.
+*/
+function removeEmptyHash() {
+    var path = window.location.pathname;
+    var hash = window.location.hash;
+    var title = document.title;
+    if (hash === UGLY_PATH) {
+        window.location.hash = ''; // for older browsers
+        history.pushState('', title, path); // for pushState browsers
+        // TODO test with older browsers and stop page reload.
+    }
 }
 
 return  {

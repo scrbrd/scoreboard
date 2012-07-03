@@ -96,7 +96,6 @@ function initializeApp() {
         cache: false
     });
 
-    // TODO remove facebook's #_=_ insertion that happens at login
     Router.initializeWithPushState();
 
     initializeControllers();
@@ -150,6 +149,7 @@ var initializeObject = (function () {
     }
 }());
 
+// all application logic happens in this function call
 initializeApp();
 
 

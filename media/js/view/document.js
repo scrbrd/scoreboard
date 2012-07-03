@@ -107,7 +107,7 @@ var DocView = Backbone.View.extend({
         TODO: put this in page state or a framework.
     */
     path: function () {
-        return $(location).attr('href');
+        return $(location).attr('pathname');
     },
 
     /**
