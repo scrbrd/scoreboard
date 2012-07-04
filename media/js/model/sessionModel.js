@@ -23,6 +23,21 @@ define(
 var SessionModel = Backbone.Model.extend({
     
     /**
+        Provide access to viewer's person id.
+    */
+    personID: function () {
+        return this.get(Const.DATA.PERSON_ID);
+    },
+
+    /**
+        Provide mutator for viewer's person id.
+        @param {number} personID
+    */
+    setPersonID: function (personID) {
+        this.setAttribute(Const.DATA.PERSON_ID, personID);
+    },
+
+    /**
         Provide access to viewer's rivals.
     */
     rivals: function () {

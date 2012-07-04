@@ -14,7 +14,7 @@ class SessionModel(DataInput):
 
     """ Session Model container that extends DataInput. """
 
-    def __init__(self, session):
+    def __init__(self, model):
         """ Construct a session model div element tree. """
         super(SessionModel, self).__init__()
         self.set_id(MODEL_ID.SESSION)
@@ -22,9 +22,13 @@ class SessionModel(DataInput):
         # set rivals data for friend/rival player selection
         view_rivals = []
         # TODO make session an object instead of a dictionary
-        for r in session[SQ_DATA.RIVALS]:
+        for r in model.rivals:
             view_rivals.append({SQ_DATA.ID: r.id, SQ_DATA.NAME: r.name})
         self.set_data(SQ_DATA.RIVALS, json.dumps(view_rivals))
+
+        # set person id from session
+        pid = model.session.person_id
+        self.set_data(SQ_DATA.PERSON_ID, pid)
 
 
 class ContextModel(DataInput):

@@ -93,8 +93,7 @@ class UISessionModel(tornado.web.UIModule):
 
     def render(self, model=None, state=None):
         """ Render a Session Model. """
-        session = {SQ_DATA.RIVALS: model.rivals}
-        element_tree = SessionModel(session).element()
+        element_tree = SessionModel(model).element()
 
         return Element.to_string(element_tree)
 

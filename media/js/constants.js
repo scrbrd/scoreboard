@@ -71,6 +71,7 @@ var constants = {
     // TODO: make this link sink with Python HTML_DATA constants
     DATA: {
         ID:                     "id",
+        PERSON_ID:              "person-id",
         SCORE:                  "score",
         RESULT:                 "result",
         PLAYER:                 "player",

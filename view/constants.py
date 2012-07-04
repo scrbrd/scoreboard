@@ -85,6 +85,12 @@ class _SqData(object):
 
 
     @constant
+    def PERSON_ID(self):
+        """ PERSON_ID is a key of the HTML attribute Data. """
+        return "person-id"
+
+
+    @constant
     def NAME(self):
         """ NAME is a key of the HTML attribute Data. """
         return "name"
