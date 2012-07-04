@@ -55,19 +55,31 @@ var initializeMixPanel = (function () {
 
 return {
     /**
+        Identify the User based on Person ID using Mixpanls' identify.
+        @param {string} id The User's Person ID
+    */
+    identifyUser: function (id) {
+        mixpanel.identify(id);
+        // insert id as name
+        mixpanel.name_tag(id);
+        // FIXME remove this property but allow to set elsewhere
+        mixpanel.register({"gender": "male"});
+    },
+
+    /**
         Track a successfully added Game by wrapping the "Create Object"
         event.
         @param {number} numberOfTags The number of tagged folks.
-        @param {string} creatorsOutcome The result of the game's creator.
-            (e.g. WIN, LOSS)
         @param {boolean} wasScored True if the game was scored.
+        @param {string} creatorsOutcome The result of the game's creator.
+            (e.g. WON, LOST)
     */
-    trackCreateGame: function (numberOfTags, creatorsOutcome, wasScored) {
+    trackCreateGame: function (numberOfTags, wasScored, creatorsOutcome) {
         createObject.trackCreateObject(
                 GAME,
                 numberOfTags,
-                creatorsOutcome,
-                wasScored);
+                wasScored,
+                creatorsOutcome);
     },
 
     /**

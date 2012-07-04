@@ -40,13 +40,15 @@ define(
         FIXME XXX make these more descriptive.
     */
     var PROPERTY = {
+        CREATORS_OUTCOME:   "creator's outcome",
         DATA_TYPE:          "data type",
+        INPUT:              "input", // user input
         NAME:               "name", // specific name
         NUMBER_OF_TAGS:     "number of tags", // number of tagged folks
         OBJECT_TYPE:        "object type",
         PATH:               "path", // path to page
         TYPE:               "type", // subcategory of event
-        INPUT:              "input" // user input
+        WAS_SCORED:         "was scored" // true if game was scored
     };
    
 
@@ -88,19 +90,21 @@ define(
             Track CREATE_OBJECT event.
             @param {string} objectType The type of object.
             @param {string} numberOfTags The number of folks tagged.
-            @param {string} creatorsOutcome The Outcome of the object's creator.
             @param {string} wasScored Was the object given a Score.
+            @param {string} creatorsOutcome The Outcome of the object's creator.
         */
         that.trackCreateObject = function (
                 objectType,
                 numberOfTags,
-                creatorsOutcome,
-                wasScored) {
+                wasScored,
+                creatorsOutcome) {
             var properties = {};
             properties[PROPERTY.TYPE] = objectType;
             properties[PROPERTY.NUMBER_OF_TAGS] = numberOfTags;
-            // TODO: fill in creators_outcome and was_scored
-            
+            properties[PROPERTY.WAS_SCORED] = wasScored;
+            properties[PROPERTY.CREATORS_OUTCOME] = creatorsOutcome;
+            // TODO move the game specific properties to the createGame
+        
             that.track(properties);
         };
 

@@ -117,21 +117,11 @@ function read(url, successFunction) {
 /**
     Create a new Game on the server.
     @param {Object} gameParams The parameters that define this game.
+    @param {Function} successFunction the function to run upon success.
 */
-function createGame(gameParams) {
-    // grab keys that will be used for success function
-    var numberOfTags = 0;
-    if (gameParams.hasOwnProperty(Const.DATA.GAME_SCORE)) {
-        numberOfTags = gameParams[Const.DATA.GAME_SCORE].length;
-    }
-    
+function createGame(gameParams, successFunction) {
     // TODO: make the gameParams more specific
-    create(Const.API_OBJECT.GAME, gameParams, function (response) {
-        // TODO - update Page State here too.
-        EventDispatcher.trigger(
-                Event.SERVER.CREATED_GAME,
-                numberOfTags);
-    });
+    create(Const.API_OBJECT.GAME, gameParams, successFunction);
 }
 
 /**
