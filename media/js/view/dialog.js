@@ -60,11 +60,11 @@ var DialogView = Backbone.View.extend({
     */
     initialize: function (
             html,
-            viewerContextModel,
+            sessionModel,
             pageStateModel,
             height) {
         this.setElement(Const.ID.DIALOG_CONTAINER);
-        this.viewerContextModel = viewerContextModel;
+        this.sessionModel = sessionModel;
         this.pageStateModel = pageStateModel;
 
         this.$el.hide();
@@ -72,7 +72,7 @@ var DialogView = Backbone.View.extend({
         this.$el.height(height);
         this.form = this.$(Const.NAME.CREATE_GAME);
         
-        this.viewerContextModel.on(
+        this.sessionModel.on(
                 MODEL_EVENT.CHANGE_RIVALS,
                 this.render,
                 this);
@@ -106,7 +106,7 @@ var DialogView = Backbone.View.extend({
     */
     render: function () {
         var leagueID = this.pageStateModel.contextID();
-        var rivals = this.viewerContextModel.rivals();
+        var rivals = this.sessionModel.rivals();
         
         this.setupForm(leagueID, rivals);
         
@@ -162,6 +162,7 @@ var DialogView = Backbone.View.extend({
         var createGameParams = $(evt.target).toObject();
         EventDispatcher.trigger(
             Event.CLIENT.CREATE_GAME,
+            this.sessionModel,
             createGameParams);
         return false;
     },
@@ -199,13 +200,13 @@ var DialogView = Backbone.View.extend({
 return {
     construct: function (
             dialogHTML,
-            viewerContext,
-            pageState,
+            sessionModel,
+            pageStateModel,
             pageHeight) {
         return new DialogView(
                 dialogHTML,
-                viewerContext,
-                pageState,
+                sessionModel,
+                pageStateModel,
                 pageHeight);
     }
 };

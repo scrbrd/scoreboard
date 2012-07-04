@@ -60,6 +60,7 @@
     @requires CreateGameController
     @requires DialogController
     @requires LoginController
+    @requires SessionController
     @requires SessionModel
     @requires PageStateModel
 */
@@ -72,6 +73,7 @@ require(
     'controller/createGame',
     'controller/dialog',
     'controller/login',
+    'controller/session',
     'model/sessionModel',
     'model/pageStateModel'
 ],
@@ -83,6 +85,7 @@ function (
         CreateGameController,
         DialogController,
         LoginController,
+        SessionController,
         SessionModel,
         PageStateModel) {
 
@@ -130,6 +133,7 @@ function initializeControllers() {
     CreateGameController.controller.initialize();
     DialogController.controller.initialize();
     LoginController.controller.initialize();
+    SessionController.controller.initialize();
 }
 
 /**
