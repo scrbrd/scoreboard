@@ -24,6 +24,13 @@ class _CookieType(object):
         return "state"
 
 
+    # TODO: remove when we start firing off MixPanelSignUp event in python!
+    @constant
+    def SIGN_UP(self):
+        """ SIGN_UP is a Type of Cookie. """
+        return "sign_up"
+
+
 COOKIE_TYPE = _CookieType()
 
 
@@ -64,32 +71,39 @@ class _Cookie(object):
 
     @constant
     def TIMEZONE(self):
-        """ TIMEZONE is a Type of Cookie. """
+        """ TIMEZONE is a Cookie Property. """
         return "timezone"
 
 
     @constant
     def IP(self):
-        """ IP is a Type of Cookie. """
+        """ IP is a Cookie Property. """
         return "ip"
 
 
     @constant
     def LOCALE(self):
-        """ LOCALE is a Type of Cookie. """
+        """ LOCALE is a Cookie Property. """
         return "locale"
 
 
     @constant
     def FACEBOOK_LOCALE(self):
-        """ FACEBOOK_LOCALE is a Type of Cookie. """
+        """ FACEBOOK_LOCALE is a Cookie Property. """
         return "facebook_locale"
 
 
     @constant
     def VERSION(self):
-        """ VERSION is a Type of Cookie. """
+        """ VERSION is a Cookie Property. """
         return "version"
+
+
+    # TODO: make this a timestamp instead?
+    @constant
+    def IS_NEW(self):
+        """ IS_NEW is a Cookie Property. """
+        return "is_new"
 
 
 COOKIE = _Cookie()

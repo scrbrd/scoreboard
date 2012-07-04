@@ -36,6 +36,7 @@ class QueryHandler(BaseHandler):
                     session_cookie.get(COOKIE.USER_ID),
                     session_cookie.get(COOKIE.PERSON_ID))
 
+            session.set_is_new(session_cookie.get(COOKIE.IS_NEW))
             session.set_access_token(session_cookie.get(COOKIE.ACCESS_TOKEN))
             session.set_fb_id(session_cookie.get(COOKIE.FACEBOOK_ID))
             session.set_gender(session_cookie.get(COOKIE.GENDER))

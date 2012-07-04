@@ -58,19 +58,37 @@ class BaseHandler(tornado.web.RequestHandler):
         raise NotImplementedError("Abstract Method: SUBCLASS MUST OVERRIDE!")
 
 
+    def set_encoded_cookie(self, type, cookie):
+        """ JSON-encode and set the supplied cookie data. """
+        self.set_cookie(type, tornado.escape.json_encode(cookie))
+
+
+    #def get_decoded_cookie(self, type):
+    #    """ Return a JSON-decoded cookie. """
+    #    cookie = self.get_cookie(type)
+    #    return tornado.escape.json_decode(cookie) if cookie else cookie
+
+
+    #def pop_decoded_cookie(self, type):
+    #    """ Return a JSON-decoded cookie and clear it. """
+    #    cookie = self.get_decoded_cookie(type)
+    #    self.clear_cookie(type)
+    #    return cookie
+
+
     def set_encoded_secure_cookie(self, type, cookie):
         """ JSON-encode, encrypt, and set the supplied cookie data. """
         self.set_secure_cookie(type, tornado.escape.json_encode(cookie))
 
 
     def get_decoded_secure_cookie(self, type):
-        """ Return a secure cookie JSON-decoded and decrypted. """
+        """ Return a JSON-decoded secure cookie decrypted. """
         cookie = self.get_secure_cookie(type)
         return tornado.escape.json_decode(cookie) if cookie else cookie
 
 
     def pop_decoded_secure_cookie(self, type):
-        """ Return and clear a secure cookie decrypted and JSON-decoded. """
+        """ Return a JSON-decoded secure cookie decrypted and clear it. """
         cookie = self.get_decoded_secure_cookie(type)
         self.clear_cookie(type)
         return cookie

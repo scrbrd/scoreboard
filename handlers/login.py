@@ -4,6 +4,7 @@
 
 import os
 import hashlib
+from time import time
 
 import tornado.web
 import tornado.auth
@@ -70,9 +71,16 @@ class LoginHandler(BaseHandler, tornado.auth.FacebookGraphMixin):
 
             # if request and session state don't exist and match, this is CSRF
             if all([
-                    request_auth_state is not None,
-                    cookie_auth_state is not None,
-                    request_auth_state == cookie_auth_state]):
+                request_auth_state is not None,
+                cookie_auth_state is not None,
+                request_auth_state == cookie_auth_state,
+                ]):
+
+                # TODO: figure out how to distinguish between actual
+                # authorization and fake authorization; meaning, Facebook will
+                # make it seem like authorization just happened even if we
+                # asked for it and it turns out we didn't need to. yuck.
+                # anyway, fire off a MixPanelFirstAuthorization event.
 
                 self.get_authenticated_user(
                         self.redirect_uri(),
@@ -111,9 +119,14 @@ class LoginHandler(BaseHandler, tornado.auth.FacebookGraphMixin):
 
         model.load_and_dispatch()
 
+        # TODO: remove when we start firing off MixPanelSignUp python events!
+        if model.is_new:
+            self.create_mixpanel_signup()
+
         self.create_session(
                 model.user,
                 model.person,
+                model.is_new,
                 raw_user.get(FACEBOOK_AUTH_SCOPE.ACCESS_TOKEN))
 
         self.redirect(self.get_next_url())
@@ -135,8 +148,8 @@ class LoginHandler(BaseHandler, tornado.auth.FacebookGraphMixin):
                 tornado.escape.url_escape(next_url))
 
 
-    def create_session(self, user, person, access_token=None):
-        """ Return a dictionary to be set as a cookie. """
+    def create_session(self, user, person, is_new=False, access_token=None):
+        """ Return a dict to be set as a cookie. """
         session = {
                 COOKIE.USER_ID: user.id,
                 COOKIE.PERSON_ID: person.id,
@@ -146,6 +159,8 @@ class LoginHandler(BaseHandler, tornado.auth.FacebookGraphMixin):
                 COOKIE.IP: user.last_ip,
                 COOKIE.LOCALE: user.locale,
                 COOKIE.VERSION: VERSION.CURRENT,
+                # TODO: make this a timestamp instead?
+                COOKIE.IS_NEW: is_new,
                 }
 
         if access_token is not None:
@@ -159,6 +174,12 @@ class LoginHandler(BaseHandler, tornado.auth.FacebookGraphMixin):
         # TODO: when adding other third party login solutions besides Facebook,
         # consider raising NotImplementedError and overriding in subclasses.
         self.set_encoded_secure_cookie(COOKIE_TYPE.AUTH_STATE, state)
+
+
+    # TODO: remove when we start firing off the MixPanelSignUp event in python!
+    def create_mixpanel_signup(self):
+        """ Temporarily create a MixPanel Signup cookie. """
+        self.set_encoded_cookie(COOKIE_TYPE.SIGN_UP, int(time()))
 
 
     def pop_auth_state(self):

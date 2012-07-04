@@ -26,6 +26,7 @@ class Session(object):
     _person_id = None
 
     # optional fields
+    _is_new = None
     _access_token = None
     _fb_id = None
     _gender = None
@@ -52,6 +53,16 @@ class Session(object):
         return self._person_id
 
 
+    def get_is_new(self):
+        """ Return whether the User/Person from a session is new. """
+        return self._is_new
+
+
+    def set_is_new(self, is_new):
+        """ Store whether the User/Person from a session is new. """
+        self._is_new = is_new
+
+
     def get_access_token(self):
         """ Return a third party access token string for session. """
         return self._access_token
@@ -60,7 +71,7 @@ class Session(object):
     def set_access_token(self, access_token):
         """ Store a third party access token string for a session. """
         self._access_token = access_token
-        
+
 
     def get_fb_id(self):
         """ Return a Facebook User ID for a session. """

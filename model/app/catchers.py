@@ -333,6 +333,9 @@ class AuthCatcher(Catcher):
     _raw_user = None
     _ip = None
     _locale = None
+    _is_new = False
+
+    # TODO: remove this when removing default league!
     _default_league_id = None
 
 
@@ -366,6 +369,7 @@ class AuthCatcher(Catcher):
     def load(self):
         """ Load an existing User from supplied login credentials. """
         # retry lookup from credentials a couple times to avoid duplicates.
+        # this is an absolute and utter hackjob!
         for attempt in range(self.MAX_ATTEMPTS):
             self._existing_user = self._load_credentials(self._raw_user)
             if self._existing_user:
@@ -374,14 +378,21 @@ class AuthCatcher(Catcher):
 
     def dispatch(self):
         """ Dispatch a create/update based on whether a User exists. """
+
+        # this User/Person exists; update our data with raw data.
         if self._existing_user:
             (self._user, self._person) = self._update_credentials(
                     self._raw_user,
                     self._existing_user)
+
+        # this User/Person is new; create new ones!
         else:
             (self._user, self._person) = self._create_credentials(
                     self._raw_user,
                     self._default_league_id)
+
+            # set a flag to alert subscribers that a new user was created!
+            self._is_new = all([self._user, self._person])
 
 
     def _load_credentials(self, raw_user):
@@ -410,6 +421,12 @@ class AuthCatcher(Catcher):
     def person(self):
         """ Return the Person for this request. """
         return self._person
+
+
+    @property
+    def is_new(self):
+        """ Return whether this User/Person is newly created. """
+        return self._is_new
 
 
 class FacebookAuthCatcher(AuthCatcher):
