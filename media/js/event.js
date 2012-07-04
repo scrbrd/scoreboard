@@ -44,6 +44,7 @@ var event = {
     */
     SERVER: {
         CREATED_GAME:           "server-created-game",
+        SIGNED_UP:              "server-signed-up",
         UPDATED_SESSION:        "server-updated-session",
         VIEWED_PAGE:            "server-viewed-page"
     }

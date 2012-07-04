@@ -189,7 +189,6 @@ class Neo4jDatabase(SqDatabase):
             return response_parser.format_nodes(response)
 
 
-
     def _query_read_nodes_from_immediate_path(
             self,
             start_node_id,

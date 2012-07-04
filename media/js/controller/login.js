@@ -32,6 +32,7 @@ var loginController = (function () {
         var events = {};
 
         events[Event.CLIENT.REQUEST_FACEBOOK_LOGIN] = that.handleSubmit;
+        events[Event.SERVER.SIGNED_UP] = that.handleSuccess;
         that.initializeEvents(events);
     };
 
@@ -44,10 +45,10 @@ var loginController = (function () {
     };
     
     /**
-        Handle a successful user authorization.
+        Handle a successful user sign up.
     */
     that.handleSuccess = function () {
-        // TODO handle authorization events here.
+        MP.trackSignUpThroughFacebook();
     };
 
     /**

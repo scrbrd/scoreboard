@@ -54,6 +54,9 @@
     @exports app
     
     @requires jQuery
+    @requires Event
+    @requires EventDispatcher
+    @requires CookieUtil
     @requires Doc
     @requires Router
     @requires LoadPageController
@@ -67,6 +70,9 @@
 require(
 [
     'jQuery',
+    'js/event',
+    'js/eventDispatcher',
+    'util/cookie',
     'view/document',
     'js/router',
     'controller/loadPage',
@@ -79,6 +85,9 @@ require(
 ],
 function (
         $,
+        Event,
+        EventDispatcher,
+        CookieUtil,
         Doc,
         Router,
         LoadPageController,
@@ -118,6 +127,8 @@ function initializeApp() {
 
         // initialize pushState in the DOM
         docView.initializePushStateDOM();
+
+        initializeNewUser();
                 
         // only load dialog after the User has access to the application.
         // FIXME rearchitect how lazy load should work.
@@ -134,6 +145,17 @@ function initializeControllers() {
     DialogController.controller.initialize();
     LoginController.controller.initialize();
     SessionController.controller.initialize();
+}
+
+/**
+    Respond specially for a new user.
+*/
+function initializeNewUser() {
+    var NEW_USER_COOKIE = "sign_up";
+    if (CookieUtil.checkCookie(NEW_USER_COOKIE)) {
+        EventDispatcher.trigger(Event.SERVER.SIGNED_UP);
+        CookieUtil.eraseCookie(NEW_USER_COOKIE);
+    }
 }
 
 /**

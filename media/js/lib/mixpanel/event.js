@@ -158,33 +158,6 @@ define(
     }());
 
     /**
-        REQUEST_LOGIN event that inherits from mixPanelEvent.
-        @constructor
-    */
-    var requestLogin = (function () {
-        var that = Object.create(mixPanelEvent);
-
-        that.mpEvent = EVENT.REQUEST_LOGIN;
-
-        that.LOGIN_TYPE = {
-            FACEBOOK:        "facebook"
-        };
-
-        /**
-            Track REQUEST_LOGIN event.
-            @param {string} loginType The type of login request.
-        */
-        that.trackRequestLogin = function (loginType) {
-            var properties = {};
-            properties[PROPERTY.LOGIN_TYPE] = loginType;
-            
-            that.track(properties);
-        };
-
-        return that;
-    }());
-
-    /**
         PLAYER_TAGGED event that inherits form mixPanelEvent.
         @constructor
     */
@@ -212,6 +185,60 @@ define(
             properties[PROPERTY.OBJECT_TYPE] = objectType;
             properties[PROPERTY.TAGGER_ID] = taggerID; // TODO: needed?
             properties[PROPERTY.IS_SELF_TAG] = isSelfTag;
+            
+            that.track(properties);
+        };
+
+        return that;
+    }());
+
+    /**
+        SIGN_UP event that inherits from mixPanelEvent.
+        @constructor
+    */
+    var signUp = (function () {
+        var that = Object.create(mixPanelEvent);
+
+        that.mpEvent = EVENT.SIGN_UP;
+
+        that.LOGIN_TYPE = {
+            FACEBOOK: "facebook"
+        };
+
+        /**
+            Track SIGN_UP event.
+            @param {string} loginTyoe The type of sign up.
+        */
+       that.trackSignUp = function (loginType) {
+           var properties = {};
+           properties[PROPERTY.LOGIN_TYPE] = loginType;
+
+           that.track(properties);
+        };
+
+        return that;
+    }());
+
+    /**
+        REQUEST_LOGIN event that inherits from mixPanelEvent.
+        @constructor
+    */
+    var requestLogin = (function () {
+        var that = Object.create(mixPanelEvent);
+
+        that.mpEvent = EVENT.REQUEST_LOGIN;
+
+        that.LOGIN_TYPE = {
+            FACEBOOK:        "facebook"
+        };
+
+        /**
+            Track REQUEST_LOGIN event.
+            @param {string} loginType The type of login request.
+        */
+        that.trackRequestLogin = function (loginType) {
+            var properties = {};
+            properties[PROPERTY.LOGIN_TYPE] = loginType;
             
             that.track(properties);
         };
@@ -258,6 +285,7 @@ define(
         enterData: enterData,
         playerTagged: playerTagged,
         requestLogin: requestLogin,
+        signUp: signUp,
         viewPage: viewPage
     };
 });

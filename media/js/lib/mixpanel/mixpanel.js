@@ -36,6 +36,7 @@ var createObject = MPEvent.createObject;
 var enterData = MPEvent.enterData;
 var playerTagged = MPEvent.playerTagged;
 var requestLogin = MPEvent.requestLogin;
+var signUp = MPEvent.signUp;
 var viewPage = MPEvent.viewPage;
 var GAME = Const.API_OBJECT.GAME;
 
@@ -122,6 +123,13 @@ return {
         requestLogin.trackRequestLogin(requestLogin.LOGIN_TYPE.FACEBOOK);
     },
     
+    /**
+        Track a Facebook sign up by wrapping "Sign Up".
+    */
+    trackSignUpThroughFacebook: function () {
+        signUp.trackSignUp(signUp.LOGIN_TYPE.FACEBOOK);
+    },
+
     /**
         Track a landing view by wrapping the "View Page" event.
         @param {string} pageName The name of the page (e.g., "landing").
