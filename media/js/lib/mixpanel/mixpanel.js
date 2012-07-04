@@ -34,6 +34,7 @@ define(
 // Imports
 var createObject = MPEvent.createObject;
 var enterData = MPEvent.enterData;
+var playerTagged = MPEvent.playerTagged;
 var requestLogin = MPEvent.requestLogin;
 var viewPage = MPEvent.viewPage;
 var GAME = Const.API_OBJECT.GAME;
@@ -70,15 +71,15 @@ return {
         Track a successfully added Game by wrapping the "Create Object"
         event.
         @param {number} numberOfTags The number of tagged folks.
-        @param {boolean} wasScored True if the game was scored.
+        @param {boolean} isScored True if the game was scored.
         @param {string} creatorsOutcome The result of the game's creator.
             (e.g. WON, LOST)
     */
-    trackCreateGame: function (numberOfTags, wasScored, creatorsOutcome) {
+    trackCreateGame: function (numberOfTags, isScored, creatorsOutcome) {
         createObject.trackCreateObject(
                 GAME,
                 numberOfTags,
-                wasScored,
+                isScored,
                 creatorsOutcome);
     },
 
@@ -97,38 +98,55 @@ return {
     },
 
     /**
+        Track player tagged to a game by the user.
+        @param {string} distinctID the id to make object player into the
+            active user.
+        @param {string} objectType object the player is tagged to.
+        @param {string} taggerID id of the tagger.
+        @param {boolean} isSelfTag True if the tagger and distinct ID are
+            the same.
+    */
+    trackPlayerTaggedToGame: function (distinctID, taggerID, isSelfTag) {
+        playerTagged.trackPlayerTagged(
+                distinctID,
+                GAME,
+                taggerID,
+                isSelfTag);
+    },
+
+    /**
         Track a facebook login request by wrapping the "Request Login"
         event.
     */
     trackRequestFacebookLogin: function () {
-        requestLogin.trackRequestLogin(requestLogin.TYPE.FACEBOOK);
+        requestLogin.trackRequestLogin(requestLogin.LOGIN_TYPE.FACEBOOK);
     },
     
     /**
         Track a landing view by wrapping the "View Page" event.
-        @param {string} name The name of the page (e.g., "landing").
+        @param {string} pageName The name of the page (e.g., "landing").
         @param {string} path The path to the page (e.g., "/").
     */
-    trackViewLanding: function (name, path) {
-        viewPage.trackViewPage(viewPage.TYPE.LANDING, name, path);
+    trackViewLanding: function (pageName, path) {
+        viewPage.trackViewPage(viewPage.PAGE_TYPE.LANDING, pageName, path);
     },
     
     /**
         Track a dialog view by wrapping the "View Page" event.
-        @param {string} name The name of the page (e.g., "create_game").
+        @param {string} pageName The name of the page (e.g., "create_game").
         @param {string} path The path to the page (e.g., "/rankings").
     */
-    trackViewDialog: function (name, path) {
-        viewPage.trackViewPage(viewPage.TYPE.DIALOG, name, path);
+        trackViewDialog: function (pageName, path) {
+        viewPage.trackViewPage(viewPage.PAGE_TYPE.DIALOG, pageName, path);
     },
 
     /**
         Track a tab view by wrapping the "View Page" event.
-        @param {string} name The name of the page (e.g., "games").
+        @param {string} pageName The name of the page (e.g., "games").
         @param {string} path The path to the page (e.g., "/games").
     */
-    trackViewTab: function (name, path) {
-        viewPage.trackViewPage(viewPage.TYPE.TAB, name, path);
+    trackViewTab: function (pageName, path) {
+        viewPage.trackViewPage(viewPage.PAGE_TYPE.TAB, pageName, path);
     }
 };
 

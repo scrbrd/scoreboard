@@ -29,26 +29,38 @@ define(
     var EVENT = {
         CREATE_OBJECT:      "Create Object",
         ENTER_DATA:         "Enter Data",
+        PLAYER_TAGGED:      "Player Tagged",
         REQUEST_LOGIN:      "Request Login",
+        SIGN_UP:            "Sign Up",
         VIEW_PAGE:          "View Page"
     };
 
 
     /**
-        Enum for all mixpanel property parmaeters. (lowercase.)
+        Enum for all mixpanel properties. (lowercase.)
         @enum {string}
-        FIXME XXX make these more descriptive.
     */
     var PROPERTY = {
         CREATORS_OUTCOME:   "creator's outcome",
         DATA_TYPE:          "data type",
         INPUT:              "input", // user input
-        NAME:               "name", // specific name
+        IS_SCORED:          "is scored", // true if game has a score
+        IS_SELF_TAG:        "is self tag", // is tagger and taggee the same
+        LOGIN_TYPE:         "login type",
         NUMBER_OF_TAGS:     "number of tags", // number of tagged folks
         OBJECT_TYPE:        "object type",
+        PAGE_NAME:          "page name", // specific name
+        PAGE_TYPE:          "page type",
         PATH:               "path", // path to page
-        TYPE:               "type", // subcategory of event
-        WAS_SCORED:         "was scored" // true if game was scored
+        TAGGER_ID:          "tagger id"
+    };
+
+    /**
+        Enum for all special mixpanel properties.
+        @enum {string}
+    */
+    var MIXPANEL_PROPERTY = {
+        DISTINCT_ID:        "distinct_id" // identifier in events
     };
    
 
@@ -90,18 +102,18 @@ define(
             Track CREATE_OBJECT event.
             @param {string} objectType The type of object.
             @param {string} numberOfTags The number of folks tagged.
-            @param {string} wasScored Was the object given a Score.
+            @param {string} isScored Does the object have a score?
             @param {string} creatorsOutcome The Outcome of the object's creator.
         */
         that.trackCreateObject = function (
                 objectType,
                 numberOfTags,
-                wasScored,
+                isScored,
                 creatorsOutcome) {
             var properties = {};
-            properties[PROPERTY.TYPE] = objectType;
+            properties[PROPERTY.OBJECT_TYPE] = objectType;
             properties[PROPERTY.NUMBER_OF_TAGS] = numberOfTags;
-            properties[PROPERTY.WAS_SCORED] = wasScored;
+            properties[PROPERTY.IS_SCORED] = isScored;
             properties[PROPERTY.CREATORS_OUTCOME] = creatorsOutcome;
             // TODO move the game specific properties to the createGame
         
@@ -137,7 +149,7 @@ define(
             properties[PROPERTY.OBJECT_TYPE] = objectType;
             properties[PROPERTY.DATA_TYPE] = dataType;
             properties[PROPERTY.INPUT] = inputValue;
-            properties[PROPERTY.NAME] = pageName;
+            properties[PROPERTY.PAGE_NAME] = pageName;
 
             that.track(properties);
         };
@@ -154,7 +166,7 @@ define(
 
         that.mpEvent = EVENT.REQUEST_LOGIN;
 
-        that.TYPE = {
+        that.LOGIN_TYPE = {
             FACEBOOK:        "facebook"
         };
 
@@ -164,7 +176,7 @@ define(
         */
         that.trackRequestLogin = function (loginType) {
             var properties = {};
-            properties[PROPERTY.TYPE] = loginType;
+            properties[PROPERTY.LOGIN_TYPE] = loginType;
             
             that.track(properties);
         };
@@ -172,7 +184,41 @@ define(
         return that;
     }());
 
-    
+    /**
+        PLAYER_TAGGED event that inherits form mixPanelEvent.
+        @constructor
+    */
+    var playerTagged = (function () {
+        var that = Object.create(mixPanelEvent);
+
+        that.mpEvent = EVENT.PLAYER_TAGGED;
+
+        /**
+            Track PLAYER_TAGGED event.
+            @param {string} distinctID the id to make object player into the
+                active user.
+            @param {string} objectType object the player is tagged to.
+            @param {string} taggerID id of the tagger.
+            @param {boolean} isSelfTag True if the tagger and distinct ID are
+                the same.
+        */
+        that.trackPlayerTagged = function (
+                distinctID,
+                objectType,
+                taggerID,
+                isSelfTag) {
+            var properties = {};
+            properties[MIXPANEL_PROPERTY.DISTINCT_ID] = distinctID;
+            properties[PROPERTY.OBJECT_TYPE] = objectType;
+            properties[PROPERTY.TAGGER_ID] = taggerID; // TODO: needed?
+            properties[PROPERTY.IS_SELF_TAG] = isSelfTag;
+            
+            that.track(properties);
+        };
+
+        return that;
+    }());
+
     /**
         VIEW_PAGE event that inherits from mixPanelEvent.
         @constructor
@@ -180,7 +226,7 @@ define(
     var viewPage = (function () {
         var that = Object.create(mixPanelEvent);
         
-        that.TYPE = {
+        that.PAGE_TYPE = {
             TAB:        "tab",
             LANDING:    "landing",
             DIALOG:     "dialog"
@@ -190,14 +236,14 @@ define(
 
         /**
             Track VIEW_PAGE event.
-            @param {string} type The type of the viewed page.
-            @param {string} name The name of the viewed page.
+            @param {string} pageType The type of the viewed page.
+            @param {string} pageName The name of the viewed page.
             @param {string} path The path (not URL) of the viewed page.
         */
-        that.trackViewPage = function (type, name, path) {
+        that.trackViewPage = function (pageType, pageName, path) {
             var properties = {};
-            properties[PROPERTY.TYPE] = type;
-            properties[PROPERTY.NAME] = name;
+            properties[PROPERTY.PAGE_TYPE] = pageType;
+            properties[PROPERTY.PAGE_NAME] = pageName;
             properties[PROPERTY.PATH] = path;
 
             that.track(properties);
@@ -210,6 +256,7 @@ define(
     return {
         createObject: createObject,
         enterData: enterData,
+        playerTagged: playerTagged,
         requestLogin: requestLogin,
         viewPage: viewPage
     };

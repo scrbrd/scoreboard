@@ -18,7 +18,8 @@ var constants = {
         @enum {string}
     */
     API_OBJECT: {
-        GAME:                   "game"
+        GAME:                   "game",
+        PLAYER:                 "player"
     },
 
     /**

@@ -57,47 +57,62 @@ var createGameController = (function () {
         // process game data to prepare it for the server.
         gameParams = readyGameParamsForSubmit(gameParams);
 
-        // grab keys that will be used for success function
-        var numberOfTags = 0;
-        if (gameParams.hasOwnProperty(Const.DATA.GAME_SCORE)) {
-            numberOfTags = gameParams[Const.DATA.GAME_SCORE].length;
-        }
-    
-        // currently there are only W/L/T and no score.
-        var wasScored = false;
-        
-        // currently we compute on the server so don't think about creator outcome.
-        var creatorsOutcome = getCreatorsOutcome(creatorID, gameParams);
 
         Crud.createGame(gameParams, function (response) {
             // TODO - update Page State here too.
             EventDispatcher.trigger(
                 Event.SERVER.CREATED_GAME,
-                numberOfTags,
-                wasScored,
-                creatorsOutcome);
+                creatorID,
+                gameParams);
         });
         docView.hideDialog();
     };
     
     /**
         Respond to successfull game creation on the server.
-        @param {number} numberOfTags number of tagged players
-        @param {boolean} wasScored true if the game was scored
-        @param {string} creatorsOutcome "WON", "LOST", "PLAYED", "TIED"
+        @param {number} creatorID User's person id.
+        @param {Object} gameParams game parameters.
     */
     that.handleSuccess = function (
-            numberOfTags,
-            wasScored,
-            creatorsOutcome) {
-        var docView = Doc.retrieve();
+            creatorID,
+            gameParams) {
+
+        // set number of tags for MP Create Game event.
+        var numberOfTags = 0;
+        if (gameParams.hasOwnProperty(Const.DATA.GAME_SCORE)) {
+            numberOfTags = gameParams[Const.DATA.GAME_SCORE].length;
+        }
+    
+        // currently there are only W/L/T and no score.
+        var isScored = false;
+        
+        // currently we compute on the server so don't think about creator outcome.
+        var creatorsOutcome = getCreatorsOutcome(creatorID, gameParams);
         
         MP.trackCreateGame(
                 numberOfTags,
-                wasScored,
+                isScored,
                 creatorsOutcome);
+
+        // go through the tags and create a Player Tagged event for each one.
+        var gamescore = gameParams[Const.DATA.GAME_SCORE];
+        var i;
+        var taggedPlayerID;
+        var isSelfTag = false;
+        for (i = 0; i < gamescore.length; i += 1) {
+            taggedPlayerID = gamescore[i][Const.DATA.ID];
+            if (taggedPlayerID === creatorID) {
+                isSelfTag = true;
+            }
+            MP.trackPlayerTaggedToGame(
+                    taggedPlayerID.toString(),
+                    creatorID.toString(),
+                    isSelfTag);
+        }
+
         // refresh the Docview with by grabbing new data
         // FIXME trigger RELOAD_PAGE event should accomplish this too.
+        var docView = Doc.retrieve();
         docView.refresh();
     };
 
