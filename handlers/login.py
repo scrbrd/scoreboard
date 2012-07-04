@@ -151,21 +151,21 @@ class LoginHandler(BaseHandler, tornado.auth.FacebookGraphMixin):
         if access_token is not None:
             session[FACEBOOK_AUTH_SCOPE.ACCESS_TOKEN] = access_token
 
-        return self.set_encrypted_cookie(COOKIE_TYPE.SESSION, session)
+        return self.set_encoded_secure_cookie(COOKIE_TYPE.SESSION, session)
 
 
     def create_auth_state(self, state):
         """ Save a secure authorization status cookie. """
         # TODO: when adding other third party login solutions besides Facebook,
         # consider raising NotImplementedError and overriding in subclasses.
-        self.set_encrypted_cookie(COOKIE_TYPE.AUTH_STATE, state)
+        self.set_encoded_secure_cookie(COOKIE_TYPE.AUTH_STATE, state)
 
 
     def pop_auth_state(self):
         """ Return and clear a secure authorization status cookie. """
         # TODO: when adding other third party login solutions besides Facebook,
         # consider raising NotImplementedError and overriding in subclasses.
-        return self.pop_decrypted_cookie(COOKIE_TYPE.AUTH_STATE)
+        return self.pop_decoded_secure_cookie(COOKIE_TYPE.AUTH_STATE)
 
 
     def generate_auth_state(self):

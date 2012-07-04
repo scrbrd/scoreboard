@@ -36,8 +36,6 @@ class BaseHandler(tornado.web.RequestHandler):
 
     """
 
-    _cookies = {}
-
 
     def get_current_user(self):
         """ Return current user from cookie or return None.
@@ -60,27 +58,21 @@ class BaseHandler(tornado.web.RequestHandler):
         raise NotImplementedError("Abstract Method: SUBCLASS MUST OVERRIDE!")
 
 
-    def set_encrypted_cookie(self, type, cookie):
-        """ Return a secure cookie decrypted. """
+    def set_encoded_secure_cookie(self, type, cookie):
+        """ JSON-encode, encrypt, and set the supplied cookie data. """
         self.set_secure_cookie(type, tornado.escape.json_encode(cookie))
-        self._cookies[type] = cookie
 
 
-    def get_decrypted_cookie(self, type):
-        """ Return a secure cookie decrypted. """
-        if self._cookies.get(type) is None:
-            secure_cookie = self.get_secure_cookie(type)
-            if secure_cookie:
-                self._cookies[type] = tornado.escape.json_decode(secure_cookie)
-
-        return self._cookies.get(type)
+    def get_decoded_secure_cookie(self, type):
+        """ Return a secure cookie JSON-decoded and decrypted. """
+        cookie = self.get_secure_cookie(type)
+        return tornado.escape.json_decode(cookie) if cookie else cookie
 
 
-    def pop_decrypted_cookie(self, type):
-        """ Return and clear a secure cookie. """
-        cookie = self.get_decrypted_cookie(type)
+    def pop_decoded_secure_cookie(self, type):
+        """ Return and clear a secure cookie decrypted and JSON-decoded. """
+        cookie = self.get_decoded_secure_cookie(type)
         self.clear_cookie(type)
-        self._cookies[type] = None
         return cookie
 
 

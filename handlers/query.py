@@ -29,18 +29,20 @@ class QueryHandler(BaseHandler):
 
         # TODO: deal with the user deauthorizing the app
 
-        if self.session_exists():
-            session = Session(
-                    self.get_session_user_id(),
-                    self.get_session_person_id())
+        session_cookie = self.get_session_cookie()
 
-            session.set_access_token(self.get_session_access_token())
-            session.set_fb_id(self.get_session_fb_id())
-            session.set_gender(self.get_session_gender())
-            session.set_timezone(self.get_session_timezone())
-            session.set_ip(self.get_session_ip())
-            session.set_locale(self.get_session_locale())
-            session.set_version(self.get_session_version())
+        if session_cookie:
+            session = Session(
+                    session_cookie.get(COOKIE.USER_ID),
+                    session_cookie.get(COOKIE.PERSON_ID))
+
+            session.set_access_token(session_cookie.get(COOKIE.ACCESS_TOKEN))
+            session.set_fb_id(session_cookie.get(COOKIE.FACEBOOK_ID))
+            session.set_gender(session_cookie.get(COOKIE.GENDER))
+            session.set_timezone(session_cookie.get(COOKIE.TIMEZONE))
+            session.set_ip(session_cookie.get(COOKIE.IP))
+            session.set_locale(session_cookie.get(COOKIE.LOCALE))
+            session.set_version(session_cookie.get(COOKIE.VERSION))
 
         return session
 
@@ -144,62 +146,7 @@ class QueryHandler(BaseHandler):
 
     def get_session_cookie(self):
         """ Return a secure cookie modeling a session for a request. """
-        return self.get_decrypted_cookie(COOKIE_TYPE.SESSION)
-
-
-    def session_exists(self):
-        """ Return whether a session cookie exists. """
-        return bool(self.get_session_cookie())
-
-
-    def get_session_property(self, property):
-        """ Return a property from a secure session cookie. """
-        return self.get_session_cookie().get(property)
-
-
-    def get_session_access_token(self):
-        """ Return an access token from a secure session cookie. """
-        return self.get_session_property(COOKIE.ACCESS_TOKEN)
-
-
-    def get_session_user_id(self):
-        """ Return a User ID from a secure session cookie. """
-        return self.get_session_property(COOKIE.USER_ID)
-
-
-    def get_session_person_id(self):
-        """ Return a Person (Player) ID from a secure session cookie. """
-        return self.get_session_property(COOKIE.PERSON_ID)
-
-
-    def get_session_fb_id(self):
-        """ Return a Facebook User ID from a secure session cookie. """
-        return self.get_session_property(COOKIE.FACEBOOK_ID)
-
-
-    def get_session_gender(self):
-        """ Return a gender from a secure session cookie. """
-        return self.get_session_property(COOKIE.GENDER)
-
-
-    def get_session_timezone(self):
-        """ Return a timezone from a secure session cookie. """
-        return self.get_session_property(COOKIE.TIMEZONE)
-
-
-    def get_session_ip(self):
-        """ Return an IP address from a secure session cookie. """
-        return self.get_session_property(COOKIE.IP)
-
-
-    def get_session_locale(self):
-        """ Return an ISO language/country from a secure session cookie. """
-        return self.get_session_property(COOKIE.LOCALE)
-
-
-    def get_session_version(self):
-        """ Return an application version from a secure session cookie. """
-        return self.get_session_property(COOKIE.VERSION)
+        return self.get_decoded_secure_cookie(COOKIE_TYPE.SESSION)
 
 
     def get_asynchronous_argument(self):
