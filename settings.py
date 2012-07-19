@@ -26,6 +26,8 @@ LEAGUE = 721  # The Joy of Serving Others
 path = lambda root, *a: os.path.join(root, *a)
 ROOT = os.path.dirname(os.path.abspath(__file__))
 PORT = os.environ.get("PORT", 5000)
+FACEBOOK_APP_ID = os.environ.get("FACEBOOK_APP_ID", "")
+FACEBOOK_SECRET = os.environ.get("FACEBOOK_SECRET", "")
 
 define("port", default=PORT, help="run on the given port", type=int)
 define("config", default=None, help="tornado config file")
@@ -62,8 +64,8 @@ settings['static_path'] = MEDIA_ROOT
 settings['cookie_secret'] = "\xee\x0ec\x9bl\x02\xeb/.\xd4\xeb\xc2(\xb0\xb1\x8a\x0b\xb5[^Tq\xecy"
 settings['xsrf_cookies'] = True
 settings['login_url'] = "/"
-settings['facebook_api_key'] = "184725354981659"
-settings['facebook_secret'] = "06a89856418cad1d4ce484c159cbdafc"
+settings['facebook_api_key'] = FACEBOOK_APP_ID
+settings['facebook_secret'] = FACEBOOK_SECRET
 
 settings['template_loader'] = tornado.template.Loader(TEMPLATE_ROOT)
 settings['ui_modules'] = {
