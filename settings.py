@@ -25,8 +25,9 @@ LEAGUE = 721  # The Joy of Serving Others
 # Make filepaths relative to settings.
 path = lambda root, *a: os.path.join(root, *a)
 ROOT = os.path.dirname(os.path.abspath(__file__))
+PORT = os.environ.get("PORT", 5000)
 
-define("port", default=8000, help="run on the given port", type=int)
+define("port", default=PORT, help="run on the given port", type=int)
 define("config", default=None, help="tornado config file")
 define("debug", default=True, help="debug mode")
 tornado.options.parse_command_line()
