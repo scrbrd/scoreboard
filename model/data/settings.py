@@ -3,7 +3,10 @@
 Provide settings that allow for switching out and configuring databases.
 
 """
-from constants import SETTING, TYPE, PROTOCOL
+import os
+
+from constants import SETTING, TYPE, PROTOCOL, NEO4J
+
 
 databases = {}
 
@@ -17,14 +20,14 @@ db0 = {
 databases[db0[SETTING.NAME]] = db0
 
 db1 = {
-        SETTING.HOST: "f7e1861b3.hosted.neo4j.org",
-        SETTING.PORT: "7134",
+        SETTING.HOST: os.environ.get(NEO4J.HOST),
+        SETTING.PORT: os.environ.get(NEO4J.PORT),
         SETTING.PROTOCOL: PROTOCOL.HTTP,
         SETTING.TYPE: TYPE.SECURE_NEO4J,
         SETTING.NAME: "heroku",
-        SETTING.USERNAME: "1dd76643b",
-        SETTING.PASSWORD: "919115168",
+        SETTING.LOGIN: os.environ.get(NEO4J.LOGIN),
+        SETTING.PASSWORD: os.environ.get(NEO4J.PASSWORD),
         }
 databases[db1[SETTING.NAME]] = db1
 
-active_db = "local"
+active_db = "heroku"

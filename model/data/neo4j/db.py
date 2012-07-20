@@ -12,7 +12,7 @@ import urllib2
 import json
 
 
-from util.decorators import print_timing
+#from util.decorators import print_timing
 from model.constants import NODE_PROPERTY, EDGE_PROPERTY
 from model.data.db import SqDatabase
 from model.data.data_errors import DbConnectionError
@@ -260,7 +260,7 @@ class Neo4jDatabase(SqDatabase):
             return response_parser.format_path(response)
 
 
-    @print_timing
+    #@print_timing
     def _gremlin(self, script, params):
         """ POST a Gremlin JSON request to a URL and handle the response.
 

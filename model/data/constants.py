@@ -12,45 +12,51 @@ class _Setting(object):
 
 
     @constant
+    def DELIMITER(self):
+        """ DELIMITER is a Database settings constant. """
+        return "_"
+
+
+    @constant
     def HOST(self):
         """ HOST is a Database settings constant. """
-        return "host"
+        return "HOST"
+
+
+    @constant
+    def LOGIN(self):
+        """ LOGIN is a Database settings constant. """
+        return "LOGIN"
 
 
     @constant
     def NAME(self):
         """ NAME is a Database settings constant. """
-        return "name"
+        return "NAME"
 
 
     @constant
     def PASSWORD(self):
         """ PASSWORD is a Database settings constant. """
-        return "password"
+        return "PASSWORD"
 
 
     @constant
     def PORT(self):
         """ PORT is a Database settings constant. """
-        return "port"
+        return "PORT"
 
 
     @constant
     def PROTOCOL(self):
         """ PROTOCOL is a Database settings constant. """
-        return "protocol"
+        return "PROTOCOL"
 
 
     @constant
     def TYPE(self):
         """ TYPE is a Database settings constant. """
-        return "type"
-
-
-    @constant
-    def USERNAME(self):
-        """ USERNAME is a Database settings constant. """
-        return "username"
+        return "TYPE"
 
 
 SETTING = _Setting()
@@ -64,13 +70,13 @@ class _Type(object):
     @constant
     def NEO4J(self):
         """ NEO4J is a type of datbase that we use. """
-        return "neo4j"
+        return "NEO4J"
 
 
     @constant
     def SECURE_NEO4J(self):
         """ SECURE_NEO4J is a type of datbase that we use. """
-        return "secure_neo4j"
+        return "SECURE_NEO4J"
 
 
 TYPE = _Type()
@@ -94,3 +100,35 @@ class _Protocol(object):
 
 
 PROTOCOL = _Protocol()
+
+
+class _Neo4j(object):
+
+    """ _Neo4j class to hold Neo4j Constants. """
+
+
+    @constant
+    def HOST(self):
+        """ HOST is a Heroku Neo4j setting. """
+        return TYPE.NEO4J + SETTING.DELIMITER + SETTING.HOST
+
+
+    @constant
+    def PORT(self):
+        """ PORT is a Heroku Neo4j setting. """
+        return TYPE.NEO4J + SETTING.DELIMITER + SETTING.PORT
+
+
+    @constant
+    def LOGIN(self):
+        """ LOGIN is a Heroku Neo4j setting. """
+        return TYPE.NEO4J + SETTING.DELIMITER + SETTING.LOGIN
+
+
+    @constant
+    def PASSWORD(self):
+        """ PASSWORDis a Heroku Neo4j setting. """
+        return TYPE.NEO4J + SETTING.DELIMITER + SETTING.PASSWORD
+
+
+NEO4J = _Neo4j()

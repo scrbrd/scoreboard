@@ -209,10 +209,10 @@ class SqDatabase(object):
         raise NotImplementedError("TODO - Implement update_edge.")
 
         if any(k in properties for k in (
-            EDGE_PROPERTY.TYPE,
-            EDGE_PROPERTY.FROM_NODE_ID,
-            EDGE_PROPERTY.TO_NODE_ID,
-            EDGE_PROPERTY.ID)):
+                EDGE_PROPERTY.TYPE,
+                EDGE_PROPERTY.FROM_NODE_ID,
+                EDGE_PROPERTY.TO_NODE_ID,
+                EDGE_PROPERTY.ID)):
             raise DbInputError(
                 k,
                 properties,

@@ -75,7 +75,7 @@ class Game(SqNode):
                 score = edge._get_property(API_EDGE_PROPERTY.SCORE)
                 opponent_id = edge.to_node_id
                 outcome.append({"id": opponent_id, "score": score})
-                outcome.sort(key = lambda x: x["score"], reverse=True)
+                outcome.sort(key=lambda x: x["score"], reverse=True)
 
         return outcome
 

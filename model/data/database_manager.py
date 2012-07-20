@@ -21,7 +21,7 @@ for db_key, db_value in settings.databases.items():
         db = SecureNeo4jDatabase(
                 db_value[SETTING.HOST],
                 db_value[SETTING.PORT],
-                db_value[SETTING.USERNAME],
+                db_value[SETTING.LOGIN],
                 db_value[SETTING.PASSWORD])
     else:
         # TODO: add an InvalidDatabaseTypeError here
