@@ -12,7 +12,7 @@ import urllib2
 import json
 
 
-#from util.decorators import print_timing
+#from util.dev import print_timing
 from model.constants import NODE_PROPERTY, EDGE_PROPERTY
 from model.data.db import SqDatabase
 from model.data.data_errors import DbConnectionError

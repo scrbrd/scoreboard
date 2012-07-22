@@ -21,7 +21,7 @@ databases[db0[SETTING.NAME]] = db0
 
 db1 = {
         SETTING.HOST: os.environ.get(NEO4J.HOST),
-        SETTING.PORT: os.environ.get(NEO4J.PORT),
+        SETTING.PORT: int(os.environ.get(NEO4J.PORT)),
         SETTING.PROTOCOL: PROTOCOL.HTTP,
         SETTING.TYPE: TYPE.SECURE_NEO4J,
         SETTING.NAME: "heroku",

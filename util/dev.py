@@ -4,19 +4,19 @@ Use these tools in a dev environment only.
 
 """
 from pprint import pprint
-import time
+import os
 
 
 def print_timing(func):
-    """ Time decorated function. Print output. """
+    """ Debug decorator to see how long functions take. """
+
 
     def wrapper(*arg):
-        t1 = time.time()
-        print "{0} LAUNCHED".format(func.func_name)
-        res = func(*arg)
-        t2 = time.time()
-        print '%s took %0.3f ms' % (func.func_name, (t2-t1)*1000.0)
-        return res
+        t1 = os.times()[4]
+        return_value = func(*arg)
+        t2 = os.times()[4]
+        print "{0} took {1}ms".format(func.func_name, (t2 - t1) * 1000.0)
+        return return_value
     return wrapper
 
 
@@ -28,11 +28,12 @@ def obj_to_dict(obj, classkey=None):
     elif hasattr(obj, "__iter__"):
         return [obj_to_dict(v, classkey) for v in obj]
     elif hasattr(obj, "__dict__"):
-        data = dict([
-            (key, obj_to_dict(value, classkey))
-            for key, value in obj.__dict__.iteritems()
-            if not callable(value) and not key.startswith('_')
-            ])
+        data = dict(
+                [
+                    (key, obj_to_dict(value, classkey))
+                    for key, value in obj.__dict__.iteritems()
+                    if not callable(value) and not key.startswith('_')
+                ])
         if classkey is not None and hasattr(obj, "__class__"):
             data[classkey] = obj.__class__.__name__
         return data
@@ -42,5 +43,3 @@ def obj_to_dict(obj, classkey=None):
 
 def print_obj(obj, classkey=None):
     pprint(obj_to_dict(obj, classkey))
-
-

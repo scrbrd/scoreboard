@@ -235,9 +235,12 @@ class RankingsCatcher(ReadCatcher):
         # for those games. the only tricky thing is just getting one league. it
         # shouldn't be tricky to avoid manually loading opponents.
 
+        print(self.session.person_id)
         person = Person.load_leagues(self.session.person_id)
 
         # TODO: do better than simply getting someone's first league.
+        print("leagues")
+        print(person.get_leagues())
         league = person.get_leagues()[0]
 
         # Load league with games into generic context
