@@ -1,0 +1,14 @@
+1. Create the 'authentication index' by sending this gremlin script in the console
+before indexing:
+
+g.createAutomaticIndex('authentication', Vertex.class, ['fb_id', 'email'] as Set)
+
+
+2. When we run g.clear() there are two ('vertices' and 'edges') auto indices
+created, and these have all properties being indexed.
+
+
+3. Either method seems to work. I did a db restart and and all the indices are
+still there. But when I ran a g.clear() the authentication index is gone.
+
+4. I rerun the authentication index and everything is working again.

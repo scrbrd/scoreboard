@@ -34,7 +34,7 @@ class SqObject(object):
     Required:
     id      _id             SqObject id
     str     _type           SqObject type
-    dict    _properties     SqObject properties from GraphObject 
+    dict    _properties     SqObject properties from GraphObject
 
     """
 
@@ -199,8 +199,10 @@ class SqNode(SqObject):
         else:
             if sq_property != PROPERTY_VALUE.EMPTY:
                 property = sq_property
-            else:
+            elif tp_property is not None:
                 property = tp_property
+            else:
+                property = sq_property
 
         if property is None:
             raise SqObjectPropertyError(
