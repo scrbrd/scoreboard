@@ -71,10 +71,10 @@ class LoginHandler(BaseHandler, tornado.auth.FacebookGraphMixin):
 
             # if request and session state don't exist and match, this is CSRF
             if all([
-                request_auth_state is not None,
-                cookie_auth_state is not None,
-                request_auth_state == cookie_auth_state,
-                ]):
+                    request_auth_state is not None,
+                    cookie_auth_state is not None,
+                    request_auth_state == cookie_auth_state,
+                    ]):
 
                 # TODO: figure out how to distinguish between actual
                 # authorization and fake authorization; meaning, Facebook will
