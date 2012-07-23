@@ -4,7 +4,7 @@
 
 """
 
-from model.app.catchers import GamesCatcher
+from model.app.base import GamesModel
 
 from handlers.query import QueryHandler
 
@@ -16,7 +16,7 @@ class GamesHandler(QueryHandler):
 
     def get_model(self):
         """ Return a data model in response to a request for Games. """
-        model = GamesCatcher(self.current_user)
+        model = GamesModel(self.current_user)
         model.load()
         return model
 

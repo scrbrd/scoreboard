@@ -1,7 +1,7 @@
-""" Data Request Catchers
+""" Module: base
 
 All data requests are processed by request type and the appropriate
-data is retrieved and returned as a Catcher.
+data is retrieved and returned as a Model.
 
 """
 
@@ -17,11 +17,11 @@ from model.api.game import Game
 from model.api.league import League
 
 
-class Catcher(object):
+class BaseModel(object):
 
     """ Fetch and/or edit all data necessary for a model request.
 
-    Catchers wrap around returned data to provide controlled access
+    BaseModels wrap around returned data to provide controlled access
     outside of model.
 
     """
@@ -30,7 +30,7 @@ class Catcher(object):
 
 
     def __init__(self, session):
-        """ Catcher is an abstract superclass. """
+        """ BaseModel is an abstract superclass. """
         self._session = session
 
 
@@ -50,7 +50,7 @@ class Catcher(object):
         raise NotImplementedError("Abstract Class: SUBCLASS MUST OVERRIDE!")
 
 
-class ReadCatcher(Catcher):
+class ReadModel(BaseModel):
 
     """ Read and return all data for a model request.
 
@@ -97,7 +97,7 @@ class ReadCatcher(Catcher):
         return self._rivals
 
 
-class WriteCatcher(Catcher):
+class WriteModel(BaseModel):
 
     """ Write data to a model and return success.
 
@@ -116,18 +116,18 @@ class WriteCatcher(Catcher):
 
     @property
     def success(self):
-        """ Return whether this Catcher successfully dispatched a write. """
+        """ Return whether this Model successfully dispatched a write. """
         return bool(self._model)
 
 
-class LeagueCatcher(ReadCatcher):
+class LeagueModel(ReadModel):
 
     """ Load and prepare data for the View to render a League. """
 
 
     def __init__(self, session):
-        """ Construct a ReadCatcher. """
-        super(ReadCatcher, self).__init__(session)
+        """ Construct a ReadModel. """
+        super(ReadModel, self).__init__(session)
 
         self._summary = {
                 "standings": None,
@@ -190,7 +190,7 @@ class LeagueCatcher(ReadCatcher):
         return self._summary.get("activity")
 
 
-class GamesCatcher(ReadCatcher):
+class GamesModel(ReadModel):
 
     """ Fetch and return all data necessary for a games list.
 
@@ -281,7 +281,7 @@ class GamesCatcher(ReadCatcher):
         return outcomes_by_game
 
 
-class RankingsCatcher(ReadCatcher):
+class RankingsModel(ReadModel):
 
     """ Generate league's rankings based on most wins.
 
@@ -334,11 +334,11 @@ class RankingsCatcher(ReadCatcher):
         return self._rank_field
 
 
-class CreateGameCatcher(WriteCatcher):
+class CreateGameModel(WriteModel):
 
     """ Create a game and return it.
 
-    Dispatch Game node creation. We might want to make a Catcher for
+    Dispatch Game node creation. We might want to make a Model for
     each node type, or we might want to keep this more generic.
 
     """
@@ -380,7 +380,7 @@ class CreateGameCatcher(WriteCatcher):
         return self._model
 
 
-class AuthCatcher(Catcher):
+class AuthModel(BaseModel):
 
     """ Authenticate a User. Prompt for authorization if needed.
 
@@ -500,7 +500,7 @@ class AuthCatcher(Catcher):
         return self._is_new
 
 
-class FacebookAuthCatcher(AuthCatcher):
+class FacebookAuthModel(AuthModel):
 
     """ Authenticate a Facebook User. Prompt for authorization if needed.
 
@@ -567,7 +567,7 @@ class FacebookAuthCatcher(AuthCatcher):
 # FIXME remove this class
 class GenericModel(object):
 
-    """ Generic object for returning data that a catcher constructs.
+    """ Generic object for returning data that a Model constructs.
 
     Common models should be added to the API.
 

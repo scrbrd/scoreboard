@@ -4,7 +4,7 @@ Handle all incoming requests for object creation.
 
 """
 
-from model.app.catchers import CreateGameCatcher
+from model.app.base import CreateGameModel
 
 from handlers.query import QueryHandler
 
@@ -35,7 +35,7 @@ class CreateGameHandler(QueryHandler):
         game_score = parameters["game-score"]
 
         # create game in model
-        model = CreateGameCatcher(self.current_user)
+        model = CreateGameModel(self.current_user)
         model.set_league_id(league_id)
         model.set_score(game_score)
         model.dispatch()

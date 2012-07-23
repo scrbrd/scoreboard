@@ -4,7 +4,7 @@
 
 """
 
-from model.app.catchers import RankingsCatcher
+from model.app.base import RankingsModel
 
 from handlers.query import QueryHandler
 
@@ -16,7 +16,7 @@ class RankingsHandler(QueryHandler):
 
     def get_model(self):
         """ Return a data model in response to a request for Rankings. """
-        model = RankingsCatcher(self.current_user)
+        model = RankingsModel(self.current_user)
         model.load()
         return model
 

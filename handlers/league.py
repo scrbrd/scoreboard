@@ -5,7 +5,7 @@ serving outgoing responses to League Highlights.
 
 """
 
-from model.app.catchers import LeagueCatcher
+from model.app.base import LeagueModel
 
 from handlers.query import QueryHandler
 
@@ -17,7 +17,7 @@ class LeagueHandler(QueryHandler):
 
     def get_model(self):
         """ Return a data model in response to a request for Games. """
-        model = LeagueCatcher(self.current_user)
+        model = LeagueModel(self.current_user)
         model.load()
         return model
 
