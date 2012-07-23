@@ -12,7 +12,7 @@ Provides:
 
 """
 
-from model.graph import GraphEdge, GraphNode, GraphPath, GraphOutputError
+from model.graph import GraphOutputError
 from model.graph import reader
 
 import sqfactory
@@ -123,7 +123,7 @@ def load_nodes_by_property(key, value, node_type_return_filter=None):
 def load_edge(edge_id):
     """ Return a SqEdge subclass for the given id.
 
-    Wrap a call to a Graph API that returns a GraphEdge and call on 
+    Wrap a call to a Graph API that returns a GraphEdge and call on
     sqfactory to parse it into a SqEdge subclass.
 
     Required:
@@ -149,7 +149,7 @@ def load_edge(edge_id):
 def load_edges(node_id):
     """ Return a dict of SqEdge subclasses for the given SqNode ID.
 
-    Wrap a call to a Graph API that returns a GraphEdge and call on 
+    Wrap a call to a Graph API that returns a GraphEdge and call on
     sqfactory to parse it into a SqEdge subclass.
 
     Required:
@@ -215,7 +215,6 @@ def load_neighbors(
         #logger.debug(e.reason)
         print e.reason
 
-    # TODO: this only works for depth-1 queries because of graph fan-out, so 
+    # TODO: this only works for depth-1 queries because of graph fan-out, so
     # we need something different for queries of depth-2 and up.
     return (node, neighbor_nodes)
-

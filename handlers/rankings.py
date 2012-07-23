@@ -4,7 +4,7 @@
 
 """
 
-from model.app.base import RankingsModel
+from model.app.rankings import RankingsModel
 
 from handlers.query import QueryHandler
 

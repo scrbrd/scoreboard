@@ -5,7 +5,7 @@ serving outgoing responses to League Highlights.
 
 """
 
-from model.app.base import LeagueModel
+from model.app.league import LeagueModel
 
 from handlers.query import QueryHandler
 

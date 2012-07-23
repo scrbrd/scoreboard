@@ -1,9 +1,13 @@
-import logging
+""" Module: home
+
+Provide a handler for the home page. Delegate processing of the request
+to whatever is currently understood to be the default logged-in view
+or else forward to the landing page.
+
+"""
 
 from handlers.landing import LandingHandler
 from handlers.rankings import RankingsHandler
-
-logger = logging.getLogger('boilerplate.' + __name__)
 
 
 class HomeHandler(RankingsHandler, LandingHandler):
@@ -34,7 +38,7 @@ class HomeHandler(RankingsHandler, LandingHandler):
     def get(self):
         """ Handle GET request for the Home page. """
 
-        # if the user is logged, go to the home page.
+        # if the user is logged in, go to the home page.
         if self.current_user is not None:
             RankingsHandler.process_request(self)
 

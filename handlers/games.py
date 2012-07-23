@@ -4,7 +4,7 @@
 
 """
 
-from model.app.base import GamesModel
+from model.app.games import GamesModel
 
 from handlers.query import QueryHandler
 

@@ -4,7 +4,7 @@ Handle all incoming requests for object creation.
 
 """
 
-from model.app.base import CreateGameModel
+from model.app.create_game import CreateGameModel
 
 from handlers.query import QueryHandler
 

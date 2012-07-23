@@ -9,7 +9,7 @@ from time import time
 import tornado.web
 import tornado.auth
 
-from model.app.base import FacebookAuthModel
+from model.app.auth import FacebookAuthModel
 
 from constants import COOKIE_TYPE, COOKIE, ARGUMENT, SETTING
 from constants import FACEBOOK_AUTH, FACEBOOK_AUTH_SCOPE, VERSION
