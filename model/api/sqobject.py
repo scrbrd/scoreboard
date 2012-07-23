@@ -197,7 +197,10 @@ class SqNode(SqObject):
         if use_third_party:
             property = tp_property
         else:
-            property = sq_property if sq_property is not None else tp_property
+            if sq_property != PROPERTY_VALUE.EMPTY:
+                property = sq_property
+            else:
+                property = tp_property
 
         if property is None:
             raise SqObjectPropertyError(
