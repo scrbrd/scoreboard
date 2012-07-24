@@ -4,7 +4,6 @@ import tornado.template
 import os
 from tornado.options import define, options
 
-import environment
 import logconfig
 
 from view.modules.components import UIAppHeader, UIContextHeader, UINavHeader

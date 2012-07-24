@@ -3,12 +3,15 @@
 Rankings tab components.
 
 """
+
 from view.constants import SQ_DATA
 from view.constants import PAGE_NAME
-from view.html.elements import LI, Span
-from view.html.components import NumberedList
+
+from view.elements.base import LI, Span
+from view.elements.components import NumberedList
 
 from framework import TabSection
+
 
 class RankingsTabSection(TabSection):
 

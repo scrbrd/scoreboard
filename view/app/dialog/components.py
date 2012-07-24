@@ -3,7 +3,8 @@
 Element components that are reusable, non-positional, but only for dialogs.
 
 """
-from view.html.elements import Div, TextInput, HiddenInput
+
+from view.elements.base import Div, TextInput, HiddenInput
 
 from constants import DIALOG_CLASS
 

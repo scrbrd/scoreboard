@@ -3,11 +3,12 @@
 Element components for Create Game dialog.
 
 """
+
 from view.constants import SQ_DATA, FORM_NAME
 from view.app_copy import Copy
-from view.html.elements import UL
-from view.html.elements import Form, HiddenInput, CheckboxInput
-from view.html.components import HeadedList, HeadedListItem
+
+from view.elements.base import UL, Form, HiddenInput, CheckboxInput
+from view.elements.components import HeadedList, HeadedListItem
 
 from constants import DIALOG_CLASS
 from framework import SubmitButtonSection

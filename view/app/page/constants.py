@@ -3,6 +3,7 @@
 Provide constants for Page Package.
 
 """
+
 from util.decorators import constant
 
 
@@ -17,6 +18,9 @@ class _PageClass(object):
         return "login-button-wrapper"
 
 
+PAGE_CLASS = _PageClass()
+
+
 class _PageID(object):
 
     """ _PageID holds all the w3c ids for the page package. """
@@ -25,5 +29,4 @@ class _PageID(object):
     pass
 
 
-PAGE_CLASS = _PageClass()
 PAGE_ID = _PageID()

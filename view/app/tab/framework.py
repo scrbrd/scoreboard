@@ -3,11 +3,11 @@
 Element components that are for the tab framework.
 
 """
+
 from view.constants import SQ_DATA
-from view.html.elements import H1, Nav, Footer, Section
-from view.html.elements import UL, LI
-from view.html.elements import A
-from view.html.components import AddButton, MainHeaderDiv
+
+from view.elements.base import H1, Nav, Footer, Section, UL, LI, A
+from view.elements.components import AddButton, MainHeaderDiv
 
 from constants import TAB_CLASS, TAB_ID
 

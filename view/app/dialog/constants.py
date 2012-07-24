@@ -3,6 +3,7 @@
 Provide constants for Dialog package.
 
 """
+
 from util.decorators import constant
 
 
@@ -47,6 +48,9 @@ class _DialogClass(object):
         return "autocomplete-players"
 
 
+DIALOG_CLASS = _DialogClass()
+
+
 class _DialogID(object):
 
     """ _DialogID holds all w3c ids for the dialog package. """
@@ -54,5 +58,4 @@ class _DialogID(object):
     pass
 
 
-DIALOG_CLASS = _DialogClass()
 DIALOG_ID = _DialogID()

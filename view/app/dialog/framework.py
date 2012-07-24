@@ -5,9 +5,10 @@ used for positioning (unlike the components which should not be used for
 positioning.
 
 """
-from view.html.elements import Header, Div
-from view.html.components import MainHeaderDiv
-from view.html.components import DefaultCloseButton, DefaultSubmitButton
+
+from view.elements.base import Header, Div
+from view.elements.components import MainHeaderDiv
+from view.elements.components import DefaultCloseButton, DefaultSubmitButton
 
 from constants import DIALOG_CLASS
 

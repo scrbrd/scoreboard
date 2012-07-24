@@ -19,22 +19,27 @@ Each class has a single requirement...override the following:
     def render(self, model=None):
 
 """
+
 # TODO: should this be in a util?
 import xml.etree.cElementTree as ET
+
 import tornado.web
 
 from view.app_copy import Copy
 from view.constants import PAGE_TYPE, PAGE_NAME, APP_CLASS, SQ_DATA
-from view.html.elements import Element
-from view.html.tab.framework import AppHeader, AppFooter, NavHeader
-from view.html.tab.framework import ContextHeader
-from view.html.tab.model import SessionModel
-from view.html.tab.model import ContextModel, PageModel
-from view.html.tab.games import GamesTabSection
-from view.html.tab.rankings import RankingsTabSection
-from view.html.dialog.framework import DialogHeader
-from view.html.dialog.create_game import CreateGameForm
-from view.html.page.landing import LandingPage
+
+from view.elements.base import Element
+
+from view.app.tab.framework import AppHeader, AppFooter, NavHeader
+from view.app.tab.framework import ContextHeader
+from view.app.tab.model import ContextModel, PageModel, SessionModel
+from view.app.tab.games import GamesTabSection
+from view.app.tab.rankings import RankingsTabSection
+
+from view.app.dialog.framework import DialogHeader
+from view.app.dialog.create_game import CreateGameForm
+
+from view.app.page.landing import LandingPage
 
 
 class UIAppHeader(tornado.web.UIModule):

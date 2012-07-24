@@ -3,10 +3,13 @@
 Games tab components.
 
 """
+
 from view.constants import SQ_DATA
 from view.constants import PAGE_NAME
-from view.html.elements import OL, LI, Span, BR
-from view.html.tab.framework import TabSection
+
+from view.elements.base import OL, LI, Span, BR
+
+from framework import TabSection
 
 
 class GamesTabSection(TabSection):

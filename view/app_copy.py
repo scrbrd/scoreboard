@@ -4,6 +4,7 @@ Reusable copy for the view. Currently strings but will be templates.
 
 """
 
+
 class _Copy(object):
 
     """ _Copy class holds all the application's copy. """
@@ -49,5 +50,6 @@ class _Copy(object):
     def score_placeholder(self):
         """ The copy for a score placeholder. """
         return "?"
+
 
 Copy = _Copy()

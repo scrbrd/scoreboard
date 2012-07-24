@@ -3,9 +3,11 @@
 Element components for Landing Page.
 
 """
+
 from view.constants import PAGE_NAME
-from view.html.elements import Section, Div
-from view.html.components import FacebookLoginButton
+
+from view.elements.base import Section, Div
+from view.elements.components import FacebookLoginButton
 
 from constants import PAGE_CLASS
 

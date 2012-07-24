@@ -4,10 +4,12 @@ Element components that are for the tab's model div that sends model pieces to
 the client as part of the DOM.
 
 """
+
 import json
 
 from view.constants import SQ_DATA, MODEL_ID
-from view.html.elements import DataInput
+
+from view.elements.base import DataInput
 
 
 class SessionModel(DataInput):

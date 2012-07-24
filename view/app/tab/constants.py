@@ -3,6 +3,7 @@
 Provide constants for Tab package.
 
 """
+
 from util.decorators import constant
 
 
@@ -15,6 +16,9 @@ class _TabClass(object):
     def SECOND_HEADER(self):
         """ SECOND_HEADER is a w3c class. """
         return "second-header"
+
+
+TAB_CLASS = _TabClass()
 
 
 class _TabID(object):
@@ -34,5 +38,4 @@ class _TabID(object):
         return "content"
 
 
-TAB_CLASS = _TabClass()
 TAB_ID = _TabID()

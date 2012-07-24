@@ -4,12 +4,13 @@ Generic reusable components that are building blocks of
 app-specific features.
 
 """
+
 from view.constants import APP_CLASS
 from view.app_copy import Copy
 
-from component_constants import COMPONENT_CLASS
-from elements import Div, OL, SubmitButton, Button, H2, Header, LI
-from elements import Span, A
+from constants import COMPONENT_CLASS
+
+from base import Div, OL, SubmitButton, Button, H2, Header, LI, Span, A
 
 
 class AddButton(A):

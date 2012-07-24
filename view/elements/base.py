@@ -119,6 +119,7 @@ they change the functionality of their element.
     type
 
 """
+
 import xml.etree.cElementTree as ET
 
 from constants import HTML_TAG, HTML_ATTRIBUTE, HTML_TYPE, HTML_CONSTANT
@@ -323,8 +324,7 @@ class Element(object):
     def set_classes(self, classes):
         # TODO: add a constant for class delimiter? [ebh: no.]
         """ Set a list of classes for this element. """
-        class_delimiter = " "
-        self._set_attribute(HTML_ATTRIBUTE.CLASS, class_delimiter.join(classes))
+        self._set_attribute(HTML_ATTRIBUTE.CLASS, " ".join(classes))
 
 
     def append_class(self, additional_class):
@@ -553,11 +553,11 @@ class Element(object):
 #           invalid_classes = []
 #
 #           for attribute, value in tag.attributes():
-#               
+#
 #               # is this a valid attribute that has been implemented?
 #               if attribute not in HTML_CONSTANT.ATTRIBUTES[tag]:
 #                   invalid_attributes.append(attribute)
-#               
+#
 #               # if this is the class attribute, is its value valid?
 #               if attribute == HTML_ATTRIBUTE.CLASS:
 #                   class_set = set(tag.classes())

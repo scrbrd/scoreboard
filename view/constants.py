@@ -6,6 +6,7 @@ Provide Application constants for view.
     HTML_CLASS
 
 """
+
 from util.decorators import constant
 
 
@@ -44,11 +45,17 @@ class _AppClass(object):
         return "active-nav"
 
 
+APP_CLASS = _AppClass()
+
+
 class _AppID(object):
 
     """ _AppID holds all function w3c ids. """
 
     pass
+
+
+APP_ID = _AppID()
 
 
 class _FormName(object):
@@ -66,6 +73,9 @@ class _FormName(object):
     def GAME_SCORE(self):
         """ GAME_SCORE is the name of a set of form elements. """
         return "game-score"
+
+
+FORM_NAME = _FormName()
 
 
 class _SqData(object):
@@ -126,6 +136,9 @@ class _SqData(object):
         return "page-name"
 
 
+SQ_DATA = _SqData()
+
+
 class _PageType(object):
 
     """ _PageType class to hold all possible values for data-page-type. """
@@ -147,6 +160,9 @@ class _PageType(object):
     def DIALOG(self):
         """ DIALOG is a page type. """
         return "dialog"
+
+
+PAGE_TYPE = _PageType()
 
 
 class _PageName(object):
@@ -178,6 +194,9 @@ class _PageName(object):
         return "create-game"
 
 
+PAGE_NAME = _PageName()
+
+
 class _ModelID(object):
 
     """ _ModelID class to hold all IDs that will contain model info. """
@@ -201,10 +220,4 @@ class _ModelID(object):
         return "model-page-state"
 
 
-APP_CLASS = _AppClass()
-APP_ID = _AppID()
-SQ_DATA = _SqData()
-FORM_NAME = _FormName()
-PAGE_TYPE = _PageType()
-PAGE_NAME = _PageName()
 MODEL_ID = _ModelID()
