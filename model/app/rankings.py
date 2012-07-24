@@ -5,13 +5,12 @@ summary and feed for that context.
 
 """
 
-from model.api.person import Person
-from model.api.league import League
+from model.api import person, league
 
-from base import ReadModel
+import base
 
 
-class RankingsModel(ReadModel):
+class RankingsModel(base.ReadModel):
 
     """ Generate league's rankings based on most wins.
 
@@ -33,16 +32,13 @@ class RankingsModel(ReadModel):
         # for those games. the only tricky thing is just getting one league. it
         # shouldn't be tricky to avoid manually loading opponents.
 
-        print(self.session.person_id)
-        person = Person.load_leagues(self.session.person_id)
+        loaded_person = person.Person.load_leagues(self.session.person_id)
 
         # TODO: do better than simply getting someone's first league.
-        print("leagues")
-        print(person.get_leagues())
-        league = person.get_leagues()[0]
+        loaded_league = loaded_person.get_leagues()[0]
 
         # Load league with games into generic context
-        self._context = League.load_opponents(league.id)
+        self._context = league.League.load_opponents(loaded_league.id)
 
         # league's opponents by Win Count
         self._opponents = self._context.get_opponents()

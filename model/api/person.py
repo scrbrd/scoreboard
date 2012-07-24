@@ -14,12 +14,12 @@ from exceptions import NotImplementedError
 from model.constants import NODE_PROPERTY, THIRD_PARTY
 
 from constants import API_NODE_TYPE, API_NODE_PROPERTY, API_EDGE_TYPE
-from sqobject import SqNode
+import sqobject
 import loader
 import editor
 
 
-class Person(SqNode):
+class Person(sqobject.SqNode):
 
     """ Person is an abstract subclass of SqNode.
 
@@ -111,7 +111,7 @@ class Person(SqNode):
 
     def get_leagues(self):
         """ Return a list of Leagues. """
-        SqNode.assert_loaded(self._leagues)
+        Person.assert_loaded(self._leagues)
         return self._leagues.values()
 
 

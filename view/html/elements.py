@@ -4,7 +4,7 @@ Provide generic HTML5 tag implementations as subclasses of python's
 cElementTree library to be wielded for rendering by Tornado's UIModule.
 
 Mobile, web, and native application views should extend these to create
-context-specific components.
+generic and application-specific components.
 
 Over time and as needed, this module will codify portions of the HTML5
 spec. To wit, when front-end code for generating markup seems broadly

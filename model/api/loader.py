@@ -17,6 +17,9 @@ from model.graph import reader
 
 import sqfactory
 
+# TODO make this a Singleton object and create a reference to SqFactory
+# so we don't grab it all over the place.
+
 
 def load_node(node_id):
     """ Return a SqNode subclass for the given id.
@@ -38,7 +41,8 @@ def load_node(node_id):
         graph_node = reader.get_node(node_id)
 
         if graph_node:
-            node = sqfactory.construct_node_and_edges(graph_node)
+            factory = sqfactory.get_factory()
+            node = factory.construct_node_and_edges(graph_node)
 
     except GraphOutputError as e:
         #logger.debug(e.reason)
@@ -110,8 +114,9 @@ def load_nodes_by_property(key, value, node_type_return_filter=None):
                 node_type_return_filter)
 
         nodes = {}
+        factory = sqfactory.get_factory()
         for id, graph_node in graph_nodes.items():
-            nodes[id] = sqfactory.construct_node_and_edges(graph_node)
+            nodes[id] = factory.construct_node_and_edges(graph_node)
 
     except GraphOutputError as e:
         #logger.debug(e.reason)
@@ -137,7 +142,8 @@ def load_edge(edge_id):
     edge = None
 
     try:
-        edge = sqfactory.construct_edge(reader.get_edge(edge_id))
+        factory = sqfactory.get_factory()
+        edge = factory.construct_edge(reader.get_edge(edge_id))
 
     except GraphOutputError as e:
         #logger.debug(e.reason)
@@ -166,8 +172,9 @@ def load_edges(node_id):
         graph_node = reader.get_node(node_id)
 
         edges = {}
+        factory = sqfactory.get_factory()
         for id, graph_edge in graph_node.edges().items():
-            edges[id] = sqfactory.construct_edge(graph_edge)
+            edges[id] = factory.construct_edge(graph_edge)
 
     except GraphOutputError as e:
         #logger.debug(e.reason)
@@ -205,11 +212,12 @@ def load_neighbors(
                 node_type_return_filter)
 
         # load nodes and edges into SqNodes and SqEdges
-        node = sqfactory.construct_node_and_edges(graph_path.get_start_node())
+        factory = sqfactory.get_factory()
+        node = factory.construct_node_and_edges(graph_path.get_start_node())
 
         neighbor_nodes = {}
         for id, graph_node in graph_path.get_neighbor_nodes().items():
-            neighbor_nodes[id] = sqfactory.construct_node_and_edges(graph_node)
+            neighbor_nodes[id] = factory.construct_node_and_edges(graph_node)
 
     except GraphOutputError as e:
         #logger.debug(e.reason)

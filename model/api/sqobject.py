@@ -15,12 +15,9 @@ Exception
 from exceptions import NotImplementedError
 from copy import deepcopy
 
-from model.graph import GraphEdge, GraphNode
 from model.constants import NODE_PROPERTY, EDGE_PROPERTY
 from model.constants import PROPERTY_KEY, PROPERTY_VALUE, THIRD_PARTY
 
-from constants import API_NODE_TYPE, API_EDGE_TYPE
-from constants import API_NODE_PROPERTY, API_EDGE_PROPERTY
 from constants import API_CONSTANT
 
 
@@ -79,7 +76,7 @@ class SqNode(SqObject):
     """ SqNode is a subclass of SqObject.
 
     Provide access to the common attributes of a League, Team, Player,
-    User, and Game, including fields and edges connecting to other 
+    User, and Game, including fields and edges connecting to other
     nodes.
 
     SqNode's only requirement is at least one set of SqEdges.
@@ -118,7 +115,7 @@ class SqNode(SqObject):
 
     def incoming_edge_types(self):
         """ Return a list of allowed incoming SqEdge types. """
-        
+
         edge_types = []
 
         for edge_type in self.outgoing_edge_types():
@@ -138,7 +135,7 @@ class SqNode(SqObject):
         except SqObjectNotLoadedError as e:
             print e.reason
             edges = {}
-        
+
         return edges
 
 
@@ -318,7 +315,7 @@ class SqNode(SqObject):
     @staticmethod
     def prepare_third_party_properties(type_keys, third_parties):
         """ Return a dict with flat, valid third party properties.
- 
+
         This is intended to be called by static method
         SqNode.prepare_node_properties(), which is invoked at SqNode
         create/update time, but it can also function on its own.
@@ -448,6 +445,7 @@ class SqNode(SqObject):
                 PROPERTY_KEY.DELIMITER,
                 property_key)
 
+
 class SqEdge(SqObject):
 
     """ SqEdge is a subclass of SqObject.
@@ -469,7 +467,7 @@ class SqEdge(SqObject):
 
     # FIXME remove this variable when SqEdges are fully implemented
     _properties = {}
-    
+
 
     def __init__(self, graph_object):
         """ Construct a SqEdge extending SqObject. """
@@ -479,10 +477,10 @@ class SqEdge(SqObject):
         self._to_node_id = graph_object.to_node_id()
         #self._is_one_way = graph_object.is_one_way()
         #self._is_unique = graph_object.is_unique()
-    
+
         # FIXME remove whenSqEdges are fully implemented
         self._properties = deepcopy(graph_object.properties())
-        
+
         # TODO: move as much error checking from reader/writer into here as
         # possible to avoid repetitive code and to grant class hierarchy
         # appropriate knowledge and power over itself.
@@ -536,7 +534,7 @@ class SqObjectPropertyError(Exception):
     def __init__(self, parameter, description):
         """ Construct a SqObjectPropertyError extending Exception. """
         self.reason = "SqObjectPropertyError: {0} : {1}".format(
-                parameter, 
+                parameter,
                 description)
 
 
@@ -544,8 +542,8 @@ class SqObjectNotLoadedError(Exception):
 
     """ SqObjectNotLoadedError is a subclass of Exception.
 
-    Provide an exception to be raised when a member of a SqObject has 
-    not yet been loaded from the data layer and an attempt has been 
+    Provide an exception to be raised when a member of a SqObject has
+    not yet been loaded from the data layer and an attempt has been
     made to access it.
 
     """
@@ -555,4 +553,3 @@ class SqObjectNotLoadedError(Exception):
 
     def __init__(self, reason):
         self.reason = reason
-

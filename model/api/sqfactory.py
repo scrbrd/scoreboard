@@ -11,125 +11,118 @@ Provides:
     def construct_edges
 
 """
-
 # TODO: when SqEdge subclasses exist, uncomment this
-from constants import API_NODE_TYPE  # , API_EDGE_TYPE
 # TODO: when SqEdge subclasses exist, don't import SqEdge
-from sqobject import SqEdge
-import game
-import league
-import player
-import user
+import sqobject
+
+# Singleton SqFactory
+factory = None
 
 
-def construct_node_and_edges(graph_node):
-    """ Construct a SqNode and SqEdges from a GraphNode and GraphEdges.
-
-    Required:
-    GraphNode   graph_node      GraphNode to convert based on type
-
-    Returns:
-    SqNode                      concrete subclass instance with SqEdges
-
-    """
-
-    node = construct_node(graph_node)
-    edges = construct_edges(graph_node.edges())
-    node.set_edges(edges)
-
-    return node
+def get_factory():
+    """ Get an instance of SqFactory. """
+    return factory
 
 
-def construct_node(graph_node):
-    """ Instantiate a subclass of SqNode from a GraphNode.
+class SqFactory(object):
 
-    Required:
-    GraphNode   graph_node      GraphNode to convert based on type
+    """ SqFactory constructs all the API Nodes. It's a Singleton.
 
-    Returns:
-    SqNode                      single instance of concrete subclass
+    dict node_functions     all the API Node constructors are passed to
+                            SqFactory so it doesn't have to import them.
 
     """
-
-    node = None
-
-    if graph_node.type() == API_NODE_TYPE.LEAGUE:
-        node = league.League(graph_node)
-
-    elif graph_node.type() == API_NODE_TYPE.PLAYER:
-        node = player.Player(graph_node)
-
-    elif graph_node.type() == API_NODE_TYPE.GAME:
-        node = game.Game(graph_node)
-
-    elif graph_node.type() == API_NODE_TYPE.USER:
-        node = user.User(graph_node)
-
-    #elif graph_node.type() == API_NODE_TYPE.TEAM:
-    #    node = Team(graph_node)
-    #
-    #elif graph_node.type() == API_NODE_TYPE.OPEN_PLAY:
-    #    node = OpenPlay(graph_node)
-    #
-    #elif graph_node.type() == API_NODE_TYPE.SEASON:
-    #    node = Season(graph_node)
-    #
-    #elif graph_node.type() == API_NODE_TYPE.TOURNAMENT:
-    #    node = Tournament(graph_node)
-
-    else:
-    # TODO: raise an error...something went terribly wrong.
-        pass
-
-    return node
+    node_functions = {}
 
 
-def construct_edge(graph_edge):
-    """ Instantiate a subclass of SqEdge from a GraphEdge.
-
-    Required:
-    GraphEdge   graph_edge      GraphEdge to convert based on type
-
-    Returns:
-    SqEdge                      single instance of concrete subclass
-
-    """
-
-    #edge = None
-    #
-    #if graph_edge.type() == API_EDGE_TYPE.:
-    #    edge = (graph_edge)
-    #
-    #else if graph_edge.type() == API_EDGE_TYPE.:
-    #    edge = (graph_edge)
-    #
-    #else:
-    #    # TODO: raise an error...something went terribly wrong.
-    #
-    #return edge
-    return SqEdge(graph_edge)
+    def __init__(self, nodes_functions_dict):
+        """ Create the Singleton SqFactory. """
+        self.node_functions = nodes_functions_dict
+        global factory
+        factory = self
 
 
-def construct_edges(graph_edges):
-    """ Instantiate subclasses of SqEdge from GraphEdges.
+    def construct_node_and_edges(self, graph_node):
+        """ Construct a SqNode and SqEdges from a GraphNode and GraphEdges.
 
-    Required:
-    dict    graph_edges         GraphEdges to convert based on type
+        Required:
+        GraphNode   graph_node      GraphNode to convert based on type
 
-    Returns:
-    dict                        concrete SqEdge subclass instances
+        Returns:
+        SqNode                      concrete subclass instance with SqEdges
 
-    """
+        """
 
-    edges = {}
+        node = self.construct_node(graph_node)
+        edges = self.construct_edges(graph_node.edges())
+        node.set_edges(edges)
 
-    for id, graph_edge in graph_edges.items():
-        type = graph_edge.type()
+        return node
 
-        if type not in edges:
-            edges[type] = {}
 
-        # TODO: decide whether returning None on any failure is better?
-        edges[type][id] = construct_edge(graph_edge)
+    def construct_node(self, graph_node):
+        """ Instantiate a subclass of SqNode from a GraphNode.
 
-    return edges
+        Required:
+        GraphNode   graph_node      GraphNode to convert based on type
+
+        Returns:
+        SqNode                      single instance of concrete subclass
+
+        """
+        node = None
+        init_function = self.node_functions[graph_node.type()]
+        node = init_function(graph_node)
+
+        return node
+
+
+    def construct_edge(self, graph_edge):
+        """ Instantiate a subclass of SqEdge from a GraphEdge.
+
+        Required:
+        GraphEdge   graph_edge      GraphEdge to convert based on type
+
+        Returns:
+        SqEdge                      single instance of concrete subclass
+
+        """
+
+        #edge = None
+        #
+        #if graph_edge.type() == API_EDGE_TYPE.:
+        #    edge = (graph_edge)
+        #
+        #else if graph_edge.type() == API_EDGE_TYPE.:
+        #    edge = (graph_edge)
+        #
+        #else:
+        #    # TODO: raise an error...something went terribly wrong.
+        #
+        #return edge
+        return sqobject.SqEdge(graph_edge)
+
+
+    def construct_edges(self, graph_edges):
+        """ Instantiate subclasses of SqEdge from GraphEdges.
+
+        Required:
+        dict    graph_edges         GraphEdges to convert based on type
+
+        Returns:
+        dict                        concrete SqEdge subclass instances
+
+        """
+
+        edges = {}
+
+        for id, graph_edge in graph_edges.items():
+            type = graph_edge.type()
+
+            if type not in edges:
+                edges[type] = {}
+
+            # TODO: decide whether returning None on any failure is better?
+            edges[type][id] = self.construct_edge(graph_edge)
+
+        return edges

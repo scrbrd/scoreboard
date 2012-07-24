@@ -7,13 +7,12 @@ members aren't strictly members [they are pulled from properties].
 
 from constants import API_NODE_TYPE, API_EDGE_TYPE, API_NODE_PROPERTY
 
-from sqobject import SqNode
-from person import Person
-from opponent import Opponent
+import person
+import opponent
 import editor
 
 
-class Player(Person, Opponent):
+class Player(person.Person, opponent.Opponent):
 
     """ Player is a subclass of SqNode.
 
@@ -126,7 +125,7 @@ class Player(Person, Opponent):
                 API_NODE_PROPERTY.LAST_NAME: last_name,
                 }
 
-        properties = SqNode.prepare_node_properties(
+        properties = Player.prepare_node_properties(
                 player_keys,
                 raw_properties,
                 third_parties)

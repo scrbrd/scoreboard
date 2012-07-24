@@ -3,8 +3,6 @@
 Element components that are for the tab framework.
 
 """
-import json
-
 from view.constants import SQ_DATA
 from view.html.elements import H1, Nav, Footer, Section
 from view.html.elements import UL, LI

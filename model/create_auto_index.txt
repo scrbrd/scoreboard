@@ -3,7 +3,7 @@ before indexing:
 
 g.createAutomaticIndex('authentication', Vertex.class, ['fb_id', 'email'] as Set)
 
-
+----
 2. When we run g.clear() there are two ('vertices' and 'edges') auto indices
 created, and these have all properties being indexed.
 

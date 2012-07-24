@@ -19,6 +19,9 @@ from model.graph import writer, GraphInputError, GraphProtoNode, GraphProtoEdge
 from constants import API_CONSTANT
 import sqfactory
 
+# TODO make this a Singleton object and create a reference to SqFactory
+# so we don't grab it all over the place.
+
 
 def create_node_and_edges(prototype_node, prototype_edges):
     """ Create a new SqNode and its SqEdges in the database.
@@ -53,7 +56,8 @@ def create_node_and_edges(prototype_node, prototype_edges):
         new_node.set_edges(new_edges)
 
         # load the new GraphNode and GraphEdges into SqObjects
-        node = sqfactory.construct_node_and_edges(new_node)
+        factory = sqfactory.get_factory()
+        node = factory.construct_node_and_edges(new_node)
 
     except GraphInputError as e:
         #logger.debug(e.reason)

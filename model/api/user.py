@@ -4,20 +4,19 @@ TODO: fill this in with required methods to implement since required
 members aren't strictly members [they are pulled from properties].
 
 """
-
-from time import time
+import time
 
 from model.constants import NODE_PROPERTY, THIRD_PARTY, PROPERTY_VALUE
 
 from constants import API_NODE_TYPE, API_EDGE_TYPE, API_NODE_PROPERTY
 
-from sqobject import SqNode
-from player import Player
+import sqobject
+import player
 import loader
 import editor
 
 
-class User(SqNode):
+class User(sqobject.SqNode):
 
     """ User is a subclass of SqNode.
 
@@ -267,14 +266,14 @@ class User(SqNode):
         owner_id = user.id
         spawner_id = inviter_id if inviter_id is not None else owner_id
 
-        player = Player.create_player(
+        new_player = player.Player.create_player(
                 first_name,
                 last_name,
                 spawner_id,
                 owner_id,
                 third_parties)
 
-        return (user, player)
+        return (user, new_player)
 
 
     @staticmethod
@@ -333,7 +332,7 @@ class User(SqNode):
         # no ip address would mean this user isn't logged in at creation time,
         # in which case the initialized empty values suffice.
         if ip:
-            current_ts = int(time())
+            current_ts = int(time.time())
 
             raw_properties.update({
                 API_NODE_PROPERTY.REFERRER_URL: referrer_url,
@@ -344,7 +343,7 @@ class User(SqNode):
                 })
 
         # squash the two into one set of flat, valid node properties
-        properties = SqNode.prepare_node_properties(
+        properties = User.prepare_node_properties(
                 User.property_keys(),
                 raw_properties,
                 third_parties)
@@ -381,7 +380,7 @@ class User(SqNode):
     def load_by_external_id(x_id, third_party):
         """ Return a User by its indexed external id property. """
         return loader.load_node_by_unique_property(
-                SqNode.third_party_property_key(third_party, NODE_PROPERTY.ID),
+                User.third_party_property_key(third_party, NODE_PROPERTY.ID),
                 x_id,
                 [API_NODE_TYPE.USER])
 
@@ -389,7 +388,7 @@ class User(SqNode):
     @staticmethod
     def load_by_external_email(x_email, third_party):
         """ Return a User by its indexed external email property. """
-        key = SqNode.third_party_property_key(third_party, NODE_PROPERTY.EMAIL)
+        key = User.third_party_property_key(third_party, NODE_PROPERTY.EMAIL)
 
         return loader.load_node_by_unique_property(
                 key,
