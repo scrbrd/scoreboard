@@ -76,8 +76,8 @@ class QueryHandler(BaseHandler):
                 self.get_asynchronous_content_url(),
                 model=model)
 
-        context = self.render_string(
-                self.get_context_url(),
+        header = self.render_string(
+                self.get_tab_header_url(),
                 model=model)
 
         context_model = self.render_string(
@@ -94,12 +94,12 @@ class QueryHandler(BaseHandler):
 
         # TODO: make these constants!
         self.write({
-            "content": content,
-            "context": context,
-            "context_model": context_model,
-            "session_model": session_model,
-            "page_state_model": page_state_model,
-            })
+                "content": content,
+                "header": header,
+                "context_model": context_model,
+                "session_model": session_model,
+                "page_state_model": page_state_model,
+                })
 
 
     def process_synchronous_request(self):
@@ -122,10 +122,10 @@ class QueryHandler(BaseHandler):
         raise NotImplementedError("Abstract Method: SUBCLASS MUST OVERRIDE!")
 
 
-    def get_context_url(self):
-        """ Generate a URL for rendering a context header markup. """
+    def get_tab_header_url(self):
+        """ Generate a URL for rendering a tab header markup. """
         # TODO: turn this hardcoded file path into a constant
-        return "mobile/components/context.html"
+        return "mobile/components/tab_header.html"
 
 
     def get_context_model_url(self):

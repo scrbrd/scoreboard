@@ -49,7 +49,7 @@ var REQUEST_KEY = {
 var RESPONSE_KEY = {
     IS_SUCCESS:         "is_success",
     CONTENT:            "content",
-    CONTEXT:            "context",
+    HEADER:            "header",
     CONTEXT_MODEL:      "context_model",
     PAGE_STATE_MODEL:   "page_state_model"
 };
@@ -153,13 +153,13 @@ function updatePageState(jsonResponse, pageStateModel) {
         .data(Const.DATA.PAGE_TYPE);
     var pageName = $(jsonResponse[RESPONSE_KEY.PAGE_STATE_MODEL])
         .data(Const.DATA.PAGE_NAME);
-    var context = jsonResponse[RESPONSE_KEY.CONTEXT];
+    var header = jsonResponse[RESPONSE_KEY.HEADER];
     var content = jsonResponse[RESPONSE_KEY.CONTENT];
     
     pageStateModel.setContextID(contextID);
     pageStateModel.setPageType(pageType);
     pageStateModel.setPageName(pageName);
-    pageStateModel.setContext(context);
+    pageStateModel.setHeader(header);
     pageStateModel.setContent(content);
 }
 

@@ -27,10 +27,10 @@ class _TabID(object):
 
 
     @constant
-    def CONTEXT(self):
-        """ CONTEXT is the element that stores context data. """
-        return "context"
-    # FIXME Where is this context being used?
+    def TAB_HEADER(self):
+        """ TAB_HEADER is a w3c id. """
+        return "tab-header"
+
 
     @constant
     def CONTENT(self):

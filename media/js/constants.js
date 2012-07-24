@@ -39,7 +39,7 @@ var constants = {
     // TODO: make this link sink with Python HTML_ID constants
     ID: {
         TAB:                    "#tab",
-        CONTEXT:                "#context",
+        TAB_HEADER:             "#tab-header",
         CONTENT:                "#content",
         DIALOG_CONTAINER:       "#dialog-container",
         SCROLLER:               "#iscroll-wrapper"

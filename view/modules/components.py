@@ -8,13 +8,6 @@ Effectively, this will serve as a mapping between the opaque model the
 controller has passed along and the specific data the view needs
 extracted in order to render markup.
 
-Provides the following:
-    class UIAppHeader
-    class UIContextHeader
-    class UINavHeader
-    class UIGamesList
-    class UIRankingsList
-
 Each class has a single requirement...override the following:
     def render(self, model=None):
 
@@ -31,7 +24,7 @@ from view.constants import PAGE_TYPE, PAGE_NAME, APP_CLASS, SQ_DATA
 from view.elements.base import Element
 
 from view.app.tab.framework import AppHeader, AppFooter, NavHeader
-from view.app.tab.framework import ContextHeader
+from view.app.tab.framework import TabHeader
 from view.app.tab.model import ContextModel, PageModel, SessionModel
 from view.app.tab.games import GamesTabSection
 from view.app.tab.rankings import RankingsTabSection
@@ -66,16 +59,15 @@ class UIAppFooter(tornado.web.UIModule):
         return Element.to_string(element_tree)
 
 
-class UIContextHeader(tornado.web.UIModule):
+class UITabHeader(tornado.web.UIModule):
 
-    """ Context Header UI Module. """
+    """ TabHeader UI Module. """
 
     def render(self, model=None, state=None):
-        """ Render a Context Header. """
+        """ Render a TabHeader. """
         context = model.context
-        rivals = model.rivals
 
-        element_tree = ContextHeader(context, rivals).element()
+        element_tree = TabHeader(context).element()
 
         return Element.to_string(element_tree)
 

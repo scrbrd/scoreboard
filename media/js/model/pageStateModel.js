@@ -19,7 +19,7 @@ define(
         function (Const, Backbone) {
 
 
-var CONTEXT = "context";
+var HEADER = "header";
 var CONTENT = "content";
 
 /**
@@ -48,18 +48,18 @@ var PageStateModel = Backbone.Model.extend({
     },
 
     /**
-        Provide access to the current context html.
+        Provide access to the current header html.
     */
-    context: function () {
-        return this.get(CONTEXT);
+    header: function () {
+        return this.get(HEADER);
     },
 
     /**
-        Provide mutator for context html.
-        @param {string} context
+        Provide mutator for header html.
+        @param {string} header 
     */
-    setContext: function (context) {
-        this.set(CONTEXT, context);
+    setHeader: function (header) {
+        this.set(HEADER, header);
     },
 
     /**

@@ -23,17 +23,17 @@ class AppHeader(H1):
         self.set_text(app_name)
 
 
-class ContextHeader(MainHeaderDiv):
+class TabHeader(MainHeaderDiv):
 
-    """ Context header extending MainHeaderDiv <div>. """
+    """ TabHeader extending MainHeaderDiv <div>. """
 
 
-    def __init__(self, context, rivals):
-        """ Construct a context header element tree. """
-        super(ContextHeader, self).__init__(context.name)
+    def __init__(self, context):
+        """ Construct a TabHeader element tree. """
+        super(TabHeader, self).__init__(context.name)
 
+        self.set_id(TAB_ID.TAB_HEADER)
         # set context data
-        self.set_id(TAB_ID.CONTEXT)
         self.set_data(SQ_DATA.ID, context.id)
 
 

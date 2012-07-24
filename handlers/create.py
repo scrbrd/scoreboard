@@ -53,7 +53,7 @@ class CreateGameHandler(QueryHandler):
         raise NotImplementedError("Unused Method: DO NOT CALL OR OVERRIDE!")
 
 
-    def get_context_header_url(self):
+    def get_dialog_header_url(self):
         """ Generate a URL for rendering a context header. """
         raise NotImplementedError("Unused Method: DO NOT CALL OR OVERRIDE!")
 

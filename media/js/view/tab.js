@@ -33,7 +33,7 @@ var MODEL_EVENT = {
 var TabView = Backbone.View.extend({
 
     // store subViews
-    contextView: null,
+    headerView: null,
     contentView: null,
     navView: null,
 
@@ -42,34 +42,34 @@ var TabView = Backbone.View.extend({
         @param {Object} pageStateModel
     */
     initialize: function (pageStateModel) {
-        this.contextView = new ContextView(pageStateModel);
+        this.headerView = new HeaderView(pageStateModel);
         this.navView = new NavView(pageStateModel);
         this.contentView = new ContentView(pageStateModel);
     }
 });
 
 /**
-    Manage all DOM manipulations for context.
+    Manage all DOM manipulations for header.
     @constructor
 */
-var ContextView = Backbone.View.extend({
+var HeaderView = Backbone.View.extend({
 
     /**
-        Setup context portion of DOM and bind to model events.
+        Setup header portion of DOM and bind to model events.
         @param {Object} model
     */
     initialize: function (model) {
-        this.setElement(Const.ID.CONTEXT);
+        this.setElement(Const.ID.TAB_HEADER);
 
         this.model = model;
         this.model.on(MODEL_EVENT.CHANGE_CONTEXT, this.render, this);
     },
 
     /**
-        Render the ContextView by swapping the new html in.
+        Render the HeaderView by swapping the new html in.
     */
     render: function () {
-        var newEl = $(this.model.context()).insertBefore(this.$el);
+        var newEl = $(this.model.header()).insertBefore(this.$el);
         this.$el.remove();
         this.setElement(newEl);
 

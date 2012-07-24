@@ -6,7 +6,7 @@ from tornado.options import define, options
 
 import logconfig
 
-from view.modules.components import UIAppHeader, UIContextHeader, UINavHeader
+from view.modules.components import UIAppHeader, UITabHeader, UINavHeader
 from view.modules.components import UIGamesNav, UIRankingsNav, UIAppFooter
 from view.modules.components import UIGamesList, UIRankingsList
 from view.modules.components import UICreateGameDialog, UILandingPage
@@ -69,7 +69,7 @@ settings['facebook_secret'] = FACEBOOK_SECRET
 settings['template_loader'] = tornado.template.Loader(TEMPLATE_ROOT)
 settings['ui_modules'] = {
     'UIAppHeader': UIAppHeader,
-    'UIContextHeader': UIContextHeader,
+    'UITabHeader': UITabHeader,
     'UINavHeader': UINavHeader,
     'UIGamesNav': UIGamesNav,
     'UIRankingsNav': UIRankingsNav,
