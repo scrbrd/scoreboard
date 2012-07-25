@@ -36,11 +36,14 @@ var constants = {
         Enum for ID selectors. (Prefixed with '#')
         @enum {string}
     */
-    // TODO: make this link sink with Python HTML_ID constants
+    // TODO: make this link sync with Python HTML_ID constants
     ID: {
         TAB:                    "#tab",
         TAB_HEADER:             "#tab-header",
         CONTENT:                "#content",
+        PROPERTIES:             "#properties",
+        SUMMARY:                "#summary",
+        FEED:                   "#feed",
         DIALOG_CONTAINER:       "#dialog-container",
         SCROLLER:               "#iscroll-wrapper"
     },
@@ -49,7 +52,7 @@ var constants = {
         Enum for Class selectors. (Prefixed with '.')
         @enum {string}
     */
-    // TODO: make this link sink with Python HTML_CLASS constants
+    // TODO: make this link sync with Python HTML_CLASS constants
     CLASS: {
         JS_LINK:                ".js-link",
         EXTERNAL_LINK:          ".external-link",
@@ -69,7 +72,7 @@ var constants = {
         @enum {string}
         @const
     */
-    // TODO: make this link sink with Python HTML_DATA constants
+    // TODO: make this link sync with Python HTML_DATA constants
     DATA: {
         ID:                     "id",
         PERSON_ID:              "person-id",
@@ -96,7 +99,7 @@ var constants = {
         Enum for values of name attributes. (Wrapped in attribute selectors.)
         @enum {string}
     */
-    // TODO: make this link sink with Python HTML_NAME constants
+    // TODO: make this link sync with Python HTML_NAME constants
     NAME: {
         LEAGUE:                 "[name='league']",
         CREATE_GAME:            "[name='create-game']",

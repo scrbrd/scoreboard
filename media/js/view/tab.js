@@ -1,6 +1,23 @@
 /**
     Manage the tab portion of the DOM with Backbone.View.
 
+    AppView:
+        MainHeader
+        Content
+
+    TabView extends AppView:
+        TabHeader extends MainHeader
+        TabContent extends Content
+
+    DialogView extends AppView
+        DialogHeader extends MainHeader
+        DialogContent extends Content
+
+    TabContent extends Content
+        Properties  [model.context]
+        Summary     [model.aggregate(standings, activity)]
+        Feed        [model.objects]
+
     @exports TabView
 
     @requires $
@@ -8,6 +25,7 @@
     @requires Const
     @requires DOMUtil
     @requires iScroll
+
 */
 define(
         [
@@ -22,6 +40,8 @@ define(
 
 var MODEL_EVENT = {
     CHANGE_CONTEXT: "change:" + "context",
+    CHANGE_AGGREGATE: "change:" + "aggregate",
+    CHANGE_OBJECTS: "change:" + "objects",
     CHANGE_CONTENT: "change:" + "content",
     CHANGE_PAGE_NAME: "change:" + Const.DATA.PAGE_NAME
 };
@@ -34,8 +54,8 @@ var TabView = Backbone.View.extend({
 
     // store subViews
     headerView: null,
-    contentView: null,
     navView: null,
+    contentView: null,
 
     /**
         Initialize subViews.
@@ -56,12 +76,12 @@ var HeaderView = Backbone.View.extend({
 
     /**
         Setup header portion of DOM and bind to model events.
-        @param {Object} model
+        @param {Object} pageStateModel
     */
-    initialize: function (model) {
+    initialize: function (pageStateModel) {
         this.setElement(Const.ID.TAB_HEADER);
 
-        this.model = model;
+        this.model = pageStateModel;
         this.model.on(MODEL_EVENT.CHANGE_CONTEXT, this.render, this);
     },
 
@@ -86,12 +106,12 @@ var NavView = Backbone.View.extend({
     
     /**
         Setup navigation portion of DOM and bind to model events.
-        @param {Object} model
+        @param {Object} pageStateModel
     */
-    initialize: function (model) {
+    initialize: function (pageStateModel) {
         this.setElement(Const.DOM.NAV);
 
-        this.model = model;
+        this.model = pageStateModel;
         this.model.on(MODEL_EVENT.CHANGE_PAGE_NAME, this.render, this);
     },
 
@@ -124,19 +144,35 @@ var NavView = Backbone.View.extend({
 */
 var ContentView = Backbone.View.extend({
 
+    // store subViews
+    propertiesSection: null,
+    summarySection: null,
+    feedSection: null,
+
     /**
         Setup content portion of DOM and bind to model events.
-        @param {Object} model
+        @param {Object} pageStateModel
     */
-    initialize: function (model) {
+    initialize: function (pageStateModel) {
         this.setElement(Const.ID.CONTENT);
 
-        this.model = model;
+        this.model = pageStateModel;
         this.model.on(MODEL_EVENT.CHANGE_CONTENT, this.render, this);
 
+        this.initializeSections(this.model);
         this.scroller = Scroller.construct();
     },
-    
+
+    /**
+        Set up sections contained by Content.
+        @param {Object} pageStateModel
+    */
+    initializeSections: function (pageStateModel) {
+        this.propertiesSection = new PropertiesSection(pageStateModel);
+        this.summarySection = new SummarySection(pageStateModel);
+        this.feedSection = new FeedSection(pageStateModel);
+    },
+
     /**
         Render the ContentView by updating the content and resetting
         the scroller.
@@ -150,6 +186,98 @@ var ContentView = Backbone.View.extend({
         this.setElement(newEl);
         this.$el.fadeIn('fast');
         this.scroller.refresh();
+
+        return this;
+    }
+});
+
+/**
+    Manage all DOM manipulations for the Properties section.
+    @constructor
+*/
+var PropertiesSection = Backbone.View.extend({
+
+    /**
+        Setup Properties section of DOM and bind to model events.
+        @param {Object} pageStateModel
+    */
+    initialize: function (pageStateModel) {
+        this.setElement(Const.ID.PROPERTIES);
+
+        //this.model = pageStateModel;
+        //this.model.on(MODEL_EVENT.CHANGE_CONTEXT, this.render, this);
+    },
+
+    /**
+        Render the ContentView by updating the content and resetting
+        the scroller.
+    */
+    render: function () {
+        //var newEl = $(this.model.context()).insertBefore(this.$el);
+        //this.$el.remove();
+        //this.setElement(newEl);
+
+        return this;
+    }
+});
+
+
+/**
+    Manage all DOM manipulations for the Summary section.
+    @constructor
+*/
+var SummarySection = Backbone.View.extend({
+
+    /**
+        Setup Summary section of DOM and bind to model events.
+        @param {Object} pageStateModel
+    */
+    initialize: function (pageStateModel) {
+        this.setElement(Const.ID.SUMMARY);
+
+        //this.model = pageStateModel;
+        //this.model.on(MODEL_EVENT.CHANGE_AGGREGATE, this.render, this);
+    },
+
+    /**
+        Render the ContentView by updating the content and resetting
+        the scroller.
+    */
+    render: function () {
+        //var newEl = $(this.model.aggregate()).insertBefore(this.$el);
+        //this.$el.remove();
+        //this.setElement(newEl);
+
+        return this;
+    }
+});
+
+
+/**
+    Manage all DOM manipulations for the Feed section.
+    @constructor
+*/
+var FeedSection = Backbone.View.extend({
+
+    /**
+        Setup Feed section of DOM and bind to model events.
+        @param {Object} pageStateModel
+    */
+    initialize: function (pageStateModel) {
+        this.setElement(Const.ID.FEED);
+
+        //this.model = pageStateModel;
+        //this.model.on(MODEL_EVENT.CHANGE_OBJECTS, this.render, this);
+    },
+
+    /**
+        Render the ContentView by updating the content and resetting
+        the scroller.
+    */
+    render: function () {
+        //var newEl = $(this.model.objects()).insertBefore(this.$el);
+        //this.$el.remove();
+        //this.setElement(newEl);
 
         return this;
     }
