@@ -1,7 +1,7 @@
 """ Module: rankings
 
-Define a RankingsModel to provide to the RankingsHandler a context and a
-summary and feed for that context.
+Define a RankingsModel to provide to the RankingsHandler aggregations and
+objects for that context.
 
 """
 

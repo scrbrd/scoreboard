@@ -1,7 +1,7 @@
 """ Module: games
 
-Define a GamesModel to provide to the GamesHandler a context and a
-summary and feed for that context.
+Define a GamesModel to provide to the GamesHandler aggregations
+and objects for that context.
 
 """
 
