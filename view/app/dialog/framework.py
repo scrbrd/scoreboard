@@ -6,23 +6,23 @@ positioning.
 
 """
 
-from view.elements.base import Header, Div
+from view.elements.base import Div
 from view.elements.components import MainHeaderDiv
 from view.elements.components import DefaultCloseButton, DefaultSubmitButton
 
-from constants import DIALOG_CLASS
+from constants import DIALOG_CLASS, DIALOG_ID
 
 
-class DialogHeader(Header):
+class DialogHeader(MainHeaderDiv):
 
-    """ Dialog Header extending <header> and including <h2>. """
+    """ Dialog Header extending MainHeaderDiv <div>. """
 
 
     def __init__(self, dialog_name):
         """ Construct a dialog header element tree. """
-        super(DialogHeader, self).__init__()
+        super(DialogHeader, self).__init__(dialog_name)
 
-        self.append_child(MainHeaderDiv(dialog_name))
+        self.set_id(DIALOG_ID.DIALOG_HEADER)
         self.append_child(DefaultCloseButton())
 
 

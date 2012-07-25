@@ -55,7 +55,11 @@ class _DialogID(object):
 
     """ _DialogID holds all w3c ids for the dialog package. """
 
-    pass
+
+    @constant
+    def DIALOG_HEADER(object):
+        """ DIALOG_HEADER is a w3c class. """
+        return "dialog-header"
 
 
 DIALOG_ID = _DialogID()

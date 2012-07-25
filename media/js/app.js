@@ -1,5 +1,5 @@
 /**
-    The Sqoreboard mobile client application.
+    The Scoreboard mobile client application.
 
     app.js runs all the application logic. It is to a reusable module but part
     of the load hierarchy. We are using Backbone to create an MVC Framework

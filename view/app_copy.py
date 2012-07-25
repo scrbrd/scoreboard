@@ -13,7 +13,7 @@ class _Copy(object):
     @property
     def submit(self):
         """ The copy for the submit button. """
-        return "Submit!"
+        return "Post!"
 
 
     @property
@@ -50,6 +50,12 @@ class _Copy(object):
     def score_placeholder(self):
         """ The copy for a score placeholder. """
         return "?"
+
+
+    @property
+    def app_name(self):
+        """ The copy for the app name. """
+        return "Scoreboard"
 
 
 Copy = _Copy()

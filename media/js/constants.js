@@ -57,6 +57,7 @@ var constants = {
         JS_LINK:                ".js-link",
         EXTERNAL_LINK:          ".external-link",
         CLOSE_BUTTON:           ".close-button",
+        CREATE_BUTTON:          ".create-button",
         ACTIVE_NAV:             ".active-nav",
         INACTIVE_NAV:           ".inactive-nav",
         AUTOCOMPLETE_PLAYERS:   ".autocomplete-players",

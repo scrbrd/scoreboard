@@ -5,9 +5,10 @@ Element components that are for the tab framework.
 """
 
 from view.constants import SQ_DATA
+from view.app_copy import Copy
 
 from view.elements.base import H1, Nav, Footer, Section, UL, LI, A
-from view.elements.components import AddButton, MainHeaderDiv
+from view.elements.components import CreateButton, MenuButton, MainHeaderDiv
 
 from constants import TAB_CLASS, TAB_ID
 
@@ -30,11 +31,29 @@ class TabHeader(MainHeaderDiv):
 
     def __init__(self, context):
         """ Construct a TabHeader element tree. """
-        super(TabHeader, self).__init__(context.name)
+        # TODO: remove context id bit, but put back the context.name
+        super(TabHeader, self).__init__(Copy.app_name)
 
         self.set_id(TAB_ID.TAB_HEADER)
         # set context data
         self.set_data(SQ_DATA.ID, context.id)
+
+        # TODO: Make the menu button go to invite friends
+        null_link = {
+            "text": "menu",
+            "href": "",
+        }
+        self.append_child(MenuButton(null_link))
+
+        # TODO this is a hardcoded string and not a constant because once we
+        # have a Link class we will just be accessing its properties.
+        create_link = {
+            "text": "+",
+            "href": "/create/game",
+        }
+
+        create_button = CreateButton(create_link)
+        self.append_child(create_button)
 
 
 class NavHeader(Nav):
@@ -103,15 +122,6 @@ class AppFooter(Footer):
         """ Construct the apps' footer element tree. """
         super(AppFooter, self).__init__()
 
-        # TODO this is a hardcoded string and not a constant because once we
-        # have a Link class we will just be accessing its properties.
-        add_link = {
-            "text": "+",
-            "href": "/create/game",
-        }
-
-        add_button = AddButton(add_link)
-        self.append_child(add_button)
 
 
 class TabSection(Section):

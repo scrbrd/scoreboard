@@ -43,7 +43,7 @@ class UIAppHeader(tornado.web.UIModule):
         """ Render a App Header. """
         # TODO: if we ever use this, there should be an App object that
         # contains things like the name, icon, etc.
-        element_tree = AppHeader("SQOREBOARD").element()
+        element_tree = AppHeader(Copy.app_name).element()
 
         return Element.to_string(element_tree)
 

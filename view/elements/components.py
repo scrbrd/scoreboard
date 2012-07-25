@@ -10,24 +10,39 @@ from view.app_copy import Copy
 
 from constants import COMPONENT_CLASS
 
-from base import Div, OL, SubmitButton, Button, H2, Header, LI, Span, A
+from base import Div, OL, SubmitButton, Button, Header, LI, A
 
 
-class AddButton(A):
+class CreateButton(A):
 
-    """ Add Button anchor that extends <a>. """
+    """ CreateButton anchor that extends <a>. """
+
 
     def __init__(self, link):
         """ Construct an add button anchor tag. """
-        super(AddButton, self).__init__(link)
+        super(CreateButton, self).__init__(link)
 
         self.set_text("+")
-        self.append_classes([COMPONENT_CLASS.ADD_BUTTON, APP_CLASS.JS_LINK])
+        self.append_classes([COMPONENT_CLASS.CREATE_BUTTON, APP_CLASS.JS_LINK])
+
+
+class MenuButton(A):
+
+    """ MenuButton anchor that extends <a> currently for invite friends. """
+
+
+    def __init__(self, link):
+        """ Construct a menu button anchor tag. """
+        super(MenuButton, self).__init__(link)
+
+        self.set_text("menu")
+        self.append_classes([COMPONENT_CLASS.MENU_BUTTON, APP_CLASS.JS_LINK])
 
 
 class LoginButton(A):
 
     """ Login Button anchor that extends <a>. """
+
 
     def __init__(self, login_link):
         """ Construct a login button anchor tag. """
@@ -40,6 +55,7 @@ class LoginButton(A):
 class FacebookLoginButton(LoginButton):
 
     """ Facebook Login Button anchor that extends LoginButton. """
+
 
     def __init__(self, login_link):
         """ Construct a facebook login button anchor tag. """
@@ -56,6 +72,7 @@ class DefaultCloseButton(Button):
 
     """ Default Close Button button that extends <button>. """
 
+
     def __init__(self):
         """ Construct a close button tag. """
         super(DefaultCloseButton, self).__init__()
@@ -67,6 +84,7 @@ class DefaultCloseButton(Button):
 class DefaultSubmitButton(SubmitButton):
 
     """ Submit Button button that extends <button type="submit">. """
+
 
     def __init__(self):
         """ Construct a submit button tag. """
@@ -86,23 +104,23 @@ class MainHeaderDiv(Div):
 
     """
 
+
     def __init__(self, title):
         """ Construct Main Header tag. """
         super(MainHeaderDiv, self).__init__()
         self.append_classes([COMPONENT_CLASS.MAIN_HEADER])
 
-        # insert h2 and span to separate text from background
-        span = Span()
-        span.set_text(title)
+        # insert to separate text from background
+        titleContainer = Div()
+        titleContainer.set_text(title)
 
-        h2 = H2()
-        h2.append_child(span)
-        self.append_child(h2)
+        self.append_child(titleContainer)
 
 
 class MultiColumnLI(LI):
 
     """ An LI for multiple columns extends <li>. """
+
 
     def set_column(self, element):
         """ Add a single column to the <li>. """
@@ -114,6 +132,7 @@ class NumberedList(OL):
 
     """ A numbered list extends <ol>. """
 
+
     def __init__(self, items):
         """ Construct a numbered <ol>. """
         super(NumberedList, self).__init__(items)
@@ -123,6 +142,7 @@ class NumberedList(OL):
 class HeadedList(Div):
 
     """ A list with headings that extends <div>. """
+
 
     def __init__(self, headings, items):
         """ Construct a list with headings. """
@@ -147,6 +167,7 @@ class ListHeader(Header):
 
     """ A header for a list that extends <header>. """
 
+
     def __init__(self, headings):
         """ Constuct a list header. """
         super(ListHeader, self).__init__()
@@ -165,6 +186,7 @@ class ListHeader(Header):
 class HeadedListItem(MultiColumnLI):
 
     """ A list item for a HeadedList that extends MultiColumnLI. """
+
 
     def __init__(self, item, index):
         """ Construct a list item for a HeadedList. """

@@ -1,7 +1,7 @@
 /***********************************************************
 *
-*   App: Sqoreboard Mobile
-*   Version: 00.01 
+*   App: Scoreboard Mobile
+*   Version: 00.02
 *   
 ************************************************************/
 
@@ -9,68 +9,126 @@
 /***********************************************************
 * COLOR DEFINITIONS
 ************************************************************/
-@blue: #61a0bb; 
-@darkBlue: #3088b7;
-
-@lightOrange: #ffa054;
-@orange: #d17a38;
-@darkOrange: #804416;
-
-@white: #ffffff;
-@bluishWhite: #efece7;
-@grayishWhite: #e6e6e6;
-@almostWhite: #fbfcff;
-
-@black: #000000;
-
-@gray: #807d7b;
-@darkGray: #4e4a48;
-
-@beige: #645f53;
+@black: #000000; // Story Headlines, Story Date Divider, Story Description
+@darkGrey: #6d6e71; // Comments, Text
+@lightGrey: #a3a3a3; // Likes, Text Field Prompts, Story Buttons
+@mysteryColor: #cccccc; // Marketing, Blog, Subtitle
+@navy: #002070; // All Links and Clickable Tags
+@red: #b20808; // Highlights, Posts, Logo, Splash
+@white: #ffffff; // Statistics
 
 
 /***********************************************************
-* SIZE DEFINITIONS
+* SIZE DEFINITIONS (TO EDIT)
 ************************************************************/
 @screenWidth: 320px;
 @screenHeight: 480px;
 
-@innerWidth: 319px; // Width of iPhone screen inside border.
-@outerWidth: 324px; // Width of iPhone screen.
-
 @smallLineHeight: 35px; // Smaller Line Height (Nav)
-@bigLineHeight: 44px; // Normal Line Height (Context, LI)
-@headerHeight: @smallLineHeight + @bigLineHeight;
+@normalLineHeight: 44px; // Normal Line Height (Context, LI)
+@headerHeight: @smallLineHeight + @normalLineHeight;
 
-@pagePadding: 23px; // Left / Right padding of page content.
+@pagePadding: 8px; // Left / Right padding of page content.
 @linePadding: 10px; // Padding above and below text on a line.
 
 
 /***********************************************************
-* FONTS
+* FONTS (with help from http://fontsquirrel.com)
 ************************************************************/
 @font-face {
-    font-family: CronosProSemibold;
-    src: url('fonts/CronosPro-Semibold.otf');
+    font-family: 'Helvetica65MediumRegular';
+    src: url('fonts/helveticaneue-medium-webfont.eot');
+    src: 
+        url('fonts/helveticaneue-medium-webfont.eot?#iefix')
+            format('embedded-opentype'),
+        url('fonts/helveticaneue-medium-webfont.woff')
+            format('woff'),
+        url('fonts/helveticaneue-medium-webfont.ttf')
+            format('truetype'),
+        url('fonts/helveticaneue-medium-webfont.svg#Helvetica65MediumRegular')
+            format('svg');
+    font-weight: normal;
+    font-style: normal;
 }
 
 @font-face {
-    /* Currently this is always italicized and above the line. */
-    font-family: Eurostile;
-    src: url('fonts/EurostileLTStd-DemiOblique.otf');
+    font-family: 'TradeGothicCondEighteenBold';
+    src: url('fonts/tradegothic-boldcondtwenty-webfont.eot');
+    src:
+        url('fonts/tradegothic-boldcondtwenty-webfont.eot?#iefix')
+            format('embedded-opentype'),
+        url('fonts/tradegothic-boldcondtwenty-webfont.woff')
+            format('woff'),
+        url('fonts/tradegothic-boldcondtwenty-webfont.ttf')
+            format('truetype'),
+        url('fonts/tradegothic-boldcondtwenty-webfont.svg#TradeGothicCondEighteenBold')
+            format('svg');
+    font-weight: bold;
+    font-style: normal;
 }
 
-@normalFontSize: 1.2em;
-@bigFontSize: 1.15em;
-@biggestFontSize: 1.2em;
+@bodyFontSize: .9em;
+@bigFontSize: 1.9em;
+@biggestFontSize: 2em;
+
+.headerFont(@fontSize: @bigFontSize, @lineHeight: @bigFontSize) {
+    font-family: 'TradeGothicCondEighteenBold', sans-serif;
+    font-size: @fontSize;
+    font-weight: bold;
+    /* line-height: @lineHeight; */ // Screws up vertical alignment.
+    text-transform: uppercase;
+}
+
+.normalFont(@fontSize: @bodyFontSize, @lineHeight: @bodyFontSize) {
+    font-family: 'Helvetica65MediumRegular', sans-serif;
+    font-size: @fontSize;
+    line-height: @lineHeight;
+}
+
+.contrastFont(@fontSize: @biggestFontSize, @lineHeight: @biggestFontSize) {
+    font-family: Georgia, Serif;
+    font-size: @fontSize;
+    line-height: @lineHeight;
+}
+
 
 
 /***********************************************************
-* OTHER SETTINGS
+* TEXT STYLE SETS
 ************************************************************/
 @numOfNavColumns: 2;
 
+.mainHeaderText() {
+    .headerFont();
+    color: @white;
+}
 
+.headerText() {
+    .headerFont();
+    color: @black;
+}
+
+.clickableText() {
+    .normalFont();
+    color: @navy;
+}
+
+.statisticsText() {
+    .normalFont();
+    color: @white;
+}
+
+.textText() {
+    .normalFont();
+    color: @darkGrey;
+}
+
+.buttonsText() {
+    .normalFont();
+    color: @lightGrey;
+}
+
+    
 /***********************************************************
 * REUSABLE APP-SPECIFIC CLASSES
 ************************************************************/
@@ -121,7 +179,7 @@ the same border. */
 }
 
 /* Cross browser border-radius */
-.border-radius (@radius) {
+.border-radius(@radius) {
     border-radius: @radius;
     -moz-border-radius: @radius;
     -webkit-border-radius: @radius;
@@ -140,11 +198,35 @@ the same border. */
 }
 
 /* Use a background-image in a consistent way. */
-.background-image-wrapper (@width, @height, @imageSource, @backgroundColor) {
+.background-image-wrapper(
+        @width,
+        @height,
+        @imageSource,
+        @backgroundColor,
+        @repeat: no-repeat) {
     width: @width;
     height: @height;
     -webkit-background-size: @width @height;
-    background: url('/static/images/@{imageSource}') @backgroundColor;
+    background: url('/static/images/@{imageSource}') @backgroundColor @repeat;
+    // background-attachment: fixed;
+}
+
+/* Center the background image in a consistent way. */
+.centered-image(@position, @width, @height) {
+    .horizontally-centered-image(@position, @width); 
+    .vertically-centered-image(@position, @height);
+}
+
+.vertically-centered-image(@position, @height) {
+    position: @position;
+    top: 50%;
+    margin-top: -(@height / 2);
+}
+
+.horizontally-centered-image(@position, @width) {
+    position: @position;
+    left: 50%;
+    margin-left: -(@width / 2);
 }
 
 /* Use counter and counter-li in conjunction to add numbering to lists. */
@@ -157,6 +239,25 @@ the same border. */
     content: counter(item) " ";
     counter-increment: item;
 }
+
+.opacity(@value) {
+    /* IE 8 */
+    -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=50)";
+
+    /* IE 5-7 */
+    @ieValue: @value * 100;
+    filter: alpha(opacity=@ieValue);
+
+    /* Netscape */
+    -moz-opacity: @value;
+
+    /* Safari 1.x */
+    -khtml-opacity: @value;
+
+    /* Good browsers */
+    opacity: @value;
+}
+
 
 /***********************************************************
 * IMPORTS
@@ -176,9 +277,14 @@ the same border. */
 }
 
 body {
-    background: @darkGray;
-    font-family: 'CronosProSemibold', 'Arial', sans-serif;
-    font-size: @normalFontSize;
+    .textText();
+    @backgroundTileSize: 10px;
+    .background-image-wrapper( 
+        @backgroundTileSize,
+        @backgroundTileSize,
+        'backgroundTile.jpg',
+        transparent,
+        repeat);
     
     /* stops iPhone from readjusting text size for landscape orientation. */
     -webkit-text-size-adjust: none;
@@ -198,37 +304,18 @@ ol, ul {
     text-align: left;
 }
 
-header {
-    text-align: center;
-}
-
-
-h2 {
-    .emboss-text;
-    
-    font-family: 'Eurostile', 'Verdana', serif;
-    /* Eurostile's vertical-align is too high */
-    font-size: @biggestFontSize;
-    text-transform: uppercase;
-    font-style: italic;
-   
-    /* Vertically aligns Eurostile */
-    @fontAdjust: @bigFontSize / 4;
-    padding-top: @fontAdjust; // padding so that font is pushed down
-    
-}
 
 a, a:link, a:visited {
+    .clickableText();
     text-decoration: none;
-    color: @blue;
 }
 
 a:hover {
-    color: @darkBlue;
+    .clickableText();
 }
 
 a:active {
-    opacity: 0.8;
+    .opacity(0.8);
 }
 
 
@@ -236,7 +323,7 @@ input, button {
     .border-radius(0px);
    
     background-color: @white;
-    border: 1px solid @black;
+    border: 1px solid @lightGrey;
 }
 
 
@@ -251,17 +338,37 @@ input, button {
 }
 
 .submit-button {
-    background-color: @blue;
 }
 
-.add-button {
-    @addButtonSide: 44px;
-    
+// TODO replace anchor with a class 'link'
+@createButtonSide: 37px;
+a.create-button {
     .hidden-content;
     .background-image-wrapper(
-            @addButtonSide,
-            @addButtonSide,
-            'addButton.png',
+            @createButtonSide,
+            @createButtonSide,
+            'createButton.png',
+            transparent);
+
+    display: block;
+}
+
+a.create-button:active {
+    .background-image-wrapper(
+            @createButtonSide,
+            @createButtonSide,
+            'createButtonPressed.png',
+            transparent);
+}
+
+@menuButtonWidth: 36px;
+@menuButtonHeight: 28px;
+a.menu-button {
+    .hidden-content;
+    .background-image-wrapper(
+            @menuButtonWidth,
+            @menuButtonHeight,
+            'menuButton.png',
             transparent);
 
     display: block;
@@ -284,16 +391,16 @@ input, button {
 .main-header {
     .header-section;
     .background-image-wrapper(
-            @innerWidth,
-            @bigLineHeight,
-            'mainHeaderRibbon.jpg',
-            @blue);
+            @screenWidth,
+            @normalLineHeight,
+            'mainHeaderBar.png',
+            transparent);
+   
+    .mainHeaderText(); 
+    text-align: center;
 
-    line-height: @bigLineHeight;
-    height: @bigLineHeight;
+    line-height: @normalLineHeight;
     vertical-align: middle;
-    
-    color: @bluishWhite;
 }
 
 .numbered-list {
@@ -346,17 +453,15 @@ input, button {
 * ISCROLL
 ************************************************************/
 #iscroll-wrapper {
-    .page-border;
-    
     position: absolute; 
     width: 100%;
-    top: @headerHeight; 
+    top: 0px; 
     bottom: 0px; 
     left: 0px;
     z-index: 3;
     overflow: auto;
 
-    border-bottom: 2px solid @black;
+    /* border-bottom: 2px solid @black; */
 }
 
 #content-container {
@@ -371,48 +476,70 @@ input, button {
 ************************************************************/
 #tab {
     /* for hiding address bar and pulling content above bottom navigation */
+    .textText();
     position: absolute;
-    width: 100%;
+    width: @screenWidth;
     height: 100%; 
-    /* border: 0px solid #f00; */
 
     z-index: 1;
-    
-    color: @grayishWhite;
 }
 
 #content ol {
-    border-top: 2px solid @beige;
+    margin-top: @headerHeight;
+    margin-left: @pagePadding;
+    margin-right: @pagePadding;
+    border-top: 1px dotted @lightGrey;
 }
 
 #content li {
     padding: @linePadding @pagePadding;
-    border-bottom: 2px solid @beige;
+    border-bottom: 1px dotted @lightGrey;
 }
 
 #tab .loading {
     padding: @linePadding @pagePadding;
 }
 
+
 /***********************************************************
 * TAB HEADER
 ************************************************************/
-#tab header {
-    .page-border;
+#tab-header div {
+    @logoWidth: 78px;
+    @logoHeight: 32px;
+    .hidden-content;
+    .background-image-wrapper(
+        @logoWidth,
+        @logoHeight,
+        'logo.png',
+        transparent);
 
-    /* drop shadow on to content pane */
-    .drop-shadow-box;
-    
-    position: absolute; 
-    z-index: 5;
-    top: 0px; 
-    left: 0px;
-    width: 100%;
-    height: @headerHeight;
+    .centered-image(relative, @logoWidth, @logoHeight);
 }
 
+#tab-header {
+    z-index: 5;
+    position: absolute;
+    top: 0px;
+    left: 0px;
+}
+
+#tab-header .create-button {
+    .vertically-centered-image(absolute, @createButtonSide);
+
+    right: @pagePadding;
+}
+
+#tab-header .menu-button {
+    .vertically-centered-image(absolute, @menuButtonHeight);
+
+    left: @pagePadding;
+}
 
 .second-header {
+    position: relative;
+    z-index: 5;
+    margin-top: @normalLineHeight;
     .header-section;
 }
 
@@ -426,25 +553,23 @@ input, button {
 
 #tab nav li {
     height: @smallLineHeight;
-    background-color: @lightOrange;
-    color: @almostWhite;
+    color: @black;
 }
 
 #tab nav li a {
-    color: @almostWhite;
+    color: @white;
 }
-
 
 
 /***********************************************************
 * TAB FOOTER 
 ************************************************************/
-#tab footer {
+/* #tab footer {
     position: absolute;
     bottom: 15px; 
     right: 15px;
     z-index: 5;
-}
+} */
 
 
 /***********************************************************
@@ -468,11 +593,11 @@ input, button {
 * GAMES TAB SECTION
 ************************************************************/
 a.games.active-nav {
-    .navButton('gamesPressed.jpg', @orange);
+    .navButton('gamesPressed.jpg', @white);
 }
 
 a.games {
-    .navButton('gamesUnpressed.jpg', @orange);
+    .navButton('gamesUnpressed.jpg', @white);
 }
 
 
@@ -480,11 +605,11 @@ a.games {
 * RANKINGS TAB SECTION
 ************************************************************/
 a.rankings.active-nav {
-    .navButton('rankingsPressed.jpg', @orange);
+    .navButton('rankingsPressed.jpg', @white);
 }
 
 a.rankings {
-    .navButton('rankingsUnpressed.jpg', @orange);
+    .navButton('rankingsUnpressed.jpg', @white);
 }
 
 
@@ -496,13 +621,13 @@ a.rankings {
     height: 100%;
     z-index: 10;
 
-    background-color: @darkGray;
+    background-color: @white;
     
 }
 
 .dialog {
+    .textText();
     height: 100%;
-    color: @white;
     display: table;
 
 }
@@ -572,7 +697,7 @@ a.rankings {
     overflow-y: auto;
     /* prevent horizontal scrollbar */
     overflow-x: hidden;
-    background-color: @darkGray;
+    background-color: @darkGrey;
     border: 2px solid @black;
 }
 

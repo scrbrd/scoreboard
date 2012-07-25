@@ -148,8 +148,9 @@ var DocView = Backbone.View.extend({
         var _events = {};
 
         // TODO: make the event types constants
-        _events["touchstart " + Const.CLASS.JS_LINK] = "showDialog";
-        _events["click " + Const.CLASS.JS_LINK] = "showDialog";
+        var selector = Const.CLASS.CREATE_BUTTON;
+        _events["touchstart " + selector] = "showDialog";
+        _events["click " + selector] = "showDialog";
         return _events;
     },
 

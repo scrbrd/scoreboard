@@ -358,9 +358,9 @@ class _ComponentClass(object):
 
 
     @constant
-    def ADD_BUTTON(self):
-        """ ADD_BUTTON is a w3c class. """
-        return "add-button"
+    def CREATE_BUTTON(self):
+        """ CREATE_BUTTON is a w3c class. """
+        return "create-button"
 
 
     @constant
@@ -379,6 +379,12 @@ class _ComponentClass(object):
     def FACEBOOK_LOGIN_BUTTON(self):
         """ FACEBOOK_LOGIN_BUTTON is a w3c class. """
         return "facebook-login-button"
+
+
+    @constant
+    def MENU_BUTTON(self):
+        """ MENU_BUTTON is a w3c class. """
+        return "menu-button"
 
 
     @constant
