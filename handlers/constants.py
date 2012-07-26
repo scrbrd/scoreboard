@@ -159,9 +159,9 @@ class _Parameter(object):
 
 
     @constant
-    def SCORE(self):
-        """ SCORE is a Parameter Property. """
-        return "game-score"
+    def METRICS_BY_OPPONENT(self):
+        """ METRICS_BY_OPPONENT is a Parameter Property. """
+        return "metrics-by-opponent"
 
 
 PARAMETER = _Parameter()

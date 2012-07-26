@@ -27,10 +27,10 @@ from constants import GRAPH_PROPERTY
 
 
 class GraphObject(object):
-    
+
     """ GraphObject is a subclass of the __new__ python object.
 
-    Provide access to the common attributes of the GraphNode and 
+    Provide access to the common attributes of the GraphNode and
     GraphEdge subclasses.
 
     Required:
@@ -103,7 +103,7 @@ class GraphNode(GraphObject):
 
     """ GraphNode is a subclass of GraphObject.
 
-    Provide access to the attributes of a GraphNode not shared with 
+    Provide access to the attributes of a GraphNode not shared with
     GraphEdge via the superclass GraphObject.
 
     Required:
@@ -143,7 +143,7 @@ class GraphEdge(GraphObject):
 
     """ GraphEdge is a subclass of GraphObject.
 
-    Provide access to the attributes of a GraphEdge not shared with 
+    Provide access to the attributes of a GraphEdge not shared with
     GraphNode via the superclass GraphObject.
 
     Required:
@@ -197,8 +197,8 @@ class GraphPath(object):
 
     """ GraphPath is a subclass of the __new__ python object.
 
-    Provide access to the attributes of a GraphPath, which represents a 
-    traversal from a specified start node through an edge type pruner 
+    Provide access to the attributes of a GraphPath, which represents a
+    traversal from a specified start node through an edge type pruner
     to a set of nodes described by a node type return filter.
 
     Required:
@@ -281,8 +281,8 @@ class GraphPrototype(object):
 
     """ GraphPrototype is a subclass of the __new__ python object.
 
-    Provide an abstract superclass representing a model for a 
-    GraphObject before it has been written out to a database. The 
+    Provide an abstract superclass representing a model for a
+    GraphObject before it has been written out to a database. The
     main difference between them is that a GraphPrototype has no id.
 
     Required:
@@ -314,13 +314,13 @@ class GraphPrototype(object):
 
 
 class GraphProtoNode(GraphPrototype):
-    
+
     """ GraphProtoNode is a subclass of GraphPrototype.
 
-    Provide access to the attributes of GraphProtoNode not shared with 
-    GraphProtoEdge via the superclass GraphPrototype. There is no edges 
-    requirement because GraphPrototypes are only intended to be useful 
-    before data is written, and nodes have no associated edges until 
+    Provide access to the attributes of GraphProtoNode not shared with
+    GraphProtoEdge via the superclass GraphPrototype. There is no edges
+    requirement because GraphPrototypes are only intended to be useful
+    before data is written, and nodes have no associated edges until
     after they have been stored.
 
     """
@@ -338,7 +338,7 @@ class GraphProtoEdge(GraphPrototype):
 
     """ GraphProtoEdge is a subclass of GraphPrototype.
 
-    Provide access to the attributes of GraphProtoEdge not shared with 
+    Provide access to the attributes of GraphProtoEdge not shared with
     GraphProtoNode via the superclass GraphPrototype.
 
     Required:
@@ -361,7 +361,7 @@ class GraphProtoEdge(GraphPrototype):
         # TODO: raise GraphInputError on failure to provide required field
         # TODO: raise GraphInputError when disallowed fields are provided
 
-    
+
     def from_node_id(self):
         """ Return the GraphProtoNode id a GraphProtoEdge points from. """
         return self._from_node_id
@@ -392,7 +392,7 @@ class GraphError(Exception):
 
     Required:
     str     reason      what went wrong?
-    
+
     """
 
     reason = None
@@ -410,7 +410,7 @@ class GraphInputError(GraphError):
 
     """ GraphInputError is a subclass of Exception.
 
-    Provide an exception to be raised when an input parameter supplied 
+    Provide an exception to be raised when an input parameter supplied
     to this graph API is invalid.
 
     """
@@ -427,7 +427,7 @@ class GraphOutputError(GraphError):
 
     """ GraphOutputError is a subclass of Exception.
 
-    Provide an exception to be raised when output from the data layer 
+    Provide an exception to be raised when output from the data layer
     supplied to this graph API is invalid.
 
     """
@@ -438,4 +438,3 @@ class GraphOutputError(GraphError):
                 "GraphOutputError",
                 parameters,
                 description)
-

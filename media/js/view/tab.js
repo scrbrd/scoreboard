@@ -15,7 +15,7 @@
 
     TabContent extends Content
         Properties  [model.context]
-        Summary     [model.aggregate(standings, activity)]
+        Summary     [model.aggregations(standings, activity)]
         Feed        [model.objects]
 
     @exports TabView
@@ -40,7 +40,7 @@ define(
 
 var MODEL_EVENT = {
     CHANGE_CONTEXT: "change:" + "context",
-    CHANGE_AGGREGATE: "change:" + "aggregate",
+    CHANGE_AGGREGATIONS: "change:" + "aggregations",
     CHANGE_OBJECTS: "change:" + "objects",
     CHANGE_CONTENT: "change:" + "content",
     CHANGE_PAGE_NAME: "change:" + Const.DATA.PAGE_NAME

@@ -1,7 +1,8 @@
 """ Module: league
 
 Define a LeagueModel to provide to the LeagueHandler a League context and
-aggregated standings and/or activity and a feed for that League context.
+aggregated standings and/or activity and a list of obejcts for that League
+context.
 
 """
 
@@ -21,14 +22,14 @@ class LeagueModel(ReadModel):
         """ Construct a ReadModel. """
         super(ReadModel, self).__init__(session)
 
-        self._summary = {
+        self._aggregations = {
                 "standings": None,
                 "activity": None,
                 }
 
 
     def load(self):
-        """ Populate context, summary, stories, and opponents. """
+        """ Populate context, aggregations, objects, and opponents. """
 
         # TODO: we should be able to do all this in one or two queries. given
         # player id, traverse to a league. from there get games and opponents
@@ -50,7 +51,7 @@ class LeagueModel(ReadModel):
         self._context = league
 
         # league's opponents by Win Count
-        self._summary["standings"] = self._context.get_opponents().sort(
+        self._aggregations["standings"] = self._context.get_opponents().sort(
                 key=lambda x: x.win_count,
                 reverse=True)
 
@@ -64,19 +65,19 @@ class LeagueModel(ReadModel):
         # store opponents loaded games in reverse order (so it's new first)
         # NOTE: These Games are different objects than the ones in the
         # League though they represent the same data objects.
-        self._feed = games_with_opponents.values().reverse()
+        self._objects = games_with_opponents.values().reverse()
 
         # load opponents into rivals as well
         self._rivals = self._context.get_opponents()
 
 
     @property
-    def standings_summary(self):
+    def standings_aggregation(self):
         """ Return a list of League standings demonstrating rivalry. """
-        return self._summary.get("standings")
+        return self._aggregations.get("standings")
 
 
     @property
-    def activity_summary(self):
+    def activity_aggregation(self):
         """ Return a dict of League stats demonstrating camaraderie. """
-        return self._summary.get("activity")
+        return self._aggregations.get("activity")

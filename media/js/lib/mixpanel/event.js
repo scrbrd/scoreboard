@@ -41,7 +41,7 @@ define(
         @enum {string}
     */
     var PROPERTY = {
-        CREATORS_OUTCOME:   "creator's outcome",
+        CREATORS_RESULT:   "creator's result",
         DATA_TYPE:          "data type",
         INPUT:              "input", // user input
         IS_SCORED:          "is scored", // true if game has a score
@@ -103,18 +103,18 @@ define(
             @param {string} objectType The type of object.
             @param {string} numberOfTags The number of folks tagged.
             @param {string} isScored Does the object have a score?
-            @param {string} creatorsOutcome The Outcome of the object's creator.
+            @param {string} creatorsResult The Result of the object's creator.
         */
         that.trackCreateObject = function (
                 objectType,
                 numberOfTags,
                 isScored,
-                creatorsOutcome) {
+                creatorsResult) {
             var properties = {};
             properties[PROPERTY.OBJECT_TYPE] = objectType;
             properties[PROPERTY.NUMBER_OF_TAGS] = numberOfTags;
             properties[PROPERTY.IS_SCORED] = isScored;
-            properties[PROPERTY.CREATORS_OUTCOME] = creatorsOutcome;
+            properties[PROPERTY.CREATORS_RESULT] = creatorsResult;
             // TODO move the game specific properties to the createGame
         
             that.track(properties);

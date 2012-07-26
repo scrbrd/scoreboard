@@ -1,7 +1,7 @@
 """ Module: games
 
-Define a GamesModel to provide to the GamesHandler a context and a
-summary and feed for that context.
+Define a GamesModel to provide to the GamesHandler aggregations
+and objects for that context.
 
 """
 
@@ -69,47 +69,3 @@ class GamesModel(ReadModel):
     def games(self):
         """ Games that belong to the container. """
         return self._games
-
-
-    def get_outcomes_by_game(self):
-        """ Return dict by game_id of outcome highest to lowest.
-
-        Each outcome is a list of (score, Opponent) tuples ordered
-        by score from highest to lowest.
-
-        # TODO remove this method if accessing outcomes directly in Game
-
-        """
-
-        # store score, Opponent tuples by game id for each game
-        outcomes_by_game = {}
-
-        for game in self._games:
-            # get outcome for each game
-            outcome = game.outcome()
-
-            # replace opp_id with actual Opponent object from Game
-            outcome_with_opponents = []
-            for result in outcome:
-                new_result = GenericModel()
-                new_result.score = result[0]
-                opponent_id = result[1]
-                new_result.opponent = game.get_opponent(opponent_id)
-                outcome_with_opponents.append(new_result)
-
-            # save updated outcome for each game
-            outcomes_by_game[game.id] = outcome_with_opponents
-
-        return outcomes_by_game
-
-
-# FIXME remove this class
-class GenericModel(object):
-
-    """ Generic object for returning data that a Model constructs.
-
-    Common models should be added to the API.
-
-    """
-
-    pass

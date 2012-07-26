@@ -8,9 +8,6 @@ TODO: fill this in with required methods to implement since required
 members aren't strictly members [they are pulled from properties].
 
 """
-
-from exceptions import NotImplementedError
-
 from model.constants import NODE_PROPERTY, THIRD_PARTY
 
 from constants import API_NODE_TYPE, API_NODE_PROPERTY, API_EDGE_TYPE

@@ -46,16 +46,16 @@ class ReadModel(BaseModel):
     """ Read and return all data for a model request.
 
     Required:
-    League  _context    container of objects (id, name fields required)
-    dict    _summary    aggregated stats describing context
-    list    _feed       discrete units describing context
-    list    _rivals     list of Opponents (id, name)
+    League  _context        container of objects (id, name fields required)
+    dict    _aggregations   aggregated stats describing context
+    list    _objects        discrete units describing context
+    list    _rivals         list of Opponents (id, name)
 
     """
 
     _context = None
-    _summary = None
-    _feed = None
+    _aggregations = None
+    _objects = None
     _rivals = None
 
 
@@ -71,15 +71,15 @@ class ReadModel(BaseModel):
 
 
     @property
-    def summary(self):
+    def aggregations(self):
         """ Return a dict of aggregated data describing context. """
-        return self._summary
+        return self._aggregations
 
 
     @property
-    def feed(self):
-        """ Return a list of discrete units of data describing context. """
-        return self._feed
+    def objects(self):
+        """ Return a list of discrete units of data. """
+        return self._objects
 
 
     @property
