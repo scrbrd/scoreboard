@@ -485,9 +485,6 @@ a.menu-button {
 }
 
 #content ol {
-    margin-top: @headerHeight;
-    margin-left: @pagePadding;
-    margin-right: @pagePadding;
     border-top: 1px dotted @lightGrey;
 }
 
@@ -497,7 +494,13 @@ a.menu-button {
 }
 
 #tab .loading {
-    padding: @linePadding @pagePadding;
+    padding-top: @linePadding;
+}
+
+#content {
+    margin-top: @headerHeight;
+    margin-left: @pagePadding;
+    margin-right: @pagePadding;
 }
 
 
