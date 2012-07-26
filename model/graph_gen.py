@@ -28,7 +28,7 @@ from model.api.game import Game
 
 # CONSTANTS
 
-NUMBER_OF_GAMES = 100
+NUMBER_OF_GAMES = 10
 NUMBER_OF_PLAYER_SETS = 1
 
 # XXX: add a new League name to the end of this list when generating a new
@@ -48,18 +48,14 @@ users_and_players = []
 for n in range(0, NUMBER_OF_PLAYER_SETS):
     new_players = [
             User.create_user_and_player(empty, empty, empty, "David", "Wright"),
-            User.create_user_and_player(empty, empty, empty, "Evan", "Hammer"),
             User.create_user_and_player(empty, empty, empty, "Rafael", "Nadal"),
-            User.create_user_and_player(empty, empty, empty, "Bobby", "Kellogg"),
             User.create_user_and_player(empty, empty, empty, "Michael", "Phelps"),
             User.create_user_and_player(empty, empty, empty, "Jeremy", "Lin"),
-            User.create_user_and_player(empty, empty, empty, "Leigh", "Salem"),
             User.create_user_and_player(empty, empty, empty, "Magic", "Johnson"),
             User.create_user_and_player(empty, empty, empty, "Charles", "Barkley"),
             User.create_user_and_player(empty, empty, empty, "Buster", "Posey"),
             User.create_user_and_player(empty, empty, empty, "Doc", "Brown"),
             User.create_user_and_player(empty, empty, empty, "Flozell", "Adams"),
-            User.create_user_and_player(empty, empty, empty, "Jon", "Warman"),
             User.create_user_and_player(empty, empty, empty, "Wayne", "Gretzky"),
             ]
     users_and_players.extend(new_players)
@@ -97,24 +93,31 @@ opponent_ids = []
 for opponent in opponents:
     opponent_ids.append(opponent.id)
 
+results_type = ["competitive", "friendly"]
+
 games = []
 for n in range(0, NUMBER_OF_GAMES):
 
     # randomly select a game creator
     creator_id = random.choice(opponent_ids)
 
-    # TODO: swap "score" and "id" for JSON constants or member properties in a
-    # Score/Outcome class.
-
     random.shuffle(opponent_ids)
 
-    # randomly select 2 opponents and set the score
-    outcome = [
-            {"id": opponent_ids[0], "score": random.randint(0, 10)},
-            {"id": opponent_ids[1], "score": random.randint(0, 10)},
-            ]
+    # figure out results
+    random.shuffle(results_type)
+    first = "won"
+    second = "lost"
+    if results_type[0] == "friendly":
+        first = "played"
+        second = "played"
 
-    game = Game.create_game(league.id, creator_id, outcome)
+    # randomly select 2 opponents and set the score
+    results = {
+            opponent_ids[0]: {"result": first},
+            opponent_ids[1]: {"result": second}
+            }
+
+    game = Game.create_game(league.id, creator_id, results)
 
     if game is not None:
         games.append(game)

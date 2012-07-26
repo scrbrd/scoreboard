@@ -8,6 +8,8 @@ from model.app.create_game import CreateGameModel
 
 from handlers.query import QueryHandler
 
+from constants import PARAMETER
+
 
 class CreateGameHandler(QueryHandler):
 
@@ -18,9 +20,14 @@ class CreateGameHandler(QueryHandler):
         """ Handle the asynchronous version of the create game dialog.
 
         Required:
-        int     league      Game's league id
-        list    game_score  Game's final score
-                            [{"id": VALUE, "score": VALUE}]
+        int     league                  Game's league id
+        dict    metrics_by_opponent     final metrics of a game
+                                        {"id0":
+                                            {"metric0": value0,
+                                            "metric0": value1},
+                                        "id1":
+                                            {"metric0": value2},
+                                        ...}
 
         Return:
         bool is_success     if game creation was successful (None from fail)
@@ -29,15 +36,13 @@ class CreateGameHandler(QueryHandler):
 
         # get game parameters from request
         parameters = self.get_request_parameters()
-
-        # TODO: make request parameters a class or at least constants!
-        league_id = parameters["league"]
-        game_score = parameters["game-score"]
+        league_id = parameters[PARAMETER.LEAGUE_ID]
+        metrics_by_opponent = parameters[PARAMETER.METRICS_BY_OPPONENT]
 
         # create game in model
         model = CreateGameModel(self.current_user)
         model.set_league_id(league_id)
-        model.set_score(game_score)
+        model.set_metrics_by_opponent(metrics_by_opponent)
         model.dispatch()
 
         self.write({"is_success": model.success})

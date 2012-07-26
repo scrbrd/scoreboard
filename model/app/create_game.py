@@ -7,6 +7,7 @@ responsible for returning the outgoing response.
 """
 
 from model.api.game import Game
+from model.api.metric import MetricFactory
 
 from base import WriteModel
 
@@ -18,10 +19,15 @@ class CreateGameModel(WriteModel):
     Dispatch Game node creation. We might want to make a Model for
     each node type, or we might want to keep this more generic.
 
+    Required:
+    int     _league_id              the league of the new Game.
+    dict    _metrics_by_opponent    a dict of metrics keyed on opponent. each
+                                    value is a list of Metrics.
+
     """
 
     _league_id = None
-    _score = None
+    _metrics_by_opponent = {}
 
 
     def dispatch(self):
@@ -29,7 +35,7 @@ class CreateGameModel(WriteModel):
         self._model = Game.create_game(
                 self._league_id,
                 self.session.person_id,
-                self._score)
+                self._metrics_by_opponent)
 
 
     def set_league_id(self, league_id):
@@ -37,18 +43,22 @@ class CreateGameModel(WriteModel):
         self._league_id = league_id
 
 
-    def set_score(self, score):
-        """ Set the Score for the Game to be created.
+    def set_metrics_by_opponent(self, metrics_by_opponent):
+        """ Set the Metrics for each Opponent for the Game.
 
         Required:
-        list    game_score      final score of a game
-                                [{"id": id1, "score": score1},
-                                 {"id": id2, "score": score2},
-                                 ...
-                                 {"id": idN, "score": scoreN}]
-
+        dict    metrics_by_opponent     final metrics of a game
+                                        {"id0":
+                                            {"metric0": value0,
+                                            "metric0": value1},
+                                        "id1":
+                                            {"metric0": value2},
+                                        ...}
         """
-        self._score = score
+        # convert the results into API_EDGE_TYPEs
+        for opponent_ids, metrics in metrics_by_opponent.items():
+            metric_objects = MetricFactory.produce_metrics(metrics)
+            self._metrics_by_opponent[opponent_ids] = metric_objects
 
 
     @property

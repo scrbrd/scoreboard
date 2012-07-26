@@ -335,12 +335,12 @@ class User(sqobject.SqNode):
             current_ts = int(time.time())
 
             raw_properties.update({
-                API_NODE_PROPERTY.REFERRER_URL: referrer_url,
-                API_NODE_PROPERTY.LAST_IP: ip,
-                API_NODE_PROPERTY.LOCALE: locale,
-                API_NODE_PROPERTY.LAST_LOGIN_TS: current_ts,
-                API_NODE_PROPERTY.LAST_AUTHORIZED_TS: current_ts,
-                })
+                    API_NODE_PROPERTY.REFERRER_URL: referrer_url,
+                    API_NODE_PROPERTY.LAST_IP: ip,
+                    API_NODE_PROPERTY.LOCALE: locale,
+                    API_NODE_PROPERTY.LAST_LOGIN_TS: current_ts,
+                    API_NODE_PROPERTY.LAST_AUTHORIZED_TS: current_ts,
+                    })
 
         # squash the two into one set of flat, valid node properties
         properties = User.prepare_node_properties(

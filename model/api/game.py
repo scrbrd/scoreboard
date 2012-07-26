@@ -4,16 +4,13 @@ TODO: fill this in with required methods to implement since required
 members aren't strictly members [they are pulled from properties].
 
 """
-
-from exceptions import NotImplementedError
-from itertools import groupby
-
 from constants import API_NODE_TYPE, API_EDGE_TYPE
-from constants import API_EDGE_PROPERTY, API_CONSTANT
+from constants import API_CONSTANT
 
 from sqobject import SqNode
 import loader
 import editor
+
 
 
 class Game(SqNode):
@@ -55,29 +52,40 @@ class Game(SqNode):
                 ]
 
 
+    @property
     def creator_id(self):
         """  Return the Player who created the game. """
         return self.get_edges()[API_EDGE_TYPE.CREATED_BY].iterkeys().next()
 
 
-    def outcome(self):
-        """ Return a list of score, opponent_id pairs high to low.
+    @property
+    def results_by_opponent_id(self):
+        """ Return a dictionary of results keyed by opponent id. """
+        results = {}
 
-        Return a list of results without result_type.
-        [{"id": VALUE, "score": VALUE}]
-
-        """
-
-        outcome = []
-
+        # Loop through each RESULT_EDGE_TYPE and get the result/opponent_id
         for edge_type in API_CONSTANT.RESULT_EDGE_TYPES:
             for edge in self.get_edges().get(edge_type, {}).values():
-                score = edge._get_property(API_EDGE_PROPERTY.SCORE)
                 opponent_id = edge.to_node_id
-                outcome.append({"id": opponent_id, "score": score})
-                outcome.sort(key=lambda x: x["score"], reverse=True)
+                results[opponent_id] = edge_type
 
-        return outcome
+        return results
+
+
+    @property
+    def opponent_ids_by_result(self):
+        """ Return a dictionary of opponents keyed by result. Each result
+        will have a list of opponents. """
+        opponents = {}
+
+        # Loop through each RESULT_EDGE_TYPE and get the result/opponent_id
+        for edge_type in API_CONSTANT.RESULT_EDGE_TYPES:
+            opponents[edge_type] = []
+            for edge in self.get_edges().get(edge_type, {}).values():
+                opponent_id = edge.to_node_id
+                opponents[edge_type].append(opponent_id)
+
+        return opponents
 
 
     def get_opponent(self, opp_id):
@@ -149,74 +157,13 @@ class Game(SqNode):
 
 
     @staticmethod
-    def calculate_outcome(game_score):
-        """ Calculate Outcome from the Game Score
-
-        Arguments:
-        list    game_score      final score of a game
-                                [{"id": VALUE, "score": VALUE}]
-
-        If 0 Opponents: {}
-        If 1 Opponent: PLAYED_BY
-        If more Opponents:
-        WON_BY (highest score), LOST_BY, TIED_BY (even)
-
-        Currently, the highest score wins.
-
-        Return:
-        Outcome
-        {RESULT_EDGE_TYPE: [{"id": VALUE, "score": VALUE}]}
-
-        """
-
-        num_of_opponents = len(game_score)
-        outcome = {}
-
-        # if no opponents, then no results
-        if num_of_opponents == 0:
-            pass
-        # if one opponent, then no win or loss
-        elif num_of_opponents == 1:
-            outcome[API_EDGE_TYPE.PLAYED_BY] = game_score
-
-        # if two or more opponents, then calculate results
-        else:
-            # sort and group opponents by their scores
-            opp_scores_by_score = Game._sort_and_group_opponents_by_score(
-                    game_score)
-
-            # TIE v WINNER/LOSERS
-            num_of_results = len(opp_scores_by_score)
-
-            # if 1 result, then the game was a tie
-            if num_of_results == 1:
-                outcome[API_EDGE_TYPE.TIED_BY] = game_score
-
-            # if more results, then win is high score & the rest losses
-            else:
-                # winners
-                winner_scores = opp_scores_by_score[0][1]
-                outcome[API_EDGE_TYPE.WON_BY] = winner_scores
-
-                # losers
-                outcome[API_EDGE_TYPE.LOST_BY] = []
-                for score, loser_scores in opp_scores_by_score[1:]:
-                    outcome[API_EDGE_TYPE.LOST_BY].extend(loser_scores)
-        return outcome
-
-
-    @staticmethod
-    def create_game(league_id, creator_id, game_score):
+    def create_game(league_id, creator_id, metrics_by_opponent):
         """ Create a Game and return it.
 
         Required:
         id      league_id       league id that game belogs to
         id      creator_id      player id of game's creator
-        list    game_score      final score of a game
-                                [{"id": id1, "score": score1},
-                                 {"id": id2, "score": score2},
-                                 ...
-                                 {"id": idN, "score": scoreN}]
+        dict    metrics_by_opponent     dict of Metrics keyed on opponent_id
 
         Return:
         Game                    newly created Game
@@ -246,47 +193,12 @@ class Game(SqNode):
                 {},
                 creator_id))
 
-        # get outcome from gamescore
-        outcome = Game.calculate_outcome(game_score)
-
         # prepare edge prototypes for result edges
-        for type, result in outcome.items():
-            for opponent_score in result:
-                # TODO: swap "score" and "id" for JSON constants [less likely]
-                # or properties in a Score/Outcome class [more likely].
-                prototype_edges.extend(editor.prototype_edge_and_complement(
-                    type,
-                    {API_EDGE_PROPERTY.SCORE: opponent_score["score"]},
-                    None,
-                    opponent_score["id"]))
+        for opponent_id, metrics in metrics_by_opponent.items():
+            # TODO handle other metrics besides ResultMetric
+            prototype_edges.extend(editor.prototype_edge_and_complement(
+                    metrics.values()[0],
+                    {},
+                    opponent_id))
 
         return editor.create_node_and_edges(prototype_node, prototype_edges)
-
-    @staticmethod
-    def _sort_and_group_opponents_by_score(game_score):
-        """ Sort and group opponents in game_score by score.
-
-        itertools.groupby requires a sorted list.
-
-        Required:
-        list    game_score      final score of a game
-                                [{"id": VALUE, "score": VALUE}]
-
-        Return a sorted list of scores with the relevant portion of the game
-        score.
-        [(score, [{"id": VALUE, "score": VALUE}])]
-
-        """
-        index_field = "score"
-
-        # sort opponents by score  from high to low (needed for groupby)
-        game_score.sort(key = lambda x:x[index_field], reverse=True)
-
-        # group opponents by score
-        opponent_scores_by_score = []
-        for score, result_group in groupby(game_score, lambda x:x[index_field]):
-            # get opponent score list for each score
-            opponent_scores = [opp_score for opp_score in result_group]
-            opponent_scores_by_score.append((score, opponent_scores))
-
-        return opponent_scores_by_score

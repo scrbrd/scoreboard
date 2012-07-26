@@ -11,14 +11,12 @@ Exception
     +-- SqObjectNotLoadedError
 
 """
-
-from exceptions import NotImplementedError
 from copy import deepcopy
 
 from model.constants import NODE_PROPERTY, EDGE_PROPERTY
 from model.constants import PROPERTY_KEY, PROPERTY_VALUE, THIRD_PARTY
 
-from constants import API_CONSTANT
+from constants import API_CONSTANT, API_NODE_PROPERTY
 
 
 class SqObject(object):
@@ -333,7 +331,6 @@ class SqNode(SqObject):
         dict                    SqNode properties valid for storage
 
         """
-
         properties = {}
 
         # iterate over third party property dicts
@@ -349,6 +346,7 @@ class SqNode(SqObject):
                     type_keys,
                     tp_properties,
                     True)
+
 
             # FIXME: we are blindly trusting that property keys we share with
             # third parties like Facebook are exactly equivalent strings we use
@@ -417,7 +415,14 @@ class SqNode(SqObject):
 
             # success!
             else:
-                valid_properties[key] = value
+                if key == API_NODE_PROPERTY.PICTURE:
+                    facebook_bug_value = value.get("data")
+                    if facebook_bug_value is None:
+                        valid_properties[key] = value
+                    else:
+                        valid_properties[key] = facebook_bug_value.get("url")
+                else:
+                    valid_properties[key] = value
 
         return valid_properties
 

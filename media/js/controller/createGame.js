@@ -86,13 +86,14 @@ var createGameController = (function () {
         // currently there are only W/L/T and no score.
         var isScored = false;
         
-        // currently we compute on the server so don't think about creator outcome.
-        var creatorsOutcome = getCreatorsOutcome(creatorID, gameParams);
+        // currently we compute on the server so don't think about creator
+        // result.
+        var creatorsResult = getCreatorsResult(creatorID, gameParams);
         
         MP.trackCreateGame(
                 numberOfTags,
                 isScored,
-                creatorsOutcome);
+                creatorsResult);
 
         // go through the tags and create a Player Tagged event for each one.
         var gamescore = gameParams[Const.DATA.GAME_SCORE];
@@ -143,7 +144,7 @@ var createGameController = (function () {
         @param {number} creatorID
         @param {Object} gameParameters
     */
-    function getCreatorsOutcome(creatorID, gameParameters) {
+    function getCreatorsResult(creatorID, gameParameters) {
        var gamescore = gameParameters[Const.DATA.GAME_SCORE];
        // TODO add this to constants if still needed
        var LOST = "lost";

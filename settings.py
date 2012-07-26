@@ -18,7 +18,7 @@ from view.modules.components import UIGamesModel, UIRankingsModel
 # LEAGUE = 693  # The Banana Stand
 # LEAGUE = 745  # Game of Thrones
 # LEAGUE = 721  # The Joy of Serving Others
-LEAGUE = 24  # Oh No!
+LEAGUE = 278  # Oh No!
 # LEAGUE = 257  # Oh No!
 
 # Make filepaths relative to settings.

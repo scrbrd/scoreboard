@@ -73,15 +73,15 @@ return {
         event.
         @param {number} numberOfTags The number of tagged folks.
         @param {boolean} isScored True if the game was scored.
-        @param {string} creatorsOutcome The result of the game's creator.
+        @param {string} creatorsResult The result of the game's creator.
             (e.g. WON, LOST)
     */
-    trackCreateGame: function (numberOfTags, isScored, creatorsOutcome) {
+    trackCreateGame: function (numberOfTags, isScored, creatorsResult) {
         createObject.trackCreateObject(
                 GAME,
                 numberOfTags,
                 isScored,
-                creatorsOutcome);
+                creatorsResult);
     },
 
     /**
