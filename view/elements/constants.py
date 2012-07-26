@@ -137,6 +137,12 @@ class _HTMLTag(object):
         return "button"
 
 
+    @constant
+    def LABEL(self):
+        """ LABEL is a value of the HTML attribute Type. """
+        return "label"
+
+
 HTML_TAG = _HTMLTag()
 
 
@@ -235,12 +241,6 @@ class _HTMLType(object):
     def RADIO(self):
         """ RADIO is a value of the HTML attribute Type. """
         return "radio"
-
-
-    @constant
-    def LABEL(self):
-        """ LABEL is a value of the HTML attribute Type. """
-        return "label"
 
 
     @constant
