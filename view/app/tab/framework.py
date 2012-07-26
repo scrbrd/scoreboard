@@ -4,13 +4,16 @@ Element components that are for the tab framework.
 
 """
 
+from exceptions import NotImplementedError
+
 from view.constants import SQ_DATA
+
 from view.app_copy import Copy
 
-from view.elements.base import H1, Nav, Footer, Section, UL, LI, A
-from view.elements.components import CreateButton, MenuButton, MainHeaderDiv
-
 from constants import TAB_CLASS, TAB_ID
+
+from view.elements.base import H1, Nav, Footer, Section, UL, LI, A, Div
+from view.elements.components import CreateButton, MenuButton, MainHeaderDiv
 
 
 class AppHeader(H1):
@@ -123,11 +126,11 @@ class AppFooter(Footer):
         super(AppFooter, self).__init__()
 
 
-
+# TODO: remove this class when removing [Rankings,Game]TabSection
 class TabSection(Section):
 
-    """ Tab section encapsulates the generic tab attributes around i
-    <section>. """
+    """ TabSection encapsulates generic tab attributes around <section>. """
+
 
     def __init__(self, page_name):
         """ Construct a tab section element tree.
@@ -138,3 +141,84 @@ class TabSection(Section):
         """
         super(TabSection, self).__init__()
         self.set_id(TAB_ID.CONTENT)
+
+
+# TODO: subclass this from an abstract app.page.framework.PageContentSection
+# when it exists. DialogContentSection would be similar.
+class TabContentSection(Section):
+
+    """ TabContentSection encapsulates generic AppPage attributes. """
+
+
+    def __init__(self):
+        """ Construct a tab's content section element tree. """
+        super(TabContentSection, self).__init__()
+        # TODO: set this in an abstract superclass when one exists and probably
+        # use PAGE_ID.CONTENT instead.
+        self.set_id(TAB_ID.CONTENT)
+
+
+    def set_properties_content(self, properties):
+        """ Construct and add properties content to this content section. """
+        self.append_child(PropertiesDiv(properties))
+
+
+    def set_summary_content(self, summary):
+        """ Construct and add summary content to this content section. """
+        self.append_child(SummaryDiv(summary))
+
+
+    def set_feed_content(self, feed):
+        """ Construct and add feed content to this content section. """
+        self.append_child(FeedDiv(feed))
+
+
+class PropertiesDiv(Div):
+
+    """ PropertiesDiv encapsulates a tab's properties attribute <div>. """
+
+
+    def __init__(self, properties):
+        """ Construct a tab's properties content element tree. """
+        super(PropertiesDiv, self).__init__()
+        self.set_id(TAB_ID.PROPERTIES)
+        self.set_content(properties)
+
+
+    def set_content(self, properties):
+        """ Construct and add content as a direct child. """
+        raise NotImplementedError("Abstract Method: SUBCLASS MUST OVERRIDE!")
+
+
+class SummaryDiv(Div):
+
+    """ SummaryDiv encapsulates a tab's summary attribute <div>. """
+
+
+    def __init__(self, summary):
+        """ Construct a tab's summary content element tree. """
+        super(SummaryDiv, self).__init__()
+        self.set_id(TAB_ID.SUMMARY)
+        self.set_content(summary)
+
+
+    def set_content(self, summary):
+        """ Construct and add content as a direct child. """
+        raise NotImplementedError("Abstract Method: SUBCLASS MUST OVERRIDE!")
+
+
+class FeedDiv(Div):
+
+    """ FeedDiv encapsulates a tab's feed attribute <div>. """
+
+
+    def __init__(self, feed):
+        """ Construct a tab's feed content element tree. """
+        super(FeedDiv, self).__init__()
+        self.set_id(TAB_ID.FEED)
+        self.set_content(feed)
+
+
+    def set_content(self, feed):
+        """ Construct and add content as a direct child. """
+        raise NotImplementedError("Abstract Method: SUBCLASS MUST OVERRIDE!")

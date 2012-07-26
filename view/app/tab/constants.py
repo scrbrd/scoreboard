@@ -38,4 +38,22 @@ class _TabID(object):
         return "content"
 
 
+    @constant
+    def PROPERTIES(self):
+        """ PROPERTIES is the element that stores properties content. """
+        return "properties"
+
+
+    @constant
+    def SUMMARY(self):
+        """ SUMMARY is the element that stores summary content. """
+        return "summary"
+
+
+    @constant
+    def FEED(self):
+        """ FEED is the element that stores feed content. """
+        return "feed"
+
+
 TAB_ID = _TabID()

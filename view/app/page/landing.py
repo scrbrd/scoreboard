@@ -16,6 +16,7 @@ class LandingPage(Section):
 
     """ Landing Page extending <section>. """
 
+
     def __init__(self, login_link):
         """ Construct  the landing page. """
         super(LandingPage, self).__init__()

@@ -4,8 +4,7 @@ Rankings tab components.
 
 """
 
-from view.constants import SQ_DATA
-from view.constants import PAGE_NAME
+from view.constants import SQ_DATA, PAGE_NAME
 
 from view.elements.base import LI, Span
 from view.elements.components import NumberedList
@@ -15,7 +14,7 @@ from framework import TabSection
 
 class RankingsTabSection(TabSection):
 
-    """ Rankings tab section is the games list tab's content section. """
+    """ Rankings tab section is the rankings list tab's content section. """
 
     def __init__(self, rankings):
         """ Construct a rankings tab content section element tree. """

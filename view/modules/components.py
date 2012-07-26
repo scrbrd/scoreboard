@@ -24,7 +24,7 @@ from view.constants import PAGE_TYPE, PAGE_NAME, APP_CLASS, SQ_DATA
 from view.elements.base import Element
 
 from view.app.tab.framework import AppHeader, AppFooter, NavHeader
-from view.app.tab.framework import TabHeader
+from view.app.tab.framework import TabHeader, TabContentSection
 from view.app.tab.model import ContextModel, PageModel, SessionModel
 from view.app.tab.games import GamesTabSection
 from view.app.tab.rankings import RankingsTabSection
@@ -205,8 +205,17 @@ class UIRankingsModel(UITabModel):
     """ Rankings Content Model View. """
 
     def render(self, model=None, state=None):
-        """ Render a Rankigns Content Model View. """
+        """ Render a Rankings Content Model View. """
         return super(UIRankingsModel, self).render(None, PAGE_NAME.RANKINGS)
+
+
+class UILeagueModel(UITabModel):
+
+    """ League Content Model View. """
+
+    def render(self, model=None, state=None):
+        """ Render a League Content Model View. """
+        return super(UILeagueModel, self).render(None, PAGE_NAME.LEAGUE)
 
 
 class UIGamesList(tornado.web.UIModule):
@@ -215,9 +224,7 @@ class UIGamesList(tornado.web.UIModule):
 
     def render(self, model=None, state=None):
         """ Render a Games List. """
-        games = model.games
-        element_tree = GamesTabSection(games).element()
-
+        element_tree = GamesTabSection(model.games).element()
         return Element.to_string(element_tree)
 
 
@@ -227,10 +234,24 @@ class UIRankingsList(tornado.web.UIModule):
 
     def render(self, model=None, state=None):
         """ Render a Rankings List. """
-        rankings = model.rankings
-        element_tree = RankingsTabSection(rankings).element()
-
+        element_tree = RankingsTabSection(model.rankings).element()
         return Element.to_string(element_tree)
+
+
+class UILeaguePage(tornado.web.UIModule):
+
+    """ League Page UI Module. """
+
+    def render(self, model=None, state=None):
+        """ Render a League. """
+        league_page = TabContentSection()
+
+        # TODO: hook up model to the way we use it here.
+        league_page.set_properties_content(model.league.context)
+        league_page.set_summary_content(model.league.aggregations)
+        league_page.set_feed_content(model.league.objects)
+
+        return Element.to_string(league_page.element())
 
 
 class UICreateGameDialog(tornado.web.UIModule):

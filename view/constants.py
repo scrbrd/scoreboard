@@ -189,6 +189,12 @@ class _PageName(object):
 
 
     @constant
+    def LEAGUE(self):
+        """ LEAGUE is the league tab page. """
+        return "league"
+
+
+    @constant
     def CREATE_GAME(self):
         """ CREATE_GAME is the create game dialog page. """
         return "create-game"

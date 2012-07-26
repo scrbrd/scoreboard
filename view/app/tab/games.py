@@ -4,8 +4,7 @@ Games tab components.
 
 """
 
-from view.constants import SQ_DATA
-from view.constants import PAGE_NAME
+from view.constants import SQ_DATA, PAGE_NAME
 
 from view.elements.base import OL, LI, Span, BR
 
