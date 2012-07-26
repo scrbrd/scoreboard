@@ -11,6 +11,7 @@ from view.app_copy import Copy
 from constants import COMPONENT_CLASS
 
 from base import Div, OL, SubmitButton, Button, Header, LI, A
+from base import RadioInput, Label
 
 
 class CreateButton(A):
@@ -192,3 +193,50 @@ class HeadedListItem(MultiColumnLI):
         """ Construct a list item for a HeadedList. """
         super(HeadedListItem, self).__init__(item, index)
         self.append_classes([COMPONENT_CLASS.HEADED_LIST_ITEM])
+
+
+class LabeledRadioInput(Div):
+
+    """ RadioInput with an associated Label. """
+
+
+    def __init__(self, text, name, value, id, checked=False):
+        """ Construct a RadioInput with an associated Label. """
+        super(LabeledRadioInput, self).__init__()
+        self.append_child(RadioInput(name, value, id, checked))
+        self.append_child(Label(text, id))
+
+
+class RadioInputGroup(Div):
+
+    """ Set of related Radio input elements.
+
+    Note that this is not a standard HTML tag. We are pioneers.
+
+    Required:
+    str     name                    name of a RadioInput
+    dict    options                 text/id tuples keyed on value
+
+    Optional:
+    bool    default_checked_value   which value is checked by default?
+
+    """
+
+
+    def __init__(self, name, options, default_checked_value=None):
+        """ Construct a Div with a set of <input type="radio"> buttons. """
+        super(RadioInputGroup, self).__init__()
+
+        # if no options or default unspecified or non-existent, use first
+        if options and default_checked_value not in options:
+            default_checked_value = options.keys()[0]
+
+        for value, (text, id) in options.items():
+            self.append_child(LabeledRadioInput(
+                    text,
+                    name,
+                    value,
+                    (id if id else value),
+                    (value == default_checked_value)))
+
+
