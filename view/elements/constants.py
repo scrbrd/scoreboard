@@ -194,6 +194,12 @@ class _HTMLAttribute(object):
 
 
     @constant
+    def FOR(self):
+        """ FOR is a type of HTML attribute. It refers to an ID. """
+        return "for"
+
+
+    @constant
     def DATA(self):
         """ DATA is a type of HTML attribute. In fact it's the special
         data-* one. """
@@ -223,6 +229,18 @@ class _HTMLType(object):
     def CHECKBOX(self):
         """ CHECKBOX is a value of the HTML attribute Type. """
         return "checkbox"
+
+
+    @constant
+    def RADIO(self):
+        """ RADIO is a value of the HTML attribute Type. """
+        return "radio"
+
+
+    @constant
+    def LABEL(self):
+        """ LABEL is a value of the HTML attribute Type. """
+        return "label"
 
 
     @constant
@@ -268,6 +286,7 @@ class _HTMLConstant(object):
             HTML_TAG.SECTION,
             HTML_TAG.FORM,
             HTML_TAG.INPUT,
+            HTML_TAG.LABEL,
             HTML_TAG.BUTTON,
             HTML_TAG.BR,
             HTML_TAG.FOOTER,
@@ -313,6 +332,8 @@ class _HTMLConstant(object):
         attributes[HTML_TAG.INPUT].append(HTML_ATTRIBUTE.CHECKED)
         attributes[HTML_TAG.INPUT].append(HTML_ATTRIBUTE.AUTOFOCUS)
 
+        attributes[HTML_TAG.LABEL].append(HTML_ATTRIBUTE.FOR)
+
         # button tags can also have these attributes:
         attributes[HTML_TAG.BUTTON].append(HTML_ATTRIBUTE.NAME)
         attributes[HTML_TAG.BUTTON].append(HTML_ATTRIBUTE.ACTION)
@@ -329,6 +350,7 @@ class _HTMLConstant(object):
         return [
             HTML_TYPE.TEXT,
             HTML_TYPE.CHECKBOX,
+            HTML_TYPE.RADIO,
             HTML_TYPE.SUBMIT,
             HTML_TYPE.HIDDEN,
         ]

@@ -258,6 +258,7 @@ class UICreateGameDialog(tornado.web.UIModule):
 
     """ Create Game Dialog UI Module. """
 
+
     def render(self, model=None, state=None):
         """ Render a Create Game Dialog Screen. """
         # block xsrf for forms. required for Tornado posts.
