@@ -2,9 +2,6 @@
 
 Provide Application constants for view.
 
-    HTML_ID
-    HTML_CLASS
-
 """
 
 from util.decorators import constant
@@ -13,24 +10,6 @@ from util.decorators import constant
 class _AppClass(object):
 
     """ _AppClass holds app-wide w3c classes. """
-
-
-    @constant
-    def JS_LINK(self):
-        """ JS_LINK is a w3c class. """
-        return "js-link"
-
-
-    @constant
-    def EXTERNAL_LINK(self):
-        """ EXTERNAL_LINK is a w3c class. """
-        return "external-link"
-
-
-    @constant
-    def ROUTE_BYPASS(self):
-        """ ROUTE_BYPASS is a w3c class. """
-        return "route-bypass"
 
 
     @constant

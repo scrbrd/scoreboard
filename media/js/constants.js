@@ -28,7 +28,6 @@ var constants = {
     */
     DOM: {
         BODY:                   "body",
-        BUTTON:                 "button",
         NAV:                    "nav"
     },
 
@@ -54,17 +53,19 @@ var constants = {
     */
     // TODO: make this link sync with Python HTML_CLASS constants
     CLASS: {
-        JS_LINK:                ".js-link",
-        EXTERNAL_LINK:          ".external-link",
+        NON_ROUTING_ANCHOR:     ".non-routing-anchor",
+        ANCHOR:                 ".anchor",
+        BUTTON:                 ".button",
         CLOSE_BUTTON:           ".close-button",
         CREATE_BUTTON:          ".create-button",
+        MENU_BUTTON:            ".menu-button",
         ACTIVE_NAV:             ".active-nav",
         INACTIVE_NAV:           ".inactive-nav",
         AUTOCOMPLETE_PLAYERS:   ".autocomplete-players",
         AUTOCOMPLETE_LABEL:     ".autocomplete-label",
         AUTOCOMPLETE_VALUE:     ".autocomplete-value",
         LIST_WITH_HEADERS:      ".list-with-headers",
-        FACEBOOK_LOGIN_BUTTON:  ".facebook-login-button"
+        FACEBOOK_LOGIN_ANCHOR:  ".facebook-login-anchor"
     },
 
     /**

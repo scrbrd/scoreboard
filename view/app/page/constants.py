@@ -13,9 +13,9 @@ class _PageClass(object):
 
 
     @constant
-    def LOGIN_BUTTON_WRAPPER(self):
-        """ LOGIN_BUTTON_WRAPPER is a w3c class. """
-        return "login-button-wrapper"
+    def LOGIN_ANCHOR_WRAPPER(self):
+        """ LOGIN_ANCHOR_WRAPPER is a w3c class. """
+        return "login-anchor-wrapper"
 
 
 PAGE_CLASS = _PageClass()

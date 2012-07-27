@@ -216,9 +216,11 @@ var DocView = Backbone.View.extend({
         // delegation completely.
         var model = this.pageStateModel;
 
+        // For Anchors that are being internally routed (internal page views),
+        // disable default functionality, and set up view page trigger.
         $(document).on(
                 "touchstart click",
-                "a:not(" + Const.CLASS.EXTERNAL_LINK + ")",
+                Const.CLASS.ANCHOR + ":not(" + Const.CLASS.NON_ROUTING_ANCHOR + ")",
                 function (event) {
             // Get the anchor href and protcol
             var href = $(this).attr("href");
@@ -249,6 +251,7 @@ var DocView = Backbone.View.extend({
             }
         });
 
+        // Trigger RELOAD_PAGE when page is asked to be reloaded.
         this.reloadPage = function () {
             var href = "/" + model.pageName();
             EventDispatcher.trigger(
@@ -257,9 +260,10 @@ var DocView = Backbone.View.extend({
                     model);
         };
 
+        // Trigger Login Event before following link.
         $(document).on(
                 "touchstart click",
-                Const.CLASS.FACEBOOK_LOGIN_BUTTON,
+                Const.CLASS.FACEBOOK_LOGIN_ANCHOR,
                 function (event) {
             EventDispatcher.trigger(Event.CLIENT.REQUEST_FACEBOOK_LOGIN);
             return true;
