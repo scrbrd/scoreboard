@@ -57,7 +57,7 @@ var loadPageController = (function () {
     */
     that.handleSubmit = function (href, pageStateModel) {
         // set loading screen
-        var loading = "<div class=\"loading\">Loading...</div>";
+        var loading = "<div id=\"content\" class=\"loading\">Loading...</div>";
         pageStateModel.setContent(loading);
         
         Crud.readTab(href, pageStateModel);

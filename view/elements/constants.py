@@ -231,6 +231,13 @@ class _HTMLType(object):
 
     """ _HTMLType class to hold all 'Type' atttribute values. """
 
+
+    @constant
+    def BUTTON(self):
+        """ BUTTON is a value of the HTML attribute Type. """
+        return "button"
+
+
     @constant
     def CHECKBOX(self):
         """ CHECKBOX is a value of the HTML attribute Type. """
@@ -262,6 +269,27 @@ class _HTMLType(object):
 
 
 HTML_TYPE = _HTMLType()
+
+
+class _HTMLClass(object):
+
+    """ _HTMLClass class holds all w3c classes for standard HTML tags. """
+
+
+    @constant
+    def ANCHOR(self):
+        """ ANCHOR is a w3c class. """
+        return "anchor"
+
+
+    @constant
+    def BUTTON(self):
+        """ BUTTON is a w3c class. """
+        return "button"
+
+
+
+HTML_CLASS = _HTMLClass()
 
 
 class _HTMLConstant(object):
@@ -348,11 +376,12 @@ class _HTMLConstant(object):
     def TYPES(self):
         """ TYPES is a list of allowed types. """
         return [
-            HTML_TYPE.TEXT,
+            HTML_TYPE.BUTTON,
             HTML_TYPE.CHECKBOX,
+            HTML_TYPE.HIDDEN,
             HTML_TYPE.RADIO,
             HTML_TYPE.SUBMIT,
-            HTML_TYPE.HIDDEN,
+            HTML_TYPE.TEXT,
         ]
 
 
@@ -380,6 +409,12 @@ class _ComponentClass(object):
 
 
     @constant
+    def NON_ROUTING_ANCHOR(self):
+        """ NON_ROUTING_ANCHOR is a w3c class. """
+        return "non-routing-anchor"
+
+
+    @constant
     def CREATE_BUTTON(self):
         """ CREATE_BUTTON is a w3c class. """
         return "create-button"
@@ -392,15 +427,15 @@ class _ComponentClass(object):
 
 
     @constant
-    def LOGIN_BUTTON(self):
-        """ LOGIN_BUTTON is a w3c class. """
-        return "login-button"
+    def LOGIN_ANCHOR(self):
+        """ LOGIN_ANCHOR is a w3c class. """
+        return "login-anchor"
 
 
     @constant
-    def FACEBOOK_LOGIN_BUTTON(self):
-        """ FACEBOOK_LOGIN_BUTTON is a w3c class. """
-        return "facebook-login-button"
+    def FACEBOOK_LOGIN_ANCHOR(self):
+        """ FACEBOOK_LOGIN_ANCHOR is a w3c class. """
+        return "facebook-login-anchor"
 
 
     @constant

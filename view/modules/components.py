@@ -105,44 +105,44 @@ class UINavHeader(tornado.web.UIModule):
         # TODO: stop hardcoding all parameters to NavHeader...build a URL
         # class and use href constants and use a constant for index
 
-        nav_links = []
-        special_link = None
+        nav_items = []
+        special_item = None
         special_index = -1
 
-        rankings_link = {
+        rankings_item = {
             "page_name": PAGE_NAME.RANKINGS,
             "text": "Rankings",
             "href": "/rankings",
             "class": PAGE_NAME.RANKINGS,
         }
-        games_link = {
+        games_item = {
             "page_name": PAGE_NAME.GAMES,
             "text": "Games",
             "href": "/games",
             "class": PAGE_NAME.GAMES,
         }
 
-        if rankings_link["page_name"] == state:
-            nav_links.append(games_link)
-            special_link = rankings_link
+        if rankings_item["page_name"] == state:
+            nav_items.append(games_item)
+            special_item = rankings_item
             special_index = 0
-        elif games_link["page_name"] == state:
-            nav_links.append(rankings_link)
-            special_link = games_link
+        elif games_item["page_name"] == state:
+            nav_items.append(rankings_item)
+            special_item = games_item
             special_index = 1
         else:
             print("ERROR in render UINavHeader")
 
-        sp_classes = special_link["class"] + " " + APP_CLASS.ACTIVE_NAV
-        special_link["class"] = sp_classes
+        sp_classes = special_item["class"] + " " + APP_CLASS.ACTIVE_NAV
+        special_item["class"] = sp_classes
 
-        for link in nav_links:
-            classes = link["class"] + " " + APP_CLASS.INACTIVE_NAV
-            link["class"] = classes
+        for item in nav_items:
+            classes = item["class"] + " " + APP_CLASS.INACTIVE_NAV
+            item["class"] = classes
 
         element_tree = NavHeader(
-                nav_links,
-                special_link,
+                nav_items,
+                special_item,
                 special_index).element()
 
         return Element.to_string(element_tree)

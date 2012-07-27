@@ -158,6 +158,18 @@ the same border. */
     text-shadow: 0px -1px 0px rgba(0, 0, 0, 0.5);
 }
 
+/* Header section needs to cut off long text. */
+.header-section {
+    overflow-y: hidden;
+}
+
+.form-element {
+    .border-radius(5px);
+   
+    background-color: @white;
+    border: 1px solid @lightGrey;
+}
+
 
 /***********************************************************
 * REUSABLE GENERIC CLASSES
@@ -192,10 +204,6 @@ the same border. */
     color: transparent; 
 }
 
-/* Header section needs to cut off long text. */
-.header-section {
-    overflow-y: hidden;
-}
 
 /* Use a background-image in a consistent way. */
 .background-image-wrapper(
@@ -266,7 +274,7 @@ the same border. */
 
 
 /***********************************************************
-* FRAMEWORK / ELEMENTS
+* FRAMEWORK / BASE
 ************************************************************/
 
 /* I like this box model better so deal with it. */
@@ -305,25 +313,28 @@ ol, ul {
 }
 
 
-a, a:link, a:visited {
+.anchor, .anchor:link, .anchor:visited {
     .clickableText();
     text-decoration: none;
 }
 
-a:hover {
+.anchor:hover {
     .clickableText();
 }
 
-a:active {
+.anchor:active {
     .opacity(0.8);
 }
 
 
-input, button {
-    .border-radius(0px);
-   
-    background-color: @white;
-    border: 1px solid @lightGrey;
+input {
+    .form-element;
+}
+
+.button {
+    .form-element;
+
+    cursor: pointer;
 }
 
 
@@ -340,20 +351,18 @@ input, button {
 .submit-button {
 }
 
-// TODO replace anchor with a class 'link'
 @createButtonSide: 37px;
-a.create-button {
+.create-button {
     .hidden-content;
     .background-image-wrapper(
             @createButtonSide,
             @createButtonSide,
             'createButton.png',
             transparent);
-
-    display: block;
+    border: 0px; // to cancel generic button properties
 }
 
-a.create-button:active {
+.create-button:active {
     .background-image-wrapper(
             @createButtonSide,
             @createButtonSide,
@@ -363,7 +372,7 @@ a.create-button:active {
 
 @menuButtonWidth: 36px;
 @menuButtonHeight: 28px;
-a.menu-button {
+.menu-button {
     .hidden-content;
     .background-image-wrapper(
             @menuButtonWidth,
@@ -371,20 +380,20 @@ a.menu-button {
             'menuButton.png',
             transparent);
 
-    display: block;
+    border: 0px;
 }
 
-.login-button {
+.anchor.login-anchor {
     .hidden-content;
 
     display: inline-block;
 }
 
-.facebook-login-button {
+.anchor.facebook-login-anchor {
     .background-image-wrapper(
             158px,
             39px,
-            'facebookLoginButton.png',
+            'facebookLoginAnchor.png',
             transparent);
 }
 
@@ -485,9 +494,6 @@ a.menu-button {
 }
 
 #content ol {
-    margin-top: @headerHeight;
-    margin-left: @pagePadding;
-    margin-right: @pagePadding;
     border-top: 1px dotted @lightGrey;
 }
 
@@ -497,7 +503,13 @@ a.menu-button {
 }
 
 #tab .loading {
-    padding: @linePadding @pagePadding;
+    padding-top: @linePadding;
+}
+
+#content {
+    margin-top: @headerHeight;
+    margin-left: @pagePadding;
+    margin-right: @pagePadding;
 }
 
 
@@ -592,11 +604,11 @@ a.menu-button {
 /***********************************************************
 * GAMES TAB SECTION
 ************************************************************/
-a.games.active-nav {
+.anchor.games.active-nav {
     .navButton('gamesPressed.jpg', @white);
 }
 
-a.games {
+.anchor.games {
     .navButton('gamesUnpressed.jpg', @white);
 }
 
@@ -604,11 +616,11 @@ a.games {
 /***********************************************************
 * RANKINGS TAB SECTION
 ************************************************************/
-a.rankings.active-nav {
+.anchor.rankings.active-nav {
     .navButton('rankingsPressed.jpg', @white);
 }
 
-a.rankings {
+.anchor.rankings {
     .navButton('rankingsUnpressed.jpg', @white);
 }
 
@@ -661,7 +673,7 @@ a.rankings {
 /***********************************************************
 * GENERIC PAGE
 ************************************************************/
-.login-button-wrapper {
+.login-anchor-wrapper {
     position: absolute;
     left: 0px;
     top: 220px;

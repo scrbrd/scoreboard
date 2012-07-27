@@ -41,22 +41,8 @@ class TabHeader(MainHeaderDiv):
         # set context data
         self.set_data(SQ_DATA.ID, context.id)
 
-        # TODO: Make the menu button go to invite friends
-        null_link = {
-            "text": "menu",
-            "href": "",
-        }
-        self.append_child(MenuButton(null_link))
-
-        # TODO this is a hardcoded string and not a constant because once we
-        # have a Link class we will just be accessing its properties.
-        create_link = {
-            "text": "+",
-            "href": "/create/game",
-        }
-
-        create_button = CreateButton(create_link)
-        self.append_child(create_button)
+        self.append_child(MenuButton())
+        self.append_child(CreateButton())
 
 
 class NavHeader(Nav):
@@ -108,7 +94,8 @@ class NavHeaderLI(LI):
 
     def set_content(self, item):
         """ Set content for the NavHeaderLI. """
-        a = A(item)
+        url = {"href": item["href"]}
+        a = A(url, item["text"])
         # TODO: this is a hardcoded string and not a constant because once we
         # have a Link class [and an Item interface or some such thing for it
         # to implement] we will just be accessing properties there. this makes

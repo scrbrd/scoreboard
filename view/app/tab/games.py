@@ -49,7 +49,6 @@ class GameLI(LI):
         """ Generate the content for this game list item. """
 
         # get results' Opponents' names, results' scores
-        print(item.opponent_ids_by_result)
         for result, opponent_ids in item.opponent_ids_by_result.items():
             for id in opponent_ids:
                 # FIXME: this all breaks the contract that the view doesnt get

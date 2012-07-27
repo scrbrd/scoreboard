@@ -123,6 +123,7 @@ they change the functionality of their element.
 import xml.etree.cElementTree as ET
 
 from constants import HTML_TAG, HTML_ATTRIBUTE, HTML_TYPE, HTML_CONSTANT
+from constants import HTML_CLASS
 
 
 class Element(object):
@@ -657,7 +658,7 @@ class Nav(Element):
 
 class A(Element):
 
-    """ Anchor element <a>.
+    """ Anchor element <a> that is used for navigation.
 
     Attribute   Value           Description
     ---------------------------------------
@@ -689,12 +690,13 @@ class A(Element):
                                 document
 
     Required:
-    url         link            Specifies the value for href
+    url         url             Specifies the value for href
+    str         text            Text to display.
 
     """
 
 
-    def __init__(self, link):
+    def __init__(self, url, text):
         """ Construct a <a>. """
         super(A, self).__init__(HTML_TAG.A)
 
@@ -702,11 +704,10 @@ class A(Element):
         # have a Link class [and an Item interface or some such thing for it
         # to implement] we will just be accessing properties there. this makes
         # it more obvious what to change.
-        self.set_href(link["href"])
-        self.set_text(link["text"])
+        self.set_href(url["href"])
+        self.set_text(text)
 
-        # TODO: is there css we want applied even to this base class?
-        #self.append_classes([])
+        self.append_classes([HTML_CLASS.ANCHOR])
 
 
 class H1(Element):
@@ -1056,10 +1057,11 @@ class Button(Element):
 
     """ Button element <button>. """
 
-    def __init__(self, type=None):
-        """ Construct a <button>.
+    def __init__(self, text="", type=None):
+        """ Construct a <button> with class 'button'.
 
         Optional:
+        str     text    the button's text
         str     type    the button's type
 
         Button's type can be "submit", "reset", or no value.
@@ -1074,21 +1076,27 @@ class Button(Element):
             # introduce a bug
             msg = "Type can only be submit right now."
             raise InvalidAttributeError([type], msg)
+        else:
+            self.set_type(HTML_TYPE.BUTTON)
+
+        self.append_classes([HTML_CLASS.BUTTON])
+        self.set_text(text)
 
 
 class SubmitButton(Button):
 
     """ Button element of type Submit <button type="submit">. """
 
-    def __init__(self, action_url=None):
+    def __init__(self, text=None, action_url=None):
         """ Construct a <button type="submit">.
 
         Optional:
+        str     text            the button's text
         str     action_url      form submits to this url. can also
                                 be identified in the form element.
 
         """
-        super(SubmitButton, self).__init__(HTML_TYPE.SUBMIT)
+        super(SubmitButton, self).__init__(text, HTML_TYPE.SUBMIT)
         if action_url is not None:
             self.set_action(action_url)
 

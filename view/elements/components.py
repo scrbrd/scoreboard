@@ -5,7 +5,6 @@ app-specific features.
 
 """
 
-from view.constants import APP_CLASS
 from view.app_copy import Copy
 
 from constants import COMPONENT_CLASS
@@ -14,85 +13,102 @@ from base import Div, OL, SubmitButton, Button, Header, LI, A
 from base import RadioInput, Label
 
 
-class CreateButton(A):
+class NonRoutingAnchor(A):
 
-    """ CreateButton anchor that extends <a>. """
+    """ NonRoutingAnchor is an anchor that won't be handled by Router/AJAX.
 
+    Required:
+    url         url             Specifies the value for href
+    str         text            Text to display.
 
-    def __init__(self, link):
-        """ Construct an add button anchor tag. """
-        super(CreateButton, self).__init__(link)
-
-        self.set_text("+")
-        self.append_classes([COMPONENT_CLASS.CREATE_BUTTON, APP_CLASS.JS_LINK])
+    """
 
 
-class MenuButton(A):
-
-    """ MenuButton anchor that extends <a> currently for invite friends. """
-
-
-    def __init__(self, link):
-        """ Construct a menu button anchor tag. """
-        super(MenuButton, self).__init__(link)
-
-        self.set_text("menu")
-        self.append_classes([COMPONENT_CLASS.MENU_BUTTON, APP_CLASS.JS_LINK])
+    def __init__(self, url, text):
+        """ Construct an anchor that doesn't use internal routing. """
+        super(NonRoutingAnchor, self).__init__(url, text)
+        self.append_classes([COMPONENT_CLASS.NON_ROUTING_ANCHOR])
 
 
-class LoginButton(A):
+class LoginAnchor(NonRoutingAnchor):
 
-    """ Login Button anchor that extends <a>. """
+    """ Login Anchor that extends NonRoutingAnchor <a>. """
 
+    def __init__(self, login_url, text=Copy.login):
+        """ Construct a login anchor tag. """
+        super(LoginAnchor, self).__init__(login_url, text)
 
-    def __init__(self, login_link):
-        """ Construct a login button anchor tag. """
-        super(LoginButton, self).__init__(login_link)
-
-        self.set_text(Copy.login)
-        self.append_classes([COMPONENT_CLASS.LOGIN_BUTTON])
+        self.append_classes([COMPONENT_CLASS.LOGIN_ANCHOR])
 
 
-class FacebookLoginButton(LoginButton):
+class FacebookLoginAnchor(LoginAnchor):
 
-    """ Facebook Login Button anchor that extends LoginButton. """
-
-
-    def __init__(self, login_link):
-        """ Construct a facebook login button anchor tag. """
-        super(FacebookLoginButton, self).__init__(login_link)
-
-        self.set_text(Copy.facebook_login)
-        self.append_classes([
-            COMPONENT_CLASS.FACEBOOK_LOGIN_BUTTON,
-            APP_CLASS.EXTERNAL_LINK,
-        ])
+    """ Facebook Login Anchor that extends LoginAnchor. """
 
 
-class DefaultCloseButton(Button):
+    def __init__(self, login_url, text=Copy.facebook_login):
+        """ Construct a facebook login anchor tag. """
+        super(FacebookLoginAnchor, self).__init__(login_url, text)
 
-    """ Default Close Button button that extends <button>. """
+        self.append_classes([COMPONENT_CLASS.FACEBOOK_LOGIN_ANCHOR])
+
+
+class SqSubmitButton(SubmitButton):
+
+    """ Scoreboard Submit Button that extends <button type="submit">. """
+
+
+    def __init__(self, action_url=None):
+        """ Construct a submit button tag.
+
+        Optional:
+        str     action_url      form submits to this url. can also
+                                be identified in the form element.
+
+        """
+        super(SqSubmitButton, self).__init__(Copy.submit, action_url)
+
+        self.append_classes([COMPONENT_CLASS.SUBMIT_BUTTON])
+
+
+class CloseButton(Button):
+
+    """ Close Button button that extends <button>. """
 
 
     def __init__(self):
         """ Construct a close button tag. """
-        super(DefaultCloseButton, self).__init__()
+        super(CloseButton, self).__init__(Copy.close)
 
         self.append_classes([COMPONENT_CLASS.CLOSE_BUTTON])
-        self.set_text(Copy.close)
 
 
-class DefaultSubmitButton(SubmitButton):
+class CreateButton(Button):
 
-    """ Submit Button button that extends <button type="submit">. """
+    """ CreateButton that extends <button>. """
+
+    PLUS = "+"
 
 
     def __init__(self):
-        """ Construct a submit button tag. """
-        super(DefaultSubmitButton, self).__init__()
+        """ Construct an add button tag. """
+        super(CreateButton, self).__init__(self.PLUS)
 
-        self.append_classes([COMPONENT_CLASS.SUBMIT_BUTTON])
-        self.set_text(Copy.submit)
+        self.append_classes([COMPONENT_CLASS.CREATE_BUTTON])
+
+
+class MenuButton(Button):
+
+    """ MenuButton that extends <button>, currently for invite friends. """
+
+    MENU = "menu"
+
+
+    def __init__(self):
+        """ Construct a menu button tag. """
+        super(MenuButton, self).__init__(self.MENU)
+
+        self.append_classes([COMPONENT_CLASS.MENU_BUTTON])
 
 
 class MainHeaderDiv(Div):
