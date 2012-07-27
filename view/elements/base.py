@@ -209,19 +209,9 @@ class Element(object):
         return self.element().tag
 
 
-    def text(self):
-        """ Return this element's text. """
-        return self.element().text
-
-
     def set_text(self, text):
         """ Set this element's text content. """
         self.element().text = text
-
-
-    def tail(self):
-        """ Return this element's tail. """
-        return self.element().tail
 
 
     def set_tail(self, tail):
@@ -302,11 +292,6 @@ class Element(object):
             self._remove_attribute(attribute)
 
 
-    def id(self):
-        """ Return this element's id attribute. """
-        return self._attribute(HTML_ATTRIBUTE.ID)
-
-
     def set_id(self, id):
         """ Set the id attribute for this element. """
         self._set_attribute(HTML_ATTRIBUTE.ID, id)
@@ -344,35 +329,6 @@ class Element(object):
         self.set_classes(classes)
 
 
-    def data(self, data_key):
-        """ Return this element's data-KEY attribute.
-
-        Optional:
-        data_key         Key of requested data.
-
-        """
-        key = "{0}{1}".format(HTML_ATTRIBUTE.DATA, data_key)
-        return self._attribute(key)
-
-
-    def dataset(self):
-        """ Return this element's data-* attributes.
-
-        Return:
-        dict of {key: value}
-
-        """
-        all_attributes = self.attributes()
-        dataset = {}
-
-        # put the data-* key/values into the dataset
-        for attribute, value in all_attributes:
-            data_index = attribute.rfind(HTML_ATTRIBUTE.DATA)
-            if data_index != -1:
-                dataset[attribute[data_index:]] = value
-        return dataset
-
-
     def set_data(self, data_key, value):
         """ Set the data-KEY attribute for this element. """
         data_attribute = "{0}{1}".format(HTML_ATTRIBUTE.DATA, data_key)
@@ -385,19 +341,9 @@ class Element(object):
         self._remove_attribute(data_attribute)
 
 
-    def href(self):
-        """ Return this element's href attribute. """
-        return self._attribute(HTML_ATTRIBUTE.HREF)
-
-
     def set_href(self, href):
         """ Set the href attribute for this element. """
         self._set_attribute(HTML_ATTRIBUTE.HREF, href)
-
-
-    def name(self):
-        """ Return this element's name attribute. """
-        return self._attribute(HTML_ATTRIBUTE.NAME)
 
 
     def set_name(self, name):
@@ -413,19 +359,9 @@ class Element(object):
             self._set_attribute(HTML_ATTRIBUTE.NAME, name)
 
 
-    def action(self):
-        """ Return this element's action attribute. """
-        return self._attribute(HTML_ATTRIBUTE.ACTION)
-
-
     def set_action(self, url):
         """ Set the action attribute for this element. """
         self._set_attribute(HTML_ATTRIBUTE.ACTION, url)
-
-
-    def type(self):
-        """ Return this element's type attribute. """
-        return self._attribute(HTML_ATTRIBUTE.TYPE)
 
 
     def set_type(self, type):
@@ -441,33 +377,14 @@ class Element(object):
             raise InvalidAttributeError([type], description)
 
 
-    def value(self):
-        """ Return this element's value attribute. """
-        return self._attribute(HTML_ATTRIBUTE.VALUE)
-
-
     def set_value(self, value):
         """ Set the value attribute for this element. """
         self._set_attribute(HTML_ATTRIBUTE.VALUE, value)
 
 
-    def placeholder(self):
-        """ Return this element's placeholder attribute. """
-        return self._attribute(HTML_ATTRIBUTE.PLACEHOLDER)
-
-
     def set_placeholder(self, value):
         """ Set the placeholder attribute for this element. """
         self._set_attribute(HTML_ATTRIBUTE.PLACEHOLDER, value)
-
-
-    def is_autofocus(self):
-        """ Return True if element is set to autofocus.
-
-        Considered True if the element has value "autofocus".
-
-        """
-        return self._boolean_attribute(HTML_ATTRIBUTE.AUTOFOCUS)
 
 
     def set_autofocus(self, autofocus=True):
@@ -478,15 +395,6 @@ class Element(object):
 
         """
         self._set_boolean_attribute(HTML_ATTRIBUTE.AUTOFOCUS, autofocus)
-
-
-    def is_checked(self):
-        """ Return True if element is set to be checked.
-
-        Considered True if the element has value "checked".
-
-        """
-        return self._boolean_attribute(HTML_ATTRIBUTE.CHECKED)
 
 
     def set_checked(self, checked=True):

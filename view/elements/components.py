@@ -238,5 +238,3 @@ class RadioInputGroup(Div):
                     value,
                     (id if id else value),
                     (value == default_checked_value)))
-
-
