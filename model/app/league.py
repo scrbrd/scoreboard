@@ -15,7 +15,13 @@ from base import ReadModel
 
 class LeagueModel(ReadModel):
 
-    """ Load and prepare data for the View to render a League. """
+    """ Load and prepare data for the View to render a League.
+
+    Required:
+    Opponents   _opponents      Opponents sorted by Win Count
+    str         _rank_field     Field that Opponents are sorted by
+
+    """
 
 
     def __init__(self, session):
@@ -44,8 +50,21 @@ class LeagueModel(ReadModel):
         # TODO: we don't need to load Games from League when they can be loaded
         # from Opponents [or the vice-versa] all at the same time. we should
         # never be calling set_opponents() and set_games() outside the api.
-        league.set_opponents(League.load_opponents(league.id))
-        league.set_games(League.load_games(league.id))
+
+        # RANKINGS LOAD
+        league_with_opponents = League.load_opponents(league.id)
+        league.set_opponents(league_with_opponents.get_opponents())
+
+        # GAMES LOAD
+        league_with_games = League.load_games(league.id)
+        league.set_games(league_with_games.get_games())
+
+        # TODO: iterating through this list is only temporary becaue the
+        # multiload should have happened in the api.
+        game_ids = [game.id for game in self._context.get_games()]
+
+        # load opponents for each game {g_id: Game}
+        games_with_opponents = Game.multiload_opponents(game_ids)
 
         # load league with opponents and games into generic context
         self._context = league
@@ -54,13 +73,6 @@ class LeagueModel(ReadModel):
         self._aggregations["standings"] = self._context.get_opponents().sort(
                 key=lambda x: x.win_count,
                 reverse=True)
-
-        # TODO: iterating through this list is only temporary becaue the
-        # multiload should have happened in the api.
-        game_ids = [game.id for game in self._context.get_games()]
-
-        # load opponents for each game {g_id: Game}
-        games_with_opponents = Game.multiload_opponents(game_ids)
 
         # store opponents loaded games in reverse order (so it's new first)
         # NOTE: These Games are different objects than the ones in the
