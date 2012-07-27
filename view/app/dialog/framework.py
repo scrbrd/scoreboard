@@ -23,7 +23,11 @@ class DialogHeader(MainHeaderDiv):
         super(DialogHeader, self).__init__(dialog_name)
 
         self.set_id(DIALOG_ID.DIALOG_HEADER)
-        self.append_child(CloseButton())
+
+        close_button = CloseButton()
+        # set close button to disabled to prevent accidental dialog closure.
+        close_button.set_disabled()
+        self.append_child(close_button)
 
 
 class SubmitButtonSection(Div):

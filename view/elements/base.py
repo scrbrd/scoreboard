@@ -11,46 +11,6 @@ spec. To wit, when front-end code for generating markup seems broadly
 applicable to building anything on any platform, it likely belongs here.
 
 
-All Element subclasses have access to and may override:
-    def tag(self)
-    def text(self)
-    def set_text(self, text)
-    def tail(self)
-    def set_tail(self, tail)
-    def attributes(self)
-    def id(self)
-    def set_id(self, id)
-    def classes(self)
-    def set_classes(self, classes)
-    def append_class(self, additional_class)
-    def append_classes(self, additional_classes)
-    def data(self, key)
-    def dataset(self)
-    def set_data(self, data_key, value)
-    def remove_data(self, key)
-    def href(self)
-    def set_href(self, href)
-    def name(self)
-    def set_name(self, name)
-    def action(self)
-    def set_action(self, url)
-    def type(self)
-    def set_type(self, type)
-    def value(self)
-    def set_value(self, value)
-    def placeholder(self)
-    def set_placeholder(self, value)
-    def is_autofocus(self)
-    def set_autofocus(self, autofocus=True)
-    def is_checked(self)
-    def set_checked(self, checked=True)
-    def children(self)
-    def first_child(self)
-    def last_child(self)
-    def append_child(self, element)
-    def append_children(self, elements)
-
-
 The base class Element also provides static cElementTree wrappers:
     def to_string(element)
 
@@ -107,6 +67,7 @@ The following non-global html5 attributes are currently implemented:
     type            input, button
     value           input, button
     checked         input[type="checkbox"]
+    disabled        form, input, button
     placeholder     input
     autofocus       input, button
 
@@ -406,6 +367,16 @@ class Element(object):
 
         """
         self._set_boolean_attribute(HTML_ATTRIBUTE.CHECKED, checked)
+
+
+    def set_disabled(self, disabled=True):
+        """ Set the boolean disabled attribute for this element.
+
+        Optional:
+        bool    disabled    if ommitted then set as true.
+
+        """
+        self._set_boolean_attribute(HTML_ATTRIBUTE.DISABLED, disabled)
 
 
     def set_for(self, for_):

@@ -200,6 +200,12 @@ class _HTMLAttribute(object):
 
 
     @constant
+    def DISABLED(self):
+        """ DISABLED is a type of HTML boolean attribute. """
+        return "disabled"
+
+
+    @constant
     def FOR(self):
         """ FOR is a type of HTML attribute. It refers to an ID. """
         return "for"
@@ -349,25 +355,28 @@ class _HTMLConstant(object):
         attributes[HTML_TAG.A].append(HTML_ATTRIBUTE.HREF)
 
         # form tags can also have these attributes:
-        attributes[HTML_TAG.FORM].append(HTML_ATTRIBUTE.NAME)
         attributes[HTML_TAG.FORM].append(HTML_ATTRIBUTE.ACTION)
+        attributes[HTML_TAG.FORM].append(HTML_ATTRIBUTE.DISABLED)
+        attributes[HTML_TAG.FORM].append(HTML_ATTRIBUTE.NAME)
 
         # input tags can also have these attributes:
+        attributes[HTML_TAG.INPUT].append(HTML_ATTRIBUTE.AUTOFOCUS)
+        attributes[HTML_TAG.INPUT].append(HTML_ATTRIBUTE.CHECKED)
+        attributes[HTML_TAG.INPUT].append(HTML_ATTRIBUTE.DISABLED)
         attributes[HTML_TAG.INPUT].append(HTML_ATTRIBUTE.NAME)
+        attributes[HTML_TAG.INPUT].append(HTML_ATTRIBUTE.PLACEHOLDER)
         attributes[HTML_TAG.INPUT].append(HTML_ATTRIBUTE.TYPE)
         attributes[HTML_TAG.INPUT].append(HTML_ATTRIBUTE.VALUE)
-        attributes[HTML_TAG.INPUT].append(HTML_ATTRIBUTE.PLACEHOLDER)
-        attributes[HTML_TAG.INPUT].append(HTML_ATTRIBUTE.CHECKED)
-        attributes[HTML_TAG.INPUT].append(HTML_ATTRIBUTE.AUTOFOCUS)
 
         attributes[HTML_TAG.LABEL].append(HTML_ATTRIBUTE.FOR)
 
         # button tags can also have these attributes:
-        attributes[HTML_TAG.BUTTON].append(HTML_ATTRIBUTE.NAME)
         attributes[HTML_TAG.BUTTON].append(HTML_ATTRIBUTE.ACTION)
+        attributes[HTML_TAG.BUTTON].append(HTML_ATTRIBUTE.AUTOFOCUS)
+        attributes[HTML_TAG.BUTTON].append(HTML_ATTRIBUTE.DISABLED)
+        attributes[HTML_TAG.BUTTON].append(HTML_ATTRIBUTE.NAME)
         attributes[HTML_TAG.BUTTON].append(HTML_ATTRIBUTE.TYPE)
         attributes[HTML_TAG.BUTTON].append(HTML_ATTRIBUTE.VALUE)
-        attributes[HTML_TAG.BUTTON].append(HTML_ATTRIBUTE.AUTOFOCUS)
 
         return attributes
 

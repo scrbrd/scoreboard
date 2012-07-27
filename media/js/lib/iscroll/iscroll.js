@@ -13,6 +13,7 @@ define(
 
 // Instantiate iScroll object
 function Scroller() {
+    var options = {hScrollbar: false, vScrollbar: false};
 
     var curr_scroll = null;
     var IScroller = iScroll;
@@ -36,7 +37,7 @@ function Scroller() {
                     e.preventDefault();
                 },
                 false);
-        curr_scroll = new IScroller(scroller_id);
+        curr_scroll = new IScroller(scroller_id, options);
     }
 
     initialize();

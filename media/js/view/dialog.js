@@ -172,6 +172,9 @@ var DialogView = Backbone.View.extend({
         Hide dialog.
     */
     hide: function () {
+        // disable close button to prevent false positives.
+        this.$el.find(Const.CLASS.CLOSE_BUTTON).get(0).disabled = true;
+
         var form = this.form;
         // FIXME make this blurring work and clear the autocomplete.
         $('input:focus').blur(); // blurring the focus should hide keyboard
@@ -187,7 +190,12 @@ var DialogView = Backbone.View.extend({
         Display dialog.
     */
     show: function () {
-        this.$el.slideDown('fast', function () {
+        // TODO: How can we make this 'fast' and not have the close button
+        // automatically triggered...?
+        this.$el.slideDown('slow', function () {
+            // enabled close button once the dialog opens.
+            $(this).find(Const.CLASS.CLOSE_BUTTON).get(0).disabled = false;
+
             // TODO: auto-focus and make the keyboard come up.
             //var a = this.$('.ui-autocomplete-input').first();
             //a.focus();
