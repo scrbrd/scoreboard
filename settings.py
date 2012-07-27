@@ -8,11 +8,12 @@ import logconfig
 
 from view.modules.components import UIAppHeader, UITabHeader, UINavHeader
 from view.modules.components import UIGamesNav, UIRankingsNav, UIAppFooter
-from view.modules.components import UIGamesList, UIRankingsList
+from view.modules.components import UIGamesList, UIRankingsList, UILeaguePage
 from view.modules.components import UICreateGameDialog, UILandingPage
 from view.modules.components import UISessionModel, UIContextModel
 from view.modules.components import UIPageModel, UITabModel
 from view.modules.components import UIGamesModel, UIRankingsModel
+from view.modules.components import UILeagueModel
 
 # Application constants
 # LEAGUE = 693  # The Banana Stand
@@ -68,22 +69,24 @@ settings['facebook_secret'] = FACEBOOK_SECRET
 
 settings['template_loader'] = tornado.template.Loader(TEMPLATE_ROOT)
 settings['ui_modules'] = {
-    'UIAppHeader': UIAppHeader,
-    'UITabHeader': UITabHeader,
-    'UINavHeader': UINavHeader,
-    'UIGamesNav': UIGamesNav,
-    'UIRankingsNav': UIRankingsNav,
     'UIAppFooter': UIAppFooter,
-    'UIRankingsList': UIRankingsList,
-    'UIGamesList': UIGamesList,
-    'UICreateGameDialog': UICreateGameDialog,
-    'UILandingPage': UILandingPage,
+    'UIAppHeader': UIAppHeader,
     'UIContextModel': UIContextModel,
-    'UISessionModel': UISessionModel,
-    'UIPageModel': UIPageModel,
-    'UITabModel': UITabModel,
+    'UICreateGameDialog': UICreateGameDialog,
+    'UIGamesList': UIGamesList,
     'UIGamesModel': UIGamesModel,
+    'UIGamesNav': UIGamesNav,
+    'UILandingPage': UILandingPage,
+    'UILeagueModel': UILeagueModel,
+    'UILeaguePage': UILeaguePage,
+    'UINavHeader': UINavHeader,
+    'UIPageModel': UIPageModel,
+    'UIRankingsList': UIRankingsList,
     'UIRankingsModel': UIRankingsModel,
+    'UIRankingsNav': UIRankingsNav,
+    'UISessionModel': UISessionModel,
+    'UITabHeader': UITabHeader,
+    'UITabModel': UITabModel,
 }
 
 settings['league_id'] = LEAGUE

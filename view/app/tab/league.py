@@ -3,14 +3,33 @@
 League tab components.
 
 """
+from framework import TabContentSection, PropertiesDiv, SummaryDiv, FeedDiv
+from components import RankingsList 
 
-from exceptions import NotImplementedError
 
-#from view.constants import SQ_DATA, PAGE_NAME
+class LeagueContentSection(TabContentSection):
 
-#from view.elements.base import Div, Span
+    """ LeagueContentSection constructs a content section with league specific
+    sections. """
 
-from framework import PropertiesDiv, SummaryDiv, FeedDiv
+
+    def set_properties_content(self, context):
+        """ Construct and add properties to this content section. """
+        # TODO: Uncomment this line when LeagueProperties works.
+        # self.append_child(LeaguePropertiesDiv(context))
+
+
+
+    def set_summary_content(self, aggregations):
+        """ Construct and add summary content to this content section. """
+        self.append_child(LeagueSummaryDiv(aggregations))
+
+
+    def set_feed_content(self, objects):
+        """ Construct and add feed content to this content section. """
+        # TODO: Uncomment this line when LeagueFeed works.
+        # self.append_child(LeagueFeedDiv(objects))
+
 
 
 class LeaguePropertiesDiv(PropertiesDiv):
@@ -18,7 +37,7 @@ class LeaguePropertiesDiv(PropertiesDiv):
     """ LeaguePropertiesDiv extending PropertiesDiv. """
 
 
-    def set_content(self, properties):
+    def set_content(self, context):
         """ Construct and add content as a direct child. """
         raise NotImplementedError("FILL ME IN!")
 
@@ -28,9 +47,10 @@ class LeagueSummaryDiv(SummaryDiv):
     """ LeagueSummaryDiv extending SummaryDiv. """
 
 
-    def set_content(self, summary):
+    def set_content(self, aggregations):
         """ Construct and add content as a direct child. """
-        raise NotImplementedError("FILL ME IN!")
+        # TODO: remove string and pull directly from aggregations
+        self.append_child(RankingsList(aggregations.get("standings")))
 
 
 class LeagueFeedDiv(FeedDiv):
@@ -38,6 +58,6 @@ class LeagueFeedDiv(FeedDiv):
     """ LeagueFeedDiv extending FeedDiv. """
 
 
-    def set_content(self, feed):
+    def set_content(self, aggregations):
         """ Construct and add content as a direct child. """
         raise NotImplementedError("FILL ME IN!")

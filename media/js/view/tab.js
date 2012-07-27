@@ -168,9 +168,11 @@ var ContentView = Backbone.View.extend({
         @param {Object} pageStateModel
     */
     initializeSections: function (pageStateModel) {
-        this.propertiesSection = new PropertiesSection(pageStateModel);
-        this.summarySection = new SummarySection(pageStateModel);
-        this.feedSection = new FeedSection(pageStateModel);
+        // TODO: When do we need these Views (you'll need to add the sections
+        // to PageStateModel as well.
+        // this.propertiesSection = new PropertiesSection(pageStateModel);
+        // this.summarySection = new SummarySection(pageStateModel);
+        // this.feedSection = new FeedSection(pageStateModel);
     },
 
     /**

@@ -52,16 +52,16 @@ class LeagueModel(ReadModel):
         # never be calling set_opponents() and set_games() outside the api.
 
         # RANKINGS LOAD
-        league_with_opponents = League.load_opponents(league.id)
-        league.set_opponents(league_with_opponents.get_opponents())
+        opponents_list = League.load_opponents(league.id).get_opponents()
+        league.set_opponents({o.id: o for o in opponents_list})
 
         # GAMES LOAD
-        league_with_games = League.load_games(league.id)
-        league.set_games(league_with_games.get_games())
+        games_list = League.load_games(league.id).get_games()
+        league.set_games({g.id: g for g in games_list})
 
         # TODO: iterating through this list is only temporary becaue the
         # multiload should have happened in the api.
-        game_ids = [game.id for game in self._context.get_games()]
+        game_ids = [game.id for game in league.get_games()]
 
         # load opponents for each game {g_id: Game}
         games_with_opponents = Game.multiload_opponents(game_ids)
@@ -70,9 +70,13 @@ class LeagueModel(ReadModel):
         self._context = league
 
         # league's opponents by Win Count
-        self._aggregations["standings"] = self._context.get_opponents().sort(
+        # sorts the list, but returns None
+        self._context.get_opponents().sort(
                 key=lambda x: x.win_count,
                 reverse=True)
+        self._aggregations["standings"] = self._context.get_opponents()
+
+        self._aggregations["activity"] = None
 
         # store opponents loaded games in reverse order (so it's new first)
         # NOTE: These Games are different objects than the ones in the

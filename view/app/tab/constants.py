@@ -7,6 +7,20 @@ Provide constants for Tab package.
 from util.decorators import constant
 
 
+class _ComponentClass(object):
+
+    """ _ComponentClass holds all w3c classes for the tab components. """
+
+
+    @constant
+    def RANKINGS_LIST(self):
+        """ RANKINGS_LIST is a w3c class. """
+        return "rankings-list"
+
+
+COMPONENT_CLASS = _ComponentClass()
+
+
 class _TabClass(object):
 
     """ _TabClass holds all w3c classes for the tab package. """

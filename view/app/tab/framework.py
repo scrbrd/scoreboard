@@ -3,17 +3,13 @@
 Element components that are for the tab framework.
 
 """
-
-from exceptions import NotImplementedError
-
 from view.constants import SQ_DATA
-
 from view.app_copy import Copy
-
-from constants import TAB_CLASS, TAB_ID
 
 from view.elements.base import H1, Nav, Footer, Section, UL, LI, A, Div
 from view.elements.components import CreateButton, MenuButton, MainHeaderDiv
+
+from constants import TAB_CLASS, TAB_ID
 
 
 class AppHeader(H1):
@@ -130,34 +126,38 @@ class TabSection(Section):
         self.set_id(TAB_ID.CONTENT)
 
 
-# TODO: subclass this from an abstract app.page.framework.PageContentSection
+# TODO: subclass this from an abstract app.page.framework.AppPageContentSection
 # when it exists. DialogContentSection would be similar.
 class TabContentSection(Section):
 
     """ TabContentSection encapsulates generic AppPage attributes. """
 
 
-    def __init__(self):
+    def __init__(self, context, aggregations, objects):
         """ Construct a tab's content section element tree. """
         super(TabContentSection, self).__init__()
         # TODO: set this in an abstract superclass when one exists and probably
         # use PAGE_ID.CONTENT instead.
         self.set_id(TAB_ID.CONTENT)
 
+        self.set_properties_content(context)
+        self.set_summary_content(aggregations)
+        self.set_feed_content(objects)
 
-    def set_properties_content(self, properties):
-        """ Construct and add properties content to this content section. """
-        self.append_child(PropertiesDiv(properties))
+
+    def set_properties_content(self, context):
+        """ Construct and add properties to this content section. """
+        self.append_child(PropertiesDiv(context))
 
 
-    def set_summary_content(self, summary):
+    def set_summary_content(self, aggregations):
         """ Construct and add summary content to this content section. """
-        self.append_child(SummaryDiv(summary))
+        self.append_child(SummaryDiv(aggregations))
 
 
-    def set_feed_content(self, feed):
+    def set_feed_content(self, objects):
         """ Construct and add feed content to this content section. """
-        self.append_child(FeedDiv(feed))
+        self.append_child(FeedDiv(objects))
 
 
 class PropertiesDiv(Div):
@@ -165,14 +165,14 @@ class PropertiesDiv(Div):
     """ PropertiesDiv encapsulates a tab's properties attribute <div>. """
 
 
-    def __init__(self, properties):
+    def __init__(self, context):
         """ Construct a tab's properties content element tree. """
         super(PropertiesDiv, self).__init__()
         self.set_id(TAB_ID.PROPERTIES)
-        self.set_content(properties)
+        self.set_content(context)
 
 
-    def set_content(self, properties):
+    def set_content(self, context):
         """ Construct and add content as a direct child. """
         raise NotImplementedError("Abstract Method: SUBCLASS MUST OVERRIDE!")
 
@@ -182,14 +182,14 @@ class SummaryDiv(Div):
     """ SummaryDiv encapsulates a tab's summary attribute <div>. """
 
 
-    def __init__(self, summary):
+    def __init__(self, aggregations):
         """ Construct a tab's summary content element tree. """
         super(SummaryDiv, self).__init__()
         self.set_id(TAB_ID.SUMMARY)
-        self.set_content(summary)
+        self.set_content(aggregations)
 
 
-    def set_content(self, summary):
+    def set_content(self, aggregations):
         """ Construct and add content as a direct child. """
         raise NotImplementedError("Abstract Method: SUBCLASS MUST OVERRIDE!")
 
@@ -199,13 +199,13 @@ class FeedDiv(Div):
     """ FeedDiv encapsulates a tab's feed attribute <div>. """
 
 
-    def __init__(self, feed):
+    def __init__(self, objects):
         """ Construct a tab's feed content element tree. """
         super(FeedDiv, self).__init__()
         self.set_id(TAB_ID.FEED)
-        self.set_content(feed)
+        self.set_content(objects)
 
 
-    def set_content(self, feed):
+    def set_content(self, objects):
         """ Construct and add content as a direct child. """
         raise NotImplementedError("Abstract Method: SUBCLASS MUST OVERRIDE!")

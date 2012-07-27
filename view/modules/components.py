@@ -24,10 +24,11 @@ from view.constants import PAGE_TYPE, PAGE_NAME, APP_CLASS, SQ_DATA
 from view.elements.base import Element
 
 from view.app.tab.framework import AppHeader, AppFooter, NavHeader
-from view.app.tab.framework import TabHeader, TabContentSection
+from view.app.tab.framework import TabHeader
 from view.app.tab.model import ContextModel, PageModel, SessionModel
 from view.app.tab.games import GamesTabSection
 from view.app.tab.rankings import RankingsTabSection
+from view.app.tab.league import LeagueContentSection
 
 from view.app.dialog.framework import DialogHeader
 from view.app.dialog.create_game import CreateGameForm
@@ -244,12 +245,10 @@ class UILeaguePage(tornado.web.UIModule):
 
     def render(self, model=None, state=None):
         """ Render a League. """
-        league_page = TabContentSection()
-
-        # TODO: hook up model to the way we use it here.
-        league_page.set_properties_content(model.league.context)
-        league_page.set_summary_content(model.league.aggregations)
-        league_page.set_feed_content(model.league.objects)
+        league_page = LeagueContentSection(
+                model.context,
+                model.aggregations,
+                model.objects)
 
         return Element.to_string(league_page.element())
 

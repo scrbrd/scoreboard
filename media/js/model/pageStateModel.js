@@ -56,7 +56,7 @@ var PageStateModel = Backbone.Model.extend({
 
     /**
         Provide mutator for header html.
-        @param {string} header 
+        @param {string} header
     */
     setHeader: function (header) {
         this.set(HEADER, header);
