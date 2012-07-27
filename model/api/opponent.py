@@ -38,7 +38,15 @@ class Opponent(object):
                 "Interface Method: IMPLEMENTOR MUST OVERRIDE")
 
 
-    def count_wins(self):
+    @property
+    def loss_count(self):
+        """ Return an int representing this opponent's loss count. """
+        raise NotImplementedError(
+                "Interface Method: IMPLEMENTOR MUST OVERRIDE")
+
+
+    @property
+    def win_count(self):
         """ Return an int representing this opponent's win count. """
         raise NotImplementedError(
                 "Interface Method: IMPLEMENTOR MUST OVERRIDE")

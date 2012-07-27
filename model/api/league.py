@@ -4,7 +4,6 @@ TODO: fill this in with required methods to implement since required
 members aren't strictly members [they are pulled from properties].
 
 """
-
 from constants import API_NODE_TYPE, API_EDGE_TYPE
 from constants import API_NODE_PROPERTY, API_CONSTANT
 
@@ -31,11 +30,6 @@ class League(sqobject.SqNode):
 
     _opponents = None
     _games = None
-
-
-    def _get_property(self, key):
-        """ Return League property denoted by key. """
-        return self._properties.get(key, None)
 
 
     @property

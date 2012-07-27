@@ -192,10 +192,14 @@ class SqNode(SqObject):
         if use_third_party:
             property = tp_property
         else:
+            # if the property is not empty then use it.
             if sq_property != PROPERTY_VALUE.EMPTY:
                 property = sq_property
+            # else (so the property is empty) use a third party property
             elif tp_property is not None:
                 property = tp_property
+            # but if the third party property is None then use the empty
+            # sq_property.
             else:
                 property = sq_property
 

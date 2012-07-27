@@ -47,5 +47,8 @@ class RankingLI(LI):
     def set_content(self, item):
         """ Set content for Rankings LI. """
         span = Span()
-        span.set_text("{0} {1}".format(item.name, item.win_count))
+        span.set_text("{0} - W:{1}  L:{2}".format(
+                item.name,
+                item.win_count,
+                item.loss_count))
         self.append_child(span)

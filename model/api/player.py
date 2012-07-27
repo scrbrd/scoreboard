@@ -44,7 +44,21 @@ class Player(person.Person, opponent.Opponent):
                 ]
 
 
-    def count_wins(self):
+    def _count_losses(self):
+        """ Return the number of Games this Player has lost. """
+        # it's possible for a player not to have any losses, in which case
+        # there won't be an entry in the edges dict, so default to the empty
+        # dict.
+        return len(self.get_edges().get(API_EDGE_TYPE.LOST, {}))
+
+
+    @property
+    def loss_count(self):
+        """ Alias for count_losses() intended for use as a property. """
+        return self._count_losses()
+
+
+    def _count_wins(self):
         """ Return the number of Games this Player has won. """
         # it's possible for a player not to have any wins, in which case there
         # won't be an entry in the edges dict, so default to the empty dict
@@ -54,7 +68,7 @@ class Player(person.Person, opponent.Opponent):
     @property
     def win_count(self):
         """ Alias for count_wins() intended for use as a property. """
-        return self.count_wins()
+        return self._count_wins()
 
 
     @staticmethod
