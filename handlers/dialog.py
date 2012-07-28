@@ -4,6 +4,8 @@ Handle all incoming requests for dialog creation.
 
 """
 
+from model.app.dialog import DialogModel
+
 from handlers.query import QueryHandler
 
 
@@ -12,15 +14,16 @@ class CreateGameDialogHandler(QueryHandler):
     """ Handle rendering the empty Create Game Dialog. """
 
 
+    def get_model(self):
+        """ Override avoids raising an error, but no model is needed. """
+        model = DialogModel()
+        model.load()
+        return model
+
+
     def process_asynchronous_request(self):
         """ Override forces the dialog to render synchronously. """
         self.process_synchronous_request()
-
-
-    def get_model(self):
-        """ Override avoids raising an error, but no model is needed. """
-        # TODO: might be better to return None?
-        pass
 
 
     def get_asynchronous_content_url(self):
