@@ -30,8 +30,7 @@ class LeagueContentSection(TabContentSection):
 
     def set_feed_content(self, objects):
         """ Construct and add feed content to this content section. """
-        # TODO: Uncomment this line when LeagueFeed works.
-        # self.append_child(LeagueFeedDiv(objects))
+        self.append_child(LeagueFeedDiv(objects))
 
 
 
@@ -66,7 +65,5 @@ class LeagueFeedDiv(FeedDiv):
 
     """ LeagueFeedDiv extending FeedDiv. """
 
-
-    def set_content(self, aggregations):
-        """ Construct and add content as a direct child. """
-        raise NotImplementedError("FILL ME IN!")
+    # All functionality is in app.tab.framework > FeedDiv
+    pass

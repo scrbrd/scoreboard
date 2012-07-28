@@ -10,6 +10,7 @@ from view.elements.base import H1, Nav, Footer, Section, UL, LI, A, Div
 from view.elements.components import CreateButton, MenuButton, MainHeaderDiv
 
 from constants import TAB_CLASS, TAB_ID
+from story import GameStory
 
 
 class AppHeader(H1):
@@ -212,4 +213,7 @@ class FeedDiv(Div):
 
     def set_content(self, objects):
         """ Construct and add content as a direct child. """
-        raise NotImplementedError("Abstract Method: SUBCLASS MUST OVERRIDE!")
+        # Currently all objects are game
+        games = objects
+        for game in games:
+            self.append_child(GameStory(game))

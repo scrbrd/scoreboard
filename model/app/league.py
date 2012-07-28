@@ -80,9 +80,10 @@ class LeagueModel(ReadModel):
         self._aggregations["activity"] = None
 
         # store opponents loaded games in reverse order (so it's new first)
-        # NOTE: These Games are different objects than the ones in the
-        # League though they represent the same data objects.
-        self._objects = games_with_opponents.values().reverse()
+        games = games_with_opponents.values()
+        # reverse returns None as it's in-place
+        games.reverse()
+        self._objects = games
 
         # load opponents into rivals as well
         self._rivals = self._context.get_opponents()

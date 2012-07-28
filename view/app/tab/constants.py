@@ -13,6 +13,18 @@ class _ComponentClass(object):
 
 
     @constant
+    def STORY(self):
+        """ STORY is a w3c class. """
+        return "story"
+
+
+    @constant
+    def GAME_STORY(self):
+        """ GAME_STORY is a w3c class. """
+        return "game-story"
+
+
+    @constant
     def RANKINGS_LIST(self):
         """ RANKINGS_LIST is a w3c class. """
         return "rankings-list"

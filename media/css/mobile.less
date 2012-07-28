@@ -147,8 +147,8 @@ the same border. */
         @hShadow: 0px, 
         @vShadow: 0px, 
         @blur: 2px, 
-        @spread: 2px,
-        @alpha: .5) {
+        @spread: 1px,
+        @alpha: .4) {
     -webkit-box-shadow: @hShadow @vShadow @blur @spread rgba(0, 0, 0, @alpha);
     -moz-box-shadow: @hShadow @vShadow @blur @spread rgba(0, 0, 0, @alpha);
     box-shadow: @hShadow @vShadow @blur @spread rgba(0, 0, 0, @alpha);
@@ -487,7 +487,7 @@ input {
     z-index: 15;
 }
 
-#content #summary {
+#content #summary, #content #feed {
     z-index: 10;    
 }
 
@@ -571,15 +571,25 @@ input {
     padding-right: @pagePadding;
 }
 
+#content #feed {
+    position: relative;
+
+    width: 100%;
+    padding-left: @pagePadding;
+    padding-right: @pagePadding;
+}
+
 #content #summary .summary-item {
     .drop-shadow-box;
     float: left;
     width: 100%;
     background: @white;
     
+    margin-bottom: @linePadding; 
     border: @pagePadding solid @lightGrey;
     padding-left: @bigPadding;
     padding-right: @bigPadding;
+    padding-bottom: @pagePadding;
 }
 
 #tab .loading {
@@ -698,7 +708,18 @@ input {
     width: @bigPadding;
 }
 
+.story {
+    .drop-shadow-box;
+    float: left;
+    width: 100%;
+    background: @white;
+   
+    margin-top: @linePadding;
+    margin-bottom: @linePadding;
+    padding-left: @bigPadding;
+    padding-right: @bigPadding;
 
+}
 /***********************************************************
 * TAB SECTION
 ************************************************************/

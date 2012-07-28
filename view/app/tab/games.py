@@ -5,7 +5,6 @@ Games tab components.
 """
 
 from view.constants import SQ_DATA, PAGE_NAME
-
 from view.elements.base import OL, LI, Span, BR
 
 from framework import TabSection
