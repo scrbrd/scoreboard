@@ -401,48 +401,6 @@ class _APIConstant(object):
 
 
     @constant
-    def ACTOR_NODE_TYPES(self):
-        """ ACTOR_NODE_TYPES is a list of Actor Node Types. """
-        return [
-                API_NODE_TYPE.PLAYER
-                ]
-
-
-    @constant
-    def FACEBOOK_NODE_PROPERTIES(self):
-        """ FACEBOOK_NODE_PROPERTIES is a dict of Facebook Properties.
-
-        For all properties we get from Facebook, prefix the
-        corresponding Node property we have internally with "fb_" and
-        map one to the other.
-
-        """
-
-        # FIXME: does this still need to exist? it is now unused.
-
-        properties = [
-                NODE_PROPERTY.ID,
-                API_NODE_PROPERTY.NAME,
-                API_NODE_PROPERTY.FIRST_NAME,
-                API_NODE_PROPERTY.MIDDLE_NAME,
-                API_NODE_PROPERTY.LAST_NAME,
-                API_NODE_PROPERTY.LINK,
-                API_NODE_PROPERTY.USERNAME,
-                API_NODE_PROPERTY.GENDER,
-                API_NODE_PROPERTY.TIMEZONE,
-                API_NODE_PROPERTY.LOCALE,
-                API_NODE_PROPERTY.PICTURE,
-                API_NODE_PROPERTY.EMAIL,
-                ]
-
-        # FIXME: dict comprehension syntax changes when we upgrade to python2.7
-
-        prefix = "{0}{1}".format(THIRD_PARTY.FACEBOOK, PROPERTY_KEY.DELIMITER)
-
-        return dict((p, (prefix + p)) for p in properties)
-
-
-    @constant
     def RESULT_EDGE_TYPES(self):
         """ RESULT_EDGE_TYPES is a list of Result Edge Types. """
         return [

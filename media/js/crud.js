@@ -49,7 +49,7 @@ var REQUEST_KEY = {
 var RESPONSE_KEY = {
     IS_SUCCESS:         "is_success",
     CONTENT:            "content",
-    HEADER:            "header",
+    HEADER:             "header",
     CONTEXT_MODEL:      "context_model",
     PAGE_STATE_MODEL:   "page_state_model"
 };
