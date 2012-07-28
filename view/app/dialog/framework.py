@@ -38,6 +38,6 @@ class SubmitButtonSection(Div):
     def __init__(self):
         """ Construct a dialog component for a post button. """
         super(SubmitButtonSection, self).__init__()
-        self.set_classes([DIALOG_CLASS.SUBMIT_BUTTON_WRAPPER])
+        self.append_classes([DIALOG_CLASS.SUBMIT_BUTTON_WRAPPER])
 
         self.append_child(SqSubmitButton())

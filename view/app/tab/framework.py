@@ -188,6 +188,10 @@ class SummaryDiv(Div):
         self.set_id(TAB_ID.SUMMARY)
         self.set_content(aggregations)
 
+        # add a summary item class to the children
+        for child in self.children():
+            child.append_classes([TAB_CLASS.SUMMARY_ITEM])
+
 
     def set_content(self, aggregations):
         """ Construct and add content as a direct child. """

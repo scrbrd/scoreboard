@@ -30,6 +30,7 @@
 
 @pagePadding: 8px; // Left / Right padding of page content.
 @linePadding: 10px; // Padding above and below text on a line.
+@bigPadding: 15px; // For Stories
 
 
 /***********************************************************
@@ -75,7 +76,7 @@
     font-family: 'TradeGothicCondEighteenBold', sans-serif;
     font-size: @fontSize;
     font-weight: bold;
-    /* line-height: @lineHeight; */ // Screws up vertical alignment.
+    line-height: @lineHeight; // Screws up vertical alignment.
     text-transform: uppercase;
 }
 
@@ -244,7 +245,7 @@ the same border. */
 }
 
 .counter-li {
-    content: counter(item) " ";
+    content: counter(item);
     counter-increment: item;
 }
 
@@ -274,7 +275,7 @@ the same border. */
 
 
 /***********************************************************
-* FRAMEWORK / BASE
+* FRAMEWORK / ELEMENTS BASE
 ************************************************************/
 
 /* I like this box model better so deal with it. */
@@ -312,6 +313,10 @@ ol, ul {
     text-align: left;
 }
 
+li {
+    height: @smallLineHeight;
+    line-height: @smallLineHeight;
+}
 
 .anchor, .anchor:link, .anchor:visited {
     .clickableText();
@@ -339,7 +344,7 @@ input {
 
 
 /***********************************************************
-* COMPONENTS - NO POSITIONING!!!
+* ELEMENT COMPONENTS - NO POSITIONING!!!
 ************************************************************/
 .close-button {
     .hidden-content;
@@ -412,6 +417,13 @@ input {
     vertical-align: middle;
 }
 
+.headline {
+    float: left;
+    width: 100%;
+    .headerText;
+    border-bottom: 1px dotted @lightGrey;
+}
+
 .numbered-list {
     .counter;
 }
@@ -427,24 +439,33 @@ input {
 }
 
 .headed-list .list-header {
-    text-transform: uppercase;
-    margin-bottom: 0px;
+    color: @lightGrey;
+    height: @smallLineHeight - 5px;
+    line-height: @smallLineHeight - 5px;
 }
 
 .headed-list-item {
     float: left;
-    clear: left;
     width: 100%;
-    margin-bottom: @linePadding;
-    height: @smallLineHeight - @linePadding;
-}
+    border-bottom: 1px dotted @lightGrey;
 
+}
+/* .headed-list-item:after {
+    content: '';
+    width: 100%;
+    float: left;
+    margin-left: @bigPadding;
+    height: 0px;
+    border-bottom: 1px dotted @lightGrey;
+}*/
+
+// PROBLEMS ABOUND - move to the dialog component if needed
 .headed-list-item input {
     width: 100%;
     height: 100%;
 }
 
-.headed-list-item .list-column:first-child {
+/* .headed-list-item .list-column:first-child {
     float: left;
     width: 75%;
     text-align: left;
@@ -455,7 +476,7 @@ input {
     width: 20%;
     margin-left: @linePadding;
     text-align: left;
-}
+} */
 
 
 /***********************************************************
@@ -481,7 +502,7 @@ input {
 
 
 /***********************************************************
-* TAB
+* TAB FRAMEWORK
 ************************************************************/
 #tab {
     /* for hiding address bar and pulling content above bottom navigation */
@@ -493,24 +514,32 @@ input {
     z-index: 1;
 }
 
-#content ol {
-    border-top: 1px dotted @lightGrey;
+#content {
+    margin-top: @headerHeight;
 }
 
-#content li {
-    padding: @linePadding @pagePadding;
-    border-bottom: 1px dotted @lightGrey;
+#content #summary {
+    float: left;
+    width: 100%;
+
+    padding-left: @pagePadding;
+    padding-right: @pagePadding;
+}
+
+#content #summary .summary-item {
+    float: left;
+    width: 100%;
+    background: @white;
+    
+    border: @pagePadding solid @lightGrey;
+    padding-left: @bigPadding;
+    padding-right: @bigPadding;
 }
 
 #tab .loading {
     padding-top: @linePadding;
 }
 
-#content {
-    margin-top: @headerHeight;
-    margin-left: @pagePadding;
-    margin-right: @pagePadding;
-}
 
 
 /***********************************************************
@@ -582,6 +611,44 @@ input {
     right: 15px;
     z-index: 5;
 } */
+
+
+/***********************************************************
+* TAB COMPONENTS
+************************************************************/
+.rankings-list .list-column {
+    text-align: center;
+}
+
+.rankings-list .headed-list-item .list-column:nth-child(1) {
+    float: left;
+    width: 60%;
+    text-align: left;
+}
+
+.rankings-list .headed-list-item .list-column:nth-child(2) {
+    float: right;
+    width: 10%;
+}
+
+.rankings-list .headed-list-item .list-column:nth-child(3) {
+    float: right;
+    width: 10%;
+}
+
+// only header
+.rankings-list .list-header .list-column:nth-child(1) {
+    margin-left: @bigPadding;
+}
+
+// only ranked li
+.rankings-list li.headed-list-item {
+}
+
+.rankings-list .numbered-list li:before {
+    float: left;
+    width: @bigPadding;
+}
 
 
 /***********************************************************

@@ -43,6 +43,8 @@ class RankingsModel(base.ReadModel):
         # league's opponents by Win Count
         self._opponents = self._context.get_opponents()
         self._opponents.sort(key=lambda x: x.win_count, reverse=True)
+        for o in self._opponents:
+            print o.win_count
 
         # load opponents into rivals as well
         self._rivals = self._opponents

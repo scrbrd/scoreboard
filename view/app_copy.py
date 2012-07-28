@@ -11,9 +11,9 @@ class _Copy(object):
 
 
     @property
-    def submit(self):
-        """ The copy for the submit button. """
-        return "Post!"
+    def app_name(self):
+        """ The copy for the app name. """
+        return "Scoreboard"
 
 
     @property
@@ -41,9 +41,33 @@ class _Copy(object):
 
 
     @property
+    def loss(self):
+        """ The copy for a loss. """
+        return "Lost"
+
+
+    @property
+    def loss_short(self):
+        """ The copy for a shortened loss. """
+        return "L"
+
+
+    @property
+    def player(self):
+        """ The copy for the player title. """
+        return "Player"
+
+
+    @property
     def player_placeholder(self):
         """ The copy for a player placeholer. """
         return "Who played?"
+
+
+    @property
+    def rankings_title(self):
+        """ The copy for the rankings title. """
+        return "Standings"
 
 
     @property
@@ -53,9 +77,21 @@ class _Copy(object):
 
 
     @property
-    def app_name(self):
-        """ The copy for the app name. """
-        return "Scoreboard"
+    def submit(self):
+        """ The copy for the submit button. """
+        return "Post!"
+
+
+    @property
+    def win(self):
+        """ The copy for a win. """
+        return "Win"
+
+
+    @property
+    def win_short(self):
+        """ The copy for a shortened win. """
+        return "W"
 
 
 Copy = _Copy()

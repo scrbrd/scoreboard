@@ -466,6 +466,12 @@ class _ComponentClass(object):
 
 
     @constant
+    def HEADLINE(self):
+        """ HEADLINE is a w3c class. """
+        return "headline"
+
+
+    @constant
     def LIST_COLUMN(self):
         """ LIST_COLUMN is a w3c class. """
         return "list-column"

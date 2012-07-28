@@ -27,6 +27,12 @@ class _TabClass(object):
 
 
     @constant
+    def SUMMARY_ITEM(self):
+        """ SUMMARY_ITEM is a w3c class. """
+        return "summary-item"
+
+
+    @constant
     def SECOND_HEADER(self):
         """ SECOND_HEADER is a w3c class. """
         return "second-header"

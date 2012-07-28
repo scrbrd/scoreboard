@@ -9,8 +9,19 @@ from view.app_copy import Copy
 
 from constants import COMPONENT_CLASS
 
-from base import Div, OL, SubmitButton, Button, Header, LI, A
+from base import Div, OL, SubmitButton, Button, Header, LI, A, Span
 from base import RadioInput, Label
+
+
+class Headline(Span):
+
+    """ Headline is a title span. """
+
+    def __init__(self, text):
+        """ Construct a headline tag. """
+        super(Headline, self).__init__()
+        self.append_classes([COMPONENT_CLASS.HEADLINE])
+        self.set_text(text)
 
 
 class NonRoutingAnchor(A):

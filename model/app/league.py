@@ -70,11 +70,12 @@ class LeagueModel(ReadModel):
         self._context = league
 
         # league's opponents by Win Count
-        # sorts the list, but returns None
-        self._context.get_opponents().sort(
+        # store the list because the league has a dict, and sort returns None
+        opponents = self._context.get_opponents()
+        opponents.sort(
                 key=lambda x: x.win_count,
                 reverse=True)
-        self._aggregations["standings"] = self._context.get_opponents()
+        self._aggregations["standings"] = opponents
 
         self._aggregations["activity"] = None
 

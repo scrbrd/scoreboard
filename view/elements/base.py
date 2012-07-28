@@ -161,6 +161,17 @@ class Element(object):
         self._element = ET.Element(tag)
 
 
+    @classmethod
+    def _init_from_ET(class_, et):
+        """ Alternate constructor that can be used to construct an Element
+        from a ElementTree.Element. Using classmethod to get around python's
+        inability to have multiple constructors with the same number of
+        arguments. """
+        new_elem = class_("junk")
+        new_elem._element = et
+        return new_elem
+
+
     def element(self):
         """ Return this element. Bitches. """
         return self._element
@@ -254,12 +265,7 @@ class Element(object):
             self._remove_attribute(attribute)
 
 
-    def set_id(self, id):
-        """ Set the id attribute for this element. """
-        self._set_attribute(HTML_ATTRIBUTE.ID, id)
-
-
-    def classes(self):
+    def _classes(self):
         """ Return this element's classes as a list."""
         classes = self._attribute(HTML_ATTRIBUTE.CLASS)
         if classes is None:
@@ -268,17 +274,22 @@ class Element(object):
             return classes.split()
 
 
-    def set_classes(self, classes):
+    def _set_classes(self, classes):
         # TODO: add a constant for class delimiter? [ebh: no.]
         """ Set a list of classes for this element. """
         self._set_attribute(HTML_ATTRIBUTE.CLASS, " ".join(classes))
 
 
+    def set_id(self, id):
+        """ Set the id attribute for this element. """
+        self._set_attribute(HTML_ATTRIBUTE.ID, id)
+
+
     def append_class(self, additional_class):
         """ Add a class for this element. """
-        classes = self.classes()
+        classes = self._classes()
         classes.append(additional_class)
-        self.set_classes(classes)
+        self._set_classes(classes)
 
 
     def append_classes(self, additional_classes):
@@ -286,9 +297,9 @@ class Element(object):
         element.
 
         """
-        classes = self.classes()
+        classes = self._classes()
         classes.extend(additional_classes)
-        self.set_classes(classes)
+        self._set_classes(classes)
 
 
     def set_data(self, data_key, value):
@@ -385,22 +396,25 @@ class Element(object):
 
 
     def children(self):
-        """ Return a list of the immediate children for this element. """
+        """ Return a list of the immediate children for this element as generic
+        Elements so folks can manipulate them. """
         # TODO: elementTree suggests list(element) over element.getchildren(),
         # which is deprecated in v2.7, but iter(), iterfind(), and itertext()
         # are not yet available in cElementTree. update this when they are.
-        #return self.element().getchildren()
-        return list(self.element())
+        children = []
+        for elem in list(self.element()):
+            children.append(Element._init_from_ET(elem))
+        return children
 
 
     def first_child(self):
         """ Return the first immediate child for this element. """
-        return self.children()[0]
+        return Element._init_from_ET(self.children()[0])
 
 
     def last_child(self):
         """ Return the last immediate child for this element. """
-        return self.children()[-1:]
+        return Element._init_from_ET(self.children()[-1:])
 
 
     def append_child(self, element):

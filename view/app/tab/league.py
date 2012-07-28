@@ -3,8 +3,13 @@
 League tab components.
 
 """
+from view.app_copy import Copy
+
+from view.elements.base import Div
+from view.elements.components import Headline
+
 from framework import TabContentSection, PropertiesDiv, SummaryDiv, FeedDiv
-from components import RankingsList 
+from components import RankingsList
 
 
 class LeagueContentSection(TabContentSection):
@@ -50,7 +55,11 @@ class LeagueSummaryDiv(SummaryDiv):
     def set_content(self, aggregations):
         """ Construct and add content as a direct child. """
         # TODO: remove string and pull directly from aggregations
-        self.append_child(RankingsList(aggregations.get("standings")))
+        div = Div()
+        div.append_child(Headline(Copy.rankings_title))
+        div.append_child(RankingsList(aggregations.get("standings")))
+
+        self.append_child(div)
 
 
 class LeagueFeedDiv(FeedDiv):

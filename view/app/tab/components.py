@@ -4,9 +4,10 @@ Elements components that will be used in tabs but aren't part of the framework.
 
 """
 from view.constants import SQ_DATA
+from view.app_copy import Copy
 
-from view.elements.base import Span, OL
-from view.elements.components import HeadedList, HeadedListItem
+from view.elements.base import Span
+from view.elements.components import HeadedList, HeadedListItem, NumberedList
 
 from constants import COMPONENT_CLASS
 
@@ -19,7 +20,7 @@ class RankingsList(HeadedList):
 
     """
 
-    _headings = ["Player", "W", "L"]
+    _headings = [Copy.player, Copy.loss_short, Copy.win_short]
 
 
     def __init__(self, standings):
@@ -34,7 +35,7 @@ class RankingsList(HeadedList):
         self.append_child(RankingsOL(rows))
 
 
-class RankingsOL(OL):
+class RankingsOL(NumberedList):
 
     """ Rankings List exntends <ol>. """
 
@@ -62,10 +63,10 @@ class RankingLI(HeadedListItem):
         opponent.set_text(str(item.name))
         self.set_column(opponent)
 
-        win_count = Span()
-        win_count.set_text(str(item.win_count))
-        self.set_column(win_count)
-
         loss_count = Span()
         loss_count.set_text(str(item.loss_count))
         self.set_column(loss_count)
+
+        win_count = Span()
+        win_count.set_text(str(item.win_count))
+        self.set_column(win_count)
