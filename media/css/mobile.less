@@ -143,12 +143,12 @@ the same border. */
 
 
 /* Add a light drop shadow below a box. */
-.drop-shadow-box {
-    @hShadow: 0px;
-    @vShadow: 4px;
-    @blur: 15px;
-    @spread: 0px;
-    @alpha: 1.0;
+.drop-shadow-box(
+        @hShadow: 0px, 
+        @vShadow: 0px, 
+        @blur: 2px, 
+        @spread: 2px,
+        @alpha: .5) {
     -webkit-box-shadow: @hShadow @vShadow @blur @spread rgba(0, 0, 0, @alpha);
     -moz-box-shadow: @hShadow @vShadow @blur @spread rgba(0, 0, 0, @alpha);
     box-shadow: @hShadow @vShadow @blur @spread rgba(0, 0, 0, @alpha);
@@ -346,6 +346,11 @@ input {
 /***********************************************************
 * ELEMENT COMPONENTS - NO POSITIONING!!!
 ************************************************************/
+.profile-icon {
+    width: @smallLineHeight - 10px;
+    height: @smallLineHeight - 10px;
+}
+
 .close-button {
     .hidden-content;
    
@@ -527,6 +532,7 @@ input {
 }
 
 #content #summary .summary-item {
+    .drop-shadow-box;
     float: left;
     width: 100%;
     background: @white;
@@ -622,13 +628,12 @@ input {
 
 .rankings-list .headed-list-item .list-column:nth-child(1) {
     float: left;
-    width: 60%;
-    text-align: left;
-}
-
-.rankings-list .headed-list-item .list-column:nth-child(2) {
-    float: right;
     width: 10%;
+}
+.rankings-list .headed-list-item .list-column:nth-child(2) {
+    float: left;
+    width: 50%;
+    text-align: left;
 }
 
 .rankings-list .headed-list-item .list-column:nth-child(3) {
@@ -636,8 +641,13 @@ input {
     width: 10%;
 }
 
+.rankings-list .headed-list-item .list-column:nth-child(4) {
+    float: right;
+    width: 10%;
+}
+
 // only header
-.rankings-list .list-header .list-column:nth-child(1) {
+.rankings-list .list-header .list-column:nth-child(2) {
     margin-left: @bigPadding;
 }
 

@@ -9,8 +9,25 @@ from view.app_copy import Copy
 
 from constants import COMPONENT_CLASS
 
-from base import Div, OL, SubmitButton, Button, Header, LI, A, Span
+from base import Div, OL, SubmitButton, Button, Header, LI, A, Span, Img
 from base import RadioInput, Label
+
+
+class ProfileIcon(Img):
+
+    """ An Image element that contains a profile icon extending <img>. """
+
+
+    def __init__(self, src, name):
+        """ Construct a profile icon tag.
+
+        Required:
+        str src         the url of the profile icon
+        str name        the name associated with the profile
+
+        """
+        super(ProfileIcon, self).__init__(src, name)
+        self.append_classes([COMPONENT_CLASS.PROFILE_ICON])
 
 
 class Headline(Span):

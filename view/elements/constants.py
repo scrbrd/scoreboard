@@ -54,6 +54,12 @@ class _HTMLTag(object):
 
 
     @constant
+    def IMG(self):
+        """ IMG is a type of HTML tag. """
+        return "img"
+
+
+    @constant
     def A(self):
         """ A is a type of HTML tag. """
         return "a"
@@ -179,6 +185,18 @@ class _HTMLAttribute(object):
     def ACTION(self):
         """ ACTION is a type of HTML attribute. """
         return "action"
+
+
+    @constant
+    def ALT(self):
+        """ ALT is a type of HTML attribute. """
+        return "alt"
+
+
+    @constant
+    def SRC(self):
+        """ SRC is a type of HTML attribute. """
+        return "src"
 
 
     @constant
@@ -327,7 +345,8 @@ class _HTMLConstant(object):
             HTML_TAG.TABLE,
             HTML_TAG.TR,
             HTML_TAG.TD,
-            HTML_TAG.TH
+            HTML_TAG.TH,
+            HTML_TAG.IMG,
         ]
 
 
@@ -368,6 +387,7 @@ class _HTMLConstant(object):
         attributes[HTML_TAG.INPUT].append(HTML_ATTRIBUTE.TYPE)
         attributes[HTML_TAG.INPUT].append(HTML_ATTRIBUTE.VALUE)
 
+        # label tags can also have these attributes
         attributes[HTML_TAG.LABEL].append(HTML_ATTRIBUTE.FOR)
 
         # button tags can also have these attributes:
@@ -377,6 +397,10 @@ class _HTMLConstant(object):
         attributes[HTML_TAG.BUTTON].append(HTML_ATTRIBUTE.NAME)
         attributes[HTML_TAG.BUTTON].append(HTML_ATTRIBUTE.TYPE)
         attributes[HTML_TAG.BUTTON].append(HTML_ATTRIBUTE.VALUE)
+
+        # img tags can also have these attributes
+        attributes[HTML_TAG.IMG].append(HTML_ATTRIBUTE.SRC)
+        attributes[HTML_TAG.IMG].append(HTML_ATTRIBUTE.ALT)
 
         return attributes
 
@@ -415,6 +439,12 @@ HTML_CONSTANT = _HTMLConstant()
 class _ComponentClass(object):
 
     """ _ComponentClass holds all w3c classes for the components module. """
+
+
+    @constant
+    def PROFILE_ICON(self):
+        """ PROFILE_ICON is a w3c class. """
+        return "profile-icon"
 
 
     @constant

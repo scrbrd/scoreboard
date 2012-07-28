@@ -71,6 +71,12 @@ class Player(person.Person, opponent.Opponent):
         return self._count_wins()
 
 
+    @property
+    def picture_url(self):
+        """ Return the player's profile picture url. """
+        return self._get_property(API_NODE_PROPERTY.PICTURE)
+
+
     @staticmethod
     def property_keys():
         """ Return a list of permitted property fields for Player. """

@@ -6,8 +6,9 @@ Elements components that will be used in tabs but aren't part of the framework.
 from view.constants import SQ_DATA
 from view.app_copy import Copy
 
-from view.elements.base import Span
+from view.elements.base import Span, Div
 from view.elements.components import HeadedList, HeadedListItem, NumberedList
+from view.elements.components import ProfileIcon
 
 from constants import COMPONENT_CLASS
 
@@ -20,7 +21,7 @@ class RankingsList(HeadedList):
 
     """
 
-    _headings = [Copy.player, Copy.loss_short, Copy.win_short]
+    _headings = [" ", Copy.player, Copy.loss_short, Copy.win_short]
 
 
     def __init__(self, standings):
@@ -59,6 +60,19 @@ class RankingLI(HeadedListItem):
 
     def set_content(self, item):
         """ Set content for Rankings LI. """
+        # TODO make this some default scoreboard icon
+        host = "https://fbcdn-profile-a.akamaihd.net"
+        path = "/hprofile-ak-snc4/273574_1002772_699208005_q.jpg"
+        url = host + path
+
+        div = Div()
+        profile_icon = ProfileIcon(url, Copy.app_name)
+        # TODO make the model send None instead of ""
+        if item.picture_url != "":
+            profile_icon = ProfileIcon(item.picture_url, item.name)
+        div.append_child(profile_icon)
+        self.set_column(div)
+
         opponent = Span()
         opponent.set_text(str(item.name))
         self.set_column(opponent)

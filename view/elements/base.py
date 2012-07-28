@@ -70,6 +70,8 @@ The following non-global html5 attributes are currently implemented:
     disabled        form, input, button
     placeholder     input
     autofocus       input, button
+    src             img
+    alt             img
 
 TODO: required, pattern
 
@@ -335,6 +337,16 @@ class Element(object):
     def set_action(self, url):
         """ Set the action attribute for this element. """
         self._set_attribute(HTML_ATTRIBUTE.ACTION, url)
+
+
+    def set_alt(self, text):
+        """ Set the alt attribute for this element. """
+        self._set_attribute(HTML_ATTRIBUTE.ALT, text)
+
+
+    def set_src(self, url):
+        """ Set the src attribute for this element. """
+        self._set_attribute(HTML_ATTRIBUTE.SRC, url)
 
 
     def set_type(self, type):
@@ -1086,6 +1098,24 @@ class SubmitButton(Button):
             self.set_action(action_url)
 
 
+class Img(Element):
+
+    """ Image element <img>. """
+
+
+    def __init__(self, source, alt_text):
+        """ Construct an image tag.
+
+        Required:
+        str source      the url of the image
+        str alt_text    the alternate text of the image
+
+        """
+        super(Img, self).__init__(HTML_TAG.IMG)
+        self.set_src(source)
+        self.set_alt(alt_text)
+
+
 class ElementError(Exception):
 
     """ ElementError is a subclass of Exception.
@@ -1097,6 +1127,7 @@ class ElementError(Exception):
     str     reason      what went wrong?
 
     """
+
 
     def __init__(self, parameters, description):
         """ Construct a generic, not quite abstract ElementError. """
