@@ -4,9 +4,8 @@ League tab components.
 
 """
 from view.app_copy import Copy
-
 from view.elements.base import Div
-from view.elements.components import Headline
+from view.app.components import Headline, CoverPhoto
 
 from framework import TabContentSection, PropertiesDiv, SummaryDiv, FeedDiv
 from components import RankingsList
@@ -20,8 +19,7 @@ class LeagueContentSection(TabContentSection):
 
     def set_properties_content(self, context):
         """ Construct and add properties to this content section. """
-        # TODO: Uncomment this line when LeagueProperties works.
-        # self.append_child(LeaguePropertiesDiv(context))
+        self.append_child(LeaguePropertiesDiv(context))
 
 
 
@@ -44,7 +42,9 @@ class LeaguePropertiesDiv(PropertiesDiv):
 
     def set_content(self, context):
         """ Construct and add content as a direct child. """
-        raise NotImplementedError("FILL ME IN!")
+        # Currently a static image
+        src = "/static/images/covers/surferPhotoColor.jpg"
+        self.append_child(CoverPhoto(src, context.name))
 
 
 class LeagueSummaryDiv(SummaryDiv):

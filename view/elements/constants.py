@@ -442,9 +442,9 @@ class _ComponentClass(object):
 
 
     @constant
-    def PROFILE_ICON(self):
-        """ PROFILE_ICON is a w3c class. """
-        return "profile-icon"
+    def THUMBNAIL(self):
+        """ THUMBNAIL is a w3c class. """
+        return "thumbnail"
 
 
     @constant
@@ -493,12 +493,6 @@ class _ComponentClass(object):
     def MAIN_HEADER(self):
         """ MAIN_HEADER is a w3c class. """
         return "main-header"
-
-
-    @constant
-    def HEADLINE(self):
-        """ HEADLINE is a w3c class. """
-        return "headline"
 
 
     @constant

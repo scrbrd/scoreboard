@@ -4,41 +4,30 @@ Generic reusable components that are building blocks of
 app-specific features.
 
 """
-
 from view.app_copy import Copy
 
 from constants import COMPONENT_CLASS
 
-from base import Div, OL, SubmitButton, Button, Header, LI, A, Span, Img
+from base import Div, OL, SubmitButton, Button, Header, LI, A, Img
 from base import RadioInput, Label
 
 
-class ProfileIcon(Img):
+class Thumbnail(Img):
 
-    """ An Image element that contains a profile icon extending <img>. """
+    """ Thumbnail is an img element that identifies the associated object,
+    extends <img>. """
 
 
     def __init__(self, src, name):
-        """ Construct a profile icon tag.
+        """ Construct a thumbnail tag.
 
         Required:
-        str src         the url of the profile icon
-        str name        the name associated with the profile
+        str src         the url of the thumbnail
+        str name        the name associated with the image
 
         """
-        super(ProfileIcon, self).__init__(src, name)
-        self.append_classes([COMPONENT_CLASS.PROFILE_ICON])
-
-
-class Headline(Span):
-
-    """ Headline is a title span. """
-
-    def __init__(self, text):
-        """ Construct a headline tag. """
-        super(Headline, self).__init__()
-        self.append_classes([COMPONENT_CLASS.HEADLINE])
-        self.set_text(text)
+        super(Thumbnail, self).__init__(src, name)
+        self.append_classes([COMPONENT_CLASS.THUMBNAIL])
 
 
 class NonRoutingAnchor(A):

@@ -346,7 +346,7 @@ input {
 /***********************************************************
 * ELEMENT COMPONENTS - NO POSITIONING!!!
 ************************************************************/
-.profile-icon {
+.thumbnail{
     width: @smallLineHeight - 10px;
     height: @smallLineHeight - 10px;
 }
@@ -422,13 +422,6 @@ input {
     vertical-align: middle;
 }
 
-.headline {
-    float: left;
-    width: 100%;
-    .headerText;
-    border-bottom: 1px dotted @lightGrey;
-}
-
 .numbered-list {
     .counter;
 }
@@ -483,6 +476,48 @@ input {
     text-align: left;
 } */
 
+/***********************************************************
+* Z-INDEX SECTION (Remember POSITION!!!)
+************************************************************/
+#dialog-container {
+    z-index: 20;
+}
+    
+#tab-header, .second-header {
+    z-index: 15;
+}
+
+#content #summary {
+    z-index: 10;    
+}
+
+#content #properties {
+    z-index: 7;
+}
+
+#iscroll-wrapper, #content-container {
+    z-index: 5;
+}
+
+#tab {
+    z-index: 2;
+}
+
+
+/***********************************************************
+* APP COMPONENTS 
+************************************************************/
+.headline {
+    float: left;
+    width: 100%;
+    .headerText;
+    border-bottom: 1px dotted @lightGrey;
+}
+
+.cover-photo {
+    width: 100%;
+}
+
 
 /***********************************************************
 * ISCROLL
@@ -493,7 +528,6 @@ input {
     top: 0px; 
     bottom: 0px; 
     left: 0px;
-    z-index: 3;
     overflow: auto;
 
     /* border-bottom: 2px solid @black; */
@@ -502,7 +536,6 @@ input {
 #content-container {
     position: absolute;
     width: 100%;
-    z-index: 3;
 }
 
 
@@ -513,20 +546,27 @@ input {
     /* for hiding address bar and pulling content above bottom navigation */
     .textText();
     position: absolute;
+
     width: @screenWidth;
     height: 100%; 
-
-    z-index: 1;
 }
 
 #content {
-    margin-top: @headerHeight;
+    margin-top: @headerHeight * 2;
+}
+
+#content #properties {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+
+    width: 100%;
 }
 
 #content #summary {
-    float: left;
+    position: relative;
+    
     width: 100%;
-
     padding-left: @pagePadding;
     padding-right: @pagePadding;
 }
@@ -565,7 +605,6 @@ input {
 }
 
 #tab-header {
-    z-index: 5;
     position: absolute;
     top: 0px;
     left: 0px;
@@ -584,10 +623,10 @@ input {
 }
 
 .second-header {
-    position: relative;
-    z-index: 5;
-    margin-top: @normalLineHeight;
     .header-section;
+    position: relative;
+    
+    margin-top: @normalLineHeight;
 }
 
 
@@ -615,7 +654,6 @@ input {
     position: absolute;
     bottom: 15px; 
     right: 15px;
-    z-index: 5;
 } */
 
 
@@ -708,7 +746,6 @@ input {
 #dialog-container {
     position: absolute;
     height: 100%;
-    z-index: 10;
 
     background-color: @white;
     

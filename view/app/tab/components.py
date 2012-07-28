@@ -5,10 +5,9 @@ Elements components that will be used in tabs but aren't part of the framework.
 """
 from view.constants import SQ_DATA
 from view.app_copy import Copy
-
 from view.elements.base import Span, Div
 from view.elements.components import HeadedList, HeadedListItem, NumberedList
-from view.elements.components import ProfileIcon
+from view.elements.components import Thumbnail
 
 from constants import COMPONENT_CLASS
 
@@ -66,10 +65,10 @@ class RankingLI(HeadedListItem):
         url = host + path
 
         div = Div()
-        profile_icon = ProfileIcon(url, Copy.app_name)
+        profile_icon = Thumbnail(url, Copy.app_name)
         # TODO make the model send None instead of ""
         if item.picture_url != "":
-            profile_icon = ProfileIcon(item.picture_url, item.name)
+            profile_icon = Thumbnail(item.picture_url, item.name)
         div.append_child(profile_icon)
         self.set_column(div)
 
