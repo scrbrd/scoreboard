@@ -30,12 +30,15 @@ class SqObject(object):
     id      _id             SqObject id
     str     _type           SqObject type
     dict    _properties     SqObject properties from GraphObject
+    int     _created_ts     Time that SqObject was created.
 
     """
 
     _id = None
     _type = None
     _properties = None
+    _created_ts = None
+    _updated_ts = None
 
 
     def __init__(self, graph_object):
@@ -46,6 +49,11 @@ class SqObject(object):
         # intentionally not exposed as a property or even as a method since
         # most of the helpers defined by subclasses are access wrappers.
         self._properties = graph_object.properties()
+
+        # TODO: this is only needed because SqNode doesn't subclass from
+        # GraphNode
+        self._created_ts = graph_object.created_ts()
+        self._updated_ts = graph_object.updated_ts()
 
         # TODO: move as much error checking from reader/writer into here as
         # possible to avoid repetitive code and to grant class hierarchy
@@ -104,6 +112,18 @@ class SqNode(SqObject):
     def name(self):
         """ Return a SqNode name. """
         raise NotImplementedError("Abstract Method: SUBCLASS MUST OVERRIDE!")
+
+
+    @property
+    def created_ts(self):
+        """ Return a created timestamp. """
+        return self._created_ts
+
+
+    @property
+    def updated_ts(self):
+        """ Return a updated timestamp. """
+        return self._updated_ts
 
 
     def outgoing_edge_types(self):
