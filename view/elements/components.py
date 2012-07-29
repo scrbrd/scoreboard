@@ -8,8 +8,8 @@ from view.app_copy import Copy
 
 from constants import COMPONENT_CLASS
 
-from base import Div, OL, SubmitButton, Button, Header, LI, A, Img
-from base import RadioInput, Label
+from base import Div, Span, OL, SubmitButton, Button, Header, LI, A, Img, Label
+from base import CheckboxInput, RadioInput
 
 
 class Thumbnail(Img):
@@ -44,7 +44,7 @@ class NonRoutingAnchor(A):
     def __init__(self, url, text):
         """ Construct an anchor that doesn't use internal routing. """
         super(NonRoutingAnchor, self).__init__(url, text)
-        self.append_classes([COMPONENT_CLASS.NON_ROUTING_ANCHOR])
+        self.append_class(COMPONENT_CLASS.NON_ROUTING_ANCHOR)
 
 
 class LoginAnchor(NonRoutingAnchor):
@@ -55,7 +55,7 @@ class LoginAnchor(NonRoutingAnchor):
         """ Construct a login anchor tag. """
         super(LoginAnchor, self).__init__(login_url, text)
 
-        self.append_classes([COMPONENT_CLASS.LOGIN_ANCHOR])
+        self.append_class(COMPONENT_CLASS.LOGIN_ANCHOR)
 
 
 class FacebookLoginAnchor(LoginAnchor):
@@ -67,25 +67,17 @@ class FacebookLoginAnchor(LoginAnchor):
         """ Construct a facebook login anchor tag. """
         super(FacebookLoginAnchor, self).__init__(login_url, text)
 
-        self.append_classes([COMPONENT_CLASS.FACEBOOK_LOGIN_ANCHOR])
+        self.append_class(COMPONENT_CLASS.FACEBOOK_LOGIN_ANCHOR)
 
 
-class SqSubmitButton(SubmitButton):
+class PostButton(SubmitButton):
 
-    """ Scoreboard Submit Button that extends <button type="submit">. """
+    """ PostButton extending <button type="submit">. """
 
 
-    def __init__(self, action_url=None):
-        """ Construct a submit button tag.
-
-        Optional:
-        str     action_url      form submits to this url. can also
-                                be identified in the form element.
-
-        """
-        super(SqSubmitButton, self).__init__(Copy.submit, action_url)
-
-        self.append_classes([COMPONENT_CLASS.SUBMIT_BUTTON])
+    def __init__(self):
+        """ Construct a close button tag. """
+        super(PostButton, self).__init__(Copy.post)
 
 
 class CloseButton(Button):
@@ -97,7 +89,7 @@ class CloseButton(Button):
         """ Construct a close button tag. """
         super(CloseButton, self).__init__(Copy.close)
 
-        self.append_classes([COMPONENT_CLASS.CLOSE_BUTTON])
+        self.append_class(COMPONENT_CLASS.CLOSE_BUTTON)
 
 
 class CreateButton(Button):
@@ -111,7 +103,7 @@ class CreateButton(Button):
         """ Construct an add button tag. """
         super(CreateButton, self).__init__(self.PLUS)
 
-        self.append_classes([COMPONENT_CLASS.CREATE_BUTTON])
+        self.append_class(COMPONENT_CLASS.CREATE_BUTTON)
 
 
 class MenuButton(Button):
@@ -125,7 +117,7 @@ class MenuButton(Button):
         """ Construct a menu button tag. """
         super(MenuButton, self).__init__(self.MENU)
 
-        self.append_classes([COMPONENT_CLASS.MENU_BUTTON])
+        self.append_class(COMPONENT_CLASS.MENU_BUTTON)
 
 
 class MainHeaderDiv(Div):
@@ -142,7 +134,7 @@ class MainHeaderDiv(Div):
     def __init__(self, title):
         """ Construct Main Header tag. """
         super(MainHeaderDiv, self).__init__()
-        self.append_classes([COMPONENT_CLASS.MAIN_HEADER])
+        self.append_class(COMPONENT_CLASS.MAIN_HEADER)
 
         # insert to separate text from background
         titleContainer = Div()
@@ -158,7 +150,7 @@ class MultiColumnLI(LI):
 
     def set_column(self, element):
         """ Add a single column to the <li>. """
-        element.append_classes([COMPONENT_CLASS.LIST_COLUMN])
+        element.append_class(COMPONENT_CLASS.LIST_COLUMN)
         self.append_child(element)
 
 
@@ -170,7 +162,7 @@ class NumberedList(OL):
     def __init__(self, items):
         """ Construct a numbered <ol>. """
         super(NumberedList, self).__init__(items)
-        self.append_classes([COMPONENT_CLASS.NUMBERED_LIST])
+        self.append_class(COMPONENT_CLASS.NUMBERED_LIST)
 
 
 class HeadedList(Div):
@@ -181,7 +173,7 @@ class HeadedList(Div):
     def __init__(self, headings, items):
         """ Construct a list with headings. """
         super(HeadedList, self).__init__()
-        self.append_classes([COMPONENT_CLASS.HEADED_LIST])
+        self.append_class(COMPONENT_CLASS.HEADED_LIST)
 
         self.set_headings(headings)
         self.set_list(items)
@@ -194,7 +186,7 @@ class HeadedList(Div):
 
     def set_list(self, items):
         """ Set the list element for this list. """
-        raise NotImplementedError()
+        raise NotImplementedError("Abstract Method: SUBCLASS MUST OVERRIDE!")
 
 
 class ListHeader(Header):
@@ -206,14 +198,14 @@ class ListHeader(Header):
         """ Constuct a list header. """
         super(ListHeader, self).__init__()
         self.append_classes([
-            COMPONENT_CLASS.LIST_HEADER,
-            COMPONENT_CLASS.HEADED_LIST_ITEM,
-        ])
+                COMPONENT_CLASS.LIST_HEADER,
+                COMPONENT_CLASS.HEADED_LIST_ITEM,
+                ])
 
         for h in headings:
             col_head = Div()
             col_head.set_text(h)
-            col_head.append_classes([COMPONENT_CLASS.LIST_COLUMN])
+            col_head.append_class(COMPONENT_CLASS.LIST_COLUMN)
             self.append_child(col_head)
 
 
@@ -225,7 +217,7 @@ class HeadedListItem(MultiColumnLI):
     def __init__(self, item, index):
         """ Construct a list item for a HeadedList. """
         super(HeadedListItem, self).__init__(item, index)
-        self.append_classes([COMPONENT_CLASS.HEADED_LIST_ITEM])
+        self.append_class(COMPONENT_CLASS.HEADED_LIST_ITEM)
 
 
 class LabeledRadioInput(Div):
@@ -271,3 +263,26 @@ class RadioInputGroup(Div):
                     value,
                     (id if id else value),
                     (value == default_checked_value)))
+
+
+class SwitchInput(Div):
+
+    """ SwitchInput extending Div.
+
+    <div class="switch">
+        <span class="knob"></span>
+        <input type="checkbox" />
+    </div>
+
+    """
+
+
+    def __init__(self, name, value, is_on=False):
+        super(SwitchInput, self).__init__()
+        self.append_class(COMPONENT_CLASS.SWITCH)
+
+        span = Span()
+        span.append_class(COMPONENT_CLASS.KNOB)
+        self.append_child(span)
+
+        self.append_child(CheckboxInput(name, value, is_on))

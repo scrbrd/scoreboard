@@ -13,10 +13,8 @@ Each class has a single requirement...override the following:
 
 """
 
-# TODO: should this be in a util?
-import xml.etree.cElementTree as ET
-
 import tornado.web
+from tornado import escape
 
 from view.app_copy import Copy
 from view.constants import PAGE_TYPE, PAGE_NAME, APP_CLASS, SQ_DATA
@@ -260,17 +258,11 @@ class UICreateGameDialog(tornado.web.UIModule):
 
     def render(self, model=None, state=None):
         """ Render a Create Game Dialog Screen. """
-        # block xsrf for forms. required for Tornado posts.
-        # get the input element and pass the token only.
-        xsrf_tag = self.handler.xsrf_form_html()
-        xsrf_token = ET.fromstring(xsrf_tag).attrib.get("value")
-
         header_tree = DialogHeader(Copy.create_game_dialog_header).element()
+
         form_tree = CreateGameForm(
-                "create-game",
-                xsrf_token,
-                "/create/game"
-                ).element()
+                escape.xhtml_escape(self.handler.xsrf_token),
+                model).element()
 
         return Element.to_string(header_tree) + Element.to_string(form_tree)
 

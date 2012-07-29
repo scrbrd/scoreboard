@@ -704,7 +704,7 @@ class A(Element):
         self.set_href(url["href"])
         self.set_text(text)
 
-        self.append_classes([HTML_CLASS.ANCHOR])
+        self.append_class(HTML_CLASS.ANCHOR)
 
 
 class H1(Element):
@@ -878,22 +878,16 @@ class Form(Element):
 
     """ Form element <form>. """
 
-    def __init__(self, name, xsrf_token, action_url=None):
+    def __init__(self, name, xsrf_token):
         """ Construct a <form>.
 
         Required:
         str     name            unique identifying name of form
         str     xsrf_token      xsrf token to prevent forgery
 
-        Optional:
-        str     action_url      Form submits to this url. Can also
-                                be identified in the submit button.
-
         """
         super(Form, self).__init__(HTML_TAG.FORM)
         self.set_name(name)
-        if action_url is not None:
-            self.set_action(action_url)
 
         # add xsrf token bit to prevent xsrf
         self.append_child(XSRFHiddenInput(xsrf_token))
@@ -1054,7 +1048,7 @@ class Button(Element):
 
     """ Button element <button>. """
 
-    def __init__(self, text="", type=None):
+    def __init__(self, text="", type=HTML_TYPE.BUTTON):
         """ Construct a <button> with class 'button'.
 
         Optional:
@@ -1066,36 +1060,31 @@ class Button(Element):
 
         """
         super(Button, self).__init__(HTML_TAG.BUTTON)
+
         if type in HTML_CONSTANT.TYPES:
             self.set_type(type)
-        elif type is not None:
-            # TODO better way to handle this but didn't want to
-            # introduce a bug
-            msg = "Type can only be submit right now."
-            raise InvalidAttributeError([type], msg)
         else:
-            self.set_type(HTML_TYPE.BUTTON)
+            raise InvalidAttributeError(
+                    [type],
+                    "Type can only be submit right now.")
 
-        self.append_classes([HTML_CLASS.BUTTON])
         self.set_text(text)
+        self.append_class(HTML_CLASS.BUTTON)
 
 
 class SubmitButton(Button):
 
     """ Button element of type Submit <button type="submit">. """
 
-    def __init__(self, text=None, action_url=None):
+    def __init__(self, text):
         """ Construct a <button type="submit">.
 
         Optional:
         str     text            the button's text
-        str     action_url      form submits to this url. can also
-                                be identified in the form element.
 
         """
         super(SubmitButton, self).__init__(text, HTML_TYPE.SUBMIT)
-        if action_url is not None:
-            self.set_action(action_url)
+        self.append_class(HTML_CLASS.SUBMIT_BUTTON)
 
 
 class Img(Element):

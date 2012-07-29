@@ -16,7 +16,7 @@ class CreateGameDialogHandler(QueryHandler):
 
     def get_model(self):
         """ Override avoids raising an error, but no model is needed. """
-        model = DialogModel()
+        model = DialogModel(self.current_user)
         model.load()
         return model
 

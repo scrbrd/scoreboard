@@ -17,9 +17,27 @@ class _Copy(object):
 
 
     @property
+    def post(self):
+        """ The copy for the post button. """
+        return "Post"
+
+
+    @property
     def close(self):
         """ The copy for the close button. """
-        return "Close it"
+        return "Close"
+
+
+    @property
+    def okay(self):
+        """ The copy for the okay button. """
+        return "Okay"
+
+
+    @property
+    def challenge(self):
+        """ The copy for the challenge button. """
+        return "Challenge"
 
 
     @property
@@ -77,12 +95,6 @@ class _Copy(object):
 
 
     @property
-    def submit(self):
-        """ The copy for the submit button. """
-        return "Post!"
-
-
-    @property
     def win(self):
         """ The copy for a win. """
         return "Win"
@@ -92,6 +104,24 @@ class _Copy(object):
     def win_short(self):
         """ The copy for a shortened win. """
         return "W"
+
+
+    @property
+    def won(self):
+        """ The copy for the Create Game dialog winners subheader. """
+        return "Won"
+
+
+    @property
+    def lost(self):
+        """ The copy for the Create Game dialog losers subheader. """
+        return "Lost"
+
+
+    @property
+    def played_with(self):
+        """ The copy for the Create Game dialog players subheader. """
+        return "With"
 
 
 Copy = _Copy()

@@ -312,6 +312,11 @@ class _HTMLClass(object):
         return "button"
 
 
+    @constant
+    def SUBMIT_BUTTON(self):
+        """ SUBMIT_BUTTON is a w3c class. """
+        return "submit-button"
+
 
 HTML_CLASS = _HTMLClass()
 
@@ -325,39 +330,39 @@ class _HTMLConstant(object):
     def TAGS(self):
         """ TAGS is a list of implemented tags. """
         return [
-            HTML_TAG.DIV,
-            HTML_TAG.SPAN,
-            HTML_TAG.OL,
-            HTML_TAG.UL,
-            HTML_TAG.LI,
-            HTML_TAG.NAV,
-            HTML_TAG.A,
-            HTML_TAG.H1,
-            HTML_TAG.H2,
-            HTML_TAG.HEADER,
-            HTML_TAG.SECTION,
-            HTML_TAG.FORM,
-            HTML_TAG.INPUT,
-            HTML_TAG.LABEL,
-            HTML_TAG.BUTTON,
-            HTML_TAG.BR,
-            HTML_TAG.FOOTER,
-            HTML_TAG.TABLE,
-            HTML_TAG.TR,
-            HTML_TAG.TD,
-            HTML_TAG.TH,
-            HTML_TAG.IMG,
-        ]
+                HTML_TAG.DIV,
+                HTML_TAG.SPAN,
+                HTML_TAG.OL,
+                HTML_TAG.UL,
+                HTML_TAG.LI,
+                HTML_TAG.NAV,
+                HTML_TAG.A,
+                HTML_TAG.H1,
+                HTML_TAG.H2,
+                HTML_TAG.HEADER,
+                HTML_TAG.SECTION,
+                HTML_TAG.FORM,
+                HTML_TAG.INPUT,
+                HTML_TAG.LABEL,
+                HTML_TAG.BUTTON,
+                HTML_TAG.BR,
+                HTML_TAG.FOOTER,
+                HTML_TAG.TABLE,
+                HTML_TAG.TR,
+                HTML_TAG.TD,
+                HTML_TAG.TH,
+                HTML_TAG.IMG,
+                ]
 
 
     @constant
     def GLOBAL_ATTRIBUTES(self):
         """ GLOBAL_ATTRIBUTES is a list of allowed attributes. """
         return [
-            HTML_ATTRIBUTE.CLASS,
-            HTML_ATTRIBUTE.ID,
-            HTML_ATTRIBUTE.DATA,
-        ]
+                HTML_ATTRIBUTE.CLASS,
+                HTML_ATTRIBUTE.ID,
+                HTML_ATTRIBUTE.DATA,
+                ]
 
 
     @constant
@@ -409,28 +414,13 @@ class _HTMLConstant(object):
     def TYPES(self):
         """ TYPES is a list of allowed types. """
         return [
-            HTML_TYPE.BUTTON,
-            HTML_TYPE.CHECKBOX,
-            HTML_TYPE.HIDDEN,
-            HTML_TYPE.RADIO,
-            HTML_TYPE.SUBMIT,
-            HTML_TYPE.TEXT,
-        ]
-
-
-    @constant
-    def CLASSES(self):
-        """ CLASSES is a dict of css classes defined per tag. """
-
-        classes = {}
-
-        # TODO: FILL IN AND UNCOMMENT1!
-        #classes[HTML_TAG.] = [
-        #        HTML_CLASS.,
-        #        HTML_CLASS.
-        #        ]
-
-        return classes
+                HTML_TYPE.BUTTON,
+                HTML_TYPE.CHECKBOX,
+                HTML_TYPE.HIDDEN,
+                HTML_TYPE.RADIO,
+                HTML_TYPE.SUBMIT,
+                HTML_TYPE.TEXT,
+                ]
 
 
 HTML_CONSTANT = _HTMLConstant()
@@ -484,12 +474,6 @@ class _ComponentClass(object):
 
 
     @constant
-    def SUBMIT_BUTTON(self):
-        """ SUBMIT_BUTTON is a w3c class. """
-        return "submit-button"
-
-
-    @constant
     def MAIN_HEADER(self):
         """ MAIN_HEADER is a w3c class. """
         return "main-header"
@@ -523,6 +507,18 @@ class _ComponentClass(object):
     def HEADED_LIST_ITEM(self):
         """ HEADED_LIST_ITEM is a w3c class. """
         return "headed-list-item"
+
+
+    @constant
+    def SWITCH(self):
+        """ SWITCH is a w3c class. """
+        return "switch"
+
+
+    @constant
+    def KNOB(self):
+        """ KNOBis a w3c class. """
+        return "knob"
 
 
 COMPONENT_CLASS = _ComponentClass()

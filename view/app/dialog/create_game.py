@@ -4,14 +4,14 @@ Element components for Create Game dialog.
 
 """
 
-from view.constants import SQ_DATA, FORM_NAME
+from view.constants import SQ_DATA, PAGE_NAME
 from view.app_copy import Copy
 
 from view.elements.base import UL, Form, HiddenInput, CheckboxInput
-from view.elements.components import HeadedList, HeadedListItem
+from view.elements.components import HeadedList, HeadedListItem, SwitchInput
 
 from constants import DIALOG_CLASS
-from framework import SubmitButtonSection
+from framework import PostButtonSection
 from components import AutocompleteInput
 
 
@@ -20,19 +20,19 @@ class CreateGameForm(Form):
     """ Create Game form extending <form>. """
 
 
-    def __init__(self, name, xsrf_token, action_url):
+    def __init__(self, xsrf_token, data):
         """ Construct a Create Game form element tree.
 
         Required:
-        str     name            the identifying name of the form
-        str     xsrf_token      xsrf token to prevent forgery
-        url     action_url      the url that the form submits to
+        str     xsrf_token  xsrf token to prevent forgery
+        Model   data        populate data-* with model constants
 
         """
-        super(CreateGameForm, self).__init__(name, xsrf_token, action_url)
-        self.append_classes([DIALOG_CLASS.DIALOG_CONTENT])
+        super(CreateGameForm, self).__init__(PAGE_NAME.CREATE_GAME, xsrf_token)
+        self.set_action("/create/game")
+        self.append_class(DIALOG_CLASS.DIALOG_CONTENT)
 
-        self.append_child(HiddenInput(FORM_NAME.LEAGUE, ""))
+        self.append_child(HiddenInput(PAGE_NAME.LEAGUE))
 
         # TODO: take out hard coded values
         # create game score form section with Player and Winner headings
@@ -44,7 +44,7 @@ class CreateGameForm(Form):
         self.append_child(GameScoreHL(headings, rows))
 
         # add form submit and close buttons
-        self.append_child(SubmitButtonSection())
+        self.append_child(PostButtonSection())
 
 
 class GameScoreHL(HeadedList):
@@ -77,7 +77,7 @@ class GameScoreLI(HeadedListItem):
         # list names format: NAME[INDEX][DATA_TYPE]
         # id
         game_score_id = "{0}[{1}][{2}]".format(
-                FORM_NAME.GAME_SCORE,
+                "game-score",
                 self._index,
                 SQ_DATA.ID)
         id_input = AutocompleteInput(
@@ -90,7 +90,7 @@ class GameScoreLI(HeadedListItem):
         # translated to score to work with the backend
         winner_value = "1"
         game_score_winner = "{0}[{1}][{2}]".format(
-                FORM_NAME.GAME_SCORE,
+                "game-score",
                 self._index,
                 SQ_DATA.SCORE)
         winner_input = CheckboxInput(game_score_winner, winner_value)

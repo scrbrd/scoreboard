@@ -37,26 +37,6 @@ class _AppID(object):
 APP_ID = _AppID()
 
 
-class _FormName(object):
-
-    """ _FormName class holds all name attributes' possible values. """
-
-
-    @constant
-    def LEAGUE(self):
-        """ LEAGUE is the name of a form element that stores league id. """
-        return "league"
-
-
-    @constant
-    def GAME_SCORE(self):
-        """ GAME_SCORE is the name of a set of form elements. """
-        return "game-score"
-
-
-FORM_NAME = _FormName()
-
-
 class _SqData(object):
 
     """ _SqData class to hold all 'Data-' atttribute keys.
@@ -98,6 +78,18 @@ class _SqData(object):
 
 
     @constant
+    def RESULT(self):
+        """ RESULT is a key of the HTML attribute Data. """
+        return "result"
+
+
+    @constant
+    def OPPONENT_METRICS(self):
+        """ OPPONENT_METRICS is a key of the HTML attribute Data. """
+        return "opponent-metrics"
+
+
+    @constant
     def RIVALS(self):
         """ RIVALS is a key of the HTML attribute Data. """
         return "rivals"
@@ -113,6 +105,18 @@ class _SqData(object):
     def PAGE_NAME(self):
         """ PAGE_NAME is a key of the HTML attribute Data. """
         return "page-name"
+
+
+    @constant
+    def LEAGUE_ID(self):
+        """ LEAGUE_ID is the name of a form element that stores league id. """
+        return "league-id"
+
+
+    @constant
+    def GAME_TYPE(self):
+        """ GAME_TYPE is a key of the HTML attribute Data. """
+        return "game-type"
 
 
 SQ_DATA = _SqData()

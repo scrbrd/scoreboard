@@ -19,9 +19,9 @@ class _DialogClass(object):
 
 
     @constant
-    def SUBMIT_BUTTON_WRAPPER(self):
-        """ SUBMIT_BUTTON_WRAPPER is a w3c class. """
-        return "submit-button-wrapper"
+    def POST_BUTTON_WRAPPER(self):
+        """ POST_BUTTON_WRAPPER is a w3c class. """
+        return "post-button-wrapper"
 
 
     @constant

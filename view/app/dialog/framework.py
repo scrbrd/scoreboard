@@ -8,7 +8,7 @@ positioning.
 
 from view.elements.base import Div
 from view.elements.components import MainHeaderDiv
-from view.elements.components import CloseButton, SqSubmitButton
+from view.elements.components import PostButton, CloseButton
 
 from constants import DIALOG_CLASS, DIALOG_ID
 
@@ -30,14 +30,13 @@ class DialogHeader(MainHeaderDiv):
         self.append_child(close_button)
 
 
-class SubmitButtonSection(Div):
+class PostButtonSection(Div):
 
-    """ Component that has a SqSubmitButton in a <div> (for centering). """
+    """ Component that has a PostButton in a <div> (for centering). """
 
 
     def __init__(self):
         """ Construct a dialog component for a post button. """
-        super(SubmitButtonSection, self).__init__()
-        self.append_classes([DIALOG_CLASS.SUBMIT_BUTTON_WRAPPER])
-
-        self.append_child(SqSubmitButton())
+        super(PostButtonSection, self).__init__()
+        self.append_class(DIALOG_CLASS.POST_BUTTON_WRAPPER)
+        self.append_child(PostButton())
