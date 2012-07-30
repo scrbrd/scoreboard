@@ -5,11 +5,56 @@ Elements components that will be used in tabs but aren't part of the framework.
 """
 from view.constants import SQ_DATA
 from view.app_copy import Copy
-from view.elements.base import Span, Div
+from view.elements.base import Span, Div, Section
 from view.elements.components import HeadedList, HeadedListItem, NumberedList
 from view.elements.components import Thumbnail
+from view.app.constants import DEFAULT_IMAGE
+from view.app.components import Headline
 
 from constants import COMPONENT_CLASS
+
+
+class ResultHeadline(Headline):
+
+    """ResultHeadline is a headline for the result of a game. """
+
+
+    def __init__(self, winners, losers):
+        """ Construct a headline for the played game type. """
+        super(ResultHeadline, self).__init__("")
+
+        winners_text = ", ".join([winner.name for winner in winners])
+        losers_text = ", ".join([loser.name for loser in losers])
+        headline = "{0} {1} {2}".format(
+                winners_text,
+                Copy.defeated,
+                losers_text)
+        self.set_text(headline)
+
+
+class PlayedHeadline(Headline):
+
+    """PlayedHeadline is a headline for a game without a result. """
+
+
+    def __init__(self, players):
+        """ Construct a headline for the played game type. """
+        super(PlayedHeadline, self).__init__("")
+
+        players_text = ", ".join([p.name for p in players])
+        headline = "{0} {1}".format(players_text, Copy.played)
+        self.set_text(headline)
+
+
+class MainStorySection(Section):
+
+    """ MainStorySection is the main section of every story. """
+
+
+    def __init__(self):
+        """ Construct a main section for a story. """
+        super(MainStorySection, self).__init__()
+        self.append_class(COMPONENT_CLASS.MAIN_STORY_SECTION)
 
 
 class RankingsList(HeadedList):
@@ -60,12 +105,9 @@ class RankingLI(HeadedListItem):
     def set_content(self, item):
         """ Set content for Rankings LI. """
         # TODO make this some default scoreboard icon
-        host = "https://fbcdn-profile-a.akamaihd.net"
-        path = "/hprofile-ak-snc4/273574_1002772_699208005_q.jpg"
-        url = host + path
 
         div = Div()
-        profile_icon = Thumbnail(url, Copy.app_name)
+        profile_icon = Thumbnail(DEFAULT_IMAGE.THUMBNAIL, Copy.app_name)
         # TODO make the model send None instead of ""
         if item.picture_url != "":
             profile_icon = Thumbnail(item.picture_url, item.name)

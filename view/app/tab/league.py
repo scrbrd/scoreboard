@@ -5,7 +5,7 @@ League tab components.
 """
 from view.app_copy import Copy
 from view.elements.base import Div
-from view.app.components import Headline, CoverPhoto
+from view.app.components import Headline
 
 from framework import TabContentSection, PropertiesDiv, SummaryDiv, FeedDiv
 from components import RankingsList
@@ -37,13 +37,8 @@ class LeagueContentSection(TabContentSection):
 class LeaguePropertiesDiv(PropertiesDiv):
 
     """ LeaguePropertiesDiv extending PropertiesDiv. """
-
-
-    def set_content(self, context):
-        """ Construct and add content as a direct child. """
-        # Currently a static image
-        src = "/static/images/covers/surferPhotoColor.jpg"
-        self.append_child(CoverPhoto(src, context.name))
+    # All functionality is in app.tab.framework.PropertiesDiv
+    pass
 
 
 class LeagueSummaryDiv(SummaryDiv):
@@ -65,5 +60,5 @@ class LeagueFeedDiv(FeedDiv):
 
     """ LeagueFeedDiv extending FeedDiv. """
 
-    # All functionality is in app.tab.framework > FeedDiv
+    # All functionality is in app.tab.framework.FeedDiv
     pass

@@ -80,10 +80,12 @@ class Game(SqNode):
 
         # Loop through each RESULT_EDGE_TYPE and get the result/opponent_id
         for edge_type in API_CONSTANT.RESULT_EDGE_TYPES:
-            opponents[edge_type] = []
-            for edge in self.get_edges().get(edge_type, {}).values():
-                opponent_id = edge.to_node_id
-                opponents[edge_type].append(opponent_id)
+            edges = self.get_edges().get(edge_type)
+            if edges is not None:
+                opponents[edge_type] = []
+                for edge in edges.values():
+                    opponent_id = edge.to_node_id
+                    opponents[edge_type].append(opponent_id)
 
         return opponents
 
@@ -94,10 +96,13 @@ class Game(SqNode):
         return self._opponents.get(opp_id, None)
 
 
-    def get_opponents(self):
+    def get_opponents(self, opponent_ids=None):
         """ Return a list of Opponents. """
         SqNode.assert_loaded(self._opponents)
-        return self._opponents.values()
+        if opponent_ids is None:
+            return self._opponents.values()
+        else:
+            return [self.get_opponent(id) for id in opponent_ids]
 
 
     def set_opponents(self, opponents):

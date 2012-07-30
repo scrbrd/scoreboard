@@ -44,13 +44,8 @@ class Person(sqobject.SqNode):
 
     @property
     def name(self):
-        """ Return this Person's full name. """
-
-        # TODO: this wouldn't have to be defined here or in League if it were
-        # instead defined in SqNode, but this seems less confusing for now.
-
-        return "{0} {1}".format(self.first_name, self.last_name)
-        #return self._get_property(API_NODE_PROPERTY.NAME)
+        """ Return this Person's standard name. """
+        return self.short_name
 
 
     @property
@@ -77,6 +72,14 @@ class Person(sqobject.SqNode):
         return "{0} {1}".format(
                 self.first_name,
                 self.last_name[0])
+
+
+    @property
+    def full_name(self):
+        """ Return this Person's full name. """
+        return "{0} {1}".format(
+                self.first_name,
+                self.last_name)
 
 
     @property

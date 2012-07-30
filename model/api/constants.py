@@ -6,9 +6,6 @@
 
 from util.decorators import constant
 
-from model.constants import NODE_PROPERTY
-from model.constants import THIRD_PARTY, PROPERTY_KEY
-
 
 class _APINodeType(object):
 

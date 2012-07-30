@@ -72,7 +72,7 @@
 @bigFontSize: 1.9em;
 @biggestFontSize: 2em;
 
-.headerFont(@fontSize: @bigFontSize, @lineHeight: @bigFontSize) {
+.headerFont(@fontSize: @bigFontSize, @lineHeight: 1em) {
     font-family: 'TradeGothicCondEighteenBold', sans-serif;
     font-size: @fontSize;
     font-weight: bold;
@@ -80,13 +80,13 @@
     text-transform: uppercase;
 }
 
-.normalFont(@fontSize: @bodyFontSize, @lineHeight: @bodyFontSize) {
+.normalFont(@fontSize: @bodyFontSize, @lineHeight: 1em) {
     font-family: 'Helvetica65MediumRegular', sans-serif;
     font-size: @fontSize;
     line-height: @lineHeight;
 }
 
-.contrastFont(@fontSize: @biggestFontSize, @lineHeight: @biggestFontSize) {
+.contrastFont(@fontSize: @biggestFontSize, @lineHeight: 1em) {
     font-family: Georgia, Serif;
     font-size: @fontSize;
     line-height: @lineHeight;
@@ -348,7 +348,6 @@ input {
 ************************************************************/
 .thumbnail{
     width: @smallLineHeight - 10px;
-    height: @smallLineHeight - 10px;
 }
 
 .close-button {
@@ -511,6 +510,8 @@ input {
     float: left;
     width: 100%;
     .headerText;
+    padding-top: @linePadding;
+    padding-bottom: @linePadding;
     border-bottom: 1px dotted @lightGrey;
 }
 
@@ -518,6 +519,24 @@ input {
     width: 100%;
 }
 
+
+.opponent-group-section {
+}
+
+.opponent-group {
+    float: left;
+    width: 50%;
+}
+
+.single-opponent-group .thumbnail {
+    float: left;
+    width: 100%;
+}
+
+.multi-opponent-group .thumbnail {
+    float: left;
+    width: 50%;
+}
 
 /***********************************************************
 * ISCROLL
@@ -716,10 +735,15 @@ input {
    
     margin-top: @linePadding;
     margin-bottom: @linePadding;
+    padding-bottom: @bigPadding;
+}
+
+.story .main-story-section {
     padding-left: @bigPadding;
     padding-right: @bigPadding;
-
 }
+
+
 /***********************************************************
 * TAB SECTION
 ************************************************************/

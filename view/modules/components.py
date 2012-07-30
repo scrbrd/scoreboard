@@ -42,7 +42,7 @@ class UIAppHeader(tornado.web.UIModule):
         """ Render a App Header. """
         # TODO: if we ever use this, there should be an App object that
         # contains things like the name, icon, etc.
-        element_tree = AppHeader(Copy.app_name).element()
+        element_tree = AppHeader(Copy.app_name)
 
         return Element.to_string(element_tree)
 
@@ -53,7 +53,7 @@ class UIAppFooter(tornado.web.UIModule):
 
     def render(self, model=None, state=None):
         """ Render an App Footer. """
-        element_tree = AppFooter().element()
+        element_tree = AppFooter()
 
         return Element.to_string(element_tree)
 
@@ -66,7 +66,7 @@ class UITabHeader(tornado.web.UIModule):
         """ Render a TabHeader. """
         context = model.context
 
-        element_tree = TabHeader(context).element()
+        element_tree = TabHeader(context)
 
         return Element.to_string(element_tree)
 
@@ -78,7 +78,7 @@ class UIContextModel(tornado.web.UIModule):
     def render(self, model=None, state=None):
         """ Render a Context Model. """
         context = model.context
-        element_tree = ContextModel(context).element()
+        element_tree = ContextModel(context)
 
         return Element.to_string(element_tree)
 
@@ -89,7 +89,7 @@ class UISessionModel(tornado.web.UIModule):
 
     def render(self, model=None, state=None):
         """ Render a Session Model. """
-        element_tree = SessionModel(model).element()
+        element_tree = SessionModel(model)
 
         return Element.to_string(element_tree)
 
@@ -142,7 +142,7 @@ class UINavHeader(tornado.web.UIModule):
         element_tree = NavHeader(
                 nav_items,
                 special_item,
-                special_index).element()
+                special_index)
 
         return Element.to_string(element_tree)
 
@@ -171,7 +171,7 @@ class UIPageModel(tornado.web.UIModule):
 
     def render(self, model=None, state=None):
         """ Render a Content Model View. """
-        element_tree = PageModel(state).element()
+        element_tree = PageModel(state)
 
         return Element.to_string(element_tree)
 
@@ -223,7 +223,7 @@ class UIGamesList(tornado.web.UIModule):
 
     def render(self, model=None, state=None):
         """ Render a Games List. """
-        element_tree = GamesTabSection(model.games).element()
+        element_tree = GamesTabSection(model.games)
         return Element.to_string(element_tree)
 
 
@@ -233,7 +233,7 @@ class UIRankingsList(tornado.web.UIModule):
 
     def render(self, model=None, state=None):
         """ Render a Rankings List. """
-        element_tree = RankingsTabSection(model.rankings).element()
+        element_tree = RankingsTabSection(model.rankings)
         return Element.to_string(element_tree)
 
 
@@ -248,7 +248,7 @@ class UILeaguePage(tornado.web.UIModule):
                 model.aggregations,
                 model.objects)
 
-        return Element.to_string(league_page.element())
+        return Element.to_string(league_page)
 
 
 class UICreateGameDialog(tornado.web.UIModule):
@@ -258,11 +258,11 @@ class UICreateGameDialog(tornado.web.UIModule):
 
     def render(self, model=None, state=None):
         """ Render a Create Game Dialog Screen. """
-        header_tree = DialogHeader(Copy.create_game_dialog_header).element()
+        header_tree = DialogHeader(Copy.create_game_dialog_header)
 
         form_tree = CreateGameForm(
                 escape.xhtml_escape(self.handler.xsrf_token),
-                model).element()
+                model)
 
         return Element.to_string(header_tree) + Element.to_string(form_tree)
 
@@ -278,6 +278,6 @@ class UILandingPage(tornado.web.UIModule):
             "href": "/login",
         }
 
-        splash_tree = LandingPage(login_link).element()
+        splash_tree = LandingPage(login_link)
 
         return Element.to_string(splash_tree)

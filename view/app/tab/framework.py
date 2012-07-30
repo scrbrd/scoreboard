@@ -3,11 +3,12 @@
 Element components that are for the tab framework.
 
 """
+
 from view.constants import SQ_DATA
 from view.app_copy import Copy
-
 from view.elements.base import H1, Nav, Footer, Section, UL, LI, A, Div
 from view.elements.components import CreateButton, MenuButton, MainHeaderDiv
+from view.app.components import CoverPhoto
 
 from constants import TAB_CLASS, TAB_ID
 from story import GameStory
@@ -175,7 +176,9 @@ class PropertiesDiv(Div):
 
     def set_content(self, context):
         """ Construct and add content as a direct child. """
-        raise NotImplementedError("Abstract Method: SUBCLASS MUST OVERRIDE!")
+        # Currently a static image
+        src = "/static/images/covers/surferPhotoColor.jpg"
+        self.append_child(CoverPhoto(src, context.name))
 
 
 class SummaryDiv(Div):

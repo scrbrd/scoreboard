@@ -59,9 +59,15 @@ class _Copy(object):
 
 
     @property
+    def defeated(self):
+        """ The verb for one team beating another team. """
+        return "defeated"
+
+
+    @property
     def loss(self):
         """ The copy for a loss. """
-        return "Lost"
+        return "Loss"
 
 
     @property
@@ -69,6 +75,11 @@ class _Copy(object):
         """ The copy for a shortened loss. """
         return "L"
 
+
+    @property
+    def played(self):
+        """ The verb for one team playing. """
+        return "played"
 
     @property
     def player(self):

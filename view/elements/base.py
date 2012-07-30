@@ -184,6 +184,11 @@ class Element(object):
         return self.element().tag
 
 
+    def _text(self):
+        """ Return this element's text. """
+        return self.element().text
+
+
     def set_text(self, text):
         """ Set this element's text content. """
         self.element().text = text
@@ -435,7 +440,14 @@ class Element(object):
         Required:
         Element     element     an instance of elements.Element
 
+        Throw error if the element is an Empty Div because ET creates it as
+        <div /> and Chrome only sees this as a start tag.
+
         """
+        if not element.validate_root():
+            raise ElementError(
+                    [element],
+                    "{0} element is invalid.".format(element.tag()))
         self.element().append(element.element())
 
 
@@ -448,6 +460,13 @@ class Element(object):
         """
         for e in elements:
             self.element().append_child(e)
+
+
+    def validate_root(self):
+        """ Return a boolean indicating if the element is valid. """
+        # TODO: Don't put attribute/type checking here. Put it as part of an
+        # interface.
+        return True
 
 
 #   @staticmethod
@@ -490,11 +509,15 @@ class Element(object):
 
 
     @staticmethod
-    def to_string(element_tree):
+    def to_string(element):
         """ Convenience wrapper to standardize on utf-8 and html. """
         # TODO: elementree and celementree differ; does method="html" exist?
-        #return ET.tostring(element_tree, "utf-8", "html")
-        return ET.tostring(element_tree, "utf-8")
+        #return ET.tostring(element, "utf-8", "html")
+        if not element.validate_root():
+            raise ElementError(
+                    [element],
+                    "{0} element tree is invalid.".format(element.tag()))
+        return ET.tostring(element.element(), "utf-8")
 
 
 class Div(Element):
@@ -505,6 +528,15 @@ class Div(Element):
     def __init__(self):
         """ Construct a <div>. """
         super(Div, self).__init__(HTML_TAG.DIV)
+
+
+    def validate_root(self):
+        """ Return a boolean if the Div is valid. """
+        text = self._text()
+        number_of_children = len(self.children())
+        if text is None and number_of_children == 0:
+            return False
+        return True
 
 
 class Span(Element):

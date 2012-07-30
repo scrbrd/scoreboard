@@ -25,6 +25,12 @@ class _ComponentClass(object):
 
 
     @constant
+    def MAIN_STORY_SECTION(self):
+        """ MAIN_STORY_SECTION is a w3c class. """
+        return "main-story-section"
+
+
+    @constant
     def RANKINGS_LIST(self):
         """ RANKINGS_LIST is a w3c class. """
         return "rankings-list"
