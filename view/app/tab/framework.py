@@ -8,7 +8,7 @@ from view.constants import SQ_DATA
 from view.app_copy import Copy
 from view.elements.base import H1, Nav, Footer, Section, UL, LI, A, Div
 from view.elements.components import CreateButton, MenuButton, MainHeaderDiv
-from view.app.components import CoverPhoto
+from view.app.components import CoverPhoto, Headline
 
 from constants import TAB_CLASS, TAB_ID
 from story import GameStory
@@ -211,7 +211,11 @@ class FeedDiv(Div):
         """ Construct a tab's feed content element tree. """
         super(FeedDiv, self).__init__()
         self.set_id(TAB_ID.FEED)
-        self.set_content(objects)
+
+        self.append_child(Headline(Copy.feed_title))
+
+        if len(objects) > 0:
+            self.set_content(objects)
 
 
     def set_content(self, objects):

@@ -16,11 +16,7 @@ from view.modules.components import UIGamesModel, UIRankingsModel
 from view.modules.components import UILeagueModel
 
 # Application constants
-# LEAGUE = 693  # The Banana Stand
-# LEAGUE = 745  # Game of Thrones
-# LEAGUE = 721  # The Joy of Serving Others
-LEAGUE = 278  # Oh No!
-# LEAGUE = 257  # Oh No!
+LEAGUE = 144
 
 # Make filepaths relative to settings.
 path = lambda root, *a: os.path.join(root, *a)

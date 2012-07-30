@@ -59,6 +59,12 @@ class _Copy(object):
 
 
     @property
+    def feed_title(self):
+        """ The title of the Feed Section. """
+        return "Feed"
+
+
+    @property
     def defeated(self):
         """ The verb for one team beating another team. """
         return "defeated"

@@ -56,9 +56,7 @@ class _DefaultImage(object):
 
     @constant
     def THUMBNAIL(self):
-        host = "https://fbcdn-profile-a.akamaihd.net"
-        path = "/hprofile-ak-snc4/273574_1002772_699208005_q.jpg"
-        return host + path
+        return "/static/images/icon.png"
 
 
 DEFAULT_IMAGE = _DefaultImage()
