@@ -7,18 +7,18 @@ or else forward to the landing page.
 """
 
 from handlers.landing import LandingHandler
-from handlers.rankings import RankingsHandler
+from handlers.league import LeagueHandler
 
 
-class HomeHandler(RankingsHandler, LandingHandler):
+class HomeHandler(LeagueHandler, LandingHandler):
 
     """ Determine if the user needs to see the Landing page or the Home page.
 
     Check for a logged in user and then route appropriately.
 
-    IMPORTANT: RankingsHandler must be inherited before LandingHandler
+    IMPORTANT: LeagueHandler must be inherited before LandingHandler
     in order to make sure that self.current_user refers to the
-    RankingsHandler implementation, which will always return a
+    LeagueHandler implementation, which will always return a
     Session if one exists.
 
     from http://docs.python.org/release/1.5/tut/node66.html
@@ -40,7 +40,7 @@ class HomeHandler(RankingsHandler, LandingHandler):
 
         # if the user is logged in, go to the home page.
         if self.current_user is not None:
-            RankingsHandler.process_request(self)
+            LeagueHandler.process_request(self)
 
         # otherwise, go to the landing page.
         else:
