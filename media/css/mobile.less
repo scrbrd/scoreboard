@@ -434,7 +434,6 @@ input {
 .headed-list {
     width: 100%;
     float: left;
-    /* border: 1px solid blue; */
 }
 
 .headed-list .list-header {
@@ -602,18 +601,6 @@ input {
     padding-right: @pagePadding;
 }
 
-#content #summary .summary-item {
-    .drop-shadow-box;
-    float: left;
-    width: 100%;
-    background: @white;
-    
-    margin-bottom: @linePadding; 
-    border: @pagePadding solid @lightGrey;
-    padding-left: @bigPadding;
-    padding-right: @bigPadding;
-    padding-bottom: @pagePadding;
-}
 
 #tab .loading {
     padding-top: @linePadding;
@@ -693,6 +680,18 @@ input {
 /***********************************************************
 * TAB COMPONENTS
 ************************************************************/
+.summary-item {
+    .drop-shadow-box;
+    float: left;
+    width: 100%;
+    background: @white;
+    
+    margin-bottom: @linePadding; 
+    padding-left: @bigPadding;
+    padding-right: @bigPadding;
+    padding-bottom: @pagePadding;
+}
+
 .rankings-list .list-column {
     text-align: center;
 }
@@ -703,13 +702,13 @@ input {
 }
 .rankings-list .headed-list-item .list-column:nth-child(2) {
     float: left;
-    width: 40%;
+    width: 35%;
     text-align: left;
 }
 
 .rankings-list .headed-list-item .list-column:nth-child(n+3) {
     float: right;
-    width: 8%;
+    width: 12%;
 }
 
 // only header

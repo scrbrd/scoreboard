@@ -96,7 +96,8 @@ class Player(person.Person, opponent.Opponent):
 
     @property
     def current_loss_streak(self):
-        """ Alias for compute_loss_streak() intended for use as a property. """
+        """ Alias for compute_current_loss_streak() intended for use as a
+        property. """
         return self.compute_current_loss_streak()
 
 
@@ -109,7 +110,8 @@ class Player(person.Person, opponent.Opponent):
 
     @property
     def current_win_streak(self):
-        """ Alias for compute_win_streak() intended for use as a property. """
+        """ Alias for compute_current_win_streak() intended for use as a
+        property. """
         return self.compute_current_win_streak()
 
 
@@ -118,6 +120,20 @@ class Player(person.Person, opponent.Opponent):
         return self._compute_current_streak(
                 [API_EDGE_TYPE.WON],
                 [API_EDGE_TYPE.WON, API_EDGE_TYPE.LOST])
+
+
+    @property
+    def current_result_streak(self):
+        """ ALias for compute_current_result_streak() intended for use as a
+        property. """
+        return self.compute_current_result_streak()
+
+
+    def compute_current_result_streak(self):
+        """ Return the larger or current_win_streak or current_loss_streak. """
+        win_streak = self.compute_current_win_streak()
+        loss_streak = self.compute_current_loss_streak()
+        return max((win_streak, -loss_streak), key=lambda x: abs(x))
 
 
     @property

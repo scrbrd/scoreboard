@@ -278,7 +278,7 @@ class SqNode(SqObject, StatComputer):
             # prevents ZeroDivisionError
             return 0
         else:
-            return (antecedent_count / consequent_count) * 100
+            return antecedent_count / consequent_count
 
 
     def _compute_current_streak(self, streak_conditions, all_edge_types):

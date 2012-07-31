@@ -125,12 +125,21 @@ class RankingLI(HeadedListItem):
         opponent.set_text(item.name)
         self.set_column(opponent)
 
-        current_win_streak = Span()
-        current_win_streak.set_text(item.current_win_streak)
-        self.set_column(current_win_streak)
+        current_result_streak = Span()
+        streak_text = item.current_result_streak
+        if streak_text > 0:
+            streak_text = "{}{}".format(
+                    streak_text,
+                    Copy.win_short)
+        elif streak_text < 0:
+            streak_text = "{}{}".format(
+                    -streak_text,
+                    Copy.loss_short)
+        current_result_streak.set_text(streak_text)
+        self.set_column(current_result_streak)
 
         win_percentage = Span()
-        win_percentage_text = "{0:.0f}".format(item.win_percentage)
+        win_percentage_text = ".{:.0f}".format(item.win_percentage * 1000)
         win_percentage.set_text(win_percentage_text)
         self.set_column(win_percentage)
 
