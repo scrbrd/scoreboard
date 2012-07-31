@@ -16,6 +16,8 @@ from view.modules.components import UIGamesModel, UIRankingsModel
 from view.modules.components import UILeagueModel
 
 # Application constants
+
+# Our current default league ID.
 LEAGUE = 144
 
 # Make filepaths relative to settings.

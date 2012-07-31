@@ -74,20 +74,34 @@ var constants = {
         @enum {string}
         @const
     */
-    // TODO: make this link sync with Python HTML_DATA constants
+    // TODO: make this sync with Python SQ_DATA constants.
     DATA: {
         ID:                     "id",
         PERSON_ID:              "person-id",
+        NAME:                   "name",
+        LEAGUE_ID:              "league-id",
+        GAME_TYPE:              "game-type",
         SCORE:                  "score",
         RESULT:                 "result",
-        PLAYER:                 "player",
-        NAME:                   "name",
+        METRICS_BY_OPPONENT:    "metrics-by-opponent",
         RIVALS:                 "rivals",
+        PLAYER:                 "player",
         PAGE_TYPE:              "page-type",
-        PAGE_NAME:              "page-name",
-        GAME_SCORE:             "game-score"
+        PAGE_NAME:              "page-name"
     },
-            
+
+    /**
+        Enum for data-* values or JSON values corresponding to Data.
+        @enum {string}
+        @const
+    */
+    // TODO: make this sync with Python SQ_DATA constants.
+    // TODO FIXME XXX: REMOVE W/L/P OR FIGURE OUT THE RIGHT WAY TO DO THIS!
+    VALUE: {
+        RIVALRY:                "rivalry",
+        CAMARADERIE:            "camaraderie"
+    },
+
     /** Enum for model ids.
         @enum {string}
     */
@@ -101,12 +115,13 @@ var constants = {
         Enum for values of name attributes. (Wrapped in attribute selectors.)
         @enum {string}
     */
-    // TODO: make this link sync with Python HTML_NAME constants
+    // TODO: make this sync with Python HTML_NAME constants
     NAME: {
-        LEAGUE:                 "[name='league']",
-        CREATE_GAME:            "[name='create-game']",
-        GAME_SCORE_ID:          "[name^='game-score'][name$='[id]']",
-        GAME_SCORE_SCORE:       "[name^='game-score'][name$='[score]']"
+        LEAGUE_ID:      "[name='league-id']",
+        CREATE_GAME:    "[name='create-game']",
+        // FIXME: this probably doesn't work anymore.
+        OPPONENT_ID:    "[name^='metrics-by-opponent'][name$='[id]']",
+        RESULT:         "[name^='metrics-by-opponent'][name$='[result]']"
     },
 
     /**

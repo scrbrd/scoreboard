@@ -155,7 +155,7 @@ class _Parameter(object):
     @constant
     def LEAGUE_ID(self):
         """ LEAGUE_ID is a Parameter Property. """
-        return "league"
+        return "league-id"
 
 
     @constant

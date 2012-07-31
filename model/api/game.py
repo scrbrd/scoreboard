@@ -168,12 +168,12 @@ class Game(SqNode):
         """ Create a Game and return it.
 
         Required:
-        id      league_id       league id that game belogs to
-        id      creator_id      player id of game's creator
-        dict    metrics_by_opponent     dict of Metrics keyed on opponent_id
+        id      league_id           League id that Game belogs to
+        id      creator_id          Player id of Game's creator
+        dict    metrics_by_opponent Metrics keyed on Opponent id
 
         Return:
-        Game                    newly created Game
+        Game                        newly created Game
 
         """
 
@@ -202,10 +202,11 @@ class Game(SqNode):
 
         # prepare edge prototypes for result edges
         for opponent_id, metrics in metrics_by_opponent.items():
-            # TODO handle other metrics besides ResultMetric
-            prototype_edges.extend(editor.prototype_edge_and_complement(
-                    metrics.values()[0],
-                    {},
-                    opponent_id))
+            for metric in metrics:
+                # TODO: handle other metrics besides ResultMetric
+                prototype_edges.extend(editor.prototype_edge_and_complement(
+                        metric.result,
+                        {},
+                        opponent_id))
 
         return editor.create_node_and_edges(prototype_node, prototype_edges)

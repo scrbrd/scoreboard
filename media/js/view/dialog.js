@@ -42,10 +42,10 @@ var MODEL_EVENT = {
     @constructor
 */
 var DialogView = Backbone.View.extend({
-    
+
     // the dialog's form
     form: null,
-    
+
     // page name of the dialog
     // TODO: put this in DialogStateModel
     pageName: Const.PAGE_NAME.CREATE_GAME,
@@ -71,7 +71,7 @@ var DialogView = Backbone.View.extend({
         this.$el.append(html);
         this.$el.height(height);
         this.form = this.$(Const.NAME.CREATE_GAME);
-        
+
         this.sessionModel.on(
                 MODEL_EVENT.CHANGE_RIVALS,
                 this.render,
@@ -80,7 +80,7 @@ var DialogView = Backbone.View.extend({
                 MODEL_EVENT.CHANGE_CONTEXT_ID,
                 this.render,
                 this);
-        
+
         this.render();
     },
 
@@ -92,14 +92,14 @@ var DialogView = Backbone.View.extend({
         var _events = {};
         var submitForm = Const.NAME.CREATE_GAME;
         var closeButton = Const.CLASS.CLOSE_BUTTON;
-        
+
         // TODO: make the event types constants
         _events["submit " + submitForm] = "submit";
         _events["touchstart " + closeButton] = "hide";
         _events["click " + closeButton] = "hide";
+
         return _events;
     },
-
 
     /**
         Render this dialog.
@@ -107,9 +107,9 @@ var DialogView = Backbone.View.extend({
     render: function () {
         var leagueID = this.pageStateModel.contextID();
         var rivals = this.sessionModel.rivals();
-        
+
         this.setupForm(leagueID, rivals);
-        
+
         return this;
     },
 
@@ -121,7 +121,7 @@ var DialogView = Backbone.View.extend({
     */
     setupForm: function (leagueID, rivals) {
         var formPageName = this.pageName;
-        this.form.find(Const.NAME.LEAGUE).val(leagueID);
+        this.form.find(Const.NAME.LEAGUE_ID).val(leagueID);
 
         // TODO: add additional row functionality
         // diabled row, gets enabled, add new row
@@ -132,8 +132,9 @@ var DialogView = Backbone.View.extend({
                 AutocompleteUtil.autocompletePlayers(elem, rivals);
             });
 
+        // FIXME: this probably doesn't work anymore.
         // add event handler for player data entry.
-        $(Const.NAME.CREATE_GAME + ' ' + Const.NAME.GAME_SCORE_ID)
+        $(Const.NAME.CREATE_GAME + ' ' + Const.NAME.OPPONENT_ID)
             .change( function (evt) {
                 EventDispatcher.trigger(
                         Event.CLIENT.ENTER_GAME_DATA,
@@ -141,9 +142,10 @@ var DialogView = Backbone.View.extend({
                         evt.target.value,
                         formPageName);
             });
-        
+
+        // FIXME: this probably doesn't work anymore.
         // add event handler for result (W/L) data entry.
-        $(Const.NAME.CREATE_GAME + ' ' + Const.NAME.GAME_SCORE_SCORE)
+        $(Const.NAME.CREATE_GAME + ' ' + Const.NAME.OPPONENT_RESULT)
             .change( function (evt) {
                 EventDispatcher.trigger(
                         Event.CLIENT.ENTER_GAME_DATA,
@@ -167,7 +169,6 @@ var DialogView = Backbone.View.extend({
         return false;
     },
 
-
     /*
         Hide dialog.
     */
@@ -176,7 +177,7 @@ var DialogView = Backbone.View.extend({
         this.$el.find(Const.CLASS.CLOSE_BUTTON).get(0).disabled = true;
 
         var form = this.form;
-        // FIXME make this blurring work and clear the autocomplete.
+        // FIXME: make this blurring work and clear the autocomplete.
         $('input:focus').blur(); // blurring the focus should hide keyboard
         this.$el.slideUp('fast', function () {
             // TODO: make this nicer...
@@ -184,7 +185,6 @@ var DialogView = Backbone.View.extend({
         });
         return false;
     },
-
 
     /**
         Display dialog.

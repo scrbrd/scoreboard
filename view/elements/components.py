@@ -275,12 +275,20 @@ class SwitchInput(Div):
     """
 
 
-    def __init__(self, name, value, is_on=False):
+    def __init__(
+            self,
+            name,
+            value="",
+            off_text="",
+            on_text="",
+            is_on=False):
         super(SwitchInput, self).__init__()
         self.append_class(COMPONENT_CLASS.SWITCH)
 
         span = Span()
         span.append_class(COMPONENT_CLASS.KNOB)
+        span.set_text(off_text)
+        span.set_tail(on_text)
         self.append_child(span)
 
         self.append_child(CheckboxInput(name, value, is_on))

@@ -1002,7 +1002,7 @@ class CheckboxInput(Input):
     """ Input element of Checkbox type <input type="checkbox">. """
 
 
-    def __init__(self, name, value, checked=False):
+    def __init__(self, name, value="", checked=False):
         """ Construct a <input type="checkbox">.
 
         Required:

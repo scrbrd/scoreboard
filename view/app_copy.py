@@ -71,18 +71,6 @@ class _Copy(object):
 
 
     @property
-    def loss(self):
-        """ The copy for a loss. """
-        return "Loss"
-
-
-    @property
-    def loss_short(self):
-        """ The copy for a shortened loss. """
-        return "L"
-
-
-    @property
     def played(self):
         """ The verb for one team playing. """
         return "played"
@@ -94,9 +82,15 @@ class _Copy(object):
 
 
     @property
-    def player_placeholder(self):
-        """ The copy for a player placeholer. """
+    def tag_headline(self):
+        """ The copy for a tag headline. """
         return "Who played?"
+
+
+    @property
+    def tag_placeholder(self):
+        """ The copy for a tag placeholer. """
+        return "Start typing a player's name"
 
 
     @property
@@ -125,14 +119,14 @@ class _Copy(object):
 
     @property
     def win(self):
-        """ The copy for a win. """
+        """ The copy for a win (noun). """
         return "Win"
 
 
     @property
-    def win_short(self):
-        """ The copy for a shortened win. """
-        return "W"
+    def loss(self):
+        """ The copy for a loss. """
+        return "Loss"
 
 
     @property
@@ -148,8 +142,42 @@ class _Copy(object):
 
 
     @property
-    def played_with(self):
-        """ The copy for the Create Game dialog players subheader. """
+    def win_short(self):
+        """ The copy for a shortened win. """
+        return "W"
+
+
+    @property
+    def loss_short(self):
+        """ The copy for a shortened loss. """
+        return "L"
+
+
+    @property
+    def win_loss_short(self):
+        """ The copy for a shortened win/loss header or subheader. """
+        return "W/L"
+
+
+    @property
+    def versus(self):
+        """ The copy for a versus header or subheader. """
+        return "Versus"
+
+
+    @property
+    def versus_short(self):
+        """ The copy for a shortened versus header or subheader. """
+        return "VS"
+
+
+    @property
+    def with_(self):
+        """ The copy for a shortened non-versus header or subheader.
+
+        Note the trailing underscore; "with" is a python keyword.
+
+        """
         return "With"
 
 

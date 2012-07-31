@@ -48,6 +48,36 @@ class _DialogClass(object):
         return "autocomplete-players"
 
 
+    @constant
+    def OPPONENT_TAGS_LIST(self):
+        """ OPPONENT_TAGS_LIST is a w3c class. """
+        return "opponent-tags-list"
+
+
+    @constant
+    def OPPONENT_TAG_LIST_ITEM(self):
+        """ OPPONENT_TAG_LIST_ITEM is a w3c class. """
+        return "opponent-tag-list-item"
+
+
+    @constant
+    def OPPONENT_TAGS_HEADLINE(self):
+        """ OPPONENT_TAGS_HEADLINE is a w3c class. """
+        return "opponent-tags-headline"
+
+
+    @constant
+    def OPPONENT_TAGS_SUBHEADER(self):
+        """ OPPONENT_TAGS_SUBHEADER is a w3c class. """
+        return "opponent-tags-subheader"
+
+
+    @constant
+    def GAME_TYPE_SWITCH(self):
+        """ GAME_TYPE_SWITCH is a w3c class. """
+        return "game-type-switch"
+
+
 DIALOG_CLASS = _DialogClass()
 
 
@@ -57,7 +87,7 @@ class _DialogID(object):
 
 
     @constant
-    def DIALOG_HEADER(object):
+    def DIALOG_HEADER(self):
         """ DIALOG_HEADER is a w3c class. """
         return "dialog-header"
 

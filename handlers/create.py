@@ -20,17 +20,11 @@ class CreateGameHandler(QueryHandler):
         """ Handle the asynchronous version of the create game dialog.
 
         Required:
-        int     league                  Game's league id
-        dict    metrics_by_opponent     final metrics of a game
-                                        {"id0":
-                                            {"metric0": value0,
-                                            "metric0": value1},
-                                        "id1":
-                                            {"metric0": value2},
-                                        ...}
+        int     league                  Game's League id
+        dict    metrics_by_opponent     Metrics dicts keyed on Opponent id
 
         Return:
-        bool is_success     if game creation was successful (None from fail)
+        bool                            "is_success" from model.success
 
         """
 

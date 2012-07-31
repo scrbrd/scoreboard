@@ -39,7 +39,7 @@ APP_ID = _AppID()
 
 class _SqData(object):
 
-    """ _SqData class to hold all 'Data-' atttribute keys.
+    """ _SqData class to hold all possible keys appended to data-*.
 
     Note: These constants have dashes because the html5 spec says they must.
     Note: These can be used for json data as well.
@@ -72,6 +72,18 @@ class _SqData(object):
 
 
     @constant
+    def LEAGUE_ID(self):
+        """ LEAGUE_ID is the name of a form element that stores league id. """
+        return "league-id"
+
+
+    @constant
+    def GAME_TYPE(self):
+        """ GAME_TYPE is a key of the HTML attribute Data. """
+        return "game-type"
+
+
+    @constant
     def SCORE(self):
         """ SCORE is a key of the HTML attribute Data. """
         return "score"
@@ -84,9 +96,9 @@ class _SqData(object):
 
 
     @constant
-    def OPPONENT_METRICS(self):
-        """ OPPONENT_METRICS is a key of the HTML attribute Data. """
-        return "opponent-metrics"
+    def METRICS_BY_OPPONENT(self):
+        """ METRICS_BY_OPPONENT is a key of the HTML attribute Data. """
+        return "metrics-by-opponent"
 
 
     @constant
@@ -107,19 +119,52 @@ class _SqData(object):
         return "page-name"
 
 
-    @constant
-    def LEAGUE_ID(self):
-        """ LEAGUE_ID is the name of a form element that stores league id. """
-        return "league-id"
-
-
-    @constant
-    def GAME_TYPE(self):
-        """ GAME_TYPE is a key of the HTML attribute Data. """
-        return "game-type"
-
-
 SQ_DATA = _SqData()
+
+
+class _SqValue(object):
+
+    """ _SqValue class to hold all possible values for data-*.
+
+    Note that data-* isn't quite accurate. We explicitly exclude
+    data-page-type and data-page-name and count them as special.
+
+    """
+
+    @constant
+    def RIVALRY(self):
+        """ RIVALRY is a value of the HTML attribute data-game-type. """
+        return "rivalry"
+
+
+    @constant
+    def CAMARADERIE(self):
+        """ CAMARADERIE is a value of the HTML attribute data-game-type. """
+        return "camaraderie"
+
+
+    # FIXME: DialogModel should populate view.app.dialog with these values.
+    # when it does, remove these from here.
+
+    @constant
+    def WON(self):
+        """ WON is a value of the attribute data-metrics-by-opponent. """
+        return "won"
+
+
+    @constant
+    def LOST(self):
+        """ LOST is a value of the attribute data-metrics-by-opponent. """
+        return "lost"
+
+
+    @constant
+    def PLAYED(self):
+        """ PLAYED is a value of the attribute data-metrics-by-opponent. """
+        return "played"
+
+
+SQ_VALUE = _SqValue()
 
 
 class _PageType(object):

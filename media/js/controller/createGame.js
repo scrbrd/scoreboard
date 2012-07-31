@@ -41,126 +41,162 @@ var createGameController = (function () {
 
         events[Event.CLIENT.CREATE_GAME] = that.handleSubmit;
         events[Event.SERVER.CREATED_GAME] = that.handleSuccess;
+
         that.initializeEvents(events);
     };
 
     /**
-        Handle creating game form to server processing and submission.
+        Handle creating Game form to server processing and submission.
         @param {Object} sessionModel
-        @param {Object} gameParams All the Game parameters:
-            tags, scores, etc.
+        @param {Object} rawGame raw Game parameters: tags, metrics, etc.
     */
-    that.handleSubmit = function (sessionModel, gameParams) {
-        var docView = Doc.retrieve();
-        var creatorID = sessionModel.personID();
+    that.handleSubmit = function (sessionModel, rawGame) {
+        var game = prepareGameForSubmit(rawGame);
 
-        // process game data to prepare it for the server.
-        gameParams = readyGameParamsForSubmit(gameParams);
-
-
-        Crud.createGame(gameParams, function (response) {
+        Crud.createGame(game, function (response) {
             // TODO - update Page State here too.
             EventDispatcher.trigger(
                 Event.SERVER.CREATED_GAME,
-                creatorID,
-                gameParams);
+                sessionModel.personID(),
+                game);
         });
-        docView.hideDialog();
+
+        Doc.retrieve().hideDialog();
     };
     
     /**
-        Respond to successfull game creation on the server.
+        Respond to successful Game creation on the server.
         @param {number} creatorID User's person id.
-        @param {Object} gameParams game parameters.
+        @param {Object} game processed Game.
     */
-    that.handleSuccess = function (
-            creatorID,
-            gameParams) {
-
-        // set number of tags for MP Create Game event.
-        var numberOfTags = 0;
-        if (gameParams.hasOwnProperty(Const.DATA.GAME_SCORE)) {
-            numberOfTags = gameParams[Const.DATA.GAME_SCORE].length;
-        }
-    
-        // currently there are only W/L/T and no score.
-        var isScored = false;
-        
-        // currently we compute on the server so don't think about creator
-        // result.
-        var creatorsResult = getCreatorsResult(creatorID, gameParams);
-        
+    that.handleSuccess = function (creatorID, game) {
         MP.trackCreateGame(
-                numberOfTags,
-                isScored,
-                creatorsResult);
+            countTagsInGame(game),
+            isGameScored(game),
+            getResultForCreator(creatorID, game));
 
-        // go through the tags and create a Player Tagged event for each one.
-        var gamescore = gameParams[Const.DATA.GAME_SCORE];
-        var i;
-        var taggedPlayerID;
-        var isSelfTag = false;
-        for (i = 0; i < gamescore.length; i += 1) {
-            taggedPlayerID = gamescore[i][Const.DATA.ID];
-            if (taggedPlayerID === creatorID) {
-                isSelfTag = true;
-            }
-            MP.trackPlayerTaggedToGame(
-                    taggedPlayerID.toString(),
+        var metrics = game[Const.DATA.OPPONENT_METRICS];
+
+        var opponentID;
+        for (opponentID in metrics) {
+            if (metrics.hasOwnProperty(opponentID)) {
+                MP.trackPlayerTaggedToGame(
+                    opponentID.toString(),
                     creatorID.toString(),
-                    isSelfTag);
+                    (opponentID === creatorID));
+            }
         }
 
-        // refresh the Docview with by grabbing new data
         // FIXME trigger RELOAD_PAGE event should accomplish this too.
-        var docView = Doc.retrieve();
-        docView.refresh();
+        Doc.retrieve().refresh();
     };
 
     /**
-        Process and alter Game parameters to ready them for the server.
-        @param {Object} gameParams
+        Process a raw game object into a Game prepared to send to the server.
+
+        rawGame = {
+             "league-id":        <LEAGUE_ID>,
+             "creator-id":       <CREATOR_ID>,
+             "opponent-metrics": {
+                 0: {<EDGE_TYPE0>: <OPPONENT_ID0>},
+                 1: {<EDGE_TYPE1>: <OPPONENT_ID1>},
+                 }
+             }
+        game = {
+             "leagueID":        <LEAGUE_ID>,
+             "creatorID":       <CREATOR_ID>,
+             "opponentMetrics": {
+                 <OPPONENT_ID0>: {"result": <EDGE_TYPE0>, "score": <#0>},
+                 <OPPONENT_ID1>: {"result": <EDGE_TYPE1>, "score": <#1>}
+                 }
+             }
+
+        @param {Object} rawGame
         @return {Obejct} The altered game parameters.
     */
-    function readyGameParamsForSubmit(gameParams) {
-        // each player need to have a game score but the checkbox
-        // excludes losses, so add them in on that condition.
-        var gamescore = gameParams[Const.DATA.GAME_SCORE];
+    function prepareGameForSubmit(rawGame) {
+        var rawMetrics = rawGame[Const.DATA.METRICS_BY_OPPONENT];
+
+        var metrics = {};
+
         var i;
-        var player;
-        for (i = 0; i < gamescore.length; i += 1) {
-            player = gamescore[i];
-            if (!player.hasOwnProperty(Const.DATA.SCORE)) {
-                player[Const.DATA.SCORE] = 0;
+        for (i = 0; i < rawMetrics.length; i += 1) {
+
+            var metric;
+            for (metric in rawMetrics[i]) {
+
+                if (rawMetrics[i].hasOwnProperty(metric)) {
+
+                    // TODO: the only value type right now is RESULT, but
+                    // when others exist, we won't know which type this is.
+
+                    var opponentID = rawMetrics[i][metric];
+                    var result = Const.DATA.RESULT;
+
+                    metrics[opponentID] = {
+                        result: metric
+                    };
+                }
             }
         }
 
-        return gameParams;
+        rawGame[Const.DATA.METRICS_BY_OPPONENT] = metrics;
+
+        return rawGame;
+    }
+
+    /**
+        Count the number of tags in the newly created Game.
+        @param {Object} game processed Game.
+        @return {number} number of tags in a new Game.
+    */
+    function countTagsInGame(game) {
+        return game[Const.DATA.METRICS_BY_OPPONENT].length;
+    }
+
+    /**
+        Is the newly created Game scored?
+        @param {Object} game processed Game.
+        @return {boolean} does the new Game have a score?
+    */
+    function isGameScored(game) {
+        var metrics = game[Const.DATA.METRICS_BY_OPPONENT];
+
+        var opponentID;
+        for (opponentID in metrics) {
+            if (metrics.hasOwnProperty(opponentID)) {
+                return (metrics[opponentID].hasOwnProperty(Const.DATA.SCORE));
+            }
+        }
+
+        return false;
+    }
+
+    /**
+        Is the creator tagging him/herself in the newly created Game?
+        @param {Object} game processed Game.
+        @return {boolean} does the new Game have a score?
+    */
+    function isCreatorTagged(creatorID, game) {
+        var metrics = game[Const.DATA.METRICS_BY_OPPONENT];
+        return metrics.hasOwnProperty(creatorID);
     }
 
     /**
         Process game score and determine if game creator WON or LOST.
         TODO: make this more intelligent. it just responds to a 1 in score.
-        @param {number} creatorID
-        @param {Object} gameParameters
+        @param {number} creatorID Game creator ID
+        @param {Object} game processed Game
     */
-    function getCreatorsResult(creatorID, gameParameters) {
-       var gamescore = gameParameters[Const.DATA.GAME_SCORE];
-       // TODO add this to constants if still needed
-       var LOST = "lost";
-       var WON = "won";
-       var i;
-       var playerID;
-       for (i = 0; i < gamescore.length; i += 1) {
-           playerID = gamescore[i][Const.DATA.ID];
-           if (playerID === creatorID) {
-                if (gamescore[i][Const.DATA.SCORE] === 1) {
-                    return WON;
-                }
-           }
-       }
-       return LOST;
+    function getResultForCreator(creatorID, game) {
+        var metrics = game[Const.DATA.METRICS_BY_OPPONENT];
 
+        var result = "";
+        if (metrics.hasOwnProperty(creatorID)) {
+            result = metrics[creatorID][Const.DATA.RESULT];
+        }
+
+        return result;
     }
 
     return that;

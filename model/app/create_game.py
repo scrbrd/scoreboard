@@ -20,9 +20,8 @@ class CreateGameModel(WriteModel):
     each node type, or we might want to keep this more generic.
 
     Required:
-    int     _league_id              the league of the new Game.
-    dict    _metrics_by_opponent    a dict of metrics keyed on opponent. each
-                                    value is a list of Metrics.
+    int     _league_id              the league of the new Game
+    dict    _metrics_by_opponent    Metrics dicts keyed on Opponent id
 
     """
 
@@ -47,18 +46,13 @@ class CreateGameModel(WriteModel):
         """ Set the Metrics for each Opponent for the Game.
 
         Required:
-        dict    metrics_by_opponent     final metrics of a game
-                                        {"id0":
-                                            {"metric0": value0,
-                                            "metric0": value1},
-                                        "id1":
-                                            {"metric0": value2},
-                                        ...}
+        dict    metrics_by_opponent Metrics dicts keyed on Opponent  id
+
         """
         # convert the results into API_EDGE_TYPEs
-        for opponent_ids, metrics in metrics_by_opponent.items():
+        for opponent_id, metrics in metrics_by_opponent.items():
             metric_objects = MetricFactory.produce_metrics(metrics)
-            self._metrics_by_opponent[opponent_ids] = metric_objects
+            self._metrics_by_opponent[opponent_id] = metric_objects
 
 
     @property
