@@ -18,7 +18,7 @@ class Thumbnail(Img):
     extends <img>. """
 
 
-    def __init__(self, src, name):
+    def __init__(self, src, name=""):
         """ Construct a thumbnail tag.
 
         Required:

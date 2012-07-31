@@ -8,7 +8,7 @@ from view.view_util import date
 from view.elements.base import Span, Img, Div, Section
 from view.elements.components import Thumbnail
 
-from constants import COMPONENT_CLASS, DEFAULT_IMAGE
+from constants import COMPONENT_CLASS, IMAGE
 
 
 class Headline(Div):
@@ -22,6 +22,28 @@ class Headline(Div):
         self.append_class(COMPONENT_CLASS.HEADLINE)
 
         self.set_text(text)
+
+
+class AppThumbnail(Thumbnail):
+
+    """ AppThumbnail extending Thumbnail.
+
+    This is the canonical way to display a Thumbnail for a Node. It may
+    even be more appropriate to call it NodeThumbnail. We may later
+    subclass this to be more specific about the style and implementation
+    for Opponents and for Leagues and Games.
+
+    """
+
+
+    def __init__(self, src=IMAGE.DEFAULT_THUMBNAIL, name=""):
+        """ Construct an AppThumbnail. """
+        super(AppThumbnail, self).__init__(self._prepare_src(src), name)
+
+
+    def _prepare_src(self, src):
+        """ Distinguish None from "" when choosing the default thumbnail. """
+        return IMAGE.DEFAULT_THUMBNAIL if src is None else src
 
 
 class CoverPhoto(Img):
@@ -56,7 +78,7 @@ class RelativeDateComponent(Div):
         """Construct a RelativeDateComponent. """
         super(RelativeDateComponent, self).__init__()
 
-        self.append_child(Icon(DEFAULT_IMAGE.TIME_ICON, "time"))
+        self.append_child(Icon(IMAGE.TIME_ICON, "time"))
         relative_date = Span()
         relative_date.set_text(date.get_simple_datetime_ago(datetime))
         self.append_child(relative_date)
@@ -106,12 +128,10 @@ class OpponentGroup(Div):
         self.append_class(COMPONENT_CLASS.OPPONENT_GROUP)
 
         for opponent in opponents:
-
-            photo = Thumbnail(DEFAULT_IMAGE.THUMBNAIL, opponent.name)
-            # TODO make model send None instead of ""
-            if opponent.picture != "":
-                photo = Thumbnail(opponent.picture, opponent.name)
-            self.append_child(photo)
+            # FIXME: model should send None instead of "" since "" is a valid
+            # src, but model doesn't yet distinguish/translate empty db values.
+            src = opponent.picture if opponent.picture else None
+            self.append_child(AppThumbnail(src, opponent.name))
 
 
 class SingleOpponentGroup(OpponentGroup):

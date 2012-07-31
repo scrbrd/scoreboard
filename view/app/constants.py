@@ -56,12 +56,12 @@ class _ComponentClass(object):
 COMPONENT_CLASS = _ComponentClass()
 
 
-class _DefaultImage(object):
+class _Image(object):
 
-    """_DefaultImage contains the location of a number of static images. """
+    """_Image contains the location of a number of static images. """
 
     @constant
-    def THUMBNAIL(self):
+    def DEFAULT_THUMBNAIL(self):
         return "/static/images/thumbnail.jpg"
 
 
@@ -69,4 +69,4 @@ class _DefaultImage(object):
     def TIME_ICON(self):
         return "/static/images/timeIcon.png"
 
-DEFAULT_IMAGE = _DefaultImage()
+IMAGE = _Image()

@@ -8,10 +8,9 @@ from view.constants import SQ_DATA, SQ_VALUE, PAGE_NAME
 from view.sqcopy import Copy
 
 from view.elements.base import Div, Span, UL, Form, HiddenInput
-from view.elements.components import SwitchInput, MultiColumnLI, Thumbnail
-from view.elements.components import HeadedList, HeadedListItem
+from view.elements.components import SwitchInput, MultiColumnLI
 
-from view.app.components import Headline
+from view.app.components import Headline, AppThumbnail
 
 from constants import DIALOG_CLASS
 from framework import PostButtonSection
@@ -154,22 +153,6 @@ class OpponentTagsSubheader(Headline):
         self.append_class(DIALOG_CLASS.OPPONENT_TAGS_SUBHEADER)
 
 
-class OpponentTagsHL(HeadedList):
-
-    """ OpponentTagsSubheader extending Headline. """
-
-
-    def __init__(self, headings, items):
-        """ Construct an OpponentTagsHL. """
-        super(OpponentTagsHL, self).__init__(headings, items)
-        self.append_class(DIALOG_CLASS.OPPONENT_TAGS_SUBHEADER)
-
-
-    def set_list(self, items):
-        """ Set the List element for this HeadedList. """
-        self.append_child(OpponentTagsUL(items))
-
-
 class OpponentTagsUL(UL):
 
     """ OpponentTagsUL extending <ul>. """
@@ -187,9 +170,8 @@ class OpponentTagsUL(UL):
 
 
 class OpponentTagLI(MultiColumnLI):
-#class OpponentTagLI(HeadedListItem):
 
-    """ OpponentTagLI extending HeadedListItem. """
+    """ OpponentTagLI extending MultiColumnLI. """
 
 
     def __init__(self, item, index):
@@ -201,14 +183,8 @@ class OpponentTagLI(MultiColumnLI):
     def set_content(self, item):
         """ Generate the content for this Opponent tag list item. """
 
-        # TODO make this some default scoreboard icon
-        protocol = "https://"
-        host = "sphotos-b.xx.fbcdn.net/"
-        path = "hphotos-prn1/526518_166559743468848_1182827715_n.jpg"
-        url = protocol + host + path
-
         thumbnail_div = Div()
-        thumbnail_div.append_child(Thumbnail(url, Copy.app_name))
+        thumbnail_div.append_child(AppThumbnail(None, Copy.app_name))
         self.set_column(thumbnail_div)
 
         metrics_by_opponent = "{0}[{1}][{2}]".format(

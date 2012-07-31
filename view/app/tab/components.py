@@ -7,9 +7,7 @@ from view.constants import SQ_DATA
 from view.sqcopy import Copy
 from view.elements.base import Span, Div, Section
 from view.elements.components import HeadedList, HeadedListItem, NumberedList
-from view.elements.components import Thumbnail
-from view.app.constants import DEFAULT_IMAGE
-from view.app.components import Headline
+from view.app.components import Headline, AppThumbnail
 
 from constants import COMPONENT_CLASS
 
@@ -114,11 +112,10 @@ class RankingLI(HeadedListItem):
         # TODO make this some default scoreboard icon
 
         div = Div()
-        profile_icon = Thumbnail(DEFAULT_IMAGE.THUMBNAIL, Copy.app_name)
-        # TODO make the model send None instead of ""
-        if item.picture_url != "":
-            profile_icon = Thumbnail(item.picture_url, item.name)
-        div.append_child(profile_icon)
+        # FIXME: model should send None instead of "" since "" is a valid
+        # src, but model doesn't yet distinguish/translate empty db values.
+        src = item.picture_url if item.picture_url else None
+        div.append_child(AppThumbnail(src, item.name))
         self.set_column(div)
 
         opponent = Span()
