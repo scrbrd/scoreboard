@@ -49,6 +49,12 @@ class _DialogClass(object):
 
 
     @constant
+    def OPPONENT_TAGS_GROUP(self):
+        """ OPPONENT_TAGS_GROUP is a w3c class. """
+        return "opponent-tags-group"
+
+
+    @constant
     def OPPONENT_TAGS_LIST(self):
         """ OPPONENT_TAGS_LIST is a w3c class. """
         return "opponent-tags-list"

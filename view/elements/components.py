@@ -4,7 +4,7 @@ Generic reusable components that are building blocks of
 app-specific features.
 
 """
-from view.app_copy import Copy
+from view.sqcopy import Copy
 
 from constants import COMPONENT_CLASS
 

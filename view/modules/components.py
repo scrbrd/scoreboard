@@ -16,7 +16,7 @@ Each class has a single requirement...override the following:
 import tornado.web
 from tornado import escape
 
-from view.app_copy import Copy
+from view.sqcopy import Copy
 from view.constants import PAGE_TYPE, PAGE_NAME, APP_CLASS, SQ_DATA
 
 from view.elements.base import Element

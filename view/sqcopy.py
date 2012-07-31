@@ -1,4 +1,4 @@
-""" Module: app_copy
+""" Module: sqcopy
 
 Reusable copy for the view. Currently strings but will be templates.
 

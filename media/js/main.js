@@ -66,6 +66,6 @@ require([
     "order!lib/jquery/form2js/jquery.toObject",
     "order!lib/underscore/underscore-min",
     "order!lib/backbone/backbone-min",
-    "lib/iscroll/iscroll-min",
-    "lib/mixpanel/mixpanel-min"
+    "lib/iscroll/iscroll-min"
+    //"lib/mixpanel/mixpanel-min"
 ]);

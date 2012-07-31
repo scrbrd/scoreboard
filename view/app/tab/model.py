@@ -25,7 +25,10 @@ class SessionModel(DataInput):
         view_rivals = []
         # TODO make session an object instead of a dictionary
         for r in model.rivals:
-            view_rivals.append({SQ_DATA.ID: r.id, SQ_DATA.NAME: r.name})
+            view_rivals.append({
+                    SQ_DATA.ID: r.id,
+                    SQ_DATA.NAME: r.full_name,
+                    SQ_DATA.PICTURE: r.picture})
         self.set_data(SQ_DATA.RIVALS, json.dumps(view_rivals))
 
         # set person id from session

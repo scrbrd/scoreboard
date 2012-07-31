@@ -3,7 +3,7 @@
 League tab components.
 
 """
-from view.app_copy import Copy
+from view.sqcopy import Copy
 from view.elements.base import Div
 from view.app.components import Headline
 

@@ -135,7 +135,7 @@ var DialogView = Backbone.View.extend({
         // FIXME: this probably doesn't work anymore.
         // add event handler for player data entry.
         $(Const.NAME.CREATE_GAME + ' ' + Const.NAME.OPPONENT_ID)
-            .change( function (evt) {
+            .change(function (evt) {
                 EventDispatcher.trigger(
                         Event.CLIENT.ENTER_GAME_DATA,
                         Const.DATA.PLAYER,
@@ -146,13 +146,31 @@ var DialogView = Backbone.View.extend({
         // FIXME: this probably doesn't work anymore.
         // add event handler for result (W/L) data entry.
         $(Const.NAME.CREATE_GAME + ' ' + Const.NAME.OPPONENT_RESULT)
-            .change( function (evt) {
+            .change(function (evt) {
                 EventDispatcher.trigger(
                         Event.CLIENT.ENTER_GAME_DATA,
                         Const.DATA.RESULT,
                         evt.target.value,
                         formPageName);
             });
+
+        // bind opponent group display to checkbox value
+        var checkbox = $(".switch input[name='game-type']");
+        checkbox.change(function (evt) {
+            if ($(this).prop("checked")) {
+                $(Const.CLASS.OPPONENT_TAGS_GROUP +
+                    '.' + Const.VALUE.RIVALRY).show();
+                $(Const.CLASS.OPPONENT_TAGS_GROUP +
+                    '.' + Const.VALUE.CAMARADERIE).hide();
+            } else {
+                $(Const.CLASS.OPPONENT_TAGS_GROUP +
+                    '.' + Const.VALUE.RIVALRY).hide();
+                $(Const.CLASS.OPPONENT_TAGS_GROUP +
+                    '.' + Const.VALUE.CAMARADERIE).show();
+            }
+        });
+        checkbox.change();
+
     },
 
     /**

@@ -70,7 +70,7 @@ class Person(sqobject.SqNode):
     @property
     def short_name(self):
         """ Return this Person's first name and last initial. """
-        return "{0} {1}".format(
+        return "{0} {1}.".format(
                 self.first_name,
                 self.last_name[0])
 

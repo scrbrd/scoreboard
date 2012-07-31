@@ -5,7 +5,7 @@ Element components for Create Game dialog.
 """
 
 from view.constants import SQ_DATA, SQ_VALUE, PAGE_NAME
-from view.app_copy import Copy
+from view.sqcopy import Copy
 
 from view.elements.base import Div, Span, UL, Form, HiddenInput
 from view.elements.components import SwitchInput, MultiColumnLI, Thumbnail
@@ -22,7 +22,7 @@ class CreateGameForm(Form):
 
     """ Create Game form extending <form>. """
 
-    MAX_TAGS = 4
+    MAX_TAGS = 2
 
 
     def __init__(self, xsrf_token, data):
@@ -46,17 +46,21 @@ class CreateGameForm(Form):
         # tag header
         self.append_child(OpponentTagsHeader())
 
-        # group of won autocompletes
-        winner_tags = [SQ_VALUE.WON for tag in range(self.MAX_TAGS / 2)]
-        self.append_child(OpponentTagsUL(winner_tags))
-
-        # group of lost autocompletes
-        loser_tags = [SQ_VALUE.LOST for tag in range(self.MAX_TAGS / 2)]
-        self.append_child(OpponentTagsUL(loser_tags))
-
-        # group of player autocompletes
-        player_tags = [SQ_VALUE.PLAYED for tag in range(self.MAX_TAGS)]
-        self.append_child(OpponentTagsUL(player_tags))
+        # the three tag groups: won,lost, played
+        self.append_child(OpponentTagsGroup(
+                SQ_VALUE.RIVALRY,
+                SQ_VALUE.WON,
+                self.MAX_TAGS,
+                Copy.won))
+        self.append_child(OpponentTagsGroup(
+                SQ_VALUE.RIVALRY,
+                SQ_VALUE.LOST,
+                self.MAX_TAGS,
+                Copy.lost))
+        self.append_child(OpponentTagsGroup(
+                SQ_VALUE.CAMARADERIE,
+                SQ_VALUE.PLAYED,
+                self.MAX_TAGS))
 
         # TODO: add sport autocomplete input
 
@@ -92,6 +96,53 @@ class OpponentTagsHeadline(Headline):
         self.append_class(DIALOG_CLASS.OPPONENT_TAGS_HEADLINE)
 
 
+class GameTypeSwitch(SwitchInput):
+
+    """ GameTypeSwitch extending SwitchInput. """
+
+
+    def __init__(self, is_on=True):
+        """ Construct a GameTypeSwitch toggling versus/with. """
+        super(GameTypeSwitch, self).__init__(
+                SQ_DATA.GAME_TYPE,
+                SQ_VALUE.RIVALRY,
+                Copy.versus_short,
+                Copy.with_,
+                is_on)
+        self.append_class(DIALOG_CLASS.GAME_TYPE_SWITCH)
+
+
+class OpponentTagsGroup(Div):
+
+    """ OpponentTagsGroup extending <div>, for grouping tags together with a
+    Subheader. """
+
+
+    def __init__(self, game_type, result_type, number_of_tags, title=None):
+        """ Construct a OpponentTagsGroup.
+
+        Required:
+        str     game_type           the type of game (rivalry / camaraderie
+        str     result_type         the type of result (won / lost / played)
+        int     number_of_tags      the number of tags
+
+        Optional:
+        str     title               the title of the group.
+
+        """
+        super(OpponentTagsGroup, self).__init__()
+        self.append_class(DIALOG_CLASS.OPPONENT_TAGS_GROUP)
+        self.append_class(game_type)
+        # subheader for the group.
+        if title is not None:
+            self.append_child(OpponentTagsSubheader(title))
+
+        # group of autocompletes
+        tags = [result_type for n in range(number_of_tags)]
+        self.append_child(OpponentTagsUL(tags))
+
+
+
 class OpponentTagsSubheader(Headline):
 
     """ OpponentTagsSubheader extending Headline. """
@@ -117,22 +168,6 @@ class OpponentTagsHL(HeadedList):
     def set_list(self, items):
         """ Set the List element for this HeadedList. """
         self.append_child(OpponentTagsUL(items))
-
-
-class GameTypeSwitch(SwitchInput):
-
-    """ GameTypeSwitch extending SwitchInput. """
-
-
-    def __init__(self, is_on=False):
-        """ Construct a GameTypeSwitch toggling versus/with. """
-        super(GameTypeSwitch, self).__init__(
-                SQ_DATA.GAME_TYPE,
-                SQ_VALUE.RIVALRY,
-                Copy.versus_short,
-                Copy.with_,
-                is_on)
-        self.append_class(DIALOG_CLASS.GAME_TYPE_SWITCH)
 
 
 class OpponentTagsUL(UL):

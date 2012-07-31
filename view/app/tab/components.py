@@ -4,7 +4,7 @@ Elements components that will be used in tabs but aren't part of the framework.
 
 """
 from view.constants import SQ_DATA
-from view.app_copy import Copy
+from view.sqcopy import Copy
 from view.elements.base import Span, Div, Section
 from view.elements.components import HeadedList, HeadedListItem, NumberedList
 from view.elements.components import Thumbnail
@@ -129,19 +129,26 @@ class RankingLI(HeadedListItem):
         streak_text = item.current_result_streak
         if streak_text > 0:
             streak_text = "{}{}".format(
-                    streak_text,
-                    Copy.win_short)
+                    Copy.win_short,
+                    streak_text)
         elif streak_text < 0:
             streak_text = "{}{}".format(
-                    -streak_text,
-                    Copy.loss_short)
+                    Copy.loss_short,
+                    -streak_text)
+        else:
+            streak_text = "--"
         current_result_streak.set_text(streak_text)
         self.set_column(current_result_streak)
 
-        win_percentage = Span()
-        win_percentage_text = ".{:.0f}".format(item.win_percentage * 1000)
-        win_percentage.set_text(win_percentage_text)
-        self.set_column(win_percentage)
+        percentage_span = Span()
+        win_percentage = item.win_percentage
+        win_percentage_text = " .{:.0f}".format(win_percentage * 1000)
+        if win_percentage == 1.0:
+            win_percentage_text = "1.000"
+        elif win_percentage == 0.0:
+            win_percentage_text = " .000"
+        percentage_span.set_text(win_percentage_text)
+        self.set_column(percentage_span)
 
         loss_count = Span()
         loss_count.set_text(item.loss_count)

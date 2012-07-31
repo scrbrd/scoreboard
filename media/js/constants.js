@@ -65,7 +65,8 @@ var constants = {
         AUTOCOMPLETE_LABEL:     ".autocomplete-label",
         AUTOCOMPLETE_VALUE:     ".autocomplete-value",
         LIST_WITH_HEADERS:      ".list-with-headers",
-        FACEBOOK_LOGIN_ANCHOR:  ".facebook-login-anchor"
+        FACEBOOK_LOGIN_ANCHOR:  ".facebook-login-anchor",
+        OPPONENT_TAGS_GROUP:    ".opponent-tags-group"
     },
 
     /**
@@ -99,7 +100,10 @@ var constants = {
     // TODO FIXME XXX: REMOVE W/L/P OR FIGURE OUT THE RIGHT WAY TO DO THIS!
     VALUE: {
         RIVALRY:                "rivalry",
-        CAMARADERIE:            "camaraderie"
+        CAMARADERIE:            "camaraderie",
+        WON:                    "won",
+        LOST:                   "lost",
+        PLAYED:                 "played"
     },
 
     /** Enum for model ids.

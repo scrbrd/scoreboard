@@ -84,9 +84,15 @@ class _SqData(object):
 
 
     @constant
-    def SCORE(self):
-        """ SCORE is a key of the HTML attribute Data. """
-        return "score"
+    def METRICS_BY_OPPONENT(self):
+        """ METRICS_BY_OPPONENT is a key of the HTML attribute Data. """
+        return "metrics-by-opponent"
+
+
+    @constant
+    def PICTURE(self):
+        """ PICTURE is a key of the HTML attribute Data. """
+        return "picture"
 
 
     @constant
@@ -96,15 +102,15 @@ class _SqData(object):
 
 
     @constant
-    def METRICS_BY_OPPONENT(self):
-        """ METRICS_BY_OPPONENT is a key of the HTML attribute Data. """
-        return "metrics-by-opponent"
-
-
-    @constant
     def RIVALS(self):
         """ RIVALS is a key of the HTML attribute Data. """
         return "rivals"
+
+
+    @constant
+    def SCORE(self):
+        """ SCORE is a key of the HTML attribute Data. """
+        return "score"
 
 
     @constant
