@@ -44,31 +44,80 @@ class Player(person.Person, opponent.Opponent):
                 ]
 
 
-    def _count_losses(self):
+    def count_losses(self):
         """ Return the number of Games this Player has lost. """
-        # it's possible for a player not to have any losses, in which case
-        # there won't be an entry in the edges dict, so default to the empty
-        # dict.
-        return len(self.get_edges().get(API_EDGE_TYPE.LOST, {}))
+        return self._compute_count([API_EDGE_TYPE.LOST])
 
 
     @property
     def loss_count(self):
         """ Alias for count_losses() intended for use as a property. """
-        return self._count_losses()
+        return self.count_losses()
 
 
-    def _count_wins(self):
+    def count_wins(self):
         """ Return the number of Games this Player has won. """
-        # it's possible for a player not to have any wins, in which case there
-        # won't be an entry in the edges dict, so default to the empty dict
-        return len(self.get_edges().get(API_EDGE_TYPE.WON, {}))
+        return self._compute_count([API_EDGE_TYPE.WON])
 
 
     @property
     def win_count(self):
         """ Alias for count_wins() intended for use as a property. """
-        return self._count_wins()
+        return self.count_wins()
+
+
+    def compute_loss_percentage(self):
+        """ Return the percentage of LOST edges to total competitive edges. """
+        return self._compute_percentage(
+                [API_EDGE_TYPE.LOST],
+                [API_EDGE_TYPE.WON, API_EDGE_TYPE.LOST])
+
+
+    @property
+    def loss_percentage(self):
+        """ Alias for compute_loss_percentage() intended for use as a property.
+        """
+        return self.compute_loss_percentage()
+
+
+    def compute_win_percentage(self):
+        """ Return the percentage of WON edges to total competitive edges. """
+        return self._compute_percentage(
+                [API_EDGE_TYPE.WON],
+                [API_EDGE_TYPE.WON, API_EDGE_TYPE.LOST])
+
+
+    @property
+    def win_percentage(self):
+        """ Alias for compute_win_percentage() intended for use as a property.
+        """
+        return self.compute_win_percentage()
+
+
+    @property
+    def current_loss_streak(self):
+        """ Alias for compute_loss_streak() intended for use as a property. """
+        return self.compute_current_loss_streak()
+
+
+    def compute_current_loss_streak(self):
+        """ Return a streak for LOST edges looking back from now. """
+        return self._compute_current_streak(
+                [API_EDGE_TYPE.LOST],
+                [API_EDGE_TYPE.WON, API_EDGE_TYPE.LOST])
+
+
+    @property
+    def current_win_streak(self):
+        """ Alias for compute_win_streak() intended for use as a property. """
+        return self.compute_current_win_streak()
+
+
+    def compute_current_win_streak(self):
+        """ Return a streak for WON edges looking back from now. """
+        return self._compute_current_streak(
+                [API_EDGE_TYPE.WON],
+                [API_EDGE_TYPE.WON, API_EDGE_TYPE.LOST])
 
 
     @property

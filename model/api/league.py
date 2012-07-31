@@ -4,6 +4,7 @@ TODO: fill this in with required methods to implement since required
 members aren't strictly members [they are pulled from properties].
 
 """
+from util.dev import print_timing
 from constants import API_NODE_TYPE, API_EDGE_TYPE
 from constants import API_NODE_PROPERTY, API_CONSTANT
 
@@ -94,6 +95,7 @@ class League(sqobject.SqNode):
 
 
     @staticmethod
+    @print_timing
     def load_opponents(league_id):
         """ Return a League with Opponents loaded from the data layer."""
         (league, opponents) = loader.load_neighbors(
@@ -107,6 +109,7 @@ class League(sqobject.SqNode):
 
 
     @staticmethod
+    @print_timing
     def load_games(league_id):
         """ Return a League with opponents loaded from the data layer."""
         (league, games) = loader.load_neighbors(

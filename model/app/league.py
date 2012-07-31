@@ -5,7 +5,7 @@ aggregated standings and/or activity and a list of obejcts for that League
 context.
 
 """
-
+from util.dev import print_timing
 from model.api.person import Person
 from model.api.game import Game
 from model.api.league import League
@@ -34,6 +34,7 @@ class LeagueModel(ReadModel):
                 }
 
 
+    @print_timing
     def load(self):
         """ Populate context, aggregations, objects, and opponents. """
 
@@ -82,7 +83,9 @@ class LeagueModel(ReadModel):
         # store opponents loaded games in reverse order (so it's new first)
         games = games_with_opponents.values()
         # reverse returns None as it's in-place
-        games.reverse()
+        games.sort(
+                key=lambda x: x.created_ts,
+                reverse=True)
         self._objects = games
 
         # load opponents into rivals as well

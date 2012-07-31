@@ -112,6 +112,18 @@ class _Copy(object):
 
 
     @property
+    def win_streak_short(self):
+        """ The copy for a shortened win streak. """
+        return "S"
+
+
+    @property
+    def win_percentage(self):
+        """ The copy for a win percentage. """
+        return "%"
+
+
+    @property
     def win(self):
         """ The copy for a win. """
         return "Win"

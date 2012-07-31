@@ -50,3 +50,31 @@ class Opponent(object):
         """ Return an int representing this opponent's win count. """
         raise NotImplementedError(
                 "Interface Method: IMPLEMENTOR MUST OVERRIDE")
+
+
+    @property
+    def loss_percentage(self):
+        """ Return a float representing this opponent's loss percentage. """
+        raise NotImplementedError(
+                "Interface Method: IMPLEMENTOR MUST OVERRIDE")
+
+
+    @property
+    def win_percentage(self):
+        """ Return an float representing this opponent's win percentage. """
+        raise NotImplementedError(
+                "Interface Method: IMPLEMENTOR MUST OVERRIDE")
+
+
+    @property
+    def current_loss_streak(self):
+        """ Return an int representing this opponent's loss streak. """
+        raise NotImplementedError(
+                "Interface Method: IMPLEMENTOR MUST OVERRIDE")
+
+
+    @property
+    def current_win_streak(self):
+        """ Return an int representing this opponent's win streak. """
+        raise NotImplementedError(
+                "Interface Method: IMPLEMENTOR MUST OVERRIDE")

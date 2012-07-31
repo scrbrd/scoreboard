@@ -65,7 +65,14 @@ class RankingsList(HeadedList):
 
     """
 
-    _headings = [" ", Copy.player, Copy.loss_short, Copy.win_short]
+    _headings = [
+            " ",
+            Copy.player,
+            Copy.win_streak_short,
+            Copy.win_percentage,
+            Copy.loss_short,
+            Copy.win_short
+            ]
 
 
     def __init__(self, standings):
@@ -115,13 +122,22 @@ class RankingLI(HeadedListItem):
         self.set_column(div)
 
         opponent = Span()
-        opponent.set_text(str(item.name))
+        opponent.set_text(item.name)
         self.set_column(opponent)
 
+        current_win_streak = Span()
+        current_win_streak.set_text(item.current_win_streak)
+        self.set_column(current_win_streak)
+
+        win_percentage = Span()
+        win_percentage_text = "{0:.0f}".format(item.win_percentage)
+        win_percentage.set_text(win_percentage_text)
+        self.set_column(win_percentage)
+
         loss_count = Span()
-        loss_count.set_text(str(item.loss_count))
+        loss_count.set_text(item.loss_count)
         self.set_column(loss_count)
 
         win_count = Span()
-        win_count.set_text(str(item.win_count))
+        win_count.set_text(item.win_count)
         self.set_column(win_count)

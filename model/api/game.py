@@ -4,6 +4,7 @@ TODO: fill this in with required methods to implement since required
 members aren't strictly members [they are pulled from properties].
 
 """
+from util.dev import print_timing
 from constants import API_NODE_TYPE, API_EDGE_TYPE
 from constants import API_CONSTANT
 
@@ -142,6 +143,7 @@ class Game(SqNode):
 
 
     @staticmethod
+    @print_timing
     def multiload_opponents(game_ids):
         """ Load multiple Games' Opponents and attributes into a dict.
 

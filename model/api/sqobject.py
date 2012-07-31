@@ -11,12 +11,15 @@ Exception
     +-- SqObjectNotLoadedError
 
 """
+
+from __future__ import division
 from copy import deepcopy
 
 from model.constants import NODE_PROPERTY, EDGE_PROPERTY
 from model.constants import PROPERTY_KEY, PROPERTY_VALUE, THIRD_PARTY
 
 from constants import API_CONSTANT, API_NODE_PROPERTY
+from stat_computer import StatComputer
 
 
 class SqObject(object):
@@ -72,20 +75,37 @@ class SqObject(object):
         return self._type
 
 
+    @property
+    def created_ts(self):
+        """ Return a created timestamp. """
+        return self._created_ts
+
+
+    @property
+    def updated_ts(self):
+        """ Return a updated timestamp. """
+        return self._updated_ts
+
+
+
     def _get_property(self, key):
         """ Return SqObject property denoted by key. """
         raise NotImplementedError("Abstract Method: SUBCLASS MUST OVERRIDE!")
 
 
-class SqNode(SqObject):
+class SqNode(SqObject, StatComputer):
 
-    """ SqNode is a subclass of SqObject.
+    """ SqNode is a subclass of SqObject, and implements the StatComputer
+    interface.
 
     Provide access to the common attributes of a League, Team, Player,
     User, and Game, including fields and edges connecting to other
     nodes.
 
     SqNode's only requirement is at least one set of SqEdges.
+
+    StatComputer allows all subclasses to compute stats based on particular
+    metrics.
 
     Optional:
     dict    edges       this SqNode's outgoing SqEdges keyed on id
@@ -112,18 +132,6 @@ class SqNode(SqObject):
     def name(self):
         """ Return a SqNode name. """
         raise NotImplementedError("Abstract Method: SUBCLASS MUST OVERRIDE!")
-
-
-    @property
-    def created_ts(self):
-        """ Return a created timestamp. """
-        return self._created_ts
-
-
-    @property
-    def updated_ts(self):
-        """ Return a updated timestamp. """
-        return self._updated_ts
 
 
     def outgoing_edge_types(self):
@@ -229,6 +237,71 @@ class SqNode(SqObject):
                     "SqObject property doesn't exist.")
 
         return property
+
+
+    def _compute_count(self, edge_types):
+        """ Return a count of a metric.
+
+        Required:
+        list    edge_types  a list of edge_types to be counted.
+
+        """
+        # it's possible for a player not to have any of that edge type, in
+        # which case there won't be an entry in the edges dict, so default to
+        # the empty dict
+        count = 0
+        for edge_type in edge_types:
+            count += len(self.get_edges().get(edge_type, {}))
+        return count
+
+
+    def _compute_percentage(
+            self,
+            antecedent_edge_types,
+            consequent_edge_types):
+        """ Return a percentage of a ratio of a set of edge types to another
+        set of edge types.
+
+        Required:
+        list antecedent_edge_types      a list of edge types for the top of the
+                                        fraction.
+        list consequent_edge_types      a list of edge types for the bottom of
+                                        the fraction.
+
+        """
+        antecedent_count = self._compute_count(antecedent_edge_types)
+        consequent_count = self._compute_count(consequent_edge_types)
+
+        # from __future__ import division in imports (converts to float
+        # automatically and gets us ready for Python 3.*)
+        if consequent_count == 0:
+            # prevents ZeroDivisionError
+            return 0
+        else:
+            return (antecedent_count / consequent_count) * 100
+
+
+    def _compute_current_streak(self, streak_conditions, all_edge_types):
+        """ Return the count of consecutive fulfilled conditions
+        when all the edges are sorted by created_ts, looking back from now.
+
+        Required:
+        list    streak_conditions   a list of edge types that count for streak
+        list    all_edge_types      a list of all edge types
+
+        """
+        edges = []
+        for edge_type in all_edge_types:
+            edges.extend(self.get_edges().get(edge_type, {}).values())
+        edges.sort(key=lambda x: x.created_ts, reverse=True)
+
+        streak = 0
+        for e in edges:
+            if e.type in streak_conditions:
+                streak += 1
+            else:
+                break
+        return streak
 
 
     @staticmethod

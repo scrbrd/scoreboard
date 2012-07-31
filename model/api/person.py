@@ -8,6 +8,7 @@ TODO: fill this in with required methods to implement since required
 members aren't strictly members [they are pulled from properties].
 
 """
+from util.dev import print_timing
 from model.constants import NODE_PROPERTY, THIRD_PARTY
 
 from constants import API_NODE_TYPE, API_NODE_PROPERTY, API_EDGE_TYPE
@@ -121,6 +122,7 @@ class Person(sqobject.SqNode):
 
 
     @staticmethod
+    @print_timing
     def load_leagues(person_id):
         """ Return a Person with Leagues data loaded. """
         (person, leagues) = loader.load_neighbors(
