@@ -4,14 +4,14 @@ App-specific reusable components that are building blocks.
 
 """
 
+from view.view_util import date
 from view.elements.base import Span, Img, Div, Section
 from view.elements.components import Thumbnail
-from view.app.constants import DEFAULT_IMAGE
 
-from constants import COMPONENT_CLASS
+from constants import COMPONENT_CLASS, DEFAULT_IMAGE
 
 
-class Headline(Span):
+class Headline(Div):
 
     """ Headline is a title span. """
 
@@ -35,6 +35,33 @@ class CoverPhoto(Img):
         self.append_classes([COMPONENT_CLASS.COVER_PHOTO])
 
 
+class Icon(Img):
+
+    """ Icon is a small image that is used as a symbol. """
+
+
+    def __init__(self, src, alt):
+        """ Construct an Icon. """
+        super(Icon, self).__init__(src, alt)
+        self.append_classes([COMPONENT_CLASS.ICON])
+
+
+class RelativeDateComponent(Div):
+
+    """ RelativeDateComponent is a component that displays a date relative to
+    the current date. (e.g., '4 days go') """
+
+
+    def __init__(self, datetime):
+        """Construct a RelativeDateComponent. """
+        super(RelativeDateComponent, self).__init__()
+
+        self.append_child(Icon(DEFAULT_IMAGE.TIME_ICON, "time"))
+        relative_date = Span()
+        relative_date.set_text(date.get_simple_datetime_ago(datetime))
+        self.append_child(relative_date)
+
+
 class OpponentGroupsSection(Section):
 
     """ OpponentGroupsSection is a collection of OpponentGroups.
@@ -53,7 +80,9 @@ class OpponentGroupsSection(Section):
 
         opponent_groups = [first_group, second_group]
         for group in opponent_groups:
-            if len(group) == 1:
+            if len(group) == 0:
+                pass
+            elif len(group) == 1:
                 self.append_child(SingleOpponentGroup(group[0]))
             elif len(group) in range(2, 5):
                 self.append_child(MultiOpponentGroup(group))

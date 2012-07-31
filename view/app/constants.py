@@ -24,6 +24,12 @@ class _ComponentClass(object):
 
 
     @constant
+    def ICON(self):
+        """ ICON is a w3c class. """
+        return "icon"
+
+
+    @constant
     def OPPONENT_GROUP(self):
         """ OPPONENT_GROUP is a w3c class. """
         return "opponent-group"
@@ -56,7 +62,11 @@ class _DefaultImage(object):
 
     @constant
     def THUMBNAIL(self):
-        return "/static/images/icon.png"
+        return "/static/images/thumbnail.jpg"
 
+
+    @constant
+    def TIME_ICON(self):
+        return "/static/images/timeIcon.png"
 
 DEFAULT_IMAGE = _DefaultImage()

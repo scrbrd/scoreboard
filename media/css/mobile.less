@@ -32,6 +32,8 @@
 @linePadding: 10px; // Padding above and below text on a line.
 @bigPadding: 15px; // For Stories
 
+@iconSize: 15px;
+
 
 /***********************************************************
 * FONTS (with help from http://fontsquirrel.com)
@@ -507,8 +509,6 @@ input {
 * APP COMPONENTS 
 ************************************************************/
 .headline {
-    float: left;
-    width: 100%;
     .headerText;
     padding-top: @linePadding;
     padding-bottom: @linePadding;
@@ -519,6 +519,10 @@ input {
     width: 100%;
 }
 
+.icon {
+    width: @iconSize;
+    margin-right: @linePadding;
+}
 
 .opponent-group-section {
 }
@@ -739,10 +743,15 @@ input {
 }
 
 .story .main-story-section {
+    clear: both;
     padding-left: @bigPadding;
     padding-right: @bigPadding;
 }
 
+.story .main-story-section div {
+    margin-top: @linePadding;
+    margin-bottom: @linePadding;
+}
 
 /***********************************************************
 * TAB SECTION

@@ -6,7 +6,7 @@ FeedSection of a Tab.
 """
 
 from view.elements.base import Div
-from view.app.components import OpponentGroupsSection
+from view.app.components import OpponentGroupsSection, RelativeDateComponent
 
 from constants import COMPONENT_CLASS
 from components import PlayedHeadline, ResultHeadline, MainStorySection
@@ -73,6 +73,8 @@ class GameStory(Story):
             self.append_child(OpponentGroupsSection(winners, losers))
             main_section.append_child(ResultHeadline(winners, losers))
 
+        # add time icon
+        main_section.append_child(RelativeDateComponent(game.created_ts))
         self.append_child(main_section)
 
     @staticmethod

@@ -191,7 +191,7 @@ class Element(object):
 
     def set_text(self, text):
         """ Set this element's text content. """
-        self.element().text = text
+        self.element().text = str(text)
 
 
     def set_tail(self, tail):
