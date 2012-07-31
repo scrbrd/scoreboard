@@ -19,7 +19,7 @@ class Headline(Div):
     def __init__(self, text):
         """ Construct a headline tag. """
         super(Headline, self).__init__()
-        self.append_classes([COMPONENT_CLASS.HEADLINE])
+        self.append_class(COMPONENT_CLASS.HEADLINE)
 
         self.set_text(text)
 
@@ -32,7 +32,7 @@ class CoverPhoto(Img):
     def __init__(self, src, title):
         """ Construct a cover photo. """
         super(CoverPhoto, self).__init__(src, title)
-        self.append_classes([COMPONENT_CLASS.COVER_PHOTO])
+        self.append_class(COMPONENT_CLASS.COVER_PHOTO)
 
 
 class Icon(Img):
@@ -43,7 +43,7 @@ class Icon(Img):
     def __init__(self, src, alt):
         """ Construct an Icon. """
         super(Icon, self).__init__(src, alt)
-        self.append_classes([COMPONENT_CLASS.ICON])
+        self.append_class(COMPONENT_CLASS.ICON)
 
 
 class RelativeDateComponent(Div):

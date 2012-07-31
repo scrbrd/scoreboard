@@ -79,7 +79,7 @@ class RankingsList(HeadedList):
         """ Construct Rankings List using HeadedList. """
         super(RankingsList, self).__init__(self._headings, standings)
 
-        self.append_classes([COMPONENT_CLASS.RANKINGS_LIST])
+        self.append_class(COMPONENT_CLASS.RANKINGS_LIST)
 
 
     def set_list(self, rows):

@@ -55,7 +55,7 @@ class NavHeader(Nav):
                 special_item,
                 special_item_index)
 
-        self.append_classes([TAB_CLASS.SECOND_HEADER])
+        self.append_class(TAB_CLASS.SECOND_HEADER)
 
 
     def set_list(self, items):
@@ -71,9 +71,6 @@ class NavUL(UL):
     def __init__(self, items):
         """ Construct a nav header element tree. """
         super(NavUL, self).__init__(items)
-
-        # TODO: is there css we want applied even to this base class?
-        #self.append_classes([])
 
 
     def set_list_item(self, item, index):
@@ -194,7 +191,7 @@ class SummaryDiv(Div):
 
         # add a summary item class to the children
         for child in self.children():
-            child.append_classes([TAB_CLASS.SUMMARY_ITEM])
+            child.append_class(TAB_CLASS.SUMMARY_ITEM)
 
 
     def set_content(self, aggregations):

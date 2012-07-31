@@ -299,16 +299,6 @@ class Element(object):
         self._set_classes(classes)
 
 
-    def append_classes(self, additional_classes):
-        """ Add a list of classes to the current classes list for this i
-        element.
-
-        """
-        classes = self._classes()
-        classes.extend(additional_classes)
-        self._set_classes(classes)
-
-
     def set_data(self, data_key, value):
         """ Set the data-KEY attribute for this element. """
         data_attribute = "{0}{1}".format(HTML_ATTRIBUTE.DATA, data_key)
@@ -675,9 +665,6 @@ class Nav(Element):
             items.insert(special_item_index, special_item)
 
         self.set_list(items)
-
-        # TODO: is there css we want applied even to this base class?
-        #self.append_classes([])
 
 
     def set_list(self, items):

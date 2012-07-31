@@ -33,6 +33,6 @@ class LoginAnchorSection(Div):
         """ Construct a dialog component for a login button. """
         super(LoginAnchorSection, self).__init__()
         # WRAPPER helps position button on page.
-        self.append_classes([PAGE_CLASS.LOGIN_ANCHOR_WRAPPER])
+        self.append_class(PAGE_CLASS.LOGIN_ANCHOR_WRAPPER)
 
         self.append_child(FacebookLoginAnchor(login_url))

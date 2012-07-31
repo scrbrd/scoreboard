@@ -27,7 +27,7 @@ class Thumbnail(Img):
 
         """
         super(Thumbnail, self).__init__(src, name)
-        self.append_classes([COMPONENT_CLASS.THUMBNAIL])
+        self.append_class(COMPONENT_CLASS.THUMBNAIL)
 
 
 class NonRoutingAnchor(A):
@@ -197,10 +197,8 @@ class ListHeader(Header):
     def __init__(self, headings):
         """ Constuct a list header. """
         super(ListHeader, self).__init__()
-        self.append_classes([
-                COMPONENT_CLASS.LIST_HEADER,
-                COMPONENT_CLASS.HEADED_LIST_ITEM,
-                ])
+        self.append_class(COMPONENT_CLASS.LIST_HEADER)
+        self.append_class(COMPONENT_CLASS.HEADED_LIST_ITEM)
 
         for h in headings:
             col_head = Div()
