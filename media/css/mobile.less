@@ -162,7 +162,7 @@ the same border. */
 
 
 /* Add a light drop shadow below a box. */
-.drop-shadow-box(
+.drop-box-shadow(
         @hShadow: 0px, 
         @vShadow: 0px, 
         @blur: 2px, 
@@ -235,10 +235,10 @@ the same border. */
 }
 
 /* Add a box shadow. */
-.box-shadow(@hShadow, @vShadow, @blur, @spread, @alpha, @inset: "") {
-    -webkit-box-shadow: @hShadow @vShadow @blur @spread rgba(0, 0, 0, @alpha),
+.box-shadow(@hShadow, @vShadow, @blur, @spread, @alpha, @inset: ~"") {
+    -webkit-box-shadow: @hShadow @vShadow @blur @spread rgba(0, 0, 0, @alpha)
         @inset;
-    -moz-box-shadow: @hShadow @vShadow @blur @spread rgba(0, 0, 0, @alpha),
+    -moz-box-shadow: @hShadow @vShadow @blur @spread rgba(0, 0, 0, @alpha)
         @inset;
     box-shadow: @hShadow @vShadow @blur @spread rgba(0, 0, 0, @alpha) @inset;
 }
@@ -761,7 +761,7 @@ form input {
 * TAB COMPONENTS
 ************************************************************/
 .summary-item {
-    .drop-shadow-box;
+    .drop-box-shadow();
     float: left;
     width: 100%;
     background: @white;
@@ -806,7 +806,7 @@ form input {
 }
 
 .story {
-    .drop-shadow-box;
+    .drop-box-shadow();
     float: left;
     width: 100%;
     background: @white;
@@ -890,6 +890,7 @@ form input {
     width: @screenWidth;
     height: @normalLineHeight;
     background-color: @red;
+    // apply gradient
 }
 
 .dialog .close-button {
