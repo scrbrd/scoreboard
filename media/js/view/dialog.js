@@ -236,14 +236,10 @@ var DialogView = Backbone.View.extend({
         Reset dialog's form.
     */
     resetForm: function () {
-        console.log("resetting form");
         this.form[0].reset();
         // also clear the thumbnails
         var thumbnail = this.$el.find(Const.CLASS.AUTOCOMPLETE_THUMBNAIL)
             .attr("src", "/static/images/thumbnail.jpg");
-
-        console.log(thumbnail);
-
     }
 });
 

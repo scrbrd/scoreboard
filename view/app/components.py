@@ -5,10 +5,11 @@ App-specific reusable components that are building blocks.
 """
 
 from view.view_util import date
-from view.elements.base import Span, Img, Div, Section
+from view.elements.base import Span, Img, Div, Section, Button
 from view.elements.components import Thumbnail
 
 from constants import COMPONENT_CLASS, IMAGE
+from copy import Copy
 
 
 class Headline(Div):
@@ -57,6 +58,18 @@ class AppThumbnail(Thumbnail):
     def _prepare_src(self, src):
         """ Distinguish None from "" when choosing the default thumbnail. """
         return IMAGE.DEFAULT_THUMBNAIL if src is None else src
+
+
+class RemoveTagButton(Button):
+
+    """ Remove Tag Button that extends <button>. """
+
+
+    def __init__(self):
+        """ Construct a remove tag button tag. """
+        super(RemoveTagButton, self).__init__(Copy.remove_tag_button)
+
+        self.append_class(COMPONENT_CLASS.REMOVE_TAG_BUTTON)
 
 
 class CoverPhoto(Img):

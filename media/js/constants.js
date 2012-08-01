@@ -59,6 +59,7 @@ var constants = {
         CLOSE_BUTTON:           ".close-button",
         CREATE_BUTTON:          ".create-button",
         MENU_BUTTON:            ".menu-button",
+        REMOVE_TAG_BUTTON:      ".remove-tag-button",
         ACTIVE_NAV:             ".active-nav",
         INACTIVE_NAV:           ".inactive-nav",
         AUTOCOMPLETE_PLAYERS:   ".autocomplete-players",

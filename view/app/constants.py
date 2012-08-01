@@ -36,6 +36,12 @@ class _ComponentClass(object):
 
 
     @constant
+    def REMOVE_TAG_BUTTON(self):
+        """ REMOVE_TAG_BUTTON is a w3c class. """
+        return "remove-tag-button"
+
+
+    @constant
     def OPPONENT_GROUP(self):
         """ OPPONENT_GROUP is a w3c class. """
         return "opponent-group"

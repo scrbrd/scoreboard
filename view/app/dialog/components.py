@@ -6,7 +6,7 @@ Element components that are reusable, non-positional, but only for dialogs.
 
 from view.sqcopy import Copy
 from view.elements.base import Div, TextInput, HiddenInput
-from view.app.components import AppThumbnail
+from view.app.components import AppThumbnail, RemoveTagButton
 
 from constants import DIALOG_CLASS
 
@@ -69,3 +69,6 @@ class TagAutocomplete(AutocompleteInput):
         thumbnail = AppThumbnail(None, Copy.app_name)
         thumbnail.append_class(DIALOG_CLASS.AUTOCOMPLETE_THUMBNAIL)
         self.insert_child(thumbnail)
+
+        remove_tag = RemoveTagButton()
+        self.append_child(remove_tag)

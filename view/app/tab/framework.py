@@ -176,7 +176,7 @@ class PropertiesDiv(Div):
     def set_content(self, context):
         """ Construct and add content as a direct child. """
         # Currently a static image
-        src = "/static/images/covers/surferPhotoColor.jpg"
+        src = "/static/images/covers/baseballPhoto.jpg"
         self.append_child(CoverPhoto(src, context.name))
 
 

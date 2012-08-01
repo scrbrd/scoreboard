@@ -36,9 +36,7 @@ function autocomplete(
     
     // reset inputs on focus, call removeFunction, and set new autocomplete
     labelInput.focus(function (event) {
-        labelInput.val("");
         removeFunction(valueInput.val());
-        valueInput.val("");
 
         // Get the freshest available data
         var selectData = selectSource();
@@ -118,23 +116,35 @@ function autocompletePlayers(elem, players, selectedPlayers) {
                 return $('<li class="ui-menu-item-with-thumbnail"></li>')
                     .data("item.autocomplete", item)
                     .append('<a><img src="' + item.thumbnail +
-                        '" class="thumbnail"></span>' + item.label + '</a>')
+                        '" class="thumbnail" /><span>' + item.label + '</span></a>')
                     .appendTo(ul);
 
             },
             // handle success of selecting a player
-            function (selectedPlayer) {
-                // add selected player and set thumbnail
-                selectedPlayers[selectedPlayer.value] = selectedPlayer;
+            function (selectedItem) {
+                // disable label
+                $(elem).children(Const.CLASS.AUTOCOMPLETE_LABEL)
+                    .prop('disabled', true);
+                // add selected player to list
+                selectedPlayers[selectedItem.value] = selectedItem;
+                // set thumbnail
                 $(elem).children(Const.CLASS.AUTOCOMPLETE_THUMBNAIL)
-                    .attr("src", selectedPlayer.thumbnail);
+                    .attr("src", selectedItem.thumbnail);
+                // activate remove tag button
+                $(elem).find(Const.CLASS.REMOVE_TAG_BUTTON)
+                    .on("touchstart click", function (evt) {
+                        removeTagFromAutocomplete(
+                            elem,
+                            selectedPlayers,
+                            selectedItem.value);
+                        $(this).css("visibility", "hidden");
+                    })
+                    .css("visibility", "visible");
+
             },
-            // handle a player being removed from an autoselect
+            // handle removing player from autocomplete
             function (removedPlayerID) {
-                // remove player and thumbnail
-                delete selectedPlayers[removedPlayerID];
-                $(elem).children(Const.CLASS.AUTOCOMPLETE_THUMBNAIL)
-                    .attr("src", "/static/images/thumbnail.jpg");
+                removeTagFromAutocomplete(elem, selectedPlayers, removedPlayerID);
             });
 }
     
@@ -171,6 +181,26 @@ function sortByLabel(a, b) {
     }
     return returnVal;
 }
+
+/**
+    Handle a player being remove from an autocomplete.
+    @param {Object} removedPlayerID the player ID to remove.
+    @param {Object} selectedPlayers the current list of selected players.
+    @param {number} removedPlayerID the id to remove
+*/
+function removeTagFromAutocomplete(elem, selectedPlayers, removedPlayerID) {
+    // remove player and thumbnail
+    delete selectedPlayers[removedPlayerID];
+
+    // reset autocomplete
+    $(elem).children(Const.CLASS.AUTOCOMPLETE_LABEL)
+        .val("")
+        .prop('disabled', false);
+    $(elem).children(Const.CLASS.AUTOCOMPLETE_VALUE).val("");
+    $(elem).children(Const.CLASS.AUTOCOMPLETE_THUMBNAIL)
+        .attr("src", "/static/images/thumbnail.jpg");
+}
+
 
 return {
     autocomplete: autocomplete,

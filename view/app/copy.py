@@ -34,6 +34,10 @@ class _Copy(object):
         return "Player"
 
     @property
+    def remove_tag_button(self):
+        return "x"
+
+    @property
     def tag_headline(self):
         return "Who played?"
 

@@ -369,6 +369,10 @@ li {
 }
 
 
+input, button, textarea, select {
+    vertical-align: middle;
+}
+
 form input {
     .form-element;
     .altTextText();
@@ -383,8 +387,9 @@ form input {
 /***********************************************************
 * ELEMENT COMPONENTS - NO POSITIONING!!!
 ************************************************************/
+@thumbnailSide: 25px;
 .thumbnail{
-    width: @smallLineHeight - 10px;
+    width: @thumbnailSide;
 }
 
 .close-button {
@@ -429,6 +434,28 @@ form input {
     border: 0px;
 }
 
+@removeTagButtonSide: 19px;
+.remove-tag-button {
+    .hidden-content;
+    .background-image-wrapper(
+            @removeTagButtonSide,
+            @removeTagButtonSide,
+            'removeTagButton.png',
+            transparent);
+
+    border: 0px;
+
+    visibility: hidden;
+}
+
+.remove-tag-button:active {
+    .background-image-wrapper(
+            @removeTagButtonSide,
+            @removeTagButtonSide,
+            'removeTagButtonPressed.png',
+            transparent);
+}
+
 .anchor.login-anchor {
     .hidden-content;
 
@@ -437,9 +464,17 @@ form input {
 
 .anchor.facebook-login-anchor {
     .background-image-wrapper(
-            158px,
-            39px,
+            280px,
+            88px,
             'facebookLoginAnchor.png',
+            transparent);
+}
+
+.anchor.facebook-login-anchor:active {
+    .background-image-wrapper(
+            280px,
+            88px,
+            'facebookLoginAnchorPressed.png',
             transparent);
 }
 
@@ -879,14 +914,22 @@ form input {
 
 
 .autocomplete-players {
-    width: 100%;
+    text-align: center;
 }
 
 .autocomplete-players input[type='text'] {
     margin-left: @pagePadding;
-    width: 80%;
+    margin-right: @pagePadding;
+    width: 75%;
 }
 
+.autocomplete-players .remove-tag-button {
+}
+
+.autocomplete-players .ui-menu-item-with-thumbnail .thumbnail {
+    .vertically-centered-image(relative, 13px);
+    margin-right: @linePadding;
+}
 
 /***********************************************************
 * CREATE GAME DIALOG
@@ -908,11 +951,10 @@ form input {
 ************************************************************/
 .login-anchor-wrapper {
     position: absolute;
-    left: 0px;
-    top: 220px;
+    left: 0%;
+    top: 50%;
     width: 100%;
 }
-
 
 /***********************************************************
 * LANDING PAGE
@@ -939,17 +981,19 @@ form input {
 ************************************************************/
 .ui-autocomplete {
     position: absolute;
-    width: 52%;
-    max-height: 50%;
+    width: 73%;
+    height: 40%;
     overflow-y: auto;
     /* prevent horizontal scrollbar */
     overflow-x: hidden;
     background-color: @white;
     border: 1px solid @darkGrey;
+    border-radius: 12px;
+    padding: @bigPadding;
 }
 
-.ui-menu-item:not(:last-child) {
-    border-bottom: 1px dotted @darkGrey;
+.ui-menu-item {
+    border-top: 1px dotted @darkGrey;
 }
 
 .ui-menu-item a {
@@ -958,4 +1002,11 @@ form input {
     display: inline-block;
 }
 
+.ui-menu-item {
+    cursor: pointer;
+}
+
+.ui-menu-item:hover, .ui-menu-item:active {
+    background-color: @lightGrey;
+}
 
