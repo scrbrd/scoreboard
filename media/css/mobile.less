@@ -116,7 +116,7 @@
     color: @navy;
 }
 
-.statisticsText() {
+.statisticText() {
     .normalFont();
     color: @white;
 }
@@ -126,7 +126,12 @@
     color: @darkGrey;
 }
 
-.buttonsText() {
+.altTextText() {
+    .normalFont();
+    color: @black;
+}
+
+.buttonText() {
     .normalFont();
     color: @lightGrey;
 }
@@ -151,10 +156,19 @@ the same border. */
         @blur: 2px, 
         @spread: 1px,
         @alpha: .4) {
-    -webkit-box-shadow: @hShadow @vShadow @blur @spread rgba(0, 0, 0, @alpha);
-    -moz-box-shadow: @hShadow @vShadow @blur @spread rgba(0, 0, 0, @alpha);
-    box-shadow: @hShadow @vShadow @blur @spread rgba(0, 0, 0, @alpha);
+    .box-shadow(@hShadow, @vShadow, @blur, @spread, @alpha);
 }
+
+/* Inner drop shadow. */
+.inner-box-shadow(
+        @hShadow: 1px,
+        @vShadow: 2px,
+        @blur: 1px,
+        @spread: 0px,
+        @alpha: .6) {
+    .box-shadow(@hShadow, @vShadow, @blur, @spread, @alpha, inset);
+}
+    
 
 /* Emboss text slightly. */
 .emboss-text {
@@ -167,8 +181,9 @@ the same border. */
 }
 
 .form-element {
-    .border-radius(5px);
-   
+    .border-radius(@bigPadding);
+    .inner-box-shadow(); 
+    padding: 5px @pagePadding;
     background-color: @white;
     border: 1px solid @lightGrey;
 }
@@ -207,6 +222,14 @@ the same border. */
     color: transparent; 
 }
 
+/* Add a box shadow. */
+.box-shadow(@hShadow, @vShadow, @blur, @spread, @alpha, @inset: "") {
+    -webkit-box-shadow: @hShadow @vShadow @blur @spread rgba(0, 0, 0, @alpha),
+        @inset;
+    -moz-box-shadow: @hShadow @vShadow @blur @spread rgba(0, 0, 0, @alpha),
+        @inset;
+    box-shadow: @hShadow @vShadow @blur @spread rgba(0, 0, 0, @alpha) @inset;
+}
 
 /* Use a background-image in a consistent way. */
 .background-image-wrapper(
@@ -334,13 +357,13 @@ li {
 }
 
 
-input {
+form input {
     .form-element;
+    .altTextText();
 }
 
 .button {
-    .form-element;
-
+    .buttonText();
     cursor: pointer;
 }
 
@@ -826,6 +849,17 @@ input {
     width: 100%;
 }
 
+
+.autocomplete-players {
+    width: 100%;
+}
+
+.autocomplete-players input[type='text'] {
+    margin-left: @pagePadding;
+    width: 80%;
+}
+
+
 /***********************************************************
 * CREATE GAME DIALOG
 ************************************************************/
@@ -839,26 +873,6 @@ input {
 
 .opponent-tags-group {
     display: none;
-}
-
-.opponent-tags-list .list-column {
-    text-align: center;
-}
-
-.opponent-tags-list .opponent-tag-list-item .list-column:nth-child(1) {
-    float: left;
-    width: 10%;
-}
-
-.opponent-tags-list .opponent-tag-list-item .list-column:nth-child(2) {
-    float: left;
-    width: 50%;
-    text-align: left;
-}
-
-.opponent-tags-list .opponent-tag-list-item .list-column:nth-child(3) {
-    float: right;
-    width: 10%;
 }
 
 /***********************************************************
@@ -896,18 +910,24 @@ input {
 *
 ************************************************************/
 .ui-autocomplete {
-    max-height: 100px;
+    position: absolute;
+    width: 52%;
+    max-height: 50%;
     overflow-y: auto;
     /* prevent horizontal scrollbar */
     overflow-x: hidden;
-    background-color: @darkGrey;
-    border: 2px solid @black;
+    background-color: @white;
+    border: 1px solid @darkGrey;
+}
+
+.ui-menu-item:not(:last-child) {
+    border-bottom: 1px dotted @darkGrey;
 }
 
 .ui-menu-item a {
+    .altTextText;
     width: 100%;
     display: inline-block;
-    color: @white;
 }
 
 

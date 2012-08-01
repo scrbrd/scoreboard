@@ -127,9 +127,13 @@ var DialogView = Backbone.View.extend({
         // diabled row, gets enabled, add new row
 
         // set up autocomplete for each player selection
+        var selectedPlayers = {};
         $(Const.NAME.CREATE_GAME + ' ' + Const.CLASS.AUTOCOMPLETE_PLAYERS)
             .each(function (index, elem) {
-                AutocompleteUtil.autocompletePlayers(elem, rivals);
+                AutocompleteUtil.autocompletePlayers(
+                        elem,
+                        rivals,
+                        selectedPlayers);
             });
 
         // FIXME: this probably doesn't work anymore.
@@ -156,8 +160,15 @@ var DialogView = Backbone.View.extend({
 
         // bind opponent group display to checkbox value
         var checkbox = $(".switch input[name='game-type']");
+        var that = this;
         checkbox.change(function (evt) {
-            if ($(this).prop("checked")) {
+            // reset form
+            var checkedVal = checkbox.prop("checked");
+            that.resetForm();
+            checkbox.prop("checked", checkedVal);
+
+            // switch form type
+            if (checkbox.prop("checked")) {
                 $(Const.CLASS.OPPONENT_TAGS_GROUP +
                     '.' + Const.VALUE.RIVALRY).show();
                 $(Const.CLASS.OPPONENT_TAGS_GROUP +
@@ -194,12 +205,11 @@ var DialogView = Backbone.View.extend({
         // disable close button to prevent false positives.
         this.$el.find(Const.CLASS.CLOSE_BUTTON).get(0).disabled = true;
 
-        var form = this.form;
+        var that = this;
         // FIXME: make this blurring work and clear the autocomplete.
         $('input:focus').blur(); // blurring the focus should hide keyboard
         this.$el.slideUp('fast', function () {
-            // TODO: make this nicer...
-            form[0].reset();
+            that.resetForm();
         });
         return false;
     },
@@ -220,6 +230,20 @@ var DialogView = Backbone.View.extend({
         });
 
         return false;
+    },
+
+    /**
+        Reset dialog's form.
+    */
+    resetForm: function () {
+        console.log("resetting form");
+        this.form[0].reset();
+        // also clear the thumbnails
+        var thumbnail = this.$el.find(Const.CLASS.AUTOCOMPLETE_THUMBNAIL)
+            .attr("src", "/static/images/thumbnail.jpg");
+
+        console.log(thumbnail);
+
     }
 });
 

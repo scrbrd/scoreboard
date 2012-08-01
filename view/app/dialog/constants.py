@@ -37,6 +37,12 @@ class _DialogClass(object):
 
 
     @constant
+    def AUTOCOMPLETE_THUMBNAIL(self):
+        """ AUTOCOMPLETE_THUMBNAIL is a w3c class. """
+        return "autocomplete-thumbnail"
+
+
+    @constant
     def AUTOCOMPLETE_VALUE(self):
         """ AUTOCOMPLETE_VALUE is a w3c class. """
         return "autocomplete-value"

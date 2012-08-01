@@ -424,11 +424,28 @@ class Element(object):
         return Element._init_from_ET(self.children()[-1:])
 
 
+    def insert_child(self, element, index=0):
+        """ Insert a child element to this element's direct children.
+
+        Required:
+        Element     element     an instance of base.Element
+
+        Optional:
+        int         index       the insertion position
+
+        """
+        if not element.validate_root():
+            raise ElementError(
+                    [element],
+                    "{0} element is invalid.".format(element.tag()))
+        self.element().insert(index, element.element())
+
+
     def append_child(self, element):
         """ Append a child element to this element's direct children.
 
         Required:
-        Element     element     an instance of elements.Element
+        Element     element     an instance of base.Element
 
         Throw error if the element is an Empty Div because ET creates it as
         <div /> and Chrome only sees this as a start tag.

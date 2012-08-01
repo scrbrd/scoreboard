@@ -5,16 +5,14 @@ Element components for Create Game dialog.
 """
 
 from view.constants import SQ_DATA, SQ_VALUE, PAGE_NAME
-
 from view.elements.base import Div, Span, UL, Form, HiddenInput
 from view.elements.components import SwitchInput, MultiColumnLI
-
 from view.app.copy import Copy
-from view.app.components import Headline, AppThumbnail
+from view.app.components import Headline
 
 from constants import DIALOG_CLASS
 from framework import PostButtonSection
-from components import AutocompleteInput
+from components import TagAutocomplete
 
 
 class CreateGameForm(Form):
@@ -183,18 +181,14 @@ class OpponentTagLI(MultiColumnLI):
     def set_content(self, item):
         """ Generate the content for this Opponent tag list item. """
 
-        thumbnail_div = Div()
-        thumbnail_div.append_child(AppThumbnail(None, Copy.app_name))
-        self.set_column(thumbnail_div)
 
         metrics_by_opponent = "{0}[{1}][{2}]".format(
                 SQ_DATA.METRICS_BY_OPPONENT,
                 self._index,
                 item)
         input_span = Span()
-        input_span.append_child(AutocompleteInput(
+        input_span.append_child(TagAutocomplete(
                 metrics_by_opponent,
-                DIALOG_CLASS.AUTOCOMPLETE_PLAYERS,
                 Copy.tag_placeholder))
         self.set_column(input_span)
 
