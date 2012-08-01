@@ -24,6 +24,12 @@ class _ComponentClass(object):
 
 
     @constant
+    def SUBHEADLINE(self):
+        """ SUBHEADLINE is a w3c class. """
+        return "subheadline"
+
+
+    @constant
     def ICON(self):
         """ ICON is a w3c class. """
         return "icon"

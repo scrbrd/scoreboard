@@ -71,15 +71,23 @@
 }
 
 @bodyFontSize: .9em;
-@bigFontSize: 1.9em;
-@biggestFontSize: 2em;
+@bigFontSize: 1.2em;
+@veryBigFontSize: 1.9em;
+@hugeFontSize: 2em;
 
-.headerFont(@fontSize: @bigFontSize, @lineHeight: 1em) {
+.headerFont(@fontSize: @veryBigFontSize, @lineHeight: 1em) {
     font-family: 'TradeGothicCondEighteenBold', sans-serif;
     font-size: @fontSize;
     font-weight: bold;
     line-height: @lineHeight; // Screws up vertical alignment.
     text-transform: uppercase;
+}
+
+.subheaderFont(@fontSize: @bigFontSize, @lineHeight: 1em) {
+    font-family: 'Helvetica65MediumRegular', sans-serif;
+    font-size: @fontSize;
+    font-weight: bold;
+    line-height: @lineHeight;
 }
 
 .normalFont(@fontSize: @bodyFontSize, @lineHeight: 1em) {
@@ -102,12 +110,17 @@
 @numOfNavColumns: 2;
 
 .mainHeaderText() {
-    .headerFont();
+    .subheaderFont();
     color: @white;
 }
 
 .headerText() {
     .headerFont();
+    color: @black;
+}
+
+.subheaderText() {
+    .subheaderFont();
     color: @black;
 }
 
@@ -532,6 +545,13 @@ form input {
 ************************************************************/
 .headline {
     .headerText;
+    padding-top: @linePadding;
+    padding-bottom: @linePadding;
+    border-bottom: 1px dotted @lightGrey;
+}
+
+.subheadline {
+    .subheaderText;
     padding-top: @linePadding;
     padding-bottom: @linePadding;
     border-bottom: 1px dotted @lightGrey;

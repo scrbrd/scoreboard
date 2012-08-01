@@ -24,6 +24,19 @@ class Headline(Div):
         self.set_text(text)
 
 
+class Subheadline(Div):
+
+    """ Subheadline is a title span. """
+
+
+    def __init__(self, text):
+        """ Construct a headline tag. """
+        super(Subheadline, self).__init__()
+        self.append_class(COMPONENT_CLASS.SUBHEADLINE)
+
+        self.set_text(text)
+
+
 class AppThumbnail(Thumbnail):
 
     """ AppThumbnail extending Thumbnail.
