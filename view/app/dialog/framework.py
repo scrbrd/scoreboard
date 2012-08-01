@@ -22,6 +22,7 @@ class DialogHeader(MainHeaderDiv):
         """ Construct a dialog header element tree. """
         super(DialogHeader, self).__init__(dialog_name)
 
+        self.append_class(DIALOG_CLASS.DIALOG_HEADER)
         self.set_id(DIALOG_ID.DIALOG_HEADER)
 
         close_button = CloseButton()

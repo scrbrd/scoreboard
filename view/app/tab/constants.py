@@ -45,6 +45,12 @@ class _TabClass(object):
 
 
     @constant
+    def TAB_HEADER(self):
+        """ TAB_HEADER is a w3c class. """
+        return "tab-header"
+
+
+    @constant
     def SUMMARY_ITEM(self):
         """ SUMMARY_ITEM is a w3c class. """
         return "summary-item"

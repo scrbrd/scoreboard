@@ -35,7 +35,9 @@ class TabHeader(MainHeaderDiv):
         # TODO: remove context id bit, but put back the context.name
         super(TabHeader, self).__init__(Copy.app_name)
 
+        self.append_class(TAB_CLASS.TAB_HEADER)
         self.set_id(TAB_ID.TAB_HEADER)
+
         # set context data
         self.set_data(SQ_DATA.ID, context.id)
 

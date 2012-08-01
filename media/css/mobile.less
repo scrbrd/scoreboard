@@ -86,7 +86,6 @@
 .subheaderFont(@fontSize: @bigFontSize, @lineHeight: 1em) {
     font-family: 'Helvetica65MediumRegular', sans-serif;
     font-size: @fontSize;
-    font-weight: bold;
     line-height: @lineHeight;
 }
 
@@ -446,12 +445,7 @@ form input {
 
 .main-header {
     .header-section;
-    .background-image-wrapper(
-            @screenWidth,
-            @normalLineHeight,
-            'mainHeaderBar.png',
-            transparent);
-   
+
     .mainHeaderText(); 
     text-align: center;
 
@@ -654,6 +648,14 @@ form input {
 /***********************************************************
 * TAB HEADER
 ************************************************************/
+.tab-header {
+   .background-image-wrapper(
+            @screenWidth,
+            @normalLineHeight,
+            'tabHeaderBar.png',
+            transparent);
+}
+
 #tab-header div {
     @logoWidth: 78px;
     @logoHeight: 32px;
@@ -847,6 +849,12 @@ form input {
     height: 100%;
     display: table;
 
+}
+
+.dialog-header {
+    width: @screenWidth;
+    height: @normalLineHeight;
+    background-color: @red;
 }
 
 .dialog .close-button {

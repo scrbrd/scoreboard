@@ -13,6 +13,12 @@ class _DialogClass(object):
 
 
     @constant
+    def DIALOG_HEADER(self):
+        """ DIALOG_HEADER is a w3c class. """
+        return "dialog-header"
+
+
+    @constant
     def DIALOG_CONTENT(self):
         """ DIALOG_CONTENT is a w3c class. """
         return "dialog-content"
