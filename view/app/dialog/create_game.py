@@ -5,11 +5,11 @@ Element components for Create Game dialog.
 """
 
 from view.constants import SQ_DATA, SQ_VALUE, PAGE_NAME
-from view.sqcopy import Copy
 
 from view.elements.base import Div, Span, UL, Form, HiddenInput
 from view.elements.components import SwitchInput, MultiColumnLI
 
+from view.app.copy import Copy
 from view.app.components import Headline, AppThumbnail
 
 from constants import DIALOG_CLASS

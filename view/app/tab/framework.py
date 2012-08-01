@@ -5,10 +5,10 @@ Element components that are for the tab framework.
 """
 
 from view.constants import SQ_DATA
-from view.sqcopy import Copy
 from view.elements.base import H1, Nav, Footer, Section, UL, LI, A, Div
 from view.elements.components import CreateButton, MenuButton, MainHeaderDiv
 from view.app.components import CoverPhoto, Headline
+from view.app.copy import Copy
 
 from constants import TAB_CLASS, TAB_ID
 from story import GameStory

@@ -3,9 +3,10 @@
 League tab components.
 
 """
-from view.sqcopy import Copy
+
 from view.elements.base import Div
 from view.app.components import Headline
+from view.app.copy import Copy
 
 from framework import TabContentSection, PropertiesDiv, SummaryDiv, FeedDiv
 from components import RankingsList

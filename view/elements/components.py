@@ -4,9 +4,8 @@ Generic reusable components that are building blocks of
 app-specific features.
 
 """
-from view.sqcopy import Copy
-
 from constants import COMPONENT_CLASS
+from copy import Copy
 
 from base import Div, Span, OL, SubmitButton, Button, Header, LI, A, Img, Label
 from base import CheckboxInput, RadioInput
@@ -63,7 +62,7 @@ class FacebookLoginAnchor(LoginAnchor):
     """ Facebook Login Anchor that extends LoginAnchor. """
 
 
-    def __init__(self, login_url, text=Copy.facebook_login):
+    def __init__(self, login_url, text=Copy.login_with_facebook):
         """ Construct a facebook login anchor tag. """
         super(FacebookLoginAnchor, self).__init__(login_url, text)
 

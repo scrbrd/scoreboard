@@ -16,7 +16,6 @@ Each class has a single requirement...override the following:
 import tornado.web
 from tornado import escape
 
-from view.sqcopy import Copy
 from view.constants import PAGE_TYPE, PAGE_NAME, APP_CLASS, SQ_DATA
 
 from view.elements.base import Element
@@ -32,6 +31,8 @@ from view.app.dialog.framework import DialogHeader
 from view.app.dialog.create_game import CreateGameForm
 
 from view.app.page.landing import LandingPage
+
+from copy import Copy
 
 
 class UIAppHeader(tornado.web.UIModule):

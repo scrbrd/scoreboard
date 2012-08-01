@@ -4,10 +4,10 @@ Elements components that will be used in tabs but aren't part of the framework.
 
 """
 from view.constants import SQ_DATA
-from view.sqcopy import Copy
 from view.elements.base import Span, Div, Section
 from view.elements.components import HeadedList, HeadedListItem, NumberedList
 from view.app.components import Headline, AppThumbnail
+from view.app.copy import Copy
 
 from constants import COMPONENT_CLASS
 
