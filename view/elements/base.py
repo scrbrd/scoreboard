@@ -416,12 +416,12 @@ class Element(object):
 
     def first_child(self):
         """ Return the first immediate child for this element. """
-        return Element._init_from_ET(self.children()[0])
+        return self.children()[0]
 
 
     def last_child(self):
         """ Return the last immediate child for this element. """
-        return Element._init_from_ET(self.children()[-1:])
+        return self.children()[-1]
 
 
     def insert_child(self, element, index=0):

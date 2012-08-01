@@ -278,8 +278,8 @@ class SwitchInput(Div):
             self,
             name,
             value="",
-            off_text="",
-            on_text="",
+            off_text=Copy.off,
+            on_text=Copy.on,
             is_on=False):
         super(SwitchInput, self).__init__()
         self.append_class(COMPONENT_CLASS.SWITCH)
@@ -291,3 +291,16 @@ class SwitchInput(Div):
         self.append_child(span)
 
         self.append_child(CheckboxInput(name, value, is_on))
+
+
+    def set_on(self, is_on):
+        """ Set the SwitchInput to on/off.
+
+        Provide a wrapper for subclasses who don't have a reference to
+        this Element's child CheckboxInput.
+
+        Note: if more children are appended after CheckboxInput, update
+        this method to reflect CheckboxInput's child rank in the Div.
+
+        """
+        self.last_child().set_checked(is_on)

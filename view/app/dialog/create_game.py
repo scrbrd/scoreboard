@@ -102,11 +102,9 @@ class GameTypeSwitch(SwitchInput):
         """ Construct a GameTypeSwitch toggling versus/with. """
         super(GameTypeSwitch, self).__init__(
                 SQ_DATA.GAME_TYPE,
-                SQ_VALUE.RIVALRY,
-                Copy.versus_short,
-                Copy.with_,
-                is_on)
+                SQ_VALUE.RIVALRY)
         self.append_class(DIALOG_CLASS.GAME_TYPE_SWITCH)
+        self.set_on(is_on)
 
 
 class OpponentTagsGroup(Div):
