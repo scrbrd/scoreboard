@@ -10,25 +10,31 @@
     @requires $
     @requires Backbone
     @requires Const
+    @requires iScroll
     @requires Event
     @requires EventDispatcher
+    @requires DOMUtil
     @requires Components
 */
 define(
         [
             "jQuery",
             "Backbone",
+            "iScroll",
             "js/constants",
             "js/event",
             "js/eventDispatcher",
+            "util/dom",
             "view/components"
         ],
         function (
                 $,
                 Backbone,
+                Scroller,
                 Const,
                 Event,
                 EventDispatcher,
+                DOMUtil,
                 Components) {
 
 
@@ -43,13 +49,9 @@ var MODEL_EVENT = {
 */
 var DialogView = Backbone.View.extend({
 
-    // the dialog's form
     form: null,
-
-    // page name of the dialog
-    // TODO: put this in DialogStateModel
-    pageName: Const.PAGE_NAME.CREATE_GAME,
-
+    pageName: Const.PAGE_NAME.CREATE_GAME, // TODO: put this in DialogStateModel
+    scroller: null, // only create it on show, delete it on hide
     checkbox: null,
     tagAutocompletes: null,
 
@@ -200,6 +202,7 @@ var DialogView = Backbone.View.extend({
         $('input:focus').blur(); // blurring the focus should hide keyboard
         this.$el.slideUp('fast', function () {
             that.resetForm();
+            // iScroll is destroyed automatically on close.
         });
         return false;
     },
@@ -213,6 +216,10 @@ var DialogView = Backbone.View.extend({
         this.$el.slideDown('slow', function () {
             // enabled close button once the dialog opens.
             $(this).find(Const.CLASS.CLOSE_BUTTON).get(0).disabled = false;
+
+            // the dialog has to be showing to add the scroller
+            this.scroller = Scroller.Scroller(
+                    DOMUtil.getIDFromSelector(Const.ID.DIALOG_CONTENT_WRAPPER));
 
             // TODO: auto-focus and make the keyboard come up.
             //var a = this.$('.ui-autocomplete-input').first();
@@ -251,6 +258,9 @@ var DialogView = Backbone.View.extend({
                 '.' + Const.VALUE.RIVALRY).hide();
             $(Const.CLASS.OPPONENT_TAGS_GROUP +
                 '.' + Const.VALUE.CAMARADERIE).show();
+        }
+        if (this.scroller !== null) {
+            this.scroller.refresh();
         }
     }
 });

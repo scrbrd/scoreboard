@@ -28,7 +28,7 @@ from view.app.tab.rankings import RankingsTabSection
 from view.app.tab.league import LeagueContentSection
 
 from view.app.dialog.framework import DialogHeader
-from view.app.dialog.create_game import CreateGameForm
+from view.app.dialog.create_game import CreateGameContentSection
 
 from view.app.page.landing import LandingPage
 
@@ -261,11 +261,11 @@ class UICreateGameDialog(tornado.web.UIModule):
         """ Render a Create Game Dialog Screen. """
         header_tree = DialogHeader(Copy.create_game_dialog_header)
 
-        form_tree = CreateGameForm(
+        content_tree = CreateGameContentSection(
                 escape.xhtml_escape(self.handler.xsrf_token),
                 model)
 
-        return Element.to_string(header_tree) + Element.to_string(form_tree)
+        return Element.to_string(header_tree) + Element.to_string(content_tree)
 
 
 class UILandingPage(tornado.web.UIModule):

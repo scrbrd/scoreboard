@@ -11,15 +11,33 @@ from view.app.copy import Copy
 from view.app.components import Headline, Subheadline
 
 from constants import DIALOG_CLASS
-from framework import PostButtonSection
+from framework import PostButtonSection, DialogContentSection
 from components import TagAutocomplete
+
+
+class CreateGameContentSection(DialogContentSection):
+
+    """ The main content of the CreateGameDialog. """
+
+
+    def __init__(self, xsrf_token, model):
+        """ Construct a content section for CreateGame Dialog. """
+        super(CreateGameContentSection, self).__init__()
+
+        # TODO: add this iScroll container / wrapper to AppContentSection
+        self.set_id("dialog-content-wrapper")
+        div = Div()
+        div.set_id("dialog-content-container")
+
+        div.append_child(CreateGameForm(xsrf_token, model))
+        self.append_child(div)
 
 
 class CreateGameForm(Form):
 
     """ Create Game form extending <form>. """
 
-    MAX_TAGS = 2
+    MAX_TAGS = 4
 
 
     def __init__(self, xsrf_token, data):
@@ -35,6 +53,7 @@ class CreateGameForm(Form):
         # TODO: make this draw from view.url constants
         self.set_action("/create/game")
         self.append_class(DIALOG_CLASS.DIALOG_CONTENT)
+        self.set_id(DIALOG_CLASS.DIALOG_CONTENT)
 
         # TODO: is there some mild abstraction needed here? or other info?
         # add some context to the form

@@ -37,14 +37,15 @@ var constants = {
     */
     // TODO: make this link sync with Python HTML_ID constants
     ID: {
-        TAB:                    "#tab",
-        TAB_HEADER:             "#tab-header",
-        CONTENT:                "#content",
-        PROPERTIES:             "#properties",
-        SUMMARY:                "#summary",
-        FEED:                   "#feed",
-        DIALOG_CONTAINER:       "#dialog-container",
-        SCROLLER:               "#iscroll-wrapper"
+        TAB:                        "#tab",
+        TAB_HEADER:                 "#tab-header",
+        CONTENT:                    "#content",
+        PROPERTIES:                 "#properties",
+        SUMMARY:                    "#summary",
+        FEED:                       "#feed",
+        DIALOG_CONTAINER:           "#dialog-container",
+        CONTENT_CONTAINER_WRAPPER:  "#content-container-wrapper",
+        DIALOG_CONTENT_WRAPPER:     "#dialog-content-wrapper"
     },
 
     /**

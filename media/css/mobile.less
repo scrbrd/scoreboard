@@ -102,7 +102,6 @@
 }
 
 
-
 /***********************************************************
 * TEXT STYLE SETS
 ************************************************************/
@@ -402,6 +401,8 @@ form input {
     height: @smallLineHeight;
     width: @submitButtonWidth;
     background-color: @red;
+    margin-top: @bigPadding;
+    margin-bottom: @bigPadding;
 }
 
 .create-button {
@@ -581,7 +582,7 @@ form input {
     z-index: 7;
 }
 
-#iscroll-wrapper, #content-container {
+#content-container-wrapper, #content-container {
     z-index: 5;
 }
 
@@ -637,20 +638,36 @@ form input {
 /***********************************************************
 * ISCROLL
 ************************************************************/
-#iscroll-wrapper {
+#content-container-wrapper {
     position: absolute; 
     width: 100%;
     top: 0px; 
     bottom: 0px; 
     left: 0px;
     overflow: auto;
-
-    /* border-bottom: 2px solid @black; */
 }
 
 #content-container {
     position: absolute;
     width: 100%;
+}
+
+#dialog-content-wrapper {
+    position: absolute;
+    width: 100%;
+    top: @normalLineHeight;
+    bottom: 0px;
+    left: 0px;
+    overflow: auto;
+}
+
+#dialog-content-container {
+    position: absolute;
+    width: 100%;
+}
+
+#dialog-content-container:first-child {
+    padding-right:15px;
 }
 
 
@@ -926,6 +943,7 @@ form input {
     text-align: center;
 }
 
+// needed?
 .post-button-wrapper {
     position: absolute;
     bottom: @pagePadding;

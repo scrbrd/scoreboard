@@ -11,24 +11,44 @@ define(
         function($, Const, doc) {
    
 
-// Instantiate iScroll object
-function Scroller() {
-    var options = {hScrollbar: false, vScrollbar: false};
+// store iScroll in a new variable and delete it from Global
+var IScroller = iScroll;
+delete iScroll;
 
-    var curr_scroll = null;
-    var IScroller = iScroll;
-    // delete variable to remove it from GLOBAL
-    delete iScroll;
-    var scroller_id = Const.ID.SCROLLER.substring(1);
 
-    this.refresh = function() {
-        curr_scroll.refresh();
+// one set of options
+var options = {
+    hScrollbar: false,
+    vScrollbar: false,
+    onBeforeScrollStart: function (e) {
+        var target = e.target;
+        while (target.nodeType !== 1) {
+            target = target.parentNode;
+        }
+        if (target.tagName !== 'SELECT' &&
+                target.tagName !== 'INPUT' &&
+                target.tagName !== 'TEXTAREA') {
+            e.preventDefault();
+        }
+    }
+};
+
+// Scroller Class wraps iScroll
+function Scroller(element_id) {
+    // iScroll variable
+    var currScroller = null;
+
+    this.destroy = function () {
+        currScroller.destroy();
+        currScroller = null;
+    };
+    this.refresh = function () {
+        currScroller.refresh();
     };
 
-    this.scrollTo = function(x, y, time) {
-        curr_scroll.scrollTo(x, y, time);
+    this.scrollTo = function (x, y, time) {
+        currScroller.scrollTo(x, y, time);
     };
-
 
     function initialize() {
         document.addEventListener(
@@ -37,12 +57,12 @@ function Scroller() {
                     e.preventDefault();
                 },
                 false);
-        curr_scroll = new IScroller(scroller_id, options);
+        currScroller = new IScroller(element_id, options);
     }
 
     initialize();
+    this.refresh();
 }
-
 
 
 // Hide the address bar so the appl looks for appy
@@ -120,14 +140,18 @@ function hide_address_bar() {
 hide_address_bar();
 
 return {
-    construct: function () {
+    Scroller: function (element_id) {
+        return new Scroller(element_id);
+    }
+    /*
+     construct: function () {
         var scroller = new Scroller();
 
         // adjust length of scroller after address bar is hidden
         scroller.refresh();
 
         return scroller;
-    }
+    } */
 };
 
 

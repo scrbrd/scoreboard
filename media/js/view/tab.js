@@ -22,20 +22,20 @@
 
     @requires $
     @requires Backbone
+    @requires iScroll
     @requires Const
     @requires DOMUtil
-    @requires iScroll
 
 */
 define(
         [
             "jQuery",
             "Backbone",
+            "iScroll",
             "js/constants",
-            "util/dom",
-            "iScroll"
+            "util/dom"
         ],
-        function ($, Backbone, Const, DOMUtil, Scroller) {
+        function ($, Backbone, Scroller, Const, DOMUtil) {
 
 
 var MODEL_EVENT = {
@@ -160,7 +160,8 @@ var ContentView = Backbone.View.extend({
         this.model.on(MODEL_EVENT.CHANGE_CONTENT, this.render, this);
 
         this.initializeSections(this.model);
-        this.scroller = Scroller.construct();
+        this.scroller = Scroller.Scroller(
+                DOMUtil.getIDFromSelector(Const.ID.CONTENT_CONTAINER_WRAPPER));
     },
 
     /**

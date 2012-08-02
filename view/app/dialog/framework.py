@@ -6,7 +6,7 @@ positioning.
 
 """
 
-from view.elements.base import Div
+from view.elements.base import Div, Section
 from view.elements.components import MainHeaderDiv
 from view.elements.components import PostButton, CloseButton
 
@@ -31,6 +31,18 @@ class DialogHeader(MainHeaderDiv):
         self.append_child(close_button)
 
 
+# TODO: subclass this from an abstract app.page.frameworkAppPageContentSection
+# when it exists.
+class DialogContentSection(Section):
+
+    """ DialogContentSection encapsulates generic Dialog Page attributes. """
+
+
+    def __init__(self):
+        """ Construct a dialog's content section element tree. """
+        super(DialogContentSection, self).__init__()
+
+
 class PostButtonSection(Div):
 
     """ Component that has a PostButton in a <div> (for centering). """
@@ -39,5 +51,5 @@ class PostButtonSection(Div):
     def __init__(self):
         """ Construct a dialog component for a post button. """
         super(PostButtonSection, self).__init__()
-        self.append_class(DIALOG_CLASS.POST_BUTTON_WRAPPER)
+        # self.append_class(DIALOG_CLASS.POST_BUTTON_WRAPPER)
         self.append_child(PostButton())
