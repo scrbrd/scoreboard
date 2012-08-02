@@ -62,6 +62,7 @@ var constants = {
         REMOVE_TAG_BUTTON:      ".remove-tag-button",
         ACTIVE_NAV:             ".active-nav",
         INACTIVE_NAV:           ".inactive-nav",
+        AUTOCOMPLETE:           ".autocomplete",
         AUTOCOMPLETE_PLAYERS:   ".autocomplete-players",
         AUTOCOMPLETE_LABEL:     ".autocomplete-label",
         AUTOCOMPLETE_THUMBNAIL: ".autocomplete-thumbnail",

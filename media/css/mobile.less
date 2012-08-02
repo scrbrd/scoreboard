@@ -928,8 +928,8 @@ form input {
 }
 
 .autocomplete-players .ui-menu-item-with-thumbnail .thumbnail {
-    .vertically-centered-image(relative, 13px);
     margin-right: @linePadding;
+    margin-top: -3px;
 }
 
 /***********************************************************
@@ -994,20 +994,23 @@ form input {
 }
 
 .ui-menu-item {
+}
+
+.ui-menu-item {
+    cursor: pointer;
     border-top: 1px dotted @darkGrey;
+}
+
+.ui-menu-item:hover, .ui-menu-item:active {
+    background-color: @lightGrey;
 }
 
 .ui-menu-item a {
     .altTextText;
     width: 100%;
     display: inline-block;
+    height: @smallLineHeight;
+    line-height: @smallLineHeight;
 }
 
-.ui-menu-item {
-    cursor: pointer;
-}
-
-.ui-menu-item:hover, .ui-menu-item:active {
-    background-color: @lightGrey;
-}
 

@@ -12,7 +12,7 @@
     @requires Const
     @requires Event
     @requires EventDispatcher
-    @requires AutocompleteUtil
+    @requires Components
 */
 define(
         [
@@ -21,7 +21,7 @@ define(
             "js/constants",
             "js/event",
             "js/eventDispatcher",
-            "util/autocomplete"
+            "view/components"
         ],
         function (
                 $,
@@ -29,7 +29,7 @@ define(
                 Const,
                 Event,
                 EventDispatcher,
-                AutocompleteUtil) {
+                Components) {
 
 
 var MODEL_EVENT = {
@@ -50,6 +50,9 @@ var DialogView = Backbone.View.extend({
     // TODO: put this in DialogStateModel
     pageName: Const.PAGE_NAME.CREATE_GAME,
 
+    checkbox: null,
+    tagAutocompletes: null,
+
     /**
         Hide and stretch dialog, initialize its form, and bind change
         events from Models.
@@ -64,6 +67,7 @@ var DialogView = Backbone.View.extend({
             pageStateModel,
             height) {
         this.setElement(Const.ID.DIALOG_CONTAINER);
+
         this.sessionModel = sessionModel;
         this.pageStateModel = pageStateModel;
 
@@ -123,18 +127,17 @@ var DialogView = Backbone.View.extend({
         var formPageName = this.pageName;
         this.form.find(Const.NAME.LEAGUE_ID).val(leagueID);
 
+        // setup Autocomplete
+        this.tagAutocompletes = [];
+        var that = this;
+        this.form.find(Const.CLASS.AUTOCOMPLETE_PLAYERS)
+            .each(function (index, elem) {
+                that.tagAutocompletes.push(
+                        Components.TagAutocomplete($(elem), rivals));
+            });
+
         // TODO: add additional row functionality
         // diabled row, gets enabled, add new row
-
-        // set up autocomplete for each player selection
-        var selectedPlayers = {};
-        $(Const.NAME.CREATE_GAME + ' ' + Const.CLASS.AUTOCOMPLETE_PLAYERS)
-            .each(function (index, elem) {
-                AutocompleteUtil.autocompletePlayers(
-                        elem,
-                        rivals,
-                        selectedPlayers);
-            });
 
         // FIXME: this probably doesn't work anymore.
         // add event handler for player data entry.
@@ -159,29 +162,16 @@ var DialogView = Backbone.View.extend({
             });
 
         // bind opponent group display to checkbox value
-        var checkbox = $(".switch input[name='game-type']");
-        var that = this;
-        checkbox.change(function (evt) {
+        this.checkbox = $(".switch input[name='game-type']");
+        this.checkbox.change(function (evt) {
             // reset form
-            var checkedVal = checkbox.prop("checked");
+            var checkedVal = that.checkbox.prop("checked");
             that.resetForm();
-            checkbox.prop("checked", checkedVal);
+            that.checkbox.prop("checked", checkedVal);
+            that.setFormFromSwitch();
 
-            // switch form type
-            if (checkbox.prop("checked")) {
-                $(Const.CLASS.OPPONENT_TAGS_GROUP +
-                    '.' + Const.VALUE.RIVALRY).show();
-                $(Const.CLASS.OPPONENT_TAGS_GROUP +
-                    '.' + Const.VALUE.CAMARADERIE).hide();
-            } else {
-                $(Const.CLASS.OPPONENT_TAGS_GROUP +
-                    '.' + Const.VALUE.RIVALRY).hide();
-                $(Const.CLASS.OPPONENT_TAGS_GROUP +
-                    '.' + Const.VALUE.CAMARADERIE).show();
-            }
         });
-        checkbox.change();
-
+        this.setFormFromSwitch();
     },
 
     /**
@@ -237,9 +227,31 @@ var DialogView = Backbone.View.extend({
     */
     resetForm: function () {
         this.form[0].reset();
+        for (var i = 0; i < this.tagAutocompletes.length; i += 1) {
+            this.tagAutocompletes[i].resetAndClear();
+        }
         // also clear the thumbnails
         var thumbnail = this.$el.find(Const.CLASS.AUTOCOMPLETE_THUMBNAIL)
             .attr("src", "/static/images/thumbnail.jpg");
+        this.setFormFromSwitch();
+    },
+
+    /**
+        Have the form reflect the value of the WinLossSwitch
+    */
+    setFormFromSwitch: function () {
+        // switch form type
+        if (this.checkbox.prop("checked")) {
+            $(Const.CLASS.OPPONENT_TAGS_GROUP +
+                '.' + Const.VALUE.RIVALRY).show();
+            $(Const.CLASS.OPPONENT_TAGS_GROUP +
+                '.' + Const.VALUE.CAMARADERIE).hide();
+        } else {
+            $(Const.CLASS.OPPONENT_TAGS_GROUP +
+                '.' + Const.VALUE.RIVALRY).hide();
+            $(Const.CLASS.OPPONENT_TAGS_GROUP +
+                '.' + Const.VALUE.CAMARADERIE).show();
+        }
     }
 });
 
