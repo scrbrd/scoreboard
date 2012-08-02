@@ -434,10 +434,7 @@ class Element(object):
         int         index       the insertion position
 
         """
-        if not element.validate_root():
-            raise ElementError(
-                    [element],
-                    "{0} element is invalid.".format(element.tag()))
+        element.assert_valid_root()
         self.element().insert(index, element.element())
 
 
@@ -451,10 +448,7 @@ class Element(object):
         <div /> and Chrome only sees this as a start tag.
 
         """
-        if not element.validate_root():
-            raise ElementError(
-                    [element],
-                    "{0} element is invalid.".format(element.tag()))
+        element.assert_valid_root()
         self.element().append(element.element())
 
 
@@ -469,11 +463,19 @@ class Element(object):
             self.element().append_child(e)
 
 
-    def validate_root(self):
-        """ Return a boolean indicating if the element is valid. """
-        # TODO: Don't put attribute/type checking here. Put it as part of an
-        # interface.
-        return True
+    def assert_valid_root(self):
+        """ Raise an error if an Element is invalid.
+
+        This will be a no-op unless overridden, as Div is likely to be
+        the only necessary candidate for implementation. Divs without
+        text or children are invalid. All other empty Elements are
+        currently considered valid.
+
+        Note that this is not the right place to include attribute/type
+        checking. That belongs in some other as yet undefined interface.
+
+        """
+        pass
 
 
 #   @staticmethod
@@ -520,10 +522,7 @@ class Element(object):
         """ Convenience wrapper to standardize on utf-8 and html. """
         # TODO: elementree and celementree differ; does method="html" exist?
         #return ET.tostring(element, "utf-8", "html")
-        if not element.validate_root():
-            raise ElementError(
-                    [element],
-                    "{0} element tree is invalid.".format(element.tag()))
+        element.assert_valid_root()
         return ET.tostring(element.element(), "utf-8")
 
 
@@ -537,13 +536,13 @@ class Div(Element):
         super(Div, self).__init__(HTML_TAG.DIV)
 
 
-    def validate_root(self):
+    def assert_valid_root(self):
         """ Return a boolean if the Div is valid. """
-        text = self._text()
-        number_of_children = len(self.children())
-        if text is None and number_of_children == 0:
-            return False
-        return True
+        if all([
+                self._text() is None,
+                len(self.children()) == 0,
+                ]):
+            raise InvalidElementError(self, "Div has no text or children.")
 
 
 class Span(Element):
