@@ -4,7 +4,7 @@ Element components that are reusable, non-positional, but only for dialogs.
 
 """
 
-from view.sqcopy import Copy
+from view.app.copy import Copy
 from view.elements.base import Div, TextInput, HiddenInput
 from view.app.components import AppThumbnail, RemoveTagButton
 

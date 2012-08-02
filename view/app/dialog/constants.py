@@ -91,6 +91,18 @@ class _DialogClass(object):
 
 
     @constant
+    def GAME_TYPE(self):
+        """ GAME_TYPE is a w3c class. """
+        return "game-type"
+
+
+    @constant
+    def GAME_TYPE_LABEL(self):
+        """ GAME_TYPE_LABEL is a w3c class. """
+        return "game-type-label"
+
+
+    @constant
     def GAME_TYPE_SWITCH(self):
         """ GAME_TYPE_SWITCH is a w3c class. """
         return "game-type-switch"

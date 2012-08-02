@@ -60,7 +60,12 @@ class CreateGameForm(Form):
         self.append_child(HiddenInput(SQ_DATA.LEAGUE_ID))
 
         # tag header
-        self.append_child(OpponentTagsHeader())
+        self.append_child(OpponentTagsHeadline())
+
+        # versus/with checkbox
+        # TODO: optionally set is_on based on some stored model/session value.
+        #self.append_child(GameTypeSwitch())
+        self.append_child(GameTypeDiv())
 
         # the three tag groups: won,lost, played
         self.append_child(OpponentTagsGroup(
@@ -84,23 +89,6 @@ class CreateGameForm(Form):
         self.append_child(PostButtonSection())
 
 
-class OpponentTagsHeader(Div):
-
-    """ OpponentTagsHeader extending Div. """
-
-
-    def __init__(self):
-        """ Construct an OpponentTagsHeader with a Headline and Switch. """
-        super(OpponentTagsHeader, self).__init__()
-
-        # opponents headline
-        self.append_child(OpponentTagsHeadline())
-
-        # versus/with checkbox
-        #TODO: set optional is_on based on some stored value in model/session
-        self.append_child(GameTypeSwitch())
-
-
 class OpponentTagsHeadline(Headline):
 
     """ OpponentTagsHeadline extending Headline. """
@@ -117,13 +105,37 @@ class GameTypeSwitch(SwitchInput):
     """ GameTypeSwitch extending SwitchInput. """
 
 
-    def __init__(self, is_on=True):
+    def __init__(self):
         """ Construct a GameTypeSwitch toggling versus/with. """
         super(GameTypeSwitch, self).__init__(
                 SQ_DATA.GAME_TYPE,
                 SQ_VALUE.RIVALRY)
         self.append_class(DIALOG_CLASS.GAME_TYPE_SWITCH)
-        self.set_on(is_on)
+
+        # would be necessary if we associate a Label with the switch
+        #self.set_id(SQ_DATA.GAME_TYPE)
+
+
+class GameTypeDiv(Div):
+
+    """ GameTypeDiv extending Div. """
+
+
+    def __init__(self):
+        """ Construct a GameTypeSwitch toggling versus/with. """
+        super(GameTypeDiv, self).__init__()
+        self.append_class(DIALOG_CLASS.GAME_TYPE)
+
+        #label = Label(Copy.versus, SQ_DATA.GAME_TYPE)
+        #label.append_class(DIALOG_CLASS.GAME_TYPE_LABEL)
+        #self.append_child(label)
+
+        span = Span()
+        span.set_text(Copy.versus)
+        span.append_class(DIALOG_CLASS.GAME_TYPE_LABEL)
+        self.append_child(span)
+
+        self.append_child(GameTypeSwitch())
 
 
 class OpponentTagsGroup(Div):

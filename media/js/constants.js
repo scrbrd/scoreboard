@@ -68,6 +68,10 @@ var constants = {
         AUTOCOMPLETE_LABEL:     ".autocomplete-label",
         AUTOCOMPLETE_THUMBNAIL: ".autocomplete-thumbnail",
         AUTOCOMPLETE_VALUE:     ".autocomplete-value",
+        SWITCH_CONTROL:         ".switch-control",
+        SWITCH_ON:              ".switch-on",
+        SWITCH_KNOB:            ".switch-knob",
+        SWITCH_CHECKBOX:        ".switch-checkbox",
         LIST_WITH_HEADERS:      ".list-with-headers",
         FACEBOOK_LOGIN_ANCHOR:  ".facebook-login-anchor",
         OPPONENT_TAGS_GROUP:    ".opponent-tags-group"

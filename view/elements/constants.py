@@ -510,15 +510,27 @@ class _ComponentClass(object):
 
 
     @constant
-    def SWITCH(self):
-        """ SWITCH is a w3c class. """
-        return "switch"
+    def SWITCH_CONTROL(self):
+        """ SWITCH_CONTROL is a w3c class. """
+        return "switch-control"
 
 
     @constant
-    def KNOB(self):
-        """ KNOBis a w3c class. """
-        return "knob"
+    def SWITCH_ON(self):
+        """ SWITCH_ON is a w3c class. """
+        return "switch-on"
+
+
+    @constant
+    def SWITCH_KNOB(self):
+        """ SWITCH_KNOB is a w3c class. """
+        return "switch-knob"
+
+
+    @constant
+    def SWITCH_CHECKBOX(self):
+        """ SWITCH_CHECKBOX is a w3c class. """
+        return "switch-checkbox"
 
 
 COMPONENT_CLASS = _ComponentClass()

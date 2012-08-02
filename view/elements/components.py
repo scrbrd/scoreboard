@@ -277,20 +277,29 @@ class SwitchInput(Div):
     def __init__(
             self,
             name,
-            value="",
-            off_text=Copy.off,
-            on_text=Copy.on,
+            on_value="",
+            off_text="",
+            on_text="",
             is_on=False):
         super(SwitchInput, self).__init__()
-        self.append_class(COMPONENT_CLASS.SWITCH)
+        self.append_class(COMPONENT_CLASS.SWITCH_CONTROL)
+
+        # this is important for making sure the various components of the
+        # switch are in sync with one another.
+        if is_on:
+            self.append_class(COMPONENT_CLASS.SWITCH_ON)
 
         span = Span()
-        span.append_class(COMPONENT_CLASS.KNOB)
-        span.set_text(off_text)
-        span.set_tail(on_text)
+        span.append_class(COMPONENT_CLASS.SWITCH_KNOB)
+        # TODO: set on/off text in content for css class switch-knob, add style
+        # and positioning to the class, and override display of |/0.
+        #span.set_text(off_text)
+        #span.set_tail(on_text)
         self.append_child(span)
 
-        self.append_child(CheckboxInput(name, value, is_on))
+        checkbox = CheckboxInput(name, on_value, is_on)
+        checkbox.append_class(COMPONENT_CLASS.SWITCH_CHECKBOX)
+        self.append_child(checkbox)
 
 
     def _knob(self):

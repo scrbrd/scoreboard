@@ -52,7 +52,9 @@ var DialogView = Backbone.View.extend({
     form: null,
     pageName: Const.PAGE_NAME.CREATE_GAME, // TODO: put this in DialogStateModel
     scroller: null, // only create it on show, delete it on hide
-    checkbox: null,
+    switchControl: null,
+    rivalryTagsGroup: null,
+    camaraderieTagsGroup: null,
     tagAutocompletes: null,
 
     /**
@@ -91,18 +93,24 @@ var DialogView = Backbone.View.extend({
     },
 
     /**
-        Setup DialogView event triggers.
+        Set up DialogView event triggers.
         Keep _events notation to allow event keys to be variables.
     */
     events: function () {
         var _events = {};
         var submitForm = Const.NAME.CREATE_GAME;
         var closeButton = Const.CLASS.CLOSE_BUTTON;
+        var switchControl = Const.CLASS.SWITCH_CONTROL;
 
         // TODO: make the event types constants
+        // note that the space after each action string is critical
         _events["submit " + submitForm] = "submit";
         _events["touchstart " + closeButton] = "hide";
         _events["click " + closeButton] = "hide";
+        // TODO: make click/touchstart conditional upon the web/mobile
+        // environment. can't use both because toggle isn't idempotent.
+        //_events["touchstart " + switchControl] = "flipSwitch";
+        _events["click " + switchControl] = "flipSwitch";
 
         return _events;
     },
@@ -114,22 +122,25 @@ var DialogView = Backbone.View.extend({
         var leagueID = this.pageStateModel.contextID();
         var rivals = this.sessionModel.rivals();
 
-        this.setupForm(leagueID, rivals);
+        this.initForm(leagueID, rivals);
 
         return this;
     },
 
     /**
-        Setup dialog's form with event bindings and autocomplete
+        Set up dialog's form with event bindings and autocomplete
         functionality.
         @param {string} leagueID the league that the Game will be part of
         @param {Array} rivals An array of rivals for autocomplete
     */
-    setupForm: function (leagueID, rivals) {
+    initForm: function (leagueID, rivals) {
         var formPageName = this.pageName;
         this.form.find(Const.NAME.LEAGUE_ID).val(leagueID);
 
-        // setup Autocomplete
+        // TODO: add additional row functionality
+        // disabled row, gets enabled, add new row
+
+        // set up Autocompletes
         this.tagAutocompletes = [];
         var that = this;
         this.form.find(Const.CLASS.AUTOCOMPLETE_PLAYERS)
@@ -137,9 +148,6 @@ var DialogView = Backbone.View.extend({
                 that.tagAutocompletes.push(
                         Components.TagAutocomplete($(elem), rivals));
             });
-
-        // TODO: add additional row functionality
-        // diabled row, gets enabled, add new row
 
         // FIXME: this probably doesn't work anymore.
         // add event handler for player data entry.
@@ -163,17 +171,16 @@ var DialogView = Backbone.View.extend({
                         formPageName);
             });
 
-        // bind opponent group display to checkbox value
-        this.checkbox = $(".switch input[name='game-type']");
-        this.checkbox.change(function (evt) {
-            // reset form
-            var checkedVal = that.checkbox.prop("checked");
-            that.resetForm();
-            that.checkbox.prop("checked", checkedVal);
-            that.setFormFromSwitch();
+        // set up opponent tag groups
+        this.rivalryTagsGroup = this.form.find(
+            Const.CLASS.OPPONENT_TAGS_GROUP + '.' + Const.VALUE.RIVALRY);
+        this.camaraderieTagsGroup = this.form.find(
+            Const.CLASS.OPPONENT_TAGS_GROUP + '.' + Const.VALUE.CAMARADERIE);
 
-        });
-        this.setFormFromSwitch();
+        this.switchControl = this.form.find(Const.CLASS.SWITCH_CONTROL);
+        // TODO: get isOn from model, which means its not appropriate for this
+        // to be in the view. build a component.
+        this.initSwitch(true);
     },
 
     /**
@@ -237,32 +244,120 @@ var DialogView = Backbone.View.extend({
         for (var i = 0; i < this.tagAutocompletes.length; i += 1) {
             this.tagAutocompletes[i].resetAndClear();
         }
+
         // also clear the thumbnails
         var thumbnail = this.$el.find(Const.CLASS.AUTOCOMPLETE_THUMBNAIL)
             .attr("src", "/static/images/thumbnail.jpg");
-        this.setFormFromSwitch();
+
+        // TODO: get isOn from model, which means its not appropriate for this
+        // to be in the view. build a component.
+        this.resetSwitch(true);
     },
 
     /**
-        Have the form reflect the value of the WinLossSwitch
+        Reset the state of the Switch and what it controls.
     */
-    setFormFromSwitch: function () {
-        // switch form type
-        if (this.checkbox.prop("checked")) {
-            $(Const.CLASS.OPPONENT_TAGS_GROUP +
-                '.' + Const.VALUE.RIVALRY).show();
-            $(Const.CLASS.OPPONENT_TAGS_GROUP +
-                '.' + Const.VALUE.CAMARADERIE).hide();
-        } else {
-            $(Const.CLASS.OPPONENT_TAGS_GROUP +
-                '.' + Const.VALUE.RIVALRY).hide();
-            $(Const.CLASS.OPPONENT_TAGS_GROUP +
-                '.' + Const.VALUE.CAMARADERIE).show();
+    resetSwitch: function (flipOn) {
+        if (this.isSwitchOn() !== flipOn) {
+            this.flipSwitch();
         }
+    },
+
+    /**
+        Initialize the state of the Switch and what it controls.
+        @param {boolean} flipOn intialize the Switch to flipOn
+    */
+    initSwitch: function (flipOn) {
+        // sync components controlled by the switch with its default state
+        this.initSwitchComponents(this.isSwitchOn());
+
+        // if the default doesn't match the specified initial state, flip it
+        if (this.isSwitchOn() !== flipOn) {
+            this.flipSwitch();
+        }
+    },
+
+    /**
+        Toggle the visual and internal Switch state and what it controls.
+    */
+    flipSwitch: function () {
+        // visually flip the switch
+        this.toggleSwitchControl();
+
+        // flip the internal state of the switch
+        this.toggleSwitchCheckbox();
+
+        // flip the components controlled by the switch
+        this.toggleSwitchComponents();
+
+        // adjust the scroller to the new dialog height
+        this.refreshScroller();
+    },
+
+    /**
+        Determine whether the Switch is currently on.
+        @return {boolean}
+    */
+    isSwitchOn: function () {
+        var onClass = DOMUtil.getClassFromSelector(Const.CLASS.SWITCH_ON);
+        return this.switchControl.hasClass(onClass);
+    },
+
+    /**
+        Toggle the visual display of the Switch.
+    */
+    toggleSwitchControl: function () {
+        var onClass = DOMUtil.getClassFromSelector(Const.CLASS.SWITCH_ON);
+        this.switchControl.toggleClass(onClass);
+    },
+
+    /**
+        Toggle the internal state of the Switch.
+    */
+    toggleSwitchCheckbox: function () {
+        var checkbox = this.switchControl.find(Const.CLASS.SWITCH_CHECKBOX);
+        // TODO: add html property constants.
+        checkbox.prop("checked", this.isSwitchOn());
+    },
+
+    /**
+        Initialize the components controlled by the Switch.
+        @param {boolean} flipOn initialize the Switch components to flipOn
+    */
+    initSwitchComponents: function (flipOn) {
+        this.toggleSwitchCheckbox(flipOn);
+    },
+
+    /**
+        Toggle the components controlled by the Switch.
+        @param {boolean} overrideAndFlipOn optionally specify on/off state
+    */
+    toggleSwitchComponents: function (overrideAndFlipOn) {
+        var flipOn = this.isSwitchOn();
+        if (typeof(overrideAndFlipOn) !== "undefined") {
+            flipOn = overrideAndFlipOn;
+        }
+
+        // for reasons passing understanding, toggle does NOT work for hiding
+        // and showing these elements. fuck it we're doing it live!
+        if (flipOn) {
+            this.rivalryTagsGroup.show();
+            this.camaraderieTagsGroup.hide();
+        } else {
+            this.rivalryTagsGroup.hide();
+            this.camaraderieTagsGroup.show();
+        }
+    },
+
+    /**
+        Refresh the Scroller for this dialog.
+    */
+    refreshScroller: function () {
         if (this.scroller !== null) {
             this.scroller.refresh();
         }
     }
+
 });
 
 return {
