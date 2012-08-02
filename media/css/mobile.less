@@ -111,6 +111,7 @@
 .mainHeaderText() {
     .subheaderFont();
     color: @white;
+    .emboss-text;
 }
 
 .headerText() {
@@ -388,26 +389,26 @@ form input {
 * ELEMENT COMPONENTS - NO POSITIONING!!!
 ************************************************************/
 @thumbnailSide: 25px;
+@buttonImageSide: 37px;
+@submitButtonWidth: 120px;
+
 .thumbnail{
     width: @thumbnailSide;
 }
 
-.close-button {
-    .hidden-content;
-   
-    width: 15px;
-    height: 15px;
-}
-
 .submit-button {
+    .mainHeaderText();
+    .border-radius(24px);
+    height: @smallLineHeight;
+    width: @submitButtonWidth;
+    background-color: @red;
 }
 
-@createButtonSide: 37px;
 .create-button {
     .hidden-content;
     .background-image-wrapper(
-            @createButtonSide,
-            @createButtonSide,
+            @buttonImageSide,
+            @buttonImageSide,
             'createButton.png',
             transparent);
     border: 0px; // to cancel generic button properties
@@ -415,9 +416,27 @@ form input {
 
 .create-button:active {
     .background-image-wrapper(
-            @createButtonSide,
-            @createButtonSide,
+            @buttonImageSide,
+            @buttonImageSide,
             'createButtonPressed.png',
+            transparent);
+}
+
+.close-button {
+    .hidden-content;
+    .background-image-wrapper(
+            @buttonImageSide,
+            @buttonImageSide,
+            'cancelButton.png',
+            transparent);
+    border: 0px;
+}
+
+.close-button:active {
+    .background-image-wrapper(
+            @buttonImageSide,
+            @buttonImageSide,
+            'cancelButtonPressed.png',
             transparent);
 }
 
@@ -484,6 +503,8 @@ form input {
     .mainHeaderText(); 
     text-align: center;
 
+    width: @screenWidth;
+    height: @normalLineHeight;
     line-height: @normalLineHeight;
     vertical-align: middle;
 }
@@ -711,8 +732,7 @@ form input {
 }
 
 #tab-header .create-button {
-    .vertically-centered-image(absolute, @createButtonSide);
-
+    .vertically-centered-image(absolute, @buttonImageSide);
     right: @pagePadding;
 }
 
@@ -887,16 +907,16 @@ form input {
 }
 
 .dialog-header {
-    width: @screenWidth;
-    height: @normalLineHeight;
     background-color: @red;
     // apply gradient
 }
 
-.dialog .close-button {
+.dialog-header .close-button {
+    //.vertically-centered-image(absolute, @buttonImageSide);
+    //right: @pagePadding;
     position: absolute;
-    right: @linePadding;
-    top: @linePadding;
+    right: 8px;
+    top: 4px;
 }
 
 .dialog-content {
