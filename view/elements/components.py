@@ -293,14 +293,31 @@ class SwitchInput(Div):
         self.append_child(CheckboxInput(name, value, is_on))
 
 
+    def _knob(self):
+        """ Private helper returns SwitchInput's knob Span child.
+
+        Note: if more children are appended before knob Span, update
+        this method to reflect its child rank in the Div.
+
+        """
+        return self.first_child()
+
+
+    def _switch(self):
+        """ Private helper returns SwitchInput's CheckboxInput child.
+
+        Note: if more children are appended after CheckboxInput, update
+        this method to reflect its child rank in the Div.
+
+        """
+        return self.last_child()
+
+
     def set_on(self, is_on):
         """ Set the SwitchInput to on/off.
 
         Provide a wrapper for subclasses who don't have a reference to
         this Element's child CheckboxInput.
 
-        Note: if more children are appended after CheckboxInput, update
-        this method to reflect CheckboxInput's child rank in the Div.
-
         """
-        self.last_child().set_checked(is_on)
+        self._switch().set_checked(is_on)
