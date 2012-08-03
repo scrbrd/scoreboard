@@ -19,30 +19,25 @@ class SqDatabase(object):
     and interface for subclasses to implement. This database is
     abstract and should not be instantiated directly.
 
-    Required:
+    Variables:
     str     _host       the host of the database
     str     _port       the port of the database
-
-    Optional:
     str     _protocol   the protocol of the database
 
     """
-
-    _host = None
-    _port = None
-    _protocol = PROTOCOL.HTTP
 
 
     def __init__(self, host, port):
         """ Construct a new database object.
 
         Required:
-        string host         host of the database
-        string port         port of the database
+        str host         host of the database
+        str port         port of the database
 
         """
         self._host = host
         self._port = port
+        self._protocol = PROTOCOL.HTTP
 
 
     def set_protocol(self, protocol):

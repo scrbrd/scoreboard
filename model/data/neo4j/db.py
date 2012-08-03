@@ -339,10 +339,13 @@ class Neo4jDatabase(SqDatabase):
 
 class SecureNeo4jDatabase(Neo4jDatabase):
 
-    """ Implement a secure version of Neo4jDatabase. """
+    """ Implement a secure version of Neo4jDatabase.
 
-    _username = None
-    _password = None
+    Variables:
+    str _username   the username to connect to the url of the database.
+    str _password   the password to connect to the url of the database.
+
+    """
 
 
     def __init__(self, host, port, username, password):
