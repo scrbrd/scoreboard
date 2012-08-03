@@ -27,12 +27,10 @@ class Game(SqNode):
     outgoing SqEdge. In all cases, the incoming SqEdge complements
     are also required.
 
-    Optional:
+    Variables:
     dict    _opponents     store loaded Opponents by id
 
     """
-
-    _opponents = None
 
 
     @property

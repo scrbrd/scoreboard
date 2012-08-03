@@ -34,14 +34,9 @@ class SqObject(object):
     str     _type           SqObject type
     dict    _properties     SqObject properties from GraphObject
     int     _created_ts     Time that SqObject was created.
+    int     _updated_ts     Time that SqObject was updated.
 
     """
-
-    _id = None
-    _type = None
-    _properties = None
-    _created_ts = None
-    _updated_ts = None
 
 
     def __init__(self, graph_object):
@@ -108,11 +103,9 @@ class SqNode(SqObject, StatComputer):
     metrics.
 
     Optional:
-    dict    edges       this SqNode's outgoing SqEdges keyed on id
+    dict    _edges       this SqNode's outgoing SqEdges keyed on id
 
     """
-
-    _edges = None
 
 
     def __init__(self, graph_object):
@@ -562,26 +555,18 @@ class SqEdge(SqObject):
 
     """
 
-    _from_node_id = None
-    _to_node_id = None
-    #_is_one_way = None
-    #_is_unique = None
 
-    # FIXME remove this variable when SqEdges are fully implemented
-    _properties = {}
-
-
-    def __init__(self, graph_object):
+    def __init__(self, graph_edge):
         """ Construct a SqEdge extending SqObject. """
-        super(SqEdge, self).__init__(graph_object)
+        super(SqEdge, self).__init__(graph_edge)
 
-        self._from_node_id = graph_object.from_node_id()
-        self._to_node_id = graph_object.to_node_id()
-        #self._is_one_way = graph_object.is_one_way()
-        #self._is_unique = graph_object.is_unique()
+        self._from_node_id = graph_edge.from_node_id()
+        self._to_node_id = graph_edge.to_node_id()
+        #self._is_one_way = graph_edge.is_one_way()
+        #self._is_unique = graph_edge.is_unique()
 
         # FIXME remove whenSqEdges are fully implemented
-        self._properties = deepcopy(graph_object.properties())
+        self._properties = deepcopy(graph_edge.properties())
 
         # TODO: move as much error checking from reader/writer into here as
         # possible to avoid repetitive code and to grant class hierarchy
@@ -628,9 +613,10 @@ class SqObjectPropertyError(Exception):
     we failed to retrieve the property from our own database and from
     third party APIs like Facebook as well.
 
-    """
+    Required:
+    str     reason      the reason for the error
 
-    reason = None
+    """
 
 
     def __init__(self, parameter, description):
@@ -648,9 +634,10 @@ class SqObjectNotLoadedError(Exception):
     not yet been loaded from the data layer and an attempt has been
     made to access it.
 
-    """
+    Required:
+    str     reason      the reason for the error
 
-    reason = None
+    """
 
 
     def __init__(self, reason):

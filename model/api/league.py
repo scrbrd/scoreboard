@@ -29,9 +29,6 @@ class League(sqobject.SqNode):
 
     """
 
-    _opponents = None
-    _games = None
-
 
     @property
     def name(self):

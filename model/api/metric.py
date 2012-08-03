@@ -29,9 +29,13 @@ METRIC_TYPE = _MetricType()
 
 class Metric(object):
 
-    """ Metric is a generic measurement for Games and Opponents. """
+    """ Metric is a generic measurement for Games and Opponents.
 
-    _type = None
+    Required:
+    str     _type       the type of result
+
+    """
+
 
     def __init__(self, metric_value):
         """ Construct an abstract Metric. """
@@ -41,6 +45,7 @@ class Metric(object):
     @property
     def type(self):
         """ Return the type of Metric. """
+        # TODO: util.assert_loaded(self._type)
         return self._type
 
 
@@ -68,25 +73,29 @@ class MetricFactory(object):
 
 class DiscreteMetric(Metric):
 
-    """ DiscreteMetric is a measurement with a list of possible values. """
+    """ DiscreteMetric is a measurement with a list of possible values.
 
-    _values = None
+    Optional:
+    list    _values     an optional list of values for a metric.
+
+    """
 
 
     @property
     def values(self):
-        """ Return a list of values for this Metric. This list might not
-        exist. """
+        """ Return a list of values for this Metric."""
+        # TODO: Metric.assert_loaded(self._values)
         return self._values
-
-
 
 
 class ResultMetric(DiscreteMetric):
 
-    """ ResultMetric is the result of a Game. """
+    """ ResultMetric is the result of a Game.
 
-    _result = None
+    Required:
+    str     _result     the result of a game.
+
+    """
 
 
     def __init__(self, result):
@@ -96,17 +105,16 @@ class ResultMetric(DiscreteMetric):
         str     result      A Game's result.
 
         """
+        self._type = METRIC_TYPE.RESULT
         self._values = [
                 API_EDGE_TYPE.WON,
                 API_EDGE_TYPE.LOST,
                 API_EDGE_TYPE.TIED,
                 API_EDGE_TYPE.PLAYED
                 ]
-        self._type = METRIC_TYPE.RESULT
+        self._result = result
 
-        if result in self._values:
-            self._result = result
-        else:
+        if result not in self._values:
             raise InputError("Result", result)
 
 

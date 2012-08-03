@@ -11,9 +11,11 @@ Provides:
     def construct_edges
 
 """
+
 # TODO: when SqEdge subclasses exist, uncomment this
 # TODO: when SqEdge subclasses exist, don't import SqEdge
 import sqobject
+
 
 # Singleton SqFactory
 factory = None
@@ -28,16 +30,17 @@ class SqFactory(object):
 
     """ SqFactory constructs all the API Nodes. It's a Singleton.
 
+    Required:
     dict node_functions     all the API Node constructors are passed to
                             SqFactory so it doesn't have to import them.
 
     """
-    node_functions = {}
 
 
     def __init__(self, nodes_functions_dict):
         """ Create the Singleton SqFactory. """
         self.node_functions = nodes_functions_dict
+
         global factory
         factory = self
 

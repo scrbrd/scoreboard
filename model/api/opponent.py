@@ -78,3 +78,10 @@ class Opponent(object):
         """ Return an int representing this opponent's win streak. """
         raise NotImplementedError(
                 "Interface Method: IMPLEMENTOR MUST OVERRIDE")
+
+
+    @property
+    def current_result_streak(self):
+        """ Return the larger of win streak or result streak. """
+        raise NotImplementedError(
+                "Interface Method: IMPLEMENTOR MUST OVERRIDE")

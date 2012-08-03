@@ -24,7 +24,10 @@ class Person(sqobject.SqNode):
     Provide access to the attributes of a Person, including fields and
     edges connecting to other nodes.
 
-    Required:
+    Optional:
+    dict    _leagues
+
+    Required 'properties' keys:
     int     fb_id           Facebook user ID
     str     name            full name
     str     first_name      first name
@@ -34,8 +37,6 @@ class Person(sqobject.SqNode):
     url     picture         profile picture url
 
     """
-
-    _leagues = None
 
 
     def outgoing_edge_types(self):

@@ -19,8 +19,6 @@ class Player(person.Person, opponent.Opponent):
     Provide access to the attributes of a Player, including fields and
     edges connecting to other nodes.
 
-    Required:
-
     """
 
 
@@ -130,7 +128,7 @@ class Player(person.Person, opponent.Opponent):
 
 
     def compute_current_result_streak(self):
-        """ Return the larger or current_win_streak or current_loss_streak. """
+        """ Return the larger of current_win_streak or current_loss_streak. """
         win_streak = self.compute_current_win_streak()
         loss_streak = self.compute_current_loss_streak()
         return max((win_streak, -loss_streak), key=lambda x: abs(x))
