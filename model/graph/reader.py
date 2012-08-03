@@ -112,7 +112,7 @@ def get_nodes_by_index(key, value, node_type_return_filter=None):
                 key,
                 value,
                 node_type_return_filter)
-        if node_dicts == None:
+        if node_dicts is None:
             node_dicts = {}
 
         graph_nodes = {}
@@ -251,7 +251,7 @@ def get_edge(edge_id):
             if errors:
                 raise GraphOutputError(
                         errors,
-                        "Required fields or properties missing from GraphEdge.")
+                        "Required fields/properties missing from GraphEdge.")
 
             edge = GraphEdge(
                     edge_dict[EDGE_PROPERTY.ID],

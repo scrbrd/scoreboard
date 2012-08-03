@@ -33,7 +33,7 @@ class GraphObject(object):
     Provide access to the common attributes of the GraphNode and
     GraphEdge subclasses.
 
-    Required:
+    Variables:
     id      _id             GraphObject id
     str     _type           GraphObject type
     ts      _created_ts     when was this GraphObject created
@@ -43,16 +43,16 @@ class GraphObject(object):
 
     """
 
-    _id = None
-    _type = None
-    _created_ts = None
-    _updated_ts = None
-    _deleted_ts = None
-    _properties = None
-
 
     def __init__(self, id, type, properties):
-        """ Construct an abstract GraphObject. """
+        """ Construct an abstract GraphObject.
+
+        Required:
+        id      id              GraphObject id
+        str     type            GraphObject type
+        dict    properties      GraphObject properties dictionary.
+
+        """
         self._id = id
         self._type = type
 
@@ -106,16 +106,22 @@ class GraphNode(GraphObject):
     Provide access to the attributes of a GraphNode not shared with
     GraphEdge via the superclass GraphObject.
 
-    Required:
+    Variables:
     dict    _edges      dict of GraphEdges keyed on id
 
     """
 
-    _edges = None
-
 
     def __init__(self, id, type, properties, edges):
-        """ Construct a GraphNode extending GraphObject. """
+        """ Construct a GraphNode extending GraphObject.
+
+        Required:
+        int     id              id of GraphNode
+        str     type            type of GraphNode
+        dict    properties      dict keyed on property name
+        dict    edges           a dict of GraphEdges keyed on id
+
+        """
         super(GraphNode, self).__init__(id, type, properties)
 
         self._edges = {}
@@ -135,7 +141,12 @@ class GraphNode(GraphObject):
 
 
     def set_edges(self, edges):
-        """ Set a GraphNode's dict of GraphEdges. """
+        """ Set a GraphNode's dict of GraphEdges.
+
+        Required:
+        dict    edges           a dict of GraphEdges keyed on id
+
+        """
         self._edges = edges
 
 
@@ -152,14 +163,18 @@ class GraphEdge(GraphObject):
 
     """
 
-    _from_node_id = None
-    _to_node_id = None
-    #_is_one_way = None
-    #_is_unique = None
-
 
     def __init__(self, id, type, properties, from_node_id, to_node_id):
-        """ Construct a GraphEdge extending GraphObject. """
+        """ Construct a GraphEdge extending GraphObject.
+
+        Required:
+        int     id              GraphEdge's id
+        str     type            type of GraphEdge
+        dict    properties      dict keyed on property name
+        int     from_node_id    from GraphNode id
+        int     to_node_id      to GraphNode id
+
+        """
         super(GraphEdge, self).__init__(id, type, properties)
 
         self._from_node_id = from_node_id
@@ -195,32 +210,34 @@ class GraphEdge(GraphObject):
 
 class GraphPath(object):
 
-    """ GraphPath is a subclass of the __new__ python object.
+    """ GraphPath is a subclass of python object.
 
     Provide access to the attributes of a GraphPath, which represents a
     traversal from a specified start node through an edge type pruner
     to a set of nodes described by a node type return filter.
 
-    Required:
-    id      _start_node_id  id of starting GraphNode for this traversal
-    dict    _path           GraphNodes keyed on depth and id
-    int     _depth          degrees separating start and end of path
+    Variables:
+    id      start_node_id  id of starting GraphNode for this traversal
+    dict    path           GraphNodes keyed on depth and id
+    int     depth          degrees separating start and end of path
 
     """
 
-    _start_node_id = None
-    _path = None
-    _depth = None
-
 
     def __init__(self, start_node_id, path):
-        """ Construct a GraphPath. """
+        """ Construct a GraphPath.
+
+        Required:
+        id      start_node_id   the id of the GraphNode that start the path
+        dict    path            a dict of GraphNodes keyed on depth and id
+
+        """
         self._start_node_id = start_node_id
+        self._path = {}
 
         # infer depth member from path dict
+        # TODO: can't we just generate this on the fly?
         self._depth = (len(path) - 1)
-
-        self._path = {}
 
         # load nodes and edges at each depth
         for depth in range(self._depth + 1):
@@ -243,7 +260,6 @@ class GraphPath(object):
         """ Return a dict describing a path from start node. """
         # TODO: determine whether to expose path or just rely on convenience
         # methods, since they are more explicit and easier to read.
-
         return self._path
 
 
@@ -291,17 +307,21 @@ class GraphPrototype(object):
 
     """
 
-    _type = None
-    _properties = None
-
 
     def __init__(self, type, properties):
-        """ Construct an abstract GraphPrototype. """
+        """ Construct an abstract GraphPrototype.
+
+        Required:
+        str     type            see GraphObject type
+        dict    properties      see GraphObject properties
+
+        """
         self._type = type
         self._properties = properties
 
         # TODO: raise GraphInputError on failure to provide required field
         # TODO: raise GraphInputError when disallowed fields are provided
+
 
     def type(self):
         """ Return a GraphPrototype's type. """
@@ -341,18 +361,23 @@ class GraphProtoEdge(GraphPrototype):
     Provide access to the attributes of GraphProtoEdge not shared with
     GraphProtoNode via the superclass GraphPrototype.
 
-    Required:
-    id   _from_node_id  see GraphEdge from_node_id
-    id   _to_node_id    see GraphEdge to_node_id
+    Variables:
+    id   from_node_id  see GraphEdge from_node_id
+    id   to_node_id    see GraphEdge to_node_id
 
     """
 
-    _from_node_id = None
-    _to_node_id = None
-
 
     def __init__(self, type, properties, from_node_id, to_node_id):
-        """ Construct a GraphProtoEdge extending GraphPrototype. """
+        """ Construct a GraphProtoEdge extending GraphPrototype.
+
+        Required:
+        str     type            see GraphObject type
+        dict    properties      see GraphObject properties
+        id      from_node_id    the GraphNode that the edge points to
+        id      to_node_id      the GraphNode that the edge comes from
+
+        """
         super(GraphProtoEdge, self).__init__(type, properties)
 
         self._from_node_id = from_node_id
@@ -390,12 +415,10 @@ class GraphError(Exception):
     Provide an exception superclass from which all graph-related
     errors should inherit.
 
-    Required:
+    Variables:
     str     reason      what went wrong?
 
     """
-
-    reason = None
 
 
     def __init__(self, error, parameters, description):

@@ -32,4 +32,3 @@ class _GraphProperty(object):
 
 
 GRAPH_PROPERTY = _GraphProperty()
-
