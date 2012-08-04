@@ -108,8 +108,7 @@ class LoginHandler(BaseHandler, tornado.auth.FacebookGraphMixin):
         if not raw_user:
             raise tornado.web.HTTPError(500, "Facebook auth failed.")
 
-        model = FacebookAuthModel(self.current_user)
-        model.set_facebook_user(raw_user)
+        model = FacebookAuthModel(self.current_user, raw_user)
         model.set_ip(self.request.remote_ip)
         model.set_locale(self.locale.code)
 

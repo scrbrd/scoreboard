@@ -34,9 +34,8 @@ class CreateGameHandler(QueryHandler):
         metrics_by_opponent = parameters[PARAMETER.METRICS_BY_OPPONENT]
 
         # create game in model
-        model = CreateGameModel(self.current_user)
+        model = CreateGameModel(self.current_user, metrics_by_opponent)
         model.set_league_id(league_id)
-        model.set_metrics_by_opponent(metrics_by_opponent)
         model.dispatch()
 
         self.write({"is_success": model.success})

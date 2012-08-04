@@ -15,18 +15,12 @@ from base import ReadModel
 
 class LeagueModel(ReadModel):
 
-    """ Load and prepare data for the View to render a League.
-
-    Required:
-    Opponents   _opponents      Opponents sorted by Win Count
-    str         _rank_field     Field that Opponents are sorted by
-
-    """
+    """ Load and prepare data for the View to render a League. """
 
 
     def __init__(self, session):
         """ Construct a ReadModel. """
-        super(ReadModel, self).__init__(session)
+        super(LeagueModel, self).__init__(session)
 
         self._aggregations = {
                 "standings": None,

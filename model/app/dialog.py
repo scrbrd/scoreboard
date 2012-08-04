@@ -19,13 +19,25 @@ class DialogModel(ReadModel):
     """ Return input fields for generating a dialog form.
 
     Required:
-    dict    _constants      node context type, result edge types
+    str     _won_result
+    str     _lost_result
+    str     _played_result
 
     """
 
-    _won_result = None
-    _lost_result = None
-    _played_result = None
+
+    def __init__(self, session):
+        """ Construct a DialogModel.
+
+        Required:
+        dict    session     all the User/Person session data
+
+        """
+        super(DialogModel, self).__init__(session)
+
+        self._won_result = None
+        self._lost_result = None
+        self._played_result = None
 
 
     def load(self):

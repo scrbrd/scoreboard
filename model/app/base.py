@@ -15,13 +15,19 @@ class BaseModel(object):
     BaseModels wrap around returned data to provide controlled access
     outside of model.
 
-    """
+    Required:
+    dict    _session    all the user data that's stored as a cookie
 
-    _session = None
+    """
 
 
     def __init__(self, session):
-        """ BaseModel is an abstract superclass. """
+        """ BaseModel is an abstract superclass.
+
+        Required:
+        dict    session     all the User/Person session data
+
+        """
         self._session = session
 
 
@@ -53,10 +59,20 @@ class ReadModel(BaseModel):
 
     """
 
-    _context = None
-    _aggregations = None
-    _objects = None
-    _rivals = None
+
+    def __init__(self, session):
+        """ ReadModel is an Abstract superclass.
+
+        Required:
+        dict    session     all the User/Person session data
+
+        """
+        super(ReadModel, self).__init__(session)
+
+        self._context = None
+        self._aggregations = None
+        self._objects = None
+        self._rivals = None
 
 
     def dispatch(self):
@@ -92,12 +108,22 @@ class WriteModel(BaseModel):
 
     """ Write data to a model and return success.
 
-    Required:
-    bool    success     was this dispatched write successful?
+    Optional:
+    SqNode  _object     the newly created object
 
     """
 
-    _model = None
+
+    def __init__(self, session):
+        """ WriteModel is an Abstract superclass.
+
+        Required:
+        dict    session     all the User/Person session data
+
+        """
+        super(WriteModel, self).__init__(session)
+
+        self._object = None
 
 
     def load(self):
@@ -108,4 +134,4 @@ class WriteModel(BaseModel):
     @property
     def success(self):
         """ Return whether this Model successfully dispatched a write. """
-        return bool(self._model)
+        return bool(self._object)

@@ -20,20 +20,39 @@ class CreateGameModel(WriteModel):
     each node type, or we might want to keep this more generic.
 
     Required:
+    dict    _session                the User/Person data keyed by property
+    dict    _metrics_by_opponent    metrics dicts keyed on opponent id
+
+    Optional:
     int     _league_id              the league of the new Game
-    dict    _metrics_by_opponent    Metrics dicts keyed on Opponent id
 
     """
 
-    _league_id = None
-    _metrics_by_opponent = {}
+
+    def __init__(self, session, metrics_by_opponent):
+        """ BaseModel is an abstract superclass.
+
+        Required:
+        dict    session                 all the User/Person session data
+        dict    metrics_by_opponent     metrics dict keyed on opponent id
+
+        """
+        super(CreateGameModel, self).__init__(session)
+
+        self._metrics_by_opponent = {}
+        self._league_id = None
+
+        # convert the results into API_EDGE_TYPEs
+        for opponent_id, metrics in metrics_by_opponent.items():
+            metric_objects = MetricFactory.produce_metrics(metrics)
+            self._metrics_by_opponent[opponent_id] = metric_objects
 
 
     def dispatch(self):
         """ Create new Game in database and return it. """
-        self._model = Game.create_game(
+        self._object = Game.create_game(
                 self._league_id,
-                self.session.person_id,
+                self._session.person_id,
                 self._metrics_by_opponent)
 
 
@@ -42,20 +61,7 @@ class CreateGameModel(WriteModel):
         self._league_id = league_id
 
 
-    def set_metrics_by_opponent(self, metrics_by_opponent):
-        """ Set the Metrics for each Opponent for the Game.
-
-        Required:
-        dict    metrics_by_opponent Metrics dicts keyed on Opponent  id
-
-        """
-        # convert the results into API_EDGE_TYPEs
-        for opponent_id, metrics in metrics_by_opponent.items():
-            metric_objects = MetricFactory.produce_metrics(metrics)
-            self._metrics_by_opponent[opponent_id] = metric_objects
-
-
     @property
     def game(self):
         """ Return a newly created Game. """
-        return self._model
+        return self._object

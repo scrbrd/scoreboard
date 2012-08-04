@@ -12,10 +12,7 @@ to make use of Facebook's authentication system.
 
 import tornado.web
 
-from exceptions import NotImplementedError
-
 from model.constants import NODE_PROPERTY, PROPERTY_VALUE, THIRD_PARTY
-
 from model.api.user import User
 from model.api.person import Person
 
@@ -24,7 +21,7 @@ from base import BaseModel
 
 class AuthModel(BaseModel):
 
-    """ Authenticate a User. Prompt for authorization if needed.
+    """ Authenticate a User.
 
     Create, fetch, and/or prepare all necessary data for storing a
     cookie that can be used for authentication and analytics tracking on
@@ -36,25 +33,47 @@ class AuthModel(BaseModel):
     to implement our own login, we need only implement those same
     credentials-related methods here.
 
+    Required:
+
+    Optional:
+    User    _existing_user      the User object that corresponds to the
+                                raw_user
+    User    _user               the User object for this raw_user
+    Person  _person             the Person object for this raw_user
+    boolean _is_new             True if the User has just been created
+    str     _ip                 the ip of the user
+    str     _locale             the locale of the user
+
+    Constants:
+    int     MAX_ATTEMPTS        the number of tries to see if the user is in
+                                our database already
+
     """
 
     MAX_ATTEMPTS = 5
 
-    _user = None
-    _person = None
-    _existing_user = None
-    _raw_user = None
-    _ip = None
-    _locale = None
-    _is_new = False
 
-    # TODO: remove this when removing default league!
-    _default_league_id = None
+    def __init__(self, session, raw_user):
+        """ Construct a model that authenticates a user.
 
+        Required:
+        dict    session     a dictionary representation of the user's session
+        ???     raw_user    a raw user object from authentication
 
-    def set_raw_user(self, raw_user):
-        """ Set the raw User credentials for the Session to be created. """
+        """
+        super(AuthModel, self).__init__(session)
+
         self._raw_user = raw_user
+
+        self._existing_user = None
+        self._user = None
+        self._person = None
+        self._is_new = False
+        self._ip = None
+        self._locale = None
+
+        # TODO: remove this when removing default league!
+        self._default_league_id = None
 
 
     def set_ip(self, ip):
@@ -124,6 +143,10 @@ class AuthModel(BaseModel):
         raise NotImplementedError("Not Yet Implemented: SUBCLASS, OVERRIDE!")
 
 
+    def _set_raw_user(self, raw_user):
+        """ Set the User for the Session to be created. """
+        self.set_raw_user(raw_user)
+
     @property
     def user(self):
         """ Return the User for this request. """
@@ -144,7 +167,8 @@ class AuthModel(BaseModel):
 
 class FacebookAuthModel(AuthModel):
 
-    """ Authenticate a Facebook User. Prompt for authorization if needed.
+    """ Authenticate a Facebook User, and potentially have them authorize our
+    application to get that authentication.
 
     Lookup and/or create/update a User on login with Facebook.
 
@@ -199,8 +223,3 @@ class FacebookAuthModel(AuthModel):
             Person.join_league(player.id, league_id)
 
         return (user, player)
-
-
-    def set_facebook_user(self, fb_user):
-        """ Set the Facebook User for the Session to be created. """
-        self.set_raw_user(fb_user)
