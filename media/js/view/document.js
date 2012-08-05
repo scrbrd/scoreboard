@@ -137,8 +137,6 @@ var DocView = Backbone.View.extend({
                     dialogHTML,
                     sessionModel,
                     pageStateModel);
-            // REMOVE THIS FIXME XXX just for dev
-            that.dialog.show();
         });
     },
     

@@ -154,7 +154,6 @@ class Element(object):
 
     """
 
-    _element = None
 
     def __init__(self, tag):
         """ Construct an abstract Element. """
@@ -520,10 +519,8 @@ class Element(object):
     @staticmethod
     def to_string(element):
         """ Convenience wrapper to standardize on utf-8 and html. """
-        # TODO: elementree and celementree differ; does method="html" exist?
-        #return ET.tostring(element, "utf-8", "html")
         element.assert_valid_root()
-        return ET.tostring(element.element(), "utf-8")
+        return ET.tostring(element.element(), "utf-8", "html")
 
 
 class Div(Element):
@@ -534,15 +531,6 @@ class Div(Element):
     def __init__(self):
         """ Construct a <div>. """
         super(Div, self).__init__(HTML_TAG.DIV)
-
-
-    def assert_valid_root(self):
-        """ Return a boolean if the Div is valid. """
-        if all([
-                self._text() is None,
-                len(self.children()) == 0,
-                ]):
-            raise InvalidElementError(self, "Div has no text or children.")
 
 
 class Span(Element):
