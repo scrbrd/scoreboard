@@ -5,11 +5,17 @@ FeedSection of a Tab.
 
 """
 
-from view.elements.base import Div
+from view.elements.base import Div, Button
 from view.app.components import OpponentGroupsSection, RelativeDateComponent
+from view.app.facebook import FacebookCommentsBox
 
 from constants import COMPONENT_CLASS
 from components import PlayedHeadline, ResultHeadline, MainStorySection
+
+
+# TODO: get this from handlers in production
+APP_URL = "http://onscoreboard.com/"
+STORY_SLUG = "story/"
 
 
 class Story(Div):
@@ -17,19 +23,57 @@ class Story(Div):
     """ Story is a single entry for the FeedDiv, extends <div>. """
 
 
-    def __init__(self):
-        """ Construct a Story. """
+    def __init__(self, object):
+        """ Construct a Story.
+
+        Required:
+        SqNode  object  Object to build story around
+
+        """
         super(Story, self).__init__()
+        self._photo_section = None
+        self._main_section = MainStorySection()
         self.append_class(COMPONENT_CLASS.STORY)
+
+        self._construct_story_body(object)
+
+        # add time icon
+        self._main_section.append_child(
+                RelativeDateComponent(object.created_ts))
+
+        # add comments link to story
+        feedbackButton = Button()
+        feedbackButton.append_class("feedback-button")
+        self._main_section.append_child(feedbackButton)
+
+        # add photo and main section to Story
+        self.append_child(self._photo_section)
+        self.append_child(self._main_section)
+
+        # add feedback section to story
+        url = "{}{}{}".format(APP_URL, STORY_SLUG, object.id)
+        self.append_child(FacebookCommentsBox(url))
+
+
+    def _construct_story_body(self, object):
+        """ Construct the body of the story.
+
+        Required:
+        SqNode  object  Object to build story around
+
+        """
+        raise NotImplementedError("Must Override in a subclass.")
 
 
 class GameStory(Story):
 
     """ Game Story is a single entry for a played game. """
 
+    # TODO: put these constants somewhere else
     WON = 'won_by'
     LOST = 'lost_by'
     PLAYED = 'played_by'
+
 
     def __init__(self, game):
         """ Construct a GameStory.
@@ -38,11 +82,17 @@ class GameStory(Story):
         object  game    the Game that the story pulls data from
 
         """
-        super(GameStory, self).__init__()
+        super(GameStory, self).__init__(game)
         self.append_class(COMPONENT_CLASS.GAME_STORY)
 
-        main_section = MainStorySection()
 
+    def _construct_story_body(self, game):
+        """ Construct the body of the GameStory.
+
+        Required:
+        object  game    the Game that the story pulls data from
+
+        """
         # FIXME: this all breaks the contract that the view doesnt get
         # access to non-property methods in model.api.Game.
 
@@ -58,24 +108,22 @@ class GameStory(Story):
             (main_players, other_players) = self._split_camaraderie_players(
                     game,
                     player_ids)
-            self.append_child(
-                    OpponentGroupsSection(main_players, other_players))
+            self._photo_section = OpponentGroupsSection(
+                    main_players,
+                    other_players)
 
             # Create the Headline with all players.
             all_players = game.get_opponents(player_ids)
-            main_section.append_child(PlayedHeadline(all_players))
+            self._main_section.append_child(PlayedHeadline(all_players))
 
         else:
             # Competitive Game
             winners = game.get_opponents(winner_ids)
             losers = game.get_opponents(loser_ids)
 
-            self.append_child(OpponentGroupsSection(winners, losers))
-            main_section.append_child(ResultHeadline(winners, losers))
+            self._photo_section = OpponentGroupsSection(winners, losers)
+            self._main_section.append_child(ResultHeadline(winners, losers))
 
-        # add time icon
-        main_section.append_child(RelativeDateComponent(game.created_ts))
-        self.append_child(main_section)
 
     @staticmethod
     def _split_camaraderie_players(game, player_ids):
