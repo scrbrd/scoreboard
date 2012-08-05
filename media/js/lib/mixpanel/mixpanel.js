@@ -51,7 +51,7 @@ var MIXPANEL_TOKEN =  "21e3cfefb46bbded0d61eb0dca4bcec7";
 var initializeMixPanel = (function () {
     mixpanel.init(MIXPANEL_TOKEN);
     mixpanel.set_config({
-        debug: true // adds a bunch of console.log output
+        //debug: true // adds a bunch of console.log output
     });
 }());
 

@@ -21,25 +21,21 @@ class Session(object):
 
     """
 
-    # required fields
-    _user_id = None
-    _person_id = None
-
-    # optional fields
-    _is_new = None
-    _access_token = None
-    _fb_id = None
-    _gender = None
-    _timezone = None
-    _ip = None
-    _locale = None
-    _version = None
 
 
     def __init__(self, user_id, person_id):
         self._user_id = user_id
         self._person_id = person_id
 
+        # optional fields
+        self._is_new = None
+        self._access_token = None
+        self._fb_id = None
+        self._gender = None
+        self._timezone = None
+        self._ip = None
+        self._locale = None
+        self._version = None
 
     @property
     def user_id(self):
