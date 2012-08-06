@@ -87,6 +87,7 @@ var DocView = Backbone.View.extend({
         var sessionElem = $(Const.MODEL_ID.SESSION);
         if (sessionElem.length > 0) {
             model.setRivals(sessionElem.data(Const.DATA.RIVALS));
+            model.setSports(sessionElem.data(Const.DATA.SPORTS));
             model.setPersonID(sessionElem.data(Const.DATA.PERSON_ID));
             EventDispatcher.trigger(Event.SERVER.UPDATED_SESSION, model);
         }

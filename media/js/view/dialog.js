@@ -40,6 +40,7 @@ define(
 
 var MODEL_EVENT = {
     CHANGE_RIVALS: "change:" + Const.DATA.RIVALS,
+    CHANGE_SPORTS: "change:" + Const.DATA.SPORTS,
     CHANGE_CONTEXT_ID: "change:" + Const.DATA.ID
 };
 
@@ -82,6 +83,10 @@ var DialogView = Backbone.View.extend({
 
         this.sessionModel.on(
                 MODEL_EVENT.CHANGE_RIVALS,
+                this.render,
+                this);
+        this.sessionModel.on(
+                MODEL_EVENT.CHANGE_SPORTS,
                 this.render,
                 this);
         this.pageStateModel.on(

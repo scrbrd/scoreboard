@@ -28,8 +28,19 @@ class SessionModel(DataInput):
             view_rivals.append({
                     SQ_DATA.ID: r.id,
                     SQ_DATA.NAME: r.full_name,
-                    SQ_DATA.PICTURE: r.picture})
+                    SQ_DATA.PICTURE: r.picture,
+                    })
         self.set_data(SQ_DATA.RIVALS, json.dumps(view_rivals))
+
+        # set sports data for sport selection
+        view_sports = []
+        for sport_id, sport_name in model.sports.items():
+            view_sports.append({
+                    SQ_DATA.ID: sport_id,
+                    SQ_DATA.NAME: sport_name,
+                    SQ_DATA.PICTURE: "",
+                    })
+        self.set_data(SQ_DATA.SPORTS, json.dumps(view_sports))
 
         # set person id from session
         pid = model.session.person_id

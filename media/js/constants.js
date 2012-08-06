@@ -95,6 +95,7 @@ var constants = {
         METRICS_BY_OPPONENT:    "metrics-by-opponent",
         PICTURE:                "picture",
         RIVALS:                 "rivals",
+        SPORTS:                 "sports",
         PLAYER:                 "player",
         PAGE_TYPE:              "page-type",
         PAGE_NAME:              "page-name"

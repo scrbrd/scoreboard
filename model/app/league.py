@@ -5,7 +5,10 @@ aggregated standings and/or activity and a list of obejcts for that League
 context.
 
 """
+
 from util.dev import print_timing
+
+from model.api.sports import SPORT
 from model.api.person import Person
 from model.api.game import Game
 from model.api.league import League
@@ -84,6 +87,9 @@ class LeagueModel(ReadModel):
 
         # load opponents into rivals as well
         self._rivals = self._context.get_opponents()
+
+        # load the list of sports
+        self._sports = SPORT.ALL
 
 
     @property

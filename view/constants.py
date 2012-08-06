@@ -108,6 +108,12 @@ class _SqData(object):
 
 
     @constant
+    def SPORTS(self):
+        """ SPORTS is a key of the HTML attribute Data. """
+        return "sports"
+
+
+    @constant
     def SCORE(self):
         """ SCORE is a key of the HTML attribute Data. """
         return "score"

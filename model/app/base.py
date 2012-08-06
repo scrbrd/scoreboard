@@ -56,6 +56,7 @@ class ReadModel(BaseModel):
     dict    _aggregations   aggregated stats describing context
     list    _objects        discrete units describing context
     list    _rivals         list of Opponents (id, name)
+    list    _sports         list of Sports
 
     """
 
@@ -73,6 +74,7 @@ class ReadModel(BaseModel):
         self._aggregations = None
         self._objects = None
         self._rivals = None
+        self._sports = None
 
 
     def dispatch(self):
@@ -102,6 +104,12 @@ class ReadModel(BaseModel):
     def rivals(self):
         """ List of Opponents with name and id. """
         return self._rivals
+
+
+    @property
+    def sports(self):
+        """ List of Sports. """
+        return self._sports
 
 
 class WriteModel(BaseModel):

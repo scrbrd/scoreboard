@@ -146,7 +146,7 @@ function readTab(tabURL, tabModel) {
     @param {Object} pageStateModel The previous PageState to update.
 */
 function updatePageState(jsonResponse, pageStateModel) {
-    // FIXME have this PageState update viewer context (rivals) too
+    // FIXME have this PageState update viewer context (rivals, sports) too
     var contextID = $(jsonResponse[RESPONSE_KEY.CONTEXT_MODEL])
         .data(Const.DATA.ID);
     var pageType= $(jsonResponse[RESPONSE_KEY.PAGE_STATE_MODEL])

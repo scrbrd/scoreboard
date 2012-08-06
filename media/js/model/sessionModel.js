@@ -52,6 +52,21 @@ var SessionModel = Backbone.Model.extend({
         this.setAttribute(Const.DATA.RIVALS, rivals);
     },
 
+    /**
+        Provide access to sports.
+    */
+    sports: function () {
+        return this.get(Const.DATA.SPORTS);
+    },
+
+    /**
+        Provide mutator for sports (probably not necessary).
+        @param {Array} sports an Array of Sports.
+    */
+    setSports: function (sports) {
+        this.setAttribute(Const.DATA.SPORTS, sports);
+    },
+
     // if it's the initial set then don't fire change event
     // FIXME is this needed. Look at pageStateModel
     setAttribute: function (key, value) {
