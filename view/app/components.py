@@ -100,11 +100,22 @@ class RelativeDateComponent(Div):
     the current date. (e.g., '4 days go') """
 
 
-    def __init__(self, datetime):
-        """Construct a RelativeDateComponent. """
-        super(RelativeDateComponent, self).__init__()
+    def __init__(self, datetime, with_icon=True):
+        """Construct a RelativeDateComponent.
 
-        self.append_child(Icon(IMAGE.TIME_ICON, "time"))
+        Required:
+        ts      datetime    the time to display
+
+        Optional:
+        bool    with_icon   if true, display icon
+
+        """
+        super(RelativeDateComponent, self).__init__()
+        self.append_class(COMPONENT_CLASS.RELATIVE_DATE_COMPONENT)
+
+        if with_icon:
+            self.append_child(Icon(IMAGE.TIME_ICON, "time"))
+
         relative_date = Span()
         relative_date.set_text(date.get_simple_datetime_ago(datetime))
         self.append_child(relative_date)

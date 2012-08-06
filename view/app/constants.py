@@ -64,6 +64,10 @@ class _ComponentClass(object):
         """ MULTI_OPPONENT_GROUP is a w3c class. """
         return "multi-opponent-group"
 
+    @constant
+    def RELATIVE_DATE_COMPONENT(self):
+        return "relative-date-component"
+
 
 COMPONENT_CLASS = _ComponentClass()
 

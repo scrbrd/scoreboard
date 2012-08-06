@@ -4,10 +4,12 @@ Elements components that will be used in tabs but aren't part of the framework.
 
 """
 from view.constants import SQ_DATA
-from view.elements.base import Span, Div, Section
+from view.elements.base import Span, Div, Section, UL, A
 from view.elements.components import HeadedList, HeadedListItem, NumberedList
-from view.app.components import Headline, AppThumbnail
+from view.elements.components import MultiColumnLI
 from view.app.copy import Copy
+from view.app.components import Headline, AppThumbnail, RelativeDateComponent
+from view.app.facebook import FacebookThumbnail
 
 from constants import COMPONENT_CLASS
 
@@ -53,6 +55,74 @@ class MainStorySection(Section):
         """ Construct a main section for a story. """
         super(MainStorySection, self).__init__()
         self.append_class(COMPONENT_CLASS.MAIN_STORY_SECTION)
+
+
+class CommentsSection(Section):
+
+    """ Comments Section contains both the list of comments for a story and a
+    form for inputting new comments. """
+
+
+    def __init__(self, comments):
+        """ Construct a CommentsBox.
+
+        Required:
+        list    comments    A list of comments, sorted by created_ts
+
+        """
+        super(CommentsSection, self).__init__()
+        self.append_class(COMPONENT_CLASS.COMMENTS_SECTION)
+
+        self.append_child(CommentsList(comments))
+        # self.append_child(CommentsForm())
+
+
+class CommentsList(UL):
+
+    """ Comments List is a list of comments for a story. """
+
+
+    def _init__(self, comments):
+        """ Construct a CommentsList.
+
+        Required:
+        list    comments    A list of comments, sorted by created_ts
+
+        """
+        super(CommentsList, self).__init__(comments)
+
+    def set_list_item(self, item, index):
+        """ Construct and add a list item as a child of this list. """
+        self.append_child(CommentsLI(item, index))
+
+
+class CommentsLI(MultiColumnLI):
+
+    """ CommentsLI is a single comment in the CommentsList. """
+
+
+    def set_content(self, item):
+        """ Set content for Rankings LI. """
+        comment = item
+
+        thumbnail = FacebookThumbnail(
+                comment.commenter_fb_id,
+                comment.commenter_name)
+        self.set_column(thumbnail)
+
+        div = Div()
+
+        name = A({"href": "#"}, comment.commenter_name)
+        div.append_child(name)
+
+        msg = Span()
+        msg.set_text(comment.message)
+        div.append_child(msg)
+
+        created_ts = RelativeDateComponent(comment.created_ts, False)
+        div.append_child(created_ts)
+
+        self.set_column(div)
 
 
 class RankingsList(HeadedList):
@@ -118,8 +188,7 @@ class RankingLI(HeadedListItem):
         div.append_child(AppThumbnail(src, item.name))
         self.set_column(div)
 
-        opponent = Span()
-        opponent.set_text(item.name)
+        opponent = A({"href": "#"}, item.name)
         self.set_column(opponent)
 
         current_result_streak = Span()

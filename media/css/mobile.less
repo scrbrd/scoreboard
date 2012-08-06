@@ -71,6 +71,7 @@
 }
 
 @bodyFontSize: .9em;
+@heavyFontSize: 1em;
 @bigFontSize: 1.2em;
 @veryBigFontSize: 1.9em;
 @hugeFontSize: 2em;
@@ -130,7 +131,8 @@
 }
 
 .clickableText() {
-    .normalFont();
+    .normalFont(@heavyFontSize, auto);
+    font-weight: bold;
     color: @navy;
 }
 
@@ -141,12 +143,12 @@
 
 .textText() {
     .normalFont();
-    color: @darkGrey;
+    color: @black;
 }
 
 .altTextText() {
     .normalFont();
-    color: @black;
+    color: @lightGrey;
 }
 
 .buttonText() {
@@ -720,6 +722,10 @@ form input {
     width: 50%;
 }
 
+.relative-date-component {
+    .altTextText;
+}
+
 /***********************************************************
 * ISCROLL
 ************************************************************/
@@ -905,6 +911,7 @@ form input {
 .rankings-list .headed-list-item .list-column:nth-child(2) {
     float: left;
     width: 35%;
+    margin-left: @pagePadding;
     text-align: left;
 }
 
@@ -925,6 +932,10 @@ form input {
 .rankings-list .numbered-list li:before {
     float: left;
     width: @bigPadding;
+}
+
+.rankings-list .thumbnail {
+    margin-top: -3px;
 }
 
 .story {
@@ -948,6 +959,33 @@ form input {
     margin-top: @linePadding;
     margin-bottom: @linePadding;
 }
+
+.comments-section li {
+    float: left;
+    clear: both;
+
+    height: auto;
+    line-height: @bigFontSize;
+
+    margin-bottom: @bigPadding;
+    padding-left: @bigPadding;
+    padding-right: @bigPadding;
+
+    text-align: top;
+}
+
+.comments-section .list-column {
+    float: left;
+}
+
+.comments-section .thumbnail {
+    margin-right: @linePadding;
+}
+
+.comments-section .anchor {
+    margin-right: @linePadding;
+}
+
 
 /***********************************************************
 * TAB SECTION

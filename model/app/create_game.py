@@ -52,7 +52,7 @@ class CreateGameModel(WriteModel):
         """ Create new Game in database and return it. """
         self._object = Game.create_game(
                 self._league_id,
-                self._session.person_id,
+                self.session.person_id,
                 self._metrics_by_opponent)
 
 

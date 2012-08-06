@@ -7,10 +7,10 @@ FeedSection of a Tab.
 
 from view.elements.base import Div, Button
 from view.app.components import OpponentGroupsSection, RelativeDateComponent
-from view.app.facebook import FacebookCommentsBox
 
 from constants import COMPONENT_CLASS
 from components import PlayedHeadline, ResultHeadline, MainStorySection
+from components import CommentsSection
 
 
 # TODO: get this from handlers in production
@@ -42,17 +42,16 @@ class Story(Div):
                 RelativeDateComponent(object.created_ts))
 
         # add comments link to story
-        feedbackButton = Button()
-        feedbackButton.append_class("feedback-button")
-        self._main_section.append_child(feedbackButton)
+        # feedbackButton = Button()
+        # feedbackButton.append_class("feedback-button")
+        # self._main_section.append_child(feedbackButton)
 
         # add photo and main section to Story
         self.append_child(self._photo_section)
         self.append_child(self._main_section)
 
         # add feedback section to story
-        url = "{}{}{}".format(APP_URL, STORY_SLUG, object.id)
-        self.append_child(FacebookCommentsBox(url))
+        self.append_child(CommentsSection(object.comments))
 
 
     def _construct_story_body(self, object):

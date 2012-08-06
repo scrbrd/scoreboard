@@ -1,7 +1,7 @@
 """ Module: league
 
 Define a LeagueModel to provide to the LeagueHandler a League context and
-aggregated standings and/or activity and a list of obejcts for that League
+aggregated standings and/or activity and a list of objects for that League
 context.
 
 """
@@ -14,6 +14,7 @@ from model.api.game import Game
 from model.api.league import League
 
 from base import ReadModel
+from comments import CommentsModel
 
 
 class LeagueModel(ReadModel):
@@ -90,6 +91,12 @@ class LeagueModel(ReadModel):
 
         # load the list of sports
         self._sports = SPORT.ALL
+
+# add comments to the games
+        comments_model = CommentsModel(self.session, game_ids)
+        comments_model.load()
+        for game_id, comments in comments_model.comments.items():
+            games_with_opponents[game_id].comments = comments
 
 
     @property
