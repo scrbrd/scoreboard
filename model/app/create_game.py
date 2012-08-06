@@ -22,6 +22,7 @@ class CreateGameModel(WriteModel):
     Required:
     dict    _session                the User/Person data keyed by property
     dict    _metrics_by_opponent    metrics dicts keyed on opponent id
+    id      _sport_id               ID of the Sport for this Game
 
     Optional:
     int     _league_id              the league of the new Game
@@ -29,17 +30,19 @@ class CreateGameModel(WriteModel):
     """
 
 
-    def __init__(self, session, metrics_by_opponent):
+    def __init__(self, session, metrics_by_opponent, sport_id):
         """ BaseModel is an abstract superclass.
 
         Required:
         dict    session                 all the User/Person session data
         dict    metrics_by_opponent     metrics dict keyed on opponent id
+        id      sport_id                ID of the Sport for this Game
 
         """
         super(CreateGameModel, self).__init__(session)
 
         self._metrics_by_opponent = {}
+        self._sport_id = sport_id
         self._league_id = None
 
         # convert the results into API_EDGE_TYPEs
@@ -52,8 +55,9 @@ class CreateGameModel(WriteModel):
         """ Create new Game in database and return it. """
         self._object = Game.create_game(
                 self._league_id,
-                self.session.person_id,
-                self._metrics_by_opponent)
+                self._session.person_id,
+                self._metrics_by_opponent,
+                self._sport_id)
 
 
     def set_league_id(self, league_id):

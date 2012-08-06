@@ -258,7 +258,7 @@ class _Sport(object):
     @sport
     def ALL(self):
         return {
-                SPORT_ID.BASEBALL: self.BASKETBALL,
+                SPORT_ID.BASKETBALL: self.BASKETBALL,
                 SPORT_ID.SOCCER: self.SOCCER,
                 SPORT_ID.HOCKEY: self.HOCKEY,
                 SPORT_ID.FOOTBALL: self.FOOTBALL,

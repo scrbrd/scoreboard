@@ -30,11 +30,15 @@ class CreateGameHandler(QueryHandler):
 
         # get game parameters from request
         parameters = self.get_request_parameters()
-        league_id = parameters[PARAMETER.LEAGUE_ID]
-        metrics_by_opponent = parameters[PARAMETER.METRICS_BY_OPPONENT]
+        league_id = parameters.get(PARAMETER.LEAGUE_ID)
+        metrics_by_opponent = parameters.get(PARAMETER.METRICS_BY_OPPONENT)
+        sport_id = parameters.get(PARAMETER.SPORT_ID)
 
         # create game in model
-        model = CreateGameModel(self.current_user, metrics_by_opponent)
+        model = CreateGameModel(
+                self.current_user,
+                metrics_by_opponent,
+                sport_id)
         model.set_league_id(league_id)
         model.dispatch()
 

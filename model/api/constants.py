@@ -281,6 +281,10 @@ class _APINodeProperty(object):
     def REFERRER_URL(self):
         return "referrer_url"
 
+    @constant
+    def SPORT_ID(self):
+        return "sport_id"
+
 
 API_NODE_PROPERTY = _APINodeProperty()
 

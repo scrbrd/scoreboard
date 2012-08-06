@@ -5,8 +5,9 @@ members aren't strictly members [they are pulled from properties].
 
 """
 from util.dev import print_timing
-from constants import API_NODE_TYPE, API_EDGE_TYPE
+from constants import API_NODE_TYPE, API_EDGE_TYPE, API_NODE_PROPERTY
 from constants import API_CONSTANT
+from sports import SPORT
 
 from sqobject import SqNode
 import loader
@@ -55,6 +56,18 @@ class Game(SqNode):
     def creator_id(self):
         """  Return the Player who created the game. """
         return self.get_edges()[API_EDGE_TYPE.CREATED_BY].iterkeys().next()
+
+
+    @property
+    def sport_id(self):
+        """ Return the Sport ID for this Game. """
+        return self._get_property(API_NODE_PROPERTY.SPORT_ID)
+
+
+    @property
+    def sport(self):
+        """ Return the Sport for this Game. """
+        return SPORT.ALL.get(self.sport_id)
 
 
     @property
@@ -162,13 +175,14 @@ class Game(SqNode):
 
 
     @staticmethod
-    def create_game(league_id, creator_id, metrics_by_opponent):
+    def create_game(league_id, creator_id, metrics_by_opponent, sport_id):
         """ Create a Game and return it.
 
         Required:
         id      league_id           League id that Game belogs to
         id      creator_id          Player id of Game's creator
         dict    metrics_by_opponent Metrics keyed on Opponent id
+        id      sport_id            Sport id for this Game
 
         Return:
         Game                        newly created Game
@@ -184,7 +198,9 @@ class Game(SqNode):
         #        raw_properties)
 
         # prepare a node prototype for this game
-        prototype_node = editor.prototype_node(API_NODE_TYPE.GAME, {})
+        prototype_node = editor.prototype_node(
+                API_NODE_TYPE.GAME,
+                {API_NODE_PROPERTY.SPORT_ID: sport_id})
 
         # prepare edge prototypes for schedule edges
         prototype_edges = editor.prototype_edge_and_complement(

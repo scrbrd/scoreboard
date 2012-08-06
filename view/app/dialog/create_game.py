@@ -12,7 +12,7 @@ from view.app.components import Headline, Subheadline
 
 from constants import DIALOG_CLASS
 from framework import PostButtonSection, DialogContentSection
-from components import TagAutocomplete
+from components import PlayerAutocomplete, SportAutocomplete
 
 
 class CreateGameContentSection(DialogContentSection):
@@ -64,8 +64,7 @@ class CreateGameForm(Form):
 
         # versus/with checkbox
         # TODO: optionally set is_on based on some stored model/session value.
-        #self.append_child(GameTypeSwitch())
-        self.append_child(GameTypeDiv())
+        self.append_child(GameTypeSubheader())
 
         # the three tag groups: won,lost, played
         self.append_child(OpponentTagsGroup(
@@ -83,7 +82,11 @@ class CreateGameForm(Form):
                 SQ_VALUE.PLAYED,
                 self.MAX_TAGS))
 
-        # TODO: add sport autocomplete input
+        # add a blank subheadline for the dotted-line separator
+        self.append_child(Subheadline(""))
+
+        # add a sport tag autocomplete
+        self.append_child(SportTagSubheader())
 
         # add form submit and close buttons
         self.append_child(PostButtonSection())
@@ -100,6 +103,28 @@ class OpponentTagsHeadline(Headline):
         self.append_class(DIALOG_CLASS.OPPONENT_TAGS_HEADLINE)
 
 
+class GameTypeSubheader(Subheadline):
+
+    """ GameTypeSubheader extending Subheadline. """
+
+
+    def __init__(self):
+        """ Construct a GameTypeSwitch toggling versus/with. """
+        super(GameTypeSubheader, self).__init__(Copy.versus)
+        self.append_class(DIALOG_CLASS.GAME_TYPE_SUBHEADER)
+
+        #label = Label(Copy.versus, SQ_DATA.GAME_TYPE)
+        #label.append_class(DIALOG_CLASS.GAME_TYPE_LABEL)
+        #self.append_child(label)
+
+        #span = Span()
+        #span.set_text(Copy.versus)
+        #span.append_class(DIALOG_CLASS.GAME_TYPE_LABEL)
+        #self.append_child(span)
+
+        self.append_child(GameTypeSwitch())
+
+
 class GameTypeSwitch(SwitchInput):
 
     """ GameTypeSwitch extending SwitchInput. """
@@ -114,28 +139,6 @@ class GameTypeSwitch(SwitchInput):
 
         # would be necessary if we associate a Label with the switch
         #self.set_id(SQ_DATA.GAME_TYPE)
-
-
-class GameTypeDiv(Div):
-
-    """ GameTypeDiv extending Div. """
-
-
-    def __init__(self):
-        """ Construct a GameTypeSwitch toggling versus/with. """
-        super(GameTypeDiv, self).__init__()
-        self.append_class(DIALOG_CLASS.GAME_TYPE)
-
-        #label = Label(Copy.versus, SQ_DATA.GAME_TYPE)
-        #label.append_class(DIALOG_CLASS.GAME_TYPE_LABEL)
-        #self.append_child(label)
-
-        span = Span()
-        span.set_text(Copy.versus)
-        span.append_class(DIALOG_CLASS.GAME_TYPE_LABEL)
-        self.append_child(span)
-
-        self.append_child(GameTypeSwitch())
 
 
 class OpponentTagsGroup(Div):
@@ -166,7 +169,6 @@ class OpponentTagsGroup(Div):
         # group of autocompletes
         tags = [result_type for n in range(number_of_tags)]
         self.append_child(OpponentTagsUL(tags))
-
 
 
 class OpponentTagsSubheader(Subheadline):
@@ -216,9 +218,17 @@ class OpponentTagLI(MultiColumnLI):
                 self._index,
                 item)
         input_span = Span()
-        input_span.append_child(TagAutocomplete(
-                metrics_by_opponent,
-                Copy.tag_placeholder))
+        input_span.append_child(PlayerAutocomplete(metrics_by_opponent))
         self.set_column(input_span)
 
-        # TODO: add x button
+
+class SportTagSubheader(Subheadline):
+
+    """ SportTagSubheader extending Subheadline. """
+
+
+    def __init__(self):
+        """ Construct a SportTagSubheader. """
+        super(SportTagSubheader, self).__init__("")
+        self.append_class(DIALOG_CLASS.SPORT_TAG_SUBHEADER)
+        self.append_child(SportAutocomplete(SQ_DATA.SPORT_ID))

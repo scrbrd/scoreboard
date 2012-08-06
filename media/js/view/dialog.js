@@ -56,7 +56,8 @@ var DialogView = Backbone.View.extend({
     switchControl: null,
     rivalryTagsGroup: null,
     camaraderieTagsGroup: null,
-    tagAutocompletes: null,
+    opponentAutocompletes: null,
+    sportAutocomplete: null,
 
     /**
         Hide and stretch dialog, initialize its form, and bind change
@@ -126,8 +127,9 @@ var DialogView = Backbone.View.extend({
     render: function () {
         var leagueID = this.pageStateModel.contextID();
         var rivals = this.sessionModel.rivals();
+        var sports = this.sessionModel.sports();
 
-        this.initForm(leagueID, rivals);
+        this.initForm(leagueID, rivals, sports);
 
         return this;
     },
@@ -136,9 +138,10 @@ var DialogView = Backbone.View.extend({
         Set up dialog's form with event bindings and autocomplete
         functionality.
         @param {string} leagueID the league that the Game will be part of
-        @param {Array} rivals An array of rivals for autocomplete
+        @param {Array} rivals An array of rivals for Autocomplete
+        @param {Array} sports An array of Sports for Autocomplete
     */
-    initForm: function (leagueID, rivals) {
+    initForm: function (leagueID, rivals, sports) {
         var formPageName = this.pageName;
         this.form.find(Const.NAME.LEAGUE_ID).val(leagueID);
 
@@ -146,13 +149,17 @@ var DialogView = Backbone.View.extend({
         // disabled row, gets enabled, add new row
 
         // set up Autocompletes
-        this.tagAutocompletes = [];
+        this.opponentAutocompletes = [];
         var that = this;
-        this.form.find(Const.CLASS.AUTOCOMPLETE_PLAYERS)
+        this.form.find(Const.CLASS.AUTOCOMPLETE_PLAYER)
             .each(function (index, elem) {
-                that.tagAutocompletes.push(
-                        Components.TagAutocomplete($(elem), rivals));
+                that.opponentAutocompletes.push(
+                        Components.OpponentAutocomplete($(elem), rivals));
             });
+
+        this.sportAutocomplete = Components.SportAutocomplete(
+            this.form.find(Const.CLASS.AUTOCOMPLETE_SPORT),
+            sports);
 
         // FIXME: this probably doesn't work anymore.
         // add event handler for player data entry.
@@ -246,10 +253,13 @@ var DialogView = Backbone.View.extend({
     */
     resetForm: function () {
         this.form[0].reset();
-        for (var i = 0; i < this.tagAutocompletes.length; i += 1) {
-            this.tagAutocompletes[i].resetAndClear();
+        for (var i = 0; i < this.opponentAutocompletes.length; i += 1) {
+            this.opponentAutocompletes[i].resetAndClear();
         }
 
+        this.sportAutocomplete.resetAndClear();
+
+        // TODO: this should either be a constant or delivered from the model
         // also clear the thumbnails
         var thumbnail = this.$el.find(Const.CLASS.AUTOCOMPLETE_THUMBNAIL)
             .attr("src", "/static/images/thumbnail.jpg");

@@ -42,8 +42,12 @@ class _Copy(object):
         return "Who played?"
 
     @property
-    def tag_placeholder(self):
+    def opponent_tag_placeholder(self):
         return "Who Played?"
+
+    @property
+    def sport_tag_placeholder(self):
+        return "Which Sport?"
 
     @property
     def rankings_title(self):

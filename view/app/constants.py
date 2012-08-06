@@ -76,10 +76,18 @@ class _Image(object):
 
     """_Image contains the location of a number of static images. """
 
+
     @constant
     def DEFAULT_THUMBNAIL(self):
         return "/static/images/thumbnail.jpg"
 
+    @constant
+    def DEFAULT_OPPONENT_THUMBNAIL(self):
+        return "/static/images/thumbnail.jpg"
+
+    @constant
+    def DEFAULT_SPORT_THUMBNAIL(self):
+        return "/static/images/thumbnail.jpg"
 
     @constant
     def TIME_ICON(self):

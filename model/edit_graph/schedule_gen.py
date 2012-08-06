@@ -10,6 +10,7 @@ import random
 
 import gen_environment
 
+from model.api.sport import SPORT
 from model.api.league import League
 from model.api.game import Game
 
@@ -37,12 +38,16 @@ def _prepare_game_creation(opponent_ids):
     creator_id = random.choice(opponent_ids)
     random.shuffle(opponent_ids)
 
-    return (creator_id, opponent_ids)
+    sport_ids = SPORT.ALL
+    random.shuffle(sport_ids)
+    sport_id = sport_ids.keys().pop()
+
+    return (creator_id, opponent_ids, sport_id)
 
 
-def _create_game(league_id, creator_id, results):
+def _create_game(league_id, creator_id, results, sport_id):
     # randomly select 2 opponents and set the score
-    return Game.create_game(league_id, creator_id, results)
+    return Game.create_game(league_id, creator_id, results, sport_id)
 
 
 def _prepare_result(opponent_ids, type):
@@ -57,12 +62,12 @@ def generate_friendly_game(league_id, opponent_ids):
     played = "played"
     number_of_players = random.randint(1, 5)
 
-    (creator_id, opponent_ids) = _prepare_game_creation(opponent_ids)
+    (creator_id, opponent_ids, sport_id) = _prepare_game_creation(opponent_ids)
 
     played_ids = [opponent_ids[n] for n in range(0, number_of_players)]
     results = _prepare_result(played_ids, played)
 
-    return _create_game(league_id, creator_id, results)
+    return _create_game(league_id, creator_id, results, sport_id)
 
 
 def generate_competitive_game(league_id, opponent_ids):
@@ -71,7 +76,7 @@ def generate_competitive_game(league_id, opponent_ids):
     number_of_winners = random.randint(1, 4)
     number_of_losers = random.randint(1, 4)
 
-    (creator_id, opponent_ids) = _prepare_game_creation(opponent_ids)
+    (creator_id, opponent_ids, sport_id) = _prepare_game_creation(opponent_ids)
 
     won_ids = [opponent_ids[n] for n in range(0, number_of_winners)]
     lost_ids = [opponent_ids[n] for n in range(
@@ -80,7 +85,8 @@ def generate_competitive_game(league_id, opponent_ids):
     won_results = _prepare_result(won_ids, won)
     lost_results = _prepare_result(lost_ids, lost)
     results = dict(won_results.items() + lost_results.items())
-    return _create_game(league_id, creator_id, results)
+
+    return _create_game(league_id, creator_id, results, sport_id)
 
 
 if __name__ == "__main__":
