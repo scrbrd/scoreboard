@@ -16,6 +16,7 @@ Each class has a single requirement...override the following:
 import tornado.web
 from tornado import escape
 
+from view import xsrf
 from view.constants import PAGE_TYPE, PAGE_NAME, APP_CLASS, SQ_DATA
 
 from view.elements.base import Element
@@ -244,6 +245,8 @@ class UILeaguePage(tornado.web.UIModule):
 
     def render(self, model=None, state=None):
         """ Render a League. """
+        xsrf.set_xsrf_token(escape.xhtml_escape(self.handler.xsrf_token))
+
         league_page = LeagueContentSection(
                 model.context,
                 model.aggregations,
@@ -259,11 +262,11 @@ class UICreateGameDialog(tornado.web.UIModule):
 
     def render(self, model=None, state=None):
         """ Render a Create Game Dialog Screen. """
+        xsrf.set_xsrf_token(escape.xhtml_escape(self.handler.xsrf_token))
+
         header_tree = DialogHeader(Copy.create_game_dialog_header)
 
-        content_tree = CreateGameContentSection(
-                escape.xhtml_escape(self.handler.xsrf_token),
-                model)
+        content_tree = CreateGameContentSection(model)
 
         return Element.to_string(header_tree) + Element.to_string(content_tree)
 

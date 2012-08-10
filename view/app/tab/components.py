@@ -3,8 +3,10 @@
 Elements components that will be used in tabs but aren't part of the framework.
 
 """
-from view.constants import SQ_DATA
-from view.elements.base import Span, Div, Section, UL, A
+
+from view import xsrf
+from view.constants import SQ_DATA, PAGE_NAME
+from view.elements.base import Span, Div, Section, UL, A, Form, HiddenInput
 from view.elements.components import HeadedList, HeadedListItem, NumberedList
 from view.elements.components import MultiColumnLI
 from view.app.copy import Copy
@@ -124,7 +126,7 @@ class CommentsSection(Section):
         self.append_class(COMPONENT_CLASS.COMMENTS_SECTION)
 
         self.append_child(CommentsList(object_with_comments))
-        # self.append_child(CommentsForm())
+        #self.append_child(CommentsForm(
 
 
 class CommentsList(UL):
@@ -200,6 +202,32 @@ class CommentsLI(MultiColumnLI):
         div.append_child(created_ts)
 
         self.set_column(div)
+
+
+class CommentForm(Form):
+
+    """ A Form for submitting a single comment to a Story. """
+
+
+    def __init__(self, story_object):
+        """ Construct a CommentForm.
+
+        Required:
+        SqNode  story_obejct    Story to grab data from
+
+        """
+        super(CommentForm, self).__init__(
+                PAGE_NAME.LEAGUE,
+                xsrf.get_xsrf_token())
+
+        # TODO: make this draw from view.url constants
+        self.set_action("/comment")
+
+        self.append_child(HiddenInput(SQ_DATA.GAME_ID, story_object.id))
+
+        # append thumbnail
+        # append text input
+        # append comment button
 
 
 class RankingsList(HeadedList):

@@ -4,6 +4,7 @@ Element components for Create Game dialog.
 
 """
 
+from view import xsrf
 from view.constants import SQ_DATA, SQ_VALUE, PAGE_NAME
 from view.elements.base import Div, Span, UL, Form, HiddenInput
 from view.elements.components import SwitchInput, MultiColumnLI
@@ -20,7 +21,7 @@ class CreateGameContentSection(DialogContentSection):
     """ The main content of the CreateGameDialog. """
 
 
-    def __init__(self, xsrf_token, model):
+    def __init__(self, model):
         """ Construct a content section for CreateGame Dialog. """
         super(CreateGameContentSection, self).__init__()
 
@@ -29,7 +30,7 @@ class CreateGameContentSection(DialogContentSection):
         div = Div()
         div.set_id("dialog-content-container")
 
-        div.append_child(CreateGameForm(xsrf_token, model))
+        div.append_child(CreateGameForm(model))
         self.append_child(div)
 
 
@@ -37,18 +38,19 @@ class CreateGameForm(Form):
 
     """ Create Game form extending <form>. """
 
-    MAX_TAGS = 4
+    MAX_TAGS = 2
 
 
-    def __init__(self, xsrf_token, data):
+    def __init__(self, data):
         """ Construct a Create Game form element tree.
 
         Required:
-        str     xsrf_token  xsrf token to prevent forgery
         Model   data        model constants for data-* hidden inputs
 
         """
-        super(CreateGameForm, self).__init__(PAGE_NAME.CREATE_GAME, xsrf_token)
+        super(CreateGameForm, self).__init__(
+                PAGE_NAME.CREATE_GAME,
+                xsrf.get_xsrf_token())
 
         # TODO: make this draw from view.url constants
         self.set_action("/create/game")
