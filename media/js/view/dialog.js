@@ -220,7 +220,7 @@ var DialogView = Backbone.View.extend({
         // FIXME: make this blurring work and clear the autocomplete.
         $('input:focus').blur(); // blurring the focus should hide keyboard
         this.$el.slideUp('fast', function () {
-            that.resetForm();
+            that.resetForm(true);
             // iScroll is destroyed automatically on close.
         });
         return false;
@@ -250,8 +250,9 @@ var DialogView = Backbone.View.extend({
 
     /**
         Reset dialog's form.
+        @param {boolean} switchState turn the swtich on or off (true or false)
     */
-    resetForm: function () {
+    resetForm: function (switchState) {
         this.form[0].reset();
         for (var i = 0; i < this.opponentAutocompletes.length; i += 1) {
             this.opponentAutocompletes[i].resetAndClear();
@@ -266,14 +267,15 @@ var DialogView = Backbone.View.extend({
 
         // TODO: get isOn from model, which means its not appropriate for this
         // to be in the view. build a component.
-        this.resetSwitch(true);
+        this.resetSwitch(switchState);
     },
 
     /**
         Reset the state of the Switch and what it controls.
+        @param {boolean} switchState turn the switch on or off (true or false)
     */
-    resetSwitch: function (flipOn) {
-        if (this.isSwitchOn() !== flipOn) {
+    resetSwitch: function (switchState) {
+        if (this.isSwitchOn() !== switchState) {
             this.flipSwitch();
         }
     },
@@ -352,6 +354,12 @@ var DialogView = Backbone.View.extend({
         if (typeof(overrideAndFlipOn) !== "undefined") {
             flipOn = overrideAndFlipOn;
         }
+
+        // reset the form but not the checkbox
+        var checkbox = this.switchControl.find(Const.CLASS.SWITCH_CHECKBOX);
+        var checkboxState = checkbox.prop("checked");
+        this.resetForm(checkboxState);
+        checkbox.prop("checked", checkboxState);
 
         // for reasons passing understanding, toggle does NOT work for hiding
         // and showing these elements. fuck it we're doing it live!
