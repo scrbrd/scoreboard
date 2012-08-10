@@ -10,9 +10,10 @@ import random
 
 import gen_environment
 
-from model.api.sport import SPORT
+from model.api.sports import SPORT
 from model.api.league import League
 from model.api.game import Game
+from model.api.metric import MetricFactory
 
 
 def generate_schedule(league):
@@ -38,9 +39,9 @@ def _prepare_game_creation(opponent_ids):
     creator_id = random.choice(opponent_ids)
     random.shuffle(opponent_ids)
 
-    sport_ids = SPORT.ALL
+    sport_ids = SPORT.ALL.keys()
     random.shuffle(sport_ids)
-    sport_id = sport_ids.keys().pop()
+    sport_id = sport_ids.pop()
 
     return (creator_id, opponent_ids, sport_id)
 
@@ -55,7 +56,12 @@ def _prepare_result(opponent_ids, type):
     for id in opponent_ids:
         results[id] = {"result": type}
 
-    return results
+    # convert the results into API_EDGE_TYPEs
+    metrics_by_opponent = {}
+    for opponent_id, metrics in results.items():
+        metric_objects = MetricFactory.produce_metrics(metrics)
+        metrics_by_opponent[opponent_id] = metric_objects
+    return metrics_by_opponent
 
 
 def generate_friendly_game(league_id, opponent_ids):
