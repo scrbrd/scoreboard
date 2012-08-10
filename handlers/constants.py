@@ -180,6 +180,7 @@ class _FacebookAuthScope(object):
     def USER_INTERESTS(self):
         return "user_interests"
 
+
 FACEBOOK_AUTH_SCOPE = _FacebookAuthScope()
 
 

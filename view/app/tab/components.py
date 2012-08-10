@@ -9,7 +9,6 @@ from view.elements.components import HeadedList, HeadedListItem, NumberedList
 from view.elements.components import MultiColumnLI
 from view.app.copy import Copy
 from view.app.components import Headline, AppThumbnail, RelativeDateComponent
-from view.app.facebook import FacebookThumbnail
 
 from constants import COMPONENT_CLASS
 
@@ -114,17 +113,17 @@ class CommentsSection(Section):
     form for inputting new comments. """
 
 
-    def __init__(self, comments):
+    def __init__(self, object_with_comments):
         """ Construct a CommentsBox.
 
         Required:
-        list    comments    A list of comments, sorted by created_ts
+        sqobject object_with_comments  the object that was commented on
 
         """
         super(CommentsSection, self).__init__()
         self.append_class(COMPONENT_CLASS.COMMENTS_SECTION)
 
-        self.append_child(CommentsList(comments))
+        self.append_child(CommentsList(object_with_comments))
         # self.append_child(CommentsForm())
 
 
@@ -133,18 +132,45 @@ class CommentsList(UL):
     """ Comments List is a list of comments for a story. """
 
 
-    def _init__(self, comments):
+    def __init__(self, object_with_comments):
         """ Construct a CommentsList.
 
         Required:
-        list    comments    A list of comments, sorted by created_ts
+        SqObject object_with_comments  the object that was commented on
 
         """
-        super(CommentsList, self).__init__(comments)
+        super(CommentsList, self).__init__(
+                self._construct_items(object_with_comments))
+
 
     def set_list_item(self, item, index):
         """ Construct and add a list item as a child of this list. """
         self.append_child(CommentsLI(item, index))
+
+
+    # remove this function when the items can be more properly constructed
+    def _construct_items(self, object_with_comments):
+        """ Return a list of comment_items.
+
+        Required:
+        SqObject object_with_comments  the object that was commented on
+
+        """
+        items = []
+        comments = object_with_comments.comments
+        for comment in comments:
+            person = object_with_comments.get_commenter(comment.commenter_id)
+            # FIXME: this is the worst code in our application
+            # because it breaks the contract that view shouldn't be calling
+            # methods on model object (see line above this comment) and also
+            # the view shouldn't have to merge two items into one item. clearly
+            # the comment should have more information in it.
+            comment.commenter_name = person.name
+            comment.commenter_picture = person.picture
+            items.append(comment)
+
+        return items
+
 
 
 class CommentsLI(MultiColumnLI):
@@ -156,8 +182,8 @@ class CommentsLI(MultiColumnLI):
         """ Set content for Rankings LI. """
         comment = item
 
-        thumbnail = FacebookThumbnail(
-                comment.commenter_fb_id,
+        thumbnail = AppThumbnail(
+                comment.commenter_picture,
                 comment.commenter_name)
         self.set_column(thumbnail)
 

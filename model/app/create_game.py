@@ -27,6 +27,9 @@ class CreateGameModel(WriteModel):
     Optional:
     int     _league_id              the league of the new Game
 
+    Return:
+    SqObject    _object     the new comment
+
     """
 
 

@@ -106,7 +106,7 @@ class Story(Div):
         self.append_child(self._main_section)
 
         # add feedback section to story
-        self.append_child(CommentsSection(story_object.comments))
+        self.append_child(CommentsSection(story_object))
 
 
     def _construct_story_body(self, story_object):

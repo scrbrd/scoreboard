@@ -38,6 +38,7 @@ class LoginHandler(BaseHandler, tornado.auth.FacebookGraphMixin):
                 #FACEBOOK_AUTH_SCOPE.GENDER,
                 FACEBOOK_AUTH_SCOPE.EMAIL,
                 FACEBOOK_AUTH_SCOPE.USER_INTERESTS,
+                FACEBOOK_AUTH_SCOPE.PUBLISH_ACTIONS,
                 ]
 
         client_id = self.settings.get(SETTING.FACEBOOK_API_KEY)

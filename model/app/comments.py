@@ -1,7 +1,8 @@
 """ Module: comments
 
 Define a CommentsModel to fetch facebook comments and organize them for the
-CommentsHandler.
+CommentsHandler. Define a CreateCommentModel to process incoming create comment
+requests.
 
 Using facebook-sdk (https://github.com/pythonforfacebook/facebook-sdk)
 
@@ -9,25 +10,9 @@ Using facebook-sdk (https://github.com/pythonforfacebook/facebook-sdk)
 
 from util.dev import print_timing
 
-import datetime
-import time
-import facebook
+from model.api.comment import Comment
 
-from base import ReadModel
-
-
-# TODO: put these in a constants file
-FB_COMMENTS = "comments"
-FB_ID = "id"
-FB_DATA = "data"
-FB_CREATED_TIME = "created_time"
-FB_MESSAGE = "message"
-FB_COMMENTER = "from"
-FB_COMMENTER_FB_ID = "id"
-FB_COMMENTER_NAME = "name"
-
-APP_URL = "http://onscoreboard.com/"
-STORY_SLUG = "story/"
+from base import ReadModel, WriteModel
 
 
 class CommentsModel(ReadModel):
@@ -60,18 +45,8 @@ class CommentsModel(ReadModel):
     @print_timing
     def load(self):
         """ Load comments for games. """
-
-        # TODO: investigate performance to make sure that these facebook
-        # requests are fast.
-
-        graph = facebook.GraphAPI(self.session.get_access_token())
-
-        # make this a batch request
-        for id in self._game_ids:
-            post_url = "{}{}{}".format(APP_URL, STORY_SLUG, id)
-            comments = graph.request(FB_COMMENTS, {FB_ID: post_url})
-
-            self._comments[id] = [Comment(c) for c in comments[FB_DATA]]
+        # TODO: Reading comments without a larger context is not supported.
+        pass
 
 
     @property
@@ -80,62 +55,44 @@ class CommentsModel(ReadModel):
         return self._comments
 
 
-class Comment(object):
+class CreateCommentModel(WriteModel):
 
-    """ An individual comment.
+    """ Handle create comment requests by sending the comment to facebook.
 
     Required:
-    ts  _created_ts     the ts of the comment
-    str _message        the body of the comment
-    id  _from_fb_id     the facebook id of the commenter
-    str _from_name      the name of the commenter
+    id  _object_id       id of the object that is the object of the comment
+    str _message         the comment body
 
-    TODO: Move this to the API layer.
+    Return:
+    SqObject    _object     the new comment
 
     """
 
 
-    def __init__(self, comments_dict):
-        """ Construct a comment.
+    def __init__(self, session, object_id, message):
+        """ Construct a model for creating a comment.
 
         Required:
-        dict comments_dict  the dict that facebook returns with a single
-                            comment.
+        dict    session                 all the User/Person session data
+        id  object_id       id of the object that is the object of the comment
+        str message         the comment body
 
         """
-        self._created_ts = Comment._get_ts_from_fb_time(
-                comments_dict[FB_CREATED_TIME])
-        self._message = comments_dict[FB_MESSAGE]
-        self._from_fb_id = comments_dict[FB_COMMENTER][FB_COMMENTER_FB_ID]
-        self._from_name = comments_dict[FB_COMMENTER][FB_COMMENTER_NAME]
+        super(CreateCommentModel, self).__init__(session)
+
+        self._object_id = object_id
+        self._message = message
+
+
+    def dispatch(self):
+        """ Create new Comment on facebook and return it. """
+        self._object = Comment.create_comment(
+            self._object_id,
+            self.session.person_id,
+            self._message)
 
 
     @property
-    def created_ts(self):
-        """ Return the timestamp of the comment. """
-        return self._created_ts
-
-
-    @property
-    def message(self):
-        """ Return the message (comment body) of the comment. """
-        return self._message
-
-
-    @property
-    def commenter_fb_id(self):
-        """ Return the facebook id of the commenter. """
-        return self._from_fb_id
-
-
-    @property
-    def commenter_name(self):
-        """ Return the name of the commenter. """
-        return self._from_name
-
-    @staticmethod
-    def _get_ts_from_fb_time(fb_time):
-        """ Convert the facebook time to a normal timestamp. """
-        format = "%Y-%m-%dT%H:%M:%S+0000"
-        dt = datetime.datetime.strptime(fb_time, format)
-        return int(time.mktime(dt.timetuple()))
+    def comment(self):
+        """ Return a newly created Comment. """
+        return self._object

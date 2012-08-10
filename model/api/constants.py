@@ -40,6 +40,14 @@ class _APIEdgeType(object):
     """ Hold all Edge Types. """
 
     @constant
+    def COMMENTED_ON(self):
+        return "commented_on"
+
+    @constant
+    def HAS_COMMENT_FROM(self):
+        return "has_comment_from"
+
+    @constant
     def IN_LEAGUE(self):
         return "in_league"
 
@@ -298,6 +306,11 @@ class _APIEdgeProperty(object):
         return "score"
 
 
+    @constant
+    def MESSAGE(self):
+        return "message"
+
+
 API_EDGE_PROPERTY = _APIEdgeProperty()
 
 
@@ -359,6 +372,8 @@ class _APIConstant(object):
                 API_EDGE_TYPE.OWNS: API_EDGE_TYPE.OWNED_BY,
                 API_EDGE_TYPE.OWNED_BY: API_EDGE_TYPE.OWNS,
 
+                API_EDGE_TYPE.COMMENTED_ON: API_EDGE_TYPE.HAS_COMMENT_FROM,
+                API_EDGE_TYPE.HAS_COMMENT_FROM: API_EDGE_TYPE.COMMENTED_ON,
                 }
 
 

@@ -37,34 +37,43 @@ class Player(person.Person, opponent.Opponent):
                 API_EDGE_TYPE.SPAWNED_BY,
                 API_EDGE_TYPE.OWNED_BY,
                 API_EDGE_TYPE.HAS_PRIMARY,
+                API_EDGE_TYPE.COMMENTED_ON,
                 #API_EDGE_TYPE.TAGGED,
                 #API_EDGE_TYPE.TAGGED_BY,
                 ]
 
 
-    def count_losses(self):
+    @property
+    def picture_url(self):
+        """ Return the player's profile picture url. """
+        return self._get_property(API_NODE_PROPERTY.PICTURE)
+
+
+    @property
+    def comments_posted(self):
+        """ Return a list of comments made by this player, sorted by most
+        recent created_ts last. """
+        comments_posted = self.get_edges() \
+            .get(API_EDGE_TYPE.COMMENTED_ON, {}) \
+            .values()
+        comments_posted.sort(key=lambda x: x.created_ts)
+        return comments_posted
+
+
+    @property
+    def loss_count(self):
         """ Return the number of Games this Player has lost. """
         return self._compute_count([API_EDGE_TYPE.LOST])
 
 
     @property
-    def loss_count(self):
-        """ Alias for count_losses() intended for use as a property. """
-        return self.count_losses()
-
-
-    def count_wins(self):
+    def win_count(self):
         """ Return the number of Games this Player has won. """
         return self._compute_count([API_EDGE_TYPE.WON])
 
 
     @property
-    def win_count(self):
-        """ Alias for count_wins() intended for use as a property. """
-        return self.count_wins()
-
-
-    def compute_loss_percentage(self):
+    def loss_percentage(self):
         """ Return the percentage of LOST edges to total competitive edges. """
         return self._compute_percentage(
                 [API_EDGE_TYPE.LOST],
@@ -72,13 +81,7 @@ class Player(person.Person, opponent.Opponent):
 
 
     @property
-    def loss_percentage(self):
-        """ Alias for compute_loss_percentage() intended for use as a property.
-        """
-        return self.compute_loss_percentage()
-
-
-    def compute_win_percentage(self):
+    def win_percentage(self):
         """ Return the percentage of WON edges to total competitive edges. """
         return self._compute_percentage(
                 [API_EDGE_TYPE.WON],
@@ -86,20 +89,7 @@ class Player(person.Person, opponent.Opponent):
 
 
     @property
-    def win_percentage(self):
-        """ Alias for compute_win_percentage() intended for use as a property.
-        """
-        return self.compute_win_percentage()
-
-
-    @property
     def current_loss_streak(self):
-        """ Alias for compute_current_loss_streak() intended for use as a
-        property. """
-        return self.compute_current_loss_streak()
-
-
-    def compute_current_loss_streak(self):
         """ Return a streak for LOST edges looking back from now. """
         return self._compute_current_streak(
                 [API_EDGE_TYPE.LOST],
@@ -108,12 +98,6 @@ class Player(person.Person, opponent.Opponent):
 
     @property
     def current_win_streak(self):
-        """ Alias for compute_current_win_streak() intended for use as a
-        property. """
-        return self.compute_current_win_streak()
-
-
-    def compute_current_win_streak(self):
         """ Return a streak for WON edges looking back from now. """
         return self._compute_current_streak(
                 [API_EDGE_TYPE.WON],
@@ -122,22 +106,10 @@ class Player(person.Person, opponent.Opponent):
 
     @property
     def current_result_streak(self):
-        """ ALias for compute_current_result_streak() intended for use as a
-        property. """
-        return self.compute_current_result_streak()
-
-
-    def compute_current_result_streak(self):
         """ Return the larger of current_win_streak or current_loss_streak. """
-        win_streak = self.compute_current_win_streak()
-        loss_streak = self.compute_current_loss_streak()
+        win_streak = self.current_win_streak
+        loss_streak = self.current_loss_streak
         return max((win_streak, -loss_streak), key=lambda x: abs(x))
-
-
-    @property
-    def picture_url(self):
-        """ Return the player's profile picture url. """
-        return self._get_property(API_NODE_PROPERTY.PICTURE)
 
 
     @staticmethod

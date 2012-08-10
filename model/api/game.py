@@ -17,7 +17,7 @@ import editor
 
 class Game(SqNode):
 
-    """ Game is a subclass of SqObject for representing games.
+    """ Game is a subclass of SqEdge for representing games.
 
     Provide access to the attributes of a Game, including fields,
     relationships, and nearby nodes.
@@ -29,7 +29,8 @@ class Game(SqNode):
     are also required.
 
     Variables:
-    dict    _opponents     store loaded Opponents by id
+    dict    _opponents      store loaded Opponents by id
+    dict    _commenters     store loaded Commenters by id
 
     """
 
@@ -48,14 +49,28 @@ class Game(SqNode):
                 API_EDGE_TYPE.WON_BY,
                 API_EDGE_TYPE.LOST_BY,
                 API_EDGE_TYPE.TIED_BY,
-                API_EDGE_TYPE.PLAYED_BY
+                API_EDGE_TYPE.PLAYED_BY,
+                API_EDGE_TYPE.HAS_COMMENT_FROM,
                 ]
+
+
+    @property
+    def comments(self):
+        """ Return a list of comments on the Game, sorted with most recent
+        comment last. """
+        comments = self.get_edges() \
+            .get(API_EDGE_TYPE.HAS_COMMENT_FROM, {}) \
+            .values()
+        comments.sort(key=lambda x: x.created_ts)
+        return comments
 
 
     @property
     def creator_id(self):
         """  Return the Player who created the game. """
-        return self.get_edges()[API_EDGE_TYPE.CREATED_BY].iterkeys().next()
+        return self.get_edges() \
+            .get(API_EDGE_TYPE.CREATED_BY, {}) \
+            .iterkeys().next()
 
 
     @property
@@ -165,9 +180,29 @@ class Game(SqNode):
             return [self.get_opponent(id) for id in opponent_ids]
 
 
+    def get_commenter(self, commenter_id):
+        """ Return a Person that's commented by their id. """
+        SqNode.assert_loaded(self._commenters)
+        return self._commenters.get(commenter_id, None)
+
+
+    def get_commenters(self, commenter_ids=None):
+        """ Return a dict of Commenters. """
+        SqNode.assert_loaded(self._commenters)
+        if commenter_ids is None:
+            return self._commenters
+        else:
+            return {id: self.get_commenter(id) for id in commenter_ids}
+
+
     def set_opponents(self, opponents):
         """ Set a Game's loaded Opponents from a dict. """
         self._opponents = opponents
+
+
+    def set_commenters(self, commenters):
+        """ Set a Game's loaded Commenters from a dict. """
+        self._commenters = commenters
 
 
     """ Static loader wrappers. """
@@ -190,13 +225,63 @@ class Game(SqNode):
         Game            Game SqNode
 
         """
-
         (game, opponents) = loader.load_neighbors(
                 game_id,
                 API_CONSTANT.RESULT_EDGE_TYPES,
                 API_CONSTANT.OPPONENT_NODE_TYPES)
 
         game.set_opponents(opponents)
+
+        return game
+
+
+    @staticmethod
+    def load_opponents_and_commenters(game_id):
+        """ Load the Game's Opponents and Commenters and attributes into a
+        Game.
+
+        Required:
+        int game_id     the id of the Game
+
+        Return:
+        Game            Game SqNode
+
+        """
+        # TODO: commenters should really be loaded in SqNode. This is a mess
+        # because load_neighbors returns a single list of neighbors and then we
+        # break that list up by type.
+
+        edge_types = []
+        edge_types.extend(API_CONSTANT.RESULT_EDGE_TYPES)
+        edge_types.append(API_EDGE_TYPE.HAS_COMMENT_FROM)
+
+        node_types = []
+        node_types.extend(API_CONSTANT.OPPONENT_NODE_TYPES)
+        # should include "PERSON_NODE_TYPES"
+
+        (game, opponents_and_commenters) = loader.load_neighbors(
+                game_id,
+                edge_types,
+                node_types)
+
+        # sort the folks into separate lists of opponents and commenters
+        opponent_ids = set(game.results_by_opponent_id.keys())
+        comments = game.get_edges().get(
+                API_EDGE_TYPE.HAS_COMMENT_FROM,
+                {})
+        commenter_ids = set(
+                [comment.to_node_id for comment in comments.values()])
+
+        opponents = {}
+        commenters = {}
+        for person in opponents_and_commenters.values():
+            id = person.id
+            if id in opponent_ids:
+                opponents[id] = person
+            if id in commenter_ids:
+                commenters[id] = person
+        game.set_opponents(opponents)
+        game.set_commenters(commenters)
 
         return game
 
@@ -218,6 +303,27 @@ class Game(SqNode):
 
         for id in game_ids:
             games[id] = Game.load_opponents(id)
+
+        return games
+
+
+    @staticmethod
+    @print_timing
+    def multiload_opponents_and_commenters(game_ids):
+        """ Load multiple Games' Opponents, Commenters and attributes.
+
+        Required:
+        list game_ids   the ids of the Games
+
+        Return:
+        dict            Game SqNodes keyed on id
+
+        """
+
+        games = {}
+
+        for id in game_ids:
+            games[id] = Game.load_opponents_and_commenters(id)
 
         return games
 

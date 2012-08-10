@@ -31,15 +31,18 @@ class SqFactory(object):
     """ SqFactory constructs all the API Nodes. It's a Singleton.
 
     Required:
-    dict node_functions     all the API Node constructors are passed to
+    dict _node_functions     all the API Node constructors are passed to
+                            SqFactory so it doesn't have to import them.
+    dict _edge_functions     all the API Edge constructors are passed to
                             SqFactory so it doesn't have to import them.
 
     """
 
 
-    def __init__(self, nodes_functions_dict):
+    def __init__(self, node_functions_dict, edge_functions_dict):
         """ Create the Singleton SqFactory. """
-        self.node_functions = nodes_functions_dict
+        self._node_functions = node_functions_dict
+        self._edge_functions = edge_functions_dict
 
         global factory
         factory = self
@@ -73,11 +76,8 @@ class SqFactory(object):
         SqNode                      single instance of concrete subclass
 
         """
-        node = None
-        init_function = self.node_functions[graph_node.type()]
-        node = init_function(graph_node)
-
-        return node
+        init_function = self._node_functions[graph_node.type()]
+        return init_function(graph_node)
 
 
     def construct_edge(self, graph_edge):
@@ -90,20 +90,10 @@ class SqFactory(object):
         SqEdge                      single instance of concrete subclass
 
         """
-
-        #edge = None
-        #
-        #if graph_edge.type() == API_EDGE_TYPE.:
-        #    edge = (graph_edge)
-        #
-        #else if graph_edge.type() == API_EDGE_TYPE.:
-        #    edge = (graph_edge)
-        #
-        #else:
-        #    # TODO: raise an error...something went terribly wrong.
-        #
-        #return edge
-        return sqobject.SqEdge(graph_edge)
+        init_function = self._edge_functions.get(
+                graph_edge.type(),
+                sqobject.SqEdge)  # remove when all SqEdges are subclasses
+        return init_function(graph_edge)
 
 
     def construct_edges(self, graph_edges):

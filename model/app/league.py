@@ -14,7 +14,6 @@ from model.api.game import Game
 from model.api.league import League
 
 from base import ReadModel
-from comments import CommentsModel
 
 
 class LeagueModel(ReadModel):
@@ -54,18 +53,18 @@ class LeagueModel(ReadModel):
         opponents_list = League.load_opponents(league.id).get_opponents()
         league.set_opponents({o.id: o for o in opponents_list})
 
-        # GAMES LOAD
+        # GAMES LOAD (WITH OPPONENTS AND COMMENTERS)
         games_list = League.load_games(league.id).get_games()
-        league.set_games({g.id: g for g in games_list})
 
         # TODO: iterating through this list is only temporary becaue the
         # multiload should have happened in the api.
-        game_ids = [game.id for game in league.get_games()]
+        game_ids = [g.id for g in games_list]
 
-        # load opponents for each game {g_id: Game}
-        games_with_opponents = Game.multiload_opponents(game_ids)
+        # load opponents and commenters for each game {g_id: Game}
+        games_dict = Game.multiload_opponents_and_commenters(game_ids)
 
         # load league with opponents and games into generic context
+        league.set_games(games_dict)
         self._context = league
 
         # league's opponents by Win Count
@@ -75,12 +74,11 @@ class LeagueModel(ReadModel):
                 key=lambda x: x.win_count,
                 reverse=True)
         self._aggregations["standings"] = opponents
-
         self._aggregations["activity"] = None
 
         # store opponents loaded games in reverse order (so it's new first)
-        games = games_with_opponents.values()
-        # reverse returns None as it's in-place
+        games = games_dict.values()
+        # sort returns None as it's in-place
         games.sort(
                 key=lambda x: x.created_ts,
                 reverse=True)
@@ -91,12 +89,6 @@ class LeagueModel(ReadModel):
 
         # load the list of sports
         self._sports = SPORT.ALL
-
-# add comments to the games
-        comments_model = CommentsModel(self.session, game_ids)
-        comments_model.load()
-        for game_id, comments in comments_model.comments.items():
-            games_with_opponents[game_id].comments = comments
 
 
     @property
