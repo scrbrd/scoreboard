@@ -11,7 +11,7 @@ from view.app.components import CoverPhoto, Headline
 from view.app.copy import Copy
 
 from constants import TAB_CLASS, TAB_ID
-from story import GameStory
+from story import StoryFactory
 
 
 class AppHeader(H1):
@@ -219,7 +219,5 @@ class FeedDiv(Div):
 
     def set_content(self, objects):
         """ Construct and add content as a direct child. """
-        # Currently all objects are game
-        games = objects
-        for game in games:
-            self.append_child(GameStory(game))
+        for object in objects:
+            self.append_child(StoryFactory.construct_story(object))

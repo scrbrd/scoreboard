@@ -14,35 +14,86 @@ from view.app.facebook import FacebookThumbnail
 from constants import COMPONENT_CLASS
 
 
-class ResultHeadline(Headline):
+class GameStoryHeadline(Headline):
 
-    """ResultHeadline is a headline for the result of a game. """
+    """ GameStoryHeadline extending Headline. """
 
 
-    def __init__(self, winners, losers):
+    def __init__(self, game):
+        """ Construct a Headline for a GameStory. """
+        super(GameStoryHeadline, self).__init__("")
+
+        self._game = game
+
+        # defined by subclasses
+        self.set_opponents_text()
+
+        self.append_child(SportComponent(game.sport))
+
+
+    def join_opponent_names(self, opponents):
+        """ Return a string list of Opponent names. """
+        return ", ".join([opponent.name for opponent in opponents])
+
+
+    def set_opponents_text(self):
+        """ Set the Opponents Headline text for a GameStory. """
+        raise NotImplementedError("Abstract Method: SUBCLASS MUST OVERRIDE!")
+
+
+class SportComponent(Div):
+
+    """ SportComponent is a subheader for the Sport of a Game. """
+
+
+    def __init__(self, sport):
+        """ Construct a SportComponent extending Div. """
+        super(SportComponent, self).__init__()
+        self.append_class(COMPONENT_CLASS.SPORT_STORY_COMPONENT)
+        self.set_text(sport)
+
+
+class RivalryHeadline(GameStoryHeadline):
+
+    """ RivalryHeadline is a headline for the result of a game. """
+
+
+    def __init__(self, game):
         """ Construct a headline for the played game type. """
-        super(ResultHeadline, self).__init__("")
+        super(RivalryHeadline, self).__init__(game)
 
-        winners_text = ", ".join([winner.name for winner in winners])
-        losers_text = ", ".join([loser.name for loser in losers])
+
+    def set_opponents_text(self):
+        """ Set the Opponents Headline text for a GameStory. """
+        # FIXME: this all breaks the contract that the view doesnt get
+        # access to non-property methods in model.api.Game.
+        winners = self._game.get_opponents(self._game.winner_ids)
+        losers = self._game.get_opponents(self._game.loser_ids)
         headline = "{0} {1} {2}".format(
-                winners_text,
+                self.join_opponent_names(winners),
                 Copy.defeated,
-                losers_text)
+                self.join_opponent_names(losers))
         self.set_text(headline)
 
 
-class PlayedHeadline(Headline):
+class CamaraderieHeadline(GameStoryHeadline):
 
-    """PlayedHeadline is a headline for a game without a result. """
+    """ CamaraderieHeadline is a headline for a game without a result. """
 
 
-    def __init__(self, players):
+    def __init__(self, game):
         """ Construct a headline for the played game type. """
-        super(PlayedHeadline, self).__init__("")
+        super(CamaraderieHeadline, self).__init__(game)
 
-        players_text = ", ".join([p.name for p in players])
-        headline = "{0} {1}".format(players_text, Copy.played)
+
+    def set_opponents_text(self):
+        """ Set the Opponents Headline text for a GameStory. """
+        # FIXME: this all breaks the contract that the view doesnt get
+        # access to non-property methods in model.api.Game.
+        comrades = self._game.get_opponents(self._game.camaraderie_ids)
+        headline = "{0} {1}".format(
+                self.join_opponent_names(comrades),
+                Copy.played)
         self.set_text(headline)
 
 

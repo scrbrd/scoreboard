@@ -102,6 +102,54 @@ class Game(SqNode):
         return opponents
 
 
+    @property
+    def winner_ids(self):
+        """ Return a list of competitive Opponent IDs who won. """
+        return self.opponent_ids_by_result.get(API_EDGE_TYPE.WON_BY, [])
+
+
+    @property
+    def loser_ids(self):
+        """ Return a list of competitive Opponent IDs who lost. """
+        return self.opponent_ids_by_result.get(API_EDGE_TYPE.LOST_BY, [])
+
+
+    @property
+    def tier_ids(self):
+        """ Return a list of competitive Opponent IDs who tied. """
+        return self.opponent_ids_by_result.get(API_EDGE_TYPE.TIED_BY, [])
+
+
+    @property
+    def rivalry_ids(self):
+        """ Return a list of all competitive Opponent IDs for this Game. """
+        rivalry_ids = []
+        rivalry_ids.extend(self.winner_ids)
+        rivalry_ids.extend(self.loser_ids)
+        rivalry_ids.extend(self.tier_ids)
+        return rivalry_ids
+
+
+    @property
+    def camaraderie_ids(self):
+        """ Return a list of friendly Opponent IDs who played. """
+        return self.opponent_ids_by_result.get(API_EDGE_TYPE.PLAYED_BY, [])
+
+
+    # TODO: maybe we should use competitive instead of rivalry
+    @property
+    def is_rivalry(self):
+        """ Return whether this Game is competitive. """
+        return bool(self.rivalry_ids)
+
+
+    # TODO: maybe we should use friendly instead of camaraderie
+    @property
+    def is_camaraderie(self):
+        """ Return whether this Game is friendly. """
+        return bool(self.camaraderie_ids)
+
+
     def get_opponent(self, opp_id):
         """ Return an Opponent by its id. """
         SqNode.assert_loaded(self._opponents)
