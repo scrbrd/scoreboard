@@ -4,7 +4,6 @@ Elements components that will be used in tabs but aren't part of the framework.
 
 """
 
-from view import xsrf
 from view.constants import SQ_DATA, PAGE_NAME
 from view.elements.base import Span, Div, Section, UL, A
 from view.elements.base import Form, TextInput, HiddenInput, SubmitButton
@@ -218,8 +217,7 @@ class CommentForm(Form):
 
         """
         super(CommentForm, self).__init__(
-                "{}{}".format(PAGE_NAME.LEAGUE, story_id),
-                xsrf.get_xsrf_token())
+                "{}{}".format(PAGE_NAME.LEAGUE, story_id))
 
         # TODO: make this draw from view.url constants
         self.set_action("/comment")

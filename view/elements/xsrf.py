@@ -1,6 +1,6 @@
 """ Module: xsrf
 
-Provide an xsrf token to the View.
+Provide Singleton access for the xsrf token to the entire View.
 
 """
 

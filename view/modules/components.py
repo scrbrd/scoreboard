@@ -16,9 +16,9 @@ Each class has a single requirement...override the following:
 import tornado.web
 from tornado import escape
 
-from view import xsrf
 from view.constants import PAGE_TYPE, PAGE_NAME, APP_CLASS, SQ_DATA
 
+from view.elements import xsrf
 from view.elements.base import Element
 
 from view.app.tab.framework import AppHeader, AppFooter, NavHeader

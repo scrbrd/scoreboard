@@ -4,7 +4,6 @@ Element components for Create Game dialog.
 
 """
 
-from view import xsrf
 from view.constants import SQ_DATA, SQ_VALUE, PAGE_NAME
 from view.elements.base import Div, Span, UL, Form, HiddenInput
 from view.elements.components import SwitchInput, MultiColumnLI
@@ -48,9 +47,7 @@ class CreateGameForm(Form):
         Model   data        model constants for data-* hidden inputs
 
         """
-        super(CreateGameForm, self).__init__(
-                PAGE_NAME.CREATE_GAME,
-                xsrf.get_xsrf_token())
+        super(CreateGameForm, self).__init__(PAGE_NAME.CREATE_GAME)
 
         # TODO: make this draw from view.url constants
         self.set_action("/create/game")

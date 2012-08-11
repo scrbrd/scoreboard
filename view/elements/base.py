@@ -85,6 +85,7 @@ they change the functionality of their element.
 
 import xml.etree.cElementTree as ET
 
+import xsrf
 from constants import HTML_TAG, HTML_ATTRIBUTE, HTML_TYPE, HTML_CONSTANT
 from constants import HTML_CLASS
 
@@ -901,19 +902,18 @@ class Form(Element):
 
     """ Form element <form>. """
 
-    def __init__(self, name, xsrf_token):
+    def __init__(self, name):
         """ Construct a <form>.
 
         Required:
         str     name            unique identifying name of form
-        str     xsrf_token      xsrf token to prevent forgery
 
         """
         super(Form, self).__init__(HTML_TAG.FORM)
         self.set_name(name)
 
         # add xsrf token bit to prevent xsrf
-        self.append_child(XSRFHiddenInput(xsrf_token))
+        self.append_child(XSRFHiddenInput())
 
 
 class Input(Element):
@@ -974,14 +974,11 @@ class XSRFHiddenInput(HiddenInput):
 
     xsrf_key = "_xsrf"
 
-    def __init__(self, xsrf_token):
-        """ Construct a <input type="hidden" name="_xsrf" value=TOKEN />
-
-        Required:
-        str     xsrf_token      xsrf token to prevent forgery
-
-        """
-        super(XSRFHiddenInput, self).__init__(self.xsrf_key, xsrf_token)
+    def __init__(self):
+        """ Construct a <input type="hidden" name="_xsrf" value=TOKEN />. """
+        super(XSRFHiddenInput, self).__init__(
+                self.xsrf_key,
+                xsrf.get_xsrf_token())
 
 
 class TextInput(Input):
