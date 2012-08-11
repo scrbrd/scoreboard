@@ -31,7 +31,7 @@ class LeagueContentSection(TabContentSection):
 
     def set_feed_content(self, objects):
         """ Construct and add feed content to this content section. """
-        self.append_child(LeagueFeedDiv(objects))
+        self.append_child(LeagueFeedDiv(self._current_person, objects))
 
 
 

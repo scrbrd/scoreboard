@@ -131,12 +131,18 @@ class TabSection(Section):
 # when it exists. DialogContentSection would be similar.
 class TabContentSection(Section):
 
-    """ TabContentSection encapsulates generic AppPage attributes. """
+    """ TabContentSection encapsulates generic AppPage attributes.
+
+    Person  _current_person     the current User's Person
+
+    """
 
 
-    def __init__(self, context, aggregations, objects):
+    def __init__(self, context, aggregations, objects, current_person):
         """ Construct a tab's content section element tree. """
         super(TabContentSection, self).__init__()
+        self._current_person = current_person
+
         # TODO: set this in an abstract superclass when one exists and probably
         # use PAGE_ID.CONTENT instead.
         self.set_id(TAB_ID.CONTENT)
@@ -158,7 +164,7 @@ class TabContentSection(Section):
 
     def set_feed_content(self, objects):
         """ Construct and add feed content to this content section. """
-        self.append_child(FeedDiv(objects))
+        self.append_child(FeedDiv(self._current_person, objects))
 
 
 class PropertiesDiv(Div):
@@ -206,7 +212,7 @@ class FeedDiv(Div):
     """ FeedDiv encapsulates a tab's feed attribute <div>. """
 
 
-    def __init__(self, objects):
+    def __init__(self, current_person, objects):
         """ Construct a tab's feed content element tree. """
         super(FeedDiv, self).__init__()
         self.set_id(TAB_ID.FEED)
@@ -214,10 +220,11 @@ class FeedDiv(Div):
         self.append_child(Headline(Copy.feed_title))
 
         if len(objects) > 0:
-            self.set_content(objects)
+            self.set_content(current_person, objects)
 
 
-    def set_content(self, objects):
+    def set_content(self, current_person, objects):
         """ Construct and add content as a direct child. """
         for object in objects:
-            self.append_child(StoryFactory.construct_story(object))
+            self.append_child(
+                    StoryFactory.construct_story(current_person, object))

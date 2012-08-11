@@ -37,14 +37,14 @@ class StoryFactory(object):
 
 
     @staticmethod
-    def construct_story(story_object):
+    def construct_story(current_person, story_object):
         """ Construct a Story from a Node or Edge Object. """
 
         story = None
 
         # TODO: find a way to ship node/edge types to the view.
         if story_object.type == "game":
-            story = GameStory.construct_story(story_object)
+            story = GameStory.construct_story(current_person, story_object)
         else:
             raise StoryError(story_object.type, "Story constructor not found.")
 
@@ -75,10 +75,11 @@ class Story(Div):
     """ Story is a single entry for the FeedDiv, extends <div>. """
 
 
-    def __init__(self, story_object):
+    def __init__(self, current_person, story_object):
         """ Construct a Story.
 
         Required:
+        Person  current_person  the current User's associated Person
         SqNode  story_object  Object to build story around
 
         """
@@ -106,7 +107,7 @@ class Story(Div):
         self.append_child(self._main_section)
 
         # add feedback section to story
-        self.append_child(CommentsSection(story_object))
+        self.append_child(CommentsSection(current_person, story_object))
 
 
     def _construct_story_body(self, story_object):
@@ -124,26 +125,27 @@ class GameStory(Story):
     """ Game Story is a single entry for a played game. """
 
 
-    def __init__(self, game):
+    def __init__(self, current_person, game):
         """ Construct a GameStory.
 
         Required:
+        Person  current_person  the current User's associated Person
         object  game    the Game that the story pulls data from
 
         """
-        super(GameStory, self).__init__(game)
+        super(GameStory, self).__init__(current_person, game)
         self.append_class(COMPONENT_CLASS.GAME_STORY)
 
 
     @staticmethod
-    def construct_story(game):
+    def construct_story(current_person, game):
         """ Provide StoryFactory with GameStory subclass constructors. """
         story = None
 
         if game.is_rivalry:
-            story = RivalryGameStory(game)
+            story = RivalryGameStory(current_person, game)
         else:
-            story = CamaraderieGameStory(game)
+            story = CamaraderieGameStory(current_person, game)
 
         return story
 

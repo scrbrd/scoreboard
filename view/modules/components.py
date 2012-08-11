@@ -246,11 +246,16 @@ class UILeaguePage(tornado.web.UIModule):
     def render(self, model=None, state=None):
         """ Render a League. """
         xsrf.set_xsrf_token(escape.xhtml_escape(self.handler.xsrf_token))
+        current_person = None
+        for rival in model.rivals:
+            if (rival.id == self.current_user.person_id):
+                current_person = rival
 
         league_page = LeagueContentSection(
                 model.context,
                 model.aggregations,
-                model.objects)
+                model.objects,
+                current_person)
 
         return Element.to_string(league_page)
 
@@ -265,7 +270,6 @@ class UICreateGameDialog(tornado.web.UIModule):
         xsrf.set_xsrf_token(escape.xhtml_escape(self.handler.xsrf_token))
 
         header_tree = DialogHeader(Copy.create_game_dialog_header)
-
         content_tree = CreateGameContentSection(model)
 
         return Element.to_string(header_tree) + Element.to_string(content_tree)

@@ -115,10 +115,11 @@ class CommentsSection(Section):
     form for inputting new comments. """
 
 
-    def __init__(self, object_with_comments):
+    def __init__(self, current_person, object_with_comments):
         """ Construct a CommentsBox.
 
         Required:
+        Person  current_person  the current User's associated Person
         sqobject object_with_comments  the object that was commented on
 
         """
@@ -126,7 +127,7 @@ class CommentsSection(Section):
         self.append_class(COMPONENT_CLASS.COMMENTS_SECTION)
 
         self.append_child(CommentsList(object_with_comments))
-        self.append_child(CommentForm(object_with_comments.id))
+        self.append_child(CommentForm(current_person, object_with_comments.id))
 
 
 class CommentsList(UL):
@@ -209,10 +210,11 @@ class CommentForm(Form):
     """ A Form for submitting a single comment to a Story. """
 
 
-    def __init__(self, story_id):
+    def __init__(self, current_person, story_id):
         """ Construct a CommentForm.
 
         Required:
+        Person  current_person  the current User's associated Person
         id  story_id    id of the SqNode Story object
 
         """
@@ -225,11 +227,12 @@ class CommentForm(Form):
 
         self.append_child(HiddenInput(SQ_DATA.GAME_ID, story_id))
 
-        # TODO insert session information
-        self.append_child(AppThumbnail())
+        self.append_child(AppThumbnail(current_person.picture))
+
         comment_input = TextInput(SQ_DATA.MESSAGE)
         comment_input.set_placeholder(Copy.comment)
         self.append_child(comment_input)
+
         self.append_child(SubmitButton(Copy.comment))
 
 
