@@ -53,9 +53,7 @@ var DocView = Backbone.View.extend({
         @param {Object} sessionModel
         @param {Object} pageStateModel
     */
-    initialize: function (
-            sessionModel,
-            pageStateModel) {
+    initialize: function (sessionModel, pageStateModel) {
 
         this.setElement(Const.DOM.BODY);
         this.sessionModel = sessionModel;
@@ -65,7 +63,7 @@ var DocView = Backbone.View.extend({
         this.updatePageStateModel(pageStateModel);
 
         if (pageStateModel.pageType() === Const.PAGE_TYPE.TAB) {
-            this.tab = Tab.construct(pageStateModel);
+            this.tab = Tab.construct(sessionModel, pageStateModel);
         } else {
             // TODO have this happen automatically.
             this.pageStateModel.setPageType(Const.PAGE_TYPE.LANDING);

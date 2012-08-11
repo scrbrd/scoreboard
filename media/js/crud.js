@@ -28,7 +28,8 @@ define(
         function ($, Const, Event, EventDispatcher) {
 
 
-var CREATE_URL = "/create/";
+var GAME_URL = "/create/";
+var COMMENT_URL = "/";
 var JSON_RESPONSE = "json";
 
 /**
@@ -60,7 +61,7 @@ var RESPONSE_KEY = {
     @param {Object} objParams The parameters that define this object.
     @param {Function} successFunction The function to run on success.
 */
-function create(type, objParams, successFunction) {
+function create(object_url, type, objParams, successFunction) {
     var escapedParams = JSON.stringify(objParams);
     var requestData = {};
     var xsrfToken;
@@ -73,9 +74,10 @@ function create(type, objParams, successFunction) {
     requestData[REQUEST_KEY.XSRF] = xsrfToken;
     requestData[REQUEST_KEY.PARAMS] = escapedParams;
 
+    console.log(escapedParams);
     var start = new Date().getTime();
     $.post(
-            CREATE_URL + type,
+            object_url + type,
             requestData,
             function (jsonResponse) {
                 var end = new Date().getTime();
@@ -121,7 +123,17 @@ function read(url, successFunction) {
 */
 function createGame(gameParams, successFunction) {
     // TODO: make the gameParams more specific
-    create(Const.API_OBJECT.GAME, gameParams, successFunction);
+    create(GAME_URL, Const.API_OBJECT.GAME, gameParams, successFunction);
+}
+
+/**
+    Create a new Comment on the server.
+    @param {Object} commentParams The parameters that define this comment.
+    @param {Function} successFunction the function to run upon success.
+*/
+function createComment(commentParams, successFunction) {
+    // TODO: make the gameParams more specific
+    create(COMMENT_URL, Const.API_OBJECT.COMMENT, commentParams, successFunction);
 }
 
 /**
@@ -165,6 +177,7 @@ function updatePageState(jsonResponse, pageStateModel) {
 
 return {
     createGame: createGame,
+    createComment: createComment,
     readTab: readTab
 };
 

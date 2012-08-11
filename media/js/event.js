@@ -32,6 +32,7 @@ var event = {
         DISPLAY_DIALOG:         "client-display-dialog",
         ENTER_GAME_DATA:        "client-enter-game-data",
         CREATE_GAME:            "client-create-game",
+        CREATE_COMMENT:         "client-create-comment",
         VIEW_PAGE:              "client-view-page",
         RELOAD_PAGE:            "client-reload-page",
         REQUEST_FACEBOOK_LOGIN: "client-request-facebook-login"
@@ -44,6 +45,7 @@ var event = {
     */
     SERVER: {
         CREATED_GAME:           "server-created-game",
+        CREATED_COMMENT:        "server-created-comment",
         SIGNED_UP:              "server-signed-up",
         UPDATED_SESSION:        "server-updated-session",
         VIEWED_PAGE:            "server-viewed-page"

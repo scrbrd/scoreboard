@@ -19,6 +19,7 @@ var constants = {
     */
     API_OBJECT: {
         GAME:                   "game",
+        COMMENT:                "comment",
         PLAYER:                 "player"
     },
 
@@ -76,7 +77,8 @@ var constants = {
         SWITCH_CHECKBOX:        ".switch-checkbox",
         LIST_WITH_HEADERS:      ".list-with-headers",
         FACEBOOK_LOGIN_ANCHOR:  ".facebook-login-anchor",
-        OPPONENT_TAGS_GROUP:    ".opponent-tags-group"
+        OPPONENT_TAGS_GROUP:    ".opponent-tags-group",
+        COMMENT_FORM:           ".comment-form"
     },
 
     /**

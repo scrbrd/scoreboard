@@ -27,10 +27,11 @@ var LeagueView = TabView.extend({
 
     /**
         Initialize subViews.
+        @param {Object} sessionModel
         @param {Object} pageStateModel
     */
-    initialize: function (pageStateModel) {
-        TabView.prototype.initialize.call(this, pageStateModel);
+    initialize: function (sessionModel, pageStateModel) {
+        TabView.prototype.initialize.call(this, sessionModel, pageStateModel);
     }
 
 });

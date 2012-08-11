@@ -24,6 +24,8 @@
     @requires Backbone
     @requires iScroll
     @requires Const
+    @requires Event
+    @requires EventDispatcher
     @requires DOMUtil
 
 */
@@ -33,9 +35,18 @@ define(
             "Backbone",
             "iScroll",
             "js/constants",
+            "js/event",
+            "js/eventDispatcher",
             "util/dom"
         ],
-        function ($, Backbone, Scroller, Const, DOMUtil) {
+        function (
+                $,
+                Backbone,
+                Scroller,
+                Const,
+                Event,
+                EventDispatcher,
+                DOMUtil) {
 
 
 var MODEL_EVENT = {
@@ -59,12 +70,13 @@ var TabView = Backbone.View.extend({
 
     /**
         Initialize subViews.
+        @param {Object} sessionModel
         @param {Object} pageStateModel
     */
-    initialize: function (pageStateModel) {
+    initialize: function (sessionModel, pageStateModel) {
         this.headerView = new HeaderView(pageStateModel);
         this.navView = new NavView(pageStateModel);
-        this.contentView = new ContentView(pageStateModel);
+        this.contentView = new ContentView(sessionModel, pageStateModel);
     }
 });
 
@@ -144,22 +156,28 @@ var NavView = Backbone.View.extend({
 */
 var ContentView = Backbone.View.extend({
 
+    sessionModel: null,
+    pageStateModel: null,
     // store subViews
     propertiesSection: null,
     summarySection: null,
     feedSection: null,
+    commentForms: null,
 
     /**
         Setup content portion of DOM and bind to model events.
+        @param {Object} sessionModel
         @param {Object} pageStateModel
     */
-    initialize: function (pageStateModel) {
+    initialize: function (sessionModel, pageStateModel) {
         this.setElement(Const.ID.CONTENT);
 
-        this.model = pageStateModel;
-        this.model.on(MODEL_EVENT.CHANGE_CONTENT, this.render, this);
+        this.sessionModel = sessionModel;
+        this.pageStateModel = pageStateModel;
+        this.pageStateModel.on(MODEL_EVENT.CHANGE_CONTENT, this.render, this);
 
-        this.initializeSections(this.model);
+        this.commentForms = this.$el.find(Const.CLASS.COMMENT_FORM);
+        this.initializeSections(this.pageStateModel);
         this.scroller = Scroller.Scroller(
                 DOMUtil.getIDFromSelector(Const.ID.CONTENT_CONTAINER_WRAPPER));
     },
@@ -177,6 +195,20 @@ var ContentView = Backbone.View.extend({
     },
 
     /**
+        Set up ContentView event triggers.
+        Keep _events notation to allow event keys to be variables.
+    */
+    events: function () {
+        var _events = {};
+        var commentFormSelector = Const.CLASS.COMMENT_FORM;
+
+        _events["submit " + commentFormSelector] = "submit";
+
+        return _events;
+    },
+
+
+    /**
         Render the ContentView by updating the content and resetting
         the scroller.
     */
@@ -184,13 +216,28 @@ var ContentView = Backbone.View.extend({
         this.$el.toggle(false);
         this.scroller.scrollTo(0, 0, 0);  // scroll to x, y, time (ms)
         
-        var newEl = $(this.model.content()).insertBefore(this.$el);
+        var newEl = $(this.pageStateModel.content())
+            .insertBefore(this.$el);
         this.$el.remove();
         this.setElement(newEl);
         this.$el.fadeIn('fast');
         this.scroller.refresh();
 
         return this;
+    },
+
+    /**
+        Submit comment form.
+        @param {Object} evt the event that triggered submit
+    */
+    submit: function (evt) {
+        // See form2js.toObject
+        var createCommentParams = $(evt.target).toObject();
+        EventDispatcher.trigger(
+            Event.CLIENT.CREATE_COMMENT,
+            this.sessionModel,
+            createCommentParams);
+        return false;
     }
 });
 
@@ -287,8 +334,8 @@ var FeedSection = Backbone.View.extend({
 });
 
 return {
-    construct: function (options) {
-        return new TabView(options);
+    construct: function (sessionModel, pageStateModel) {
+        return new TabView(sessionModel, pageStateModel);
     }
 };
 

@@ -99,6 +99,10 @@ class _Copy(object):
         return "Versus"
 
     @property
+    def comment(self):
+        return "Comment"
+
+    @property
     def versus_short(self):
         return "VS"
 

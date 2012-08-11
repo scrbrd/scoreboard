@@ -35,6 +35,11 @@ class _ComponentClass(object):
     def RANKINGS_LIST(self):
         return "rankings-list"
 
+    @constant
+    def COMMENT_FORM(self):
+        return "comment-form"
+
+
 COMPONENT_CLASS = _ComponentClass()
 
 

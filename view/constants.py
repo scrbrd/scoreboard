@@ -49,6 +49,10 @@ class _SqData(object):
         return "person-id"
 
     @constant
+    def GAME_ID(self):
+        return "game-id"
+
+    @constant
     def NAME(self):
         return "name"
 
@@ -91,6 +95,10 @@ class _SqData(object):
     @constant
     def SCORE(self):
         return "score"
+
+    @constant
+    def MESSAGE(self):
+        return "message"
 
     @constant
     def PAGE_TYPE(self):

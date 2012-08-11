@@ -6,7 +6,8 @@ Elements components that will be used in tabs but aren't part of the framework.
 
 from view import xsrf
 from view.constants import SQ_DATA, PAGE_NAME
-from view.elements.base import Span, Div, Section, UL, A, Form, HiddenInput
+from view.elements.base import Span, Div, Section, UL, A
+from view.elements.base import Form, TextInput, HiddenInput, SubmitButton
 from view.elements.components import HeadedList, HeadedListItem, NumberedList
 from view.elements.components import MultiColumnLI
 from view.app.copy import Copy
@@ -126,7 +127,7 @@ class CommentsSection(Section):
         self.append_class(COMPONENT_CLASS.COMMENTS_SECTION)
 
         self.append_child(CommentsList(object_with_comments))
-        #self.append_child(CommentsForm(
+        self.append_child(CommentForm(object_with_comments.id))
 
 
 class CommentsList(UL):
@@ -209,25 +210,29 @@ class CommentForm(Form):
     """ A Form for submitting a single comment to a Story. """
 
 
-    def __init__(self, story_object):
+    def __init__(self, story_id):
         """ Construct a CommentForm.
 
         Required:
-        SqNode  story_obejct    Story to grab data from
+        id  story_id    id of the SqNode Story object
 
         """
         super(CommentForm, self).__init__(
-                PAGE_NAME.LEAGUE,
+                "{}{}".format(PAGE_NAME.LEAGUE, story_id),
                 xsrf.get_xsrf_token())
 
         # TODO: make this draw from view.url constants
         self.set_action("/comment")
+        self.append_class(COMPONENT_CLASS.COMMENT_FORM)
 
-        self.append_child(HiddenInput(SQ_DATA.GAME_ID, story_object.id))
+        self.append_child(HiddenInput(SQ_DATA.GAME_ID, story_id))
 
-        # append thumbnail
-        # append text input
-        # append comment button
+        # TODO insert session information
+        self.append_child(AppThumbnail())
+        comment_input = TextInput(SQ_DATA.MESSAGE)
+        comment_input.set_placeholder(Copy.comment)
+        self.append_child(comment_input)
+        self.append_child(SubmitButton(Copy.comment))
 
 
 class RankingsList(HeadedList):

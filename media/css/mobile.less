@@ -965,16 +965,21 @@ form input {
     .altTextText();
 }
 
+.story .comments-section {
+    float: left;
+    clear: both;
+
+    padding-left: @bigPadding;
+    padding-right: @bigPadding;
+}
+
 .comments-section li {
     float: left;
     clear: both;
 
     height: auto;
     line-height: @bigFontSize;
-
     margin-bottom: @bigPadding;
-    padding-left: @bigPadding;
-    padding-right: @bigPadding;
 
     text-align: top;
 }
@@ -989,6 +994,10 @@ form input {
 
 .comments-section .anchor {
     margin-right: @linePadding;
+}
+
+.comments-section .comment-form {
+    clear: both;
 }
 
 

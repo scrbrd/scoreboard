@@ -116,6 +116,14 @@ class _Parameter(object):
         return "league-id"
 
     @constant
+    def GAME_ID(self):
+        return "game-id"
+
+    @constant
+    def MESSAGE(self):
+        return "message"
+
+    @constant
     def METRICS_BY_OPPONENT(self):
         return "metrics-by-opponent"
 

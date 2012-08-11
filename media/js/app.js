@@ -61,6 +61,7 @@
     @requires Router
     @requires LoadPageController
     @requires CreateGameController
+    @requires CreateCommentController
     @requires DialogController
     @requires LoginController
     @requires SessionController
@@ -77,6 +78,7 @@ require(
     'js/router',
     'controller/loadPage',
     'controller/createGame',
+    'controller/createComment',
     'controller/dialog',
     'controller/login',
     'controller/session',
@@ -92,6 +94,7 @@ function (
         Router,
         LoadPageController,
         CreateGameController,
+        CreateCommentController,
         DialogController,
         LoginController,
         SessionController,
@@ -142,6 +145,7 @@ function initializeApp() {
 function initializeControllers() {
     LoadPageController.controller.initialize();
     CreateGameController.controller.initialize();
+    CreateCommentController.controller.initialize();
     DialogController.controller.initialize();
     LoginController.controller.initialize();
     SessionController.controller.initialize();
