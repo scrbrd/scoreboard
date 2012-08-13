@@ -1,4 +1,4 @@
-/***********************************************************
+/******************************5*****************************
 *
 *   App: Scoreboard Mobile
 *   Version: 00.02
@@ -10,36 +10,49 @@
 * COLOR DEFINITIONS
 ************************************************************/
 @black: #000000; // Story Headlines, Story Date Divider, Story Description
-@darkGrey: #6d6e71; // Comments, Text
-@lightGrey: #a3a3a3; // Likes, Text Field Prompts, Story Buttons
-@mysteryColor: #cccccc; // Marketing, Blog, Subtitle
-@navy: #002070; // All Links and Clickable Tags
+@darkGrey: #848484; // Comments, Text
+@lightGrey: #989898; // Likes, Text Field Prompts, Story Buttons
+@navy: #053c75; // All Links and Clickable Tags
 @red: #b20808; // Highlights, Posts, Logo, Splash
 @white: #ffffff; // Statistics
+
+@mysteryColor: #cccccc; // Marketing, Blog, Subtitle
 
 
 /***********************************************************
 * SIZE DEFINITIONS (TO EDIT)
 ************************************************************/
+@bodyFontSize: .9em;
+@bigFontSize: 1.2em;
+@veryBigFontSize: 1.9em;
+
 @screenWidth: 320px;
 @screenHeight: 480px;
 
-@smallLineHeight: 35px; // Smaller Line Height (Nav)
-@normalLineHeight: 44px; // Normal Line Height (Context, LI)
-@headerHeight: @smallLineHeight + @normalLineHeight;
+@bodyLineHeight: 18px;
+@smallLineHeight: @bodyLineHeight * 2; // Smaller Line Height
+@normalLineHeight: 44px; // Normal Line Height (Main Header, LI)
 
+@tinyPadding: 4px;
 @pagePadding: 8px; // Left / Right padding of page content.
+@boxPadding: 14px;
+@columnPadding: @boxPadding;
+@spanPadding: @columnPadding / 2;
 @linePadding: 10px; // Padding above and below text on a line.
 @bigPadding: 15px; // For Stories
 
 @iconSize: 15px;
 
 
+@slightRound: 2px;
+@sharpRound: 6px;
+
 /***********************************************************
 * FONTS (with help from http://fontsquirrel.com)
 ************************************************************/
-@font-face {
-    font-family: 'Helvetica65MediumRegular';
+// FIXME XXX get proper fonts from Leight for the Helveticas
+/* @font-face {
+    font-family: 'HelveticaNeueMedium';
     src: url('fonts/helveticaneue-medium-webfont.eot');
     src: 
         url('fonts/helveticaneue-medium-webfont.eot?#iefix')
@@ -48,58 +61,75 @@
             format('woff'),
         url('fonts/helveticaneue-medium-webfont.ttf')
             format('truetype'),
-        url('fonts/helveticaneue-medium-webfont.svg#Helvetica65MediumRegular')
+        url('fonts/helveticaneue-medium-webfont.svg#HelveticNeueMedium')
             format('svg');
     font-weight: normal;
     font-style: normal;
 }
 
 @font-face {
-    font-family: 'TradeGothicCondEighteenBold';
-    src: url('fonts/tradegothic-boldcondtwenty-webfont.eot');
-    src:
-        url('fonts/tradegothic-boldcondtwenty-webfont.eot?#iefix')
+    font-family: 'HelveticaNeueBold';
+    src: url('fonts/helveticaneue-bold-webfont.eot');
+    src: 
+        url('fonts/helveticaneue-bold-webfont.eot?#iefix')
             format('embedded-opentype'),
-        url('fonts/tradegothic-boldcondtwenty-webfont.woff')
+        url('fonts/helveticaneue-bold-webfont.woff')
             format('woff'),
-        url('fonts/tradegothic-boldcondtwenty-webfont.ttf')
+        url('fonts/helveticaneue-bold-webfont.ttf')
             format('truetype'),
-        url('fonts/tradegothic-boldcondtwenty-webfont.svg#TradeGothicCondEighteenBold')
+        url('fonts/helveticaneue-bold-webfont.svg#HelveticNeueBold')
             format('svg');
-    font-weight: bold;
+    font-weight: normal;
+    font-style: normal;
+} */
+
+@font-face {
+    font-family: 'AlternateGothic';
+    src: url('fonts/alternategothic-webfont.eot'); /* IE9 Compat Modes */
+    src:
+        url('fonts/alternategothic-webfont.eot?#iefix') 
+            format('embedded-opentype'), /* IE6-IE8 */
+        url('fonts/alternategothic-webfont.woff')
+            format('woff'), /* Modern Browsers */
+        url('fonts/alternategothic-webfont.ttf')
+            format('truetype'), /* Safari, Android, iOS */
+        url('fonts/alternategothic-webfont.svg#AlternateGothic')
+            format('svg'); /* Legacy iOS */
+    font-weight: normal;
     font-style: normal;
 }
 
-@bodyFontSize: .9em;
-@heavyFontSize: 1em;
-@bigFontSize: 1.2em;
-@veryBigFontSize: 1.9em;
-@hugeFontSize: 2em;
-
-.headerFont(@fontSize: @veryBigFontSize, @lineHeight: 1em) {
-    font-family: 'TradeGothicCondEighteenBold', sans-serif;
+.headerFont(@fontSize: @veryBigFontSize) {
+    font-family: 'AlternateGothic', sans-serif;
     font-size: @fontSize;
-    font-weight: bold;
-    line-height: @lineHeight; // Screws up vertical alignment.
+    //line-height: @lineHeight; // Screws up vertical alignment.
     text-transform: uppercase;
 }
 
-.subheaderFont(@fontSize: @bigFontSize, @lineHeight: 1em) {
-    font-family: 'Helvetica65MediumRegular', sans-serif;
+.subheaderFont(@fontSize: @bigFontSize) {
+    font-family: 'Helvetica Neue', 'Helvetica', sans-serif;
     font-size: @fontSize;
-    line-height: @lineHeight;
+    font-weight: bold;
+    // line-height: @lineHeight;
 }
 
-.normalFont(@fontSize: @bodyFontSize, @lineHeight: 1em) {
-    font-family: 'Helvetica65MediumRegular', sans-serif;
+.normalFont(@fontSize: @bodyFontSize) {
+    font-family: 'Helvetica Neue', 'Helvetica', sans-serif;
     font-size: @fontSize;
-    line-height: @lineHeight;
+    // line-height: @lineHeight;
 }
 
-.contrastFont(@fontSize: @biggestFontSize, @lineHeight: 1em) {
+.boldFont(@fontSize: @bodyFontSize) {
+    font-family: 'Helvetica Neue', 'Helvetica', sans-serif;
+    font-weight: bold;
+    font-size: @fontSize;
+    // line-height: @lineHeight;
+}
+
+.contrastFont(@fontSize: @biggestFontSize) {
     font-family: Georgia, Serif;
     font-size: @fontSize;
-    line-height: @lineHeight;
+    // line-height: @lineHeight;
 }
 
 
@@ -108,15 +138,15 @@
 ************************************************************/
 @numOfNavColumns: 2;
 
+.headerText() {
+    .headerFont();
+    color: @black;
+}
+
 .mainHeaderText() {
     .subheaderFont();
     color: @white;
     .emboss-text;
-}
-
-.headerText() {
-    .headerFont();
-    color: @black;
 }
 
 .subheaderText() {
@@ -124,22 +154,21 @@
     color: @black;
 }
 
-.componentText() {
+/* .componentText() {
     .subheaderFont();
     color: @lightGrey;
     //.emboss-text;
-}
+} */
 
 .clickableText() {
-    .normalFont(@heavyFontSize, auto);
-    font-weight: bold;
+    .boldFont();
     color: @navy;
 }
 
-.statisticText() {
+/* .statisticText() {
     .normalFont();
     color: @white;
-}
+} */
 
 .textText() {
     .normalFont();
@@ -148,7 +177,7 @@
 
 .altTextText() {
     .normalFont();
-    color: @lightGrey;
+    color: @darkGrey;
 }
 
 .buttonText() {
@@ -201,9 +230,10 @@ the same border. */
 }
 
 .form-element {
-    .border-radius(@bigPadding);
+    .border-radius(@sharpRound);
     .inner-box-shadow(); 
-    padding: 5px @pagePadding;
+    height: @smallLineHeight;
+    padding: @columnPadding @pagePadding;
     background-color: @white;
     border: 1px solid @lightGrey;
 }
@@ -350,6 +380,10 @@ body {
     /* -webkit-user-select: none;*/
 }
 
+span {
+    word-wrap: break-word;
+}
+
 ol, ul {
     margin: 0px;
     padding: 0px;
@@ -359,8 +393,10 @@ ol, ul {
 }
 
 li {
-    height: @smallLineHeight;
-    line-height: @smallLineHeight;
+    // height: @normalLineHeight;
+    // line-height: @normalLineHeight;
+    margin-top: @linePadding;
+    margin-bottom: @linePadding;
 }
 
 .anchor, .anchor:link, .anchor:visited {
@@ -378,12 +414,12 @@ li {
 
 
 input, button, textarea, select {
-    vertical-align: middle;
+    //vertical-align: middle;
 }
 
 form input {
     .form-element;
-    .altTextText();
+    .textText();
 }
 
 .button {
@@ -395,23 +431,23 @@ form input {
 /***********************************************************
 * ELEMENT COMPONENTS - NO POSITIONING!!!
 ************************************************************/
-@thumbnailSide: 25px;
 @buttonImageSide: 37px;
 @submitButtonHeight: 38px;
 @submitButtonWidth: 132px;
 
 .thumbnail{
-    width: @thumbnailSide;
+    width: @smallLineHeight;
+    .border-radius(@slightRound);
 }
 
 .submit-button {
     .mainHeaderText();
-    .border-radius(24px);
+    .border-radius(@sharpRound);
     height: @submitButtonHeight;
     width: @submitButtonWidth;
     background-color: @red;
-    margin-top: @bigPadding;
-    margin-bottom: @bigPadding;
+    margin-top: @boxPadding;
+    margin-bottom: @boxPadding;
 }
 
 .create-button {
@@ -533,7 +569,7 @@ form input {
 }
 
 .headed-list .list-header {
-    color: @lightGrey;
+    .altTextText;
     height: @smallLineHeight - 5px;
     line-height: @smallLineHeight - 5px;
 }
@@ -548,7 +584,7 @@ form input {
     content: '';
     width: 100%;
     float: left;
-    margin-left: @bigPadding;
+    margin-left: @boxPadding;
     height: 0px;
     border-bottom: 1px dotted @lightGrey;
 }*/
@@ -683,8 +719,9 @@ form input {
 ************************************************************/
 .headline {
     .headerText;
-    padding-top: @linePadding;
-    padding-bottom: @linePadding;
+    clear: both;
+    padding-top: @boxPadding;
+    padding-bottom: @boxPadding;
     border-bottom: 1px dotted @lightGrey;
 }
 
@@ -701,7 +738,7 @@ form input {
 
 .icon {
     width: @iconSize;
-    margin-right: @linePadding;
+    margin-right: @spanPadding;
 }
 
 .opponent-group-section {
@@ -757,10 +794,6 @@ form input {
     width: 100%;
 }
 
-#dialog-content-container:first-child {
-    padding-right:15px;
-}
-
 
 /***********************************************************
 * TAB FRAMEWORK
@@ -775,7 +808,7 @@ form input {
 }
 
 #content {
-    margin-top: @headerHeight * 2.75;
+    margin-top: @normalLineHeight * 4;
 }
 
 #content #properties {
@@ -789,6 +822,7 @@ form input {
 #content #summary {
     position: relative;
     
+    float: left;
     width: 100%;
     padding-left: @pagePadding;
     padding-right: @pagePadding;
@@ -797,6 +831,7 @@ form input {
 #content #feed {
     position: relative;
 
+    clear: both;
     width: 100%;
     padding-left: @pagePadding;
     padding-right: @pagePadding;
@@ -850,6 +885,7 @@ form input {
     left: @pagePadding;
 }
 
+/*
 .second-header {
     .header-section;
     position: relative;
@@ -873,7 +909,7 @@ form input {
 #tab nav li a {
     color: @white;
 }
-
+    */
 
 /***********************************************************
 * TAB FOOTER 
@@ -894,10 +930,9 @@ form input {
     width: 100%;
     background: @white;
     
-    margin-bottom: @linePadding; 
-    padding-left: @bigPadding;
-    padding-right: @bigPadding;
-    padding-bottom: @pagePadding;
+    padding-left: @boxPadding;
+    padding-right: @boxPadding;
+    padding-bottom: @boxPadding;
 }
 
 .rankings-list .list-column {
@@ -906,12 +941,13 @@ form input {
 
 .rankings-list .headed-list-item .list-column:nth-child(1) {
     float: left;
-    width: 10%;
+    width: @smallLineHeight;
 }
 .rankings-list .headed-list-item .list-column:nth-child(2) {
     float: left;
-    width: 35%;
-    margin-left: @pagePadding;
+    width: 25%;
+    //overflow: auto;
+    margin-left: @columnPadding;
     text-align: left;
 }
 
@@ -922,20 +958,23 @@ form input {
 
 // only header
 .rankings-list .list-header .list-column:nth-child(2) {
-    margin-left: @bigPadding;
+    margin-left: @bigPadding + @smallLineHeight + @columnPadding;
 }
 
 // only ranked li
 .rankings-list li.headed-list-item {
+    margin-top: 0px;
+    margin-bottom: 0px;
+    padding-top: @tinyPadding;
+    padding-bottom: @tinyPadding;
+
+    line-height: @bodyLineHeight * 2;
 }
 
 .rankings-list .numbered-list li:before {
+    line-height: @bodyLineHeight * 2;
     float: left;
     width: @bigPadding;
-}
-
-.rankings-list .thumbnail {
-    margin-top: -3px;
 }
 
 .story {
@@ -946,58 +985,72 @@ form input {
    
     margin-top: @linePadding;
     margin-bottom: @linePadding;
-    padding-bottom: @bigPadding;
+    padding-bottom: @boxPadding;
 }
 
 .story .main-story-section {
     clear: both;
-    padding-left: @bigPadding;
-    padding-right: @bigPadding;
-}
+    margin-top: @boxPadding;
+    margin-bottom: @boxPadding;
+    padding-left: @boxPadding;
+    padding-right: @boxPadding;
 
-.story .main-story-section div {
-    margin-top: @linePadding;
-    margin-bottom: @linePadding;
 }
 
 // FIXME: this is terrible.
 .story .sport-story-component {
     .altTextText();
+    margin-right: @spanPadding;
 }
 
 .story .comments-section {
     float: left;
     clear: both;
 
-    padding-left: @bigPadding;
-    padding-right: @bigPadding;
+    width: 100%;
+    padding-left: @boxPadding;
+    padding-right: @boxPadding;
 }
 
 .comments-section li {
-    float: left;
-    clear: both;
-
+    width: 100%;
     height: auto;
-    line-height: @bigFontSize;
-    margin-bottom: @bigPadding;
+    line-height: @bodyLineHeight;
+    margin-bottom: @linePadding;
 
     text-align: top;
 }
 
 .comments-section .list-column {
-    float: left;
+    overflow: auto;
 }
 
 .comments-section .thumbnail {
-    margin-right: @linePadding;
+    float: left;
+    margin-right: @columnPadding;
 }
 
 .comments-section .anchor {
-    margin-right: @linePadding;
+    margin-right: @spanPadding;
 }
 
 .comments-section .comment-form {
     clear: both;
+    width: 100%;
+}
+
+// FIXME put classes here instead of div and input
+.comments-section .comment-form div {
+    overflow: auto;
+}
+
+.comments-section .comment-form input {
+    width: 100%;
+}
+
+// hidden submit button (enter and 'Go' only
+.comments-section .submit-button {
+    display: none;
 }
 
 
@@ -1075,7 +1128,7 @@ form input {
 
 .dialog-content {
     height: 100%;
-    padding: @pagePadding;
+    padding: @boxPadding;
 
     text-align: center;
 }
@@ -1083,7 +1136,7 @@ form input {
 // needed?
 .post-button-wrapper {
     position: absolute;
-    bottom: @pagePadding;
+    bottom: @boxPadding;
     left: 0px;
     width: 100%;
 }
@@ -1093,30 +1146,35 @@ form input {
     text-align: center;
 }
 
-.autocomplete-tag input[type='text'] {
-    margin-left: @pagePadding;
-    margin-right: @pagePadding;
-    width: 75%;
+.autocomplete-tag .thumbnail {
+    float: left;
+}
+
+.autocomplete-tag div {
+    padding-left: @columnPadding;
+    padding-right: @columnPadding;
+    overflow: auto;
+}
+
+.autocomplete-tag input {
+    width: 100%;
 }
 
 .autocomplete-tag .remove-tag-button {
+    margin-top: 8px;
+    float: right;
 }
 
 .autocomplete-tag .ui-menu-item-with-thumbnail .thumbnail {
-    margin-right: @linePadding;
-    margin-top: -3px;
+    margin-right: @columnPadding;
 }
 
 /***********************************************************
 * CREATE GAME DIALOG
 ************************************************************/
 .game-type-subheader {
-    .componentText;
+    .subheaderText;
 }
-
-//.game-type-label {
-//    .componentText;
-//}
 
 .game-type-switch {
 }
@@ -1170,16 +1228,19 @@ form input {
     overflow-x: hidden;
     background-color: @white;
     border: 1px solid @darkGrey;
-    border-radius: 12px;
-    padding: @bigPadding;
-}
-
-.ui-menu-item {
+    border-radius: @sharpRound;
+    padding: @linePadding;
 }
 
 .ui-menu-item {
     cursor: pointer;
     border-top: 1px dotted @darkGrey;
+    margin-top: 0px;
+    margin-bottom: 0px;
+    padding-top: @tinyPadding;
+    padding-bottom: @tinyPadding;
+
+    line-height: @smallLineHeight;
 }
 
 .ui-menu-item:hover, .ui-menu-item:active {
@@ -1187,10 +1248,12 @@ form input {
 }
 
 .ui-menu-item a {
-    .altTextText;
-    width: 100%;
+    .textText;
     display: inline-block;
+
+    width: 100%;
     height: @smallLineHeight;
+
     line-height: @smallLineHeight;
 }
 

@@ -4,6 +4,6 @@ A collection of console scripts to run admin actions:
 ############################################################################
 # REMOVE ALL GAMES FROM A LEAGUE
 ############################################################################
-g.v({ID}).out('{EDGE}').dedup().sideEffect{g.removeVertex(it);}
+g.v(144).out('has_scheduled').dedup().sideEffect{g.removeVertex(it);}
 ID = 144
 EDGE = 'has_scheduled'

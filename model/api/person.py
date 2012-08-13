@@ -35,6 +35,7 @@ class Person(sqobject.SqNode):
     str     last_name       last name
     url     link            profile url
     url     picture         profile picture url
+    url     big_picture     big profile picture url
 
     """
 
@@ -106,9 +107,15 @@ class Person(sqobject.SqNode):
 
 
     @property
-    def picture(self):
+    def picture_url(self):
         """ Return a url for this Person's profile picture. """
         return self._get_property(API_NODE_PROPERTY.PICTURE)
+
+
+    @property
+    def big_picture_url(self):
+        """ Return the big version of the Person's profile picture url. """
+        return self._get_property(API_NODE_PROPERTY.BIG_PICTURE)
 
 
     def get_leagues(self):

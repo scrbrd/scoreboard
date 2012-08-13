@@ -74,7 +74,6 @@ function create(object_url, type, objParams, successFunction) {
     requestData[REQUEST_KEY.XSRF] = xsrfToken;
     requestData[REQUEST_KEY.PARAMS] = escapedParams;
 
-    console.log(escapedParams);
     var start = new Date().getTime();
     $.post(
             object_url + type,

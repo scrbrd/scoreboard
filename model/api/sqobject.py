@@ -204,10 +204,10 @@ class SqNode(SqObject, StatComputer):
         # create a hierarchy when other third parties enter the mix.
 
         property = None
-
         sq_property = self._properties.get(key, None)
 
         tp_key = SqNode.third_party_property_key(third_party, key)
+
         tp_property = self._properties.get(tp_key, None)
 
         if use_third_party:

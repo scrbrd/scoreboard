@@ -20,14 +20,11 @@ class CommentHandler(QueryHandler):
     def process_asynchronous_request(self):
         """ Handle the asynchronous requests. """
 
-        print("here!!!!!")
         # get comment parameters from request
         parameters = self.get_request_parameters()
         game_id = parameters[PARAMETER.GAME_ID]
         message = parameters[PARAMETER.MESSAGE]
 
-        print(game_id)
-        print(message)
         # create comment in model
         model = CreateCommentModel(
                 self.current_user,

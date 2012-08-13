@@ -41,10 +41,12 @@ class AutocompleteInput(Div):
         self.append_class(DIALOG_CLASS.AUTOCOMPLETE)
 
         # textinput doesn't actually contain data but does autocomplete.
+        input_div = Div()  # for overflow auto and automatic width
         input = TextInput(name + "-" + DIALOG_CLASS.AUTOCOMPLETE_LABEL)
         input.set_placeholder(placeholder)
         input.append_class(DIALOG_CLASS.AUTOCOMPLETE_LABEL)
-        self.append_child(input)
+        input_div.append_child(input)
+        self.append_child(input_div)
 
         # hiddeninput has actual data to submit.
         hidden = HiddenInput(name)
@@ -79,7 +81,7 @@ class TagAutocomplete(AutocompleteInput):
         thumbnail.append_class(DIALOG_CLASS.AUTOCOMPLETE_THUMBNAIL)
         self.insert_child(thumbnail)
 
-        self.append_child(RemoveTagButton())
+        self.insert_child(RemoveTagButton())
 
 
     def set_thumbnail(self):

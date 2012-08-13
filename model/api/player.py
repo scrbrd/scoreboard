@@ -43,12 +43,7 @@ class Player(person.Person, opponent.Opponent):
                 ]
 
 
-    @property
-    def picture_url(self):
-        """ Return the player's profile picture url. """
-        return self._get_property(API_NODE_PROPERTY.PICTURE)
-
-
+    # FIXME move this method to Person
     @property
     def comments_posted(self):
         """ Return a list of comments made by this player, sorted by most
@@ -122,6 +117,7 @@ class Player(person.Person, opponent.Opponent):
                 API_NODE_PROPERTY.LINK,
                 API_NODE_PROPERTY.GENDER,
                 API_NODE_PROPERTY.PICTURE,
+                API_NODE_PROPERTY.BIG_PICTURE,
                 ]
 
 

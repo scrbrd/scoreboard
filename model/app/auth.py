@@ -58,7 +58,7 @@ class AuthModel(BaseModel):
 
         Required:
         dict    session     a dictionary representation of the user's session
-        ???     raw_user    a raw user object from authentication
+        dict    raw_user    a raw user object from authentication
 
         """
         super(AuthModel, self).__init__(session)
@@ -206,7 +206,6 @@ class FacebookAuthModel(AuthModel):
         #    assume exclusively.
         # 4/ is it more sensible to keep these methods separate if it turns out
         #    we can't easily generalize across other Person subclasses?
-
         (user, player) = User.create_user_and_player(
                 PROPERTY_VALUE.EMPTY,
                 PROPERTY_VALUE.EMPTY,

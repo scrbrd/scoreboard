@@ -11,7 +11,7 @@ from view.app.components import OpponentGroupsSection, RelativeDateComponent
 
 from constants import COMPONENT_CLASS
 from components import CamaraderieHeadline, RivalryHeadline, MainStorySection
-from components import CommentsSection
+from components import CommentsSection, SportComponent
 
 
 # TODO: get this from handlers in production
@@ -173,6 +173,8 @@ class RivalryGameStory(GameStory):
 
         self._main_section.append_child(RivalryHeadline(game))
 
+        self._main_section.append_child(SportComponent(game.sport))
+
 
 class CamaraderieGameStory(GameStory):
 
@@ -194,6 +196,8 @@ class CamaraderieGameStory(GameStory):
 
         # Create the Headline with all players.
         self._main_section.append_child(CamaraderieHeadline(game))
+
+        self._main_section.append_child(SportComponent(game.sport))
 
 
     @staticmethod

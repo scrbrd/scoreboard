@@ -5,8 +5,8 @@ Element components for Create Game dialog.
 """
 
 from view.constants import SQ_DATA, SQ_VALUE, PAGE_NAME
-from view.elements.base import Div, Span, UL, Form, HiddenInput
-from view.elements.components import SwitchInput, MultiColumnLI
+from view.elements.base import Div, Span, UL, Form, HiddenInput, LI
+from view.elements.components import SwitchInput
 from view.app.copy import Copy
 from view.app.components import Headline, Subheadline
 
@@ -197,9 +197,9 @@ class OpponentTagsUL(UL):
         self.append_child(OpponentTagLI(item, index))
 
 
-class OpponentTagLI(MultiColumnLI):
+class OpponentTagLI(LI):
 
-    """ OpponentTagLI extending MultiColumnLI. """
+    """ OpponentTagLI extending LI. """
 
 
     def __init__(self, item, index):
@@ -216,9 +216,7 @@ class OpponentTagLI(MultiColumnLI):
                 SQ_DATA.METRICS_BY_OPPONENT,
                 self._index,
                 item)
-        input_span = Span()
-        input_span.append_child(PlayerAutocomplete(metrics_by_opponent))
-        self.set_column(input_span)
+        self.append_child(PlayerAutocomplete(metrics_by_opponent))
 
 
 class SportTagSubheader(Subheadline):

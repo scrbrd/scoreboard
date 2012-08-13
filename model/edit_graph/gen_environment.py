@@ -21,16 +21,10 @@ last_name_field = "last_name"
 player_templates = []
 for n in range(0, NUMBER_OF_PLAYER_SETS):
     new_players = [
-            {first_name_field: "David", last_name_field: "Wright"},
-            {first_name_field: "Rafael", last_name_field: "Nadal"},
-            {first_name_field: "Michael", last_name_field: "Phelps"},
-            {first_name_field: "Jeremy", last_name_field: "Lin"},
-            {first_name_field: "Magic", last_name_field: "Johnson"},
-            {first_name_field: "Charles", last_name_field: "Barkley"},
-            {first_name_field: "Buster", last_name_field: "Posey"},
-            {first_name_field: "Doc", last_name_field: "Brown"},
-            {first_name_field: "Flozell", last_name_field: "Adams"},
-            {first_name_field: "Wayne", last_name_field: "Gretzky"},
+            {first_name_field: "Dan", last_name_field: "Sinnreich"},
+            {first_name_field: "Tom", last_name_field: "Greenwoord"},
+            {first_name_field: "Roophy", last_name_field: "Roy"},
+            {first_name_field: "Jason", last_name_field: "White"},
             ]
     player_templates.extend(new_players)
 

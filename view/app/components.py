@@ -167,7 +167,10 @@ class OpponentGroup(Div):
         for opponent in opponents:
             # FIXME: model should send None instead of "" since "" is a valid
             # src, but model doesn't yet distinguish/translate empty db values.
-            src = opponent.picture if opponent.picture else None
+            # big_picture_url is from Person, not Opponent
+            src = None
+            if opponent.big_picture_url:
+                src = opponent.big_picture_url
             self.append_child(AppThumbnail(src, opponent.name))
 
 

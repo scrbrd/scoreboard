@@ -51,7 +51,6 @@ var createCommentController = (function () {
         @param {Object} rawComment raw Comment parameters: game_id, message
     */
     that.handleSubmit = function (sessionModel, rawComment) {
-        console.log("in handleSubmit");
         var comment = rawComment; // no preparation needed
 
         Crud.createComment(comment, function (response) {

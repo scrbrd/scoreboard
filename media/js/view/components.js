@@ -43,8 +43,8 @@ var Autocomplete = Backbone.View.extend({
     initialize: function (elem) {
         this.setElement(elem);
 
-        this.labelInput = this.$el.children(Const.CLASS.AUTOCOMPLETE_LABEL);
-        this.valueInput = this.$el.children(Const.CLASS.AUTOCOMPLETE_VALUE);
+        this.labelInput = this.$el.find(Const.CLASS.AUTOCOMPLETE_LABEL);
+        this.valueInput = this.$el.find(Const.CLASS.AUTOCOMPLETE_VALUE);
 
         _.bindAll(this);
         this.labelInput.focus(this.buildAutocomplete);
@@ -154,7 +154,7 @@ var TagAutocomplete = Autocomplete.extend({
     initialize: function(elem, objects){
         Autocomplete.prototype.initialize.call(this, elem);
 
-        this.thumbnail = this.$el.children(Const.CLASS.AUTOCOMPLETE_THUMBNAIL);
+        this.thumbnail = this.$el.find(Const.CLASS.AUTOCOMPLETE_THUMBNAIL);
         this.removeTagButton = this.$el.find(Const.CLASS.REMOVE_TAG_BUTTON);
 
         this.objects = objects;

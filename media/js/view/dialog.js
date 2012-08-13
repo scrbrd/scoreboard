@@ -144,7 +144,6 @@ var DialogView = Backbone.View.extend({
     initForm: function (leagueID, rivals, sports) {
         var formPageName = this.pageName;
         this.form.find(Const.NAME.LEAGUE_ID).val(leagueID);
-
         // TODO: add additional row functionality
         // disabled row, gets enabled, add new row
 

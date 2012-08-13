@@ -262,6 +262,10 @@ class _APINodeProperty(object):
         return "picture"
 
     @constant
+    def BIG_PICTURE(self):
+        return "big_picture"
+
+    @constant
     def EMAIL(self):
         return "email"
 

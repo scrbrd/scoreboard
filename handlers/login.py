@@ -5,6 +5,7 @@
 import os
 import hashlib
 from time import time
+import facebook
 
 import tornado.web
 import tornado.auth
@@ -108,6 +109,12 @@ class LoginHandler(BaseHandler, tornado.auth.FacebookGraphMixin):
         if not raw_user:
             raise tornado.web.HTTPError(500, "Facebook auth failed.")
 
+        # add a big picture field to the raw_user dictionary
+        # FIXME XXX add constants
+        raw_user["big_picture"] = self._get_big_picture(
+                raw_user["access_token"],
+                raw_user["id"])
+
         model = FacebookAuthModel(self.current_user, raw_user)
         model.set_ip(self.request.remote_ip)
         model.set_locale(self.locale.code)
@@ -129,6 +136,18 @@ class LoginHandler(BaseHandler, tornado.auth.FacebookGraphMixin):
                 raw_user.get(FACEBOOK_AUTH_SCOPE.ACCESS_TOKEN))
 
         self.redirect(self.get_next_url())
+
+
+    def _get_big_picture(self, access_token, fb_id):
+        """ Get a large picture from facebook. """
+        graph = facebook.GraphAPI(access_token)
+        picture = graph.get_connections(
+                fb_id,
+                "picture",
+                width=150,
+                height=150)
+        return picture['url']
+
 
 
     def redirect_uri(self):

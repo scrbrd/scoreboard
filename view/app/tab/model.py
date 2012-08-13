@@ -28,7 +28,7 @@ class SessionModel(DataInput):
             view_rivals.append({
                     SQ_DATA.ID: r.id,
                     SQ_DATA.NAME: r.full_name,
-                    SQ_DATA.PICTURE: r.picture,
+                    SQ_DATA.PICTURE: r.picture_url,
                     })
         self.set_data(SQ_DATA.RIVALS, json.dumps(view_rivals))
 

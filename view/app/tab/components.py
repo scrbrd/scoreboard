@@ -29,8 +29,6 @@ class GameStoryHeadline(Headline):
         # defined by subclasses
         self.set_opponents_text()
 
-        self.append_child(SportComponent(game.sport))
-
 
     def join_opponent_names(self, opponents):
         """ Return a string list of Opponent names. """
@@ -42,13 +40,13 @@ class GameStoryHeadline(Headline):
         raise NotImplementedError("Abstract Method: SUBCLASS MUST OVERRIDE!")
 
 
-class SportComponent(Div):
+class SportComponent(Span):
 
     """ SportComponent is a subheader for the Sport of a Game. """
 
 
     def __init__(self, sport):
-        """ Construct a SportComponent extending Div. """
+        """ Construct a SportComponent extending Span. """
         super(SportComponent, self).__init__()
         self.append_class(COMPONENT_CLASS.SPORT_STORY_COMPONENT)
         self.set_text(sport)
@@ -169,7 +167,7 @@ class CommentsList(UL):
             # the view shouldn't have to merge two items into one item. clearly
             # the comment should have more information in it.
             comment.commenter_name = person.name
-            comment.commenter_picture = person.picture
+            comment.commenter_picture_url = person.picture_url
             items.append(comment)
 
         return items
@@ -186,7 +184,7 @@ class CommentsLI(MultiColumnLI):
         comment = item
 
         thumbnail = AppThumbnail(
-                comment.commenter_picture,
+                comment.commenter_picture_url,
                 comment.commenter_name)
         self.set_column(thumbnail)
 
@@ -227,12 +225,15 @@ class CommentForm(Form):
 
         self.append_child(HiddenInput(SQ_DATA.GAME_ID, story_id))
 
-        self.append_child(AppThumbnail(current_person.picture))
+        self.append_child(AppThumbnail(current_person.picture_url))
 
+        # div allows overflow: auto to maximize that column
+        comment_div = Div()
         comment_input = TextInput(SQ_DATA.MESSAGE)
         comment_input.set_placeholder(Copy.comment)
-        self.append_child(comment_input)
+        comment_div.append_child(comment_input)
 
+        self.append_child(comment_div)
         self.append_child(SubmitButton(Copy.comment))
 
 
