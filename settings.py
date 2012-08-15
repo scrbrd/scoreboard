@@ -6,14 +6,11 @@ from tornado.options import define, options
 
 import logconfig
 
-from view.modules.components import UIAppHeader, UITabHeader, UINavHeader
-from view.modules.components import UIGamesNav, UIRankingsNav, UIAppFooter
-from view.modules.components import UIGamesList, UIRankingsList, UILeaguePage
+from view.modules.components import UITabHeader
+from view.modules.components import UILeaguePage, UILeagueModel
 from view.modules.components import UICreateGameDialog, UILandingPage
 from view.modules.components import UISessionModel, UIContextModel
 from view.modules.components import UIPageModel, UITabModel
-from view.modules.components import UIGamesModel, UIRankingsModel
-from view.modules.components import UILeagueModel
 
 # Application constants
 
@@ -67,21 +64,12 @@ settings['facebook_secret'] = FACEBOOK_SECRET
 
 settings['template_loader'] = tornado.template.Loader(TEMPLATE_ROOT)
 settings['ui_modules'] = {
-    'UIAppFooter': UIAppFooter,
-    'UIAppHeader': UIAppHeader,
     'UIContextModel': UIContextModel,
     'UICreateGameDialog': UICreateGameDialog,
-    'UIGamesList': UIGamesList,
-    'UIGamesModel': UIGamesModel,
-    'UIGamesNav': UIGamesNav,
     'UILandingPage': UILandingPage,
     'UILeagueModel': UILeagueModel,
     'UILeaguePage': UILeaguePage,
-    'UINavHeader': UINavHeader,
     'UIPageModel': UIPageModel,
-    'UIRankingsList': UIRankingsList,
-    'UIRankingsModel': UIRankingsModel,
-    'UIRankingsNav': UIRankingsNav,
     'UISessionModel': UISessionModel,
     'UITabHeader': UITabHeader,
     'UITabModel': UITabModel,

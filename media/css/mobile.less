@@ -693,7 +693,7 @@ form input {
     z-index: 20;
 }
     
-#tab-header, .second-header {
+#tab-header {
     z-index: 15;
 }
 
@@ -885,41 +885,6 @@ form input {
     left: @pagePadding;
 }
 
-/*
-.second-header {
-    .header-section;
-    position: relative;
-    
-    margin-top: @normalLineHeight;
-}
-
-
-#tab nav ul {
-    line-height: @smallLineHeight;
-    height: @smallLineHeight;
- 
-    .columns(@numOfNavColumns);
-} 
-
-#tab nav li {
-    height: @smallLineHeight;
-    color: @black;
-}
-
-#tab nav li a {
-    color: @white;
-}
-    */
-
-/***********************************************************
-* TAB FOOTER 
-************************************************************/
-/* #tab footer {
-    position: absolute;
-    bottom: 15px; 
-    right: 15px;
-} */
-
 
 /***********************************************************
 * TAB COMPONENTS
@@ -1051,47 +1016,6 @@ form input {
 // hidden submit button (enter and 'Go' only
 .comments-section .submit-button {
     display: none;
-}
-
-
-/***********************************************************
-* TAB SECTION
-************************************************************/
-@navButtonWidth: 160px;
-@navButtonHeight: 35px;
-
-.navButton (@imageSource, @backgroundColor) {
-    .hidden-content;
-    .background-image-wrapper(
-            @navButtonWidth,
-            @navButtonHeight,
-            @imageSource,
-            @backgroundColor);
-    display: block;
-}
-
-
-/***********************************************************
-* GAMES TAB SECTION
-************************************************************/
-.anchor.games.active-nav {
-    .navButton('gamesPressed.jpg', @white);
-}
-
-.anchor.games {
-    .navButton('gamesUnpressed.jpg', @white);
-}
-
-
-/***********************************************************
-* RANKINGS TAB SECTION
-************************************************************/
-.anchor.rankings.active-nav {
-    .navButton('rankingsPressed.jpg', @white);
-}
-
-.anchor.rankings {
-    .navButton('rankingsUnpressed.jpg', @white);
 }
 
 

@@ -55,9 +55,6 @@ class _TabClass(object):
     def SUMMARY_ITEM(self):
         return "summary-item"
 
-    @constant
-    def SECOND_HEADER(self):
-        return "second-header"
 
 TAB_CLASS = _TabClass()
 

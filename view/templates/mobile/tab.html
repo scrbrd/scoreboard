@@ -3,18 +3,16 @@
 
 {% block header_section %}
     <header>
-        <hgroup>
-            {% block tab_header %}
-                {% include components/tab_header.html %}
-            {% end %} 
-            {% block context_model %}
-                {% include components/context_model.html %}
-            {% end %} 
-            {% block session %}
-                {% include components/session_model.html %}
-            {% end %}
-            {% block nav_header %}{% end %}
-        </hgroup>
+        {% block tab_header %}
+            {% include components/tab_header.html %}
+        {% end %} 
+        {% block context_model %}
+            {% include components/context_model.html %}
+        {% end %} 
+        {% block session %}
+            {% include components/session_model.html %}
+        {% end %}
+        {% block nav_header %}{% end %}
     </header>
 {% end %}
 
@@ -26,9 +24,4 @@
             {% block content_model %} EMPTY CONTENT MODEL{% end %} 
         </div>
     </div>
-{% end %}
-
-
-{% block footer_section %}
-    {% module UIAppFooter() %}
 {% end %}

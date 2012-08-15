@@ -5,24 +5,13 @@ Element components that are for the tab framework.
 """
 
 from view.constants import SQ_DATA
-from view.elements.base import H1, Nav, Footer, Section, UL, LI, A, Div
+from view.elements.base import Section, Div
 from view.elements.components import CreateButton, MenuButton, MainHeaderDiv
 from view.app.components import CoverPhoto, Headline
 from view.app.copy import Copy
 
 from constants import TAB_CLASS, TAB_ID
 from story import StoryFactory
-
-
-class AppHeader(H1):
-
-    """ App header extending <h1>. """
-
-
-    def __init__(self, app_name):
-        """ Construct an app header element tree. """
-        super(AppHeader, self).__init__()
-        self.set_text(app_name)
 
 
 class TabHeader(MainHeaderDiv):
@@ -43,71 +32,6 @@ class TabHeader(MainHeaderDiv):
 
         self.append_child(MenuButton())
         self.append_child(CreateButton())
-
-
-class NavHeader(Nav):
-
-    """ Nav header extending <nav>. """
-
-
-    def __init__(self, items, special_item=None, special_item_index=0):
-        """ Construct a nav header element tree. """
-        super(NavHeader, self).__init__(
-                items,
-                special_item,
-                special_item_index)
-
-        self.append_class(TAB_CLASS.SECOND_HEADER)
-
-
-    def set_list(self, items):
-        """ Construct and add the NavUL list for this NavHeader. """
-        self.append_child(NavUL(items))
-
-
-class NavUL(UL):
-
-    """ Nav header extending <nav>. """
-
-
-    def __init__(self, items):
-        """ Construct a nav header element tree. """
-        super(NavUL, self).__init__(items)
-
-
-    def set_list_item(self, item, index):
-        """ Construct and add a link list item as this NavUL's child. """
-        self.append_child(NavHeaderLI(item, index))
-
-
-class NavHeaderLI(LI):
-
-    """ Nav header list item extending <li>.
-
-        <li><a href="/foo">bar</a></li>
-
-    """
-
-
-    def set_content(self, item):
-        """ Set content for the NavHeaderLI. """
-        url = {"href": item["href"]}
-        a = A(url, item["text"])
-        # TODO: this is a hardcoded string and not a constant because once we
-        # have a Link class [and an Item interface or some such thing for it
-        # to implement] we will just be accessing properties there. this makes
-        # it more obvious what to change.
-        a.append_class(item["class"])
-        self.append_child(a)
-
-
-class AppFooter(Footer):
-
-    """ App footer contains a fixed add button in a <footer>. """
-
-    def __init__(self):
-        """ Construct the apps' footer element tree. """
-        super(AppFooter, self).__init__()
 
 
 # TODO: remove this class when removing [Rankings,Game]TabSection

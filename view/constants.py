@@ -7,30 +7,6 @@ Provide Application constants for view.
 from util.decorators import constant
 
 
-class _AppClass(object):
-
-    """ _AppClass holds app-wide w3c classes. """
-
-    @constant
-    def INACTIVE_NAV(self):
-        return "inactive-nav"
-
-    @constant
-    def ACTIVE_NAV(self):
-        return "active-nav"
-
-APP_CLASS = _AppClass()
-
-
-class _AppID(object):
-
-    """ _AppID holds all function w3c ids. """
-
-    pass
-
-APP_ID = _AppID()
-
-
 class _SqData(object):
 
     """ _SqData class to hold all possible keys appended to data-*.
@@ -177,14 +153,6 @@ class _PageName(object):
     @constant
     def LANDING(self):
         return "landing"
-
-    @constant
-    def GAMES(self):
-        return "games"
-
-    @constant
-    def RANKINGS(self):
-        return "rankings"
 
     @constant
     def LEAGUE(self):
