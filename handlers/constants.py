@@ -216,6 +216,10 @@ class _FacebookParameter(object):
     def BIG_PICTURE(self):
         return "big_picture"
 
+    @constant
+    def ID(self):
+        return "id"
+
 FACEBOOK_PARAMETER = _FacebookParameter()
 
 
