@@ -18,20 +18,19 @@ class LeagueContentSection(TabContentSection):
     sections. """
 
 
-    def set_properties_content(self, context):
+    def construct_properties_content(self, context):
         """ Construct and add properties to this content section. """
-        self.append_child(LeaguePropertiesDiv(context))
+        return LeaguePropertiesDiv(context)
 
 
-
-    def set_summary_content(self, aggregations):
+    def construct_summary_content(self, aggregations):
         """ Construct and add summary content to this content section. """
-        self.append_child(LeagueSummaryDiv(aggregations))
+        return LeagueSummaryDiv(aggregations)
 
 
-    def set_feed_content(self, objects):
+    def construct_feed_content(self, objects):
         """ Construct and add feed content to this content section. """
-        self.append_child(LeagueFeedDiv(self._current_person, objects))
+        return LeagueFeedDiv(self._current_person, objects)
 
 
 

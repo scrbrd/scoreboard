@@ -5,14 +5,25 @@ Element components for Create Game dialog.
 """
 
 from view.constants import SQ_DATA, SQ_VALUE, PAGE_NAME
-from view.elements.base import Div, Span, UL, Form, HiddenInput, LI
+from view.elements.base import Div, UL, Form, HiddenInput, LI
 from view.elements.components import SwitchInput
 from view.app.copy import Copy
 from view.app.components import Headline, Subheadline
 
 from constants import DIALOG_CLASS
-from framework import PostButtonSection, DialogContentSection
+from framework import DialogHeader, DialogContentSection, PostButtonSection
 from components import PlayerAutocomplete, SportAutocomplete
+
+
+class CreateGameDialogHeader(DialogHeader):
+
+    """ The main header for the Create Game Dialog. """
+
+
+    def __init__(self):
+        """ Construct a header. """
+        super(CreateGameDialogHeader, self).__init__(
+                Copy.create_game_dialog_header)
 
 
 class CreateGameContentSection(DialogContentSection):
@@ -24,13 +35,7 @@ class CreateGameContentSection(DialogContentSection):
         """ Construct a content section for CreateGame Dialog. """
         super(CreateGameContentSection, self).__init__()
 
-        # TODO: add this iScroll container / wrapper to AppContentSection
-        self.set_id("dialog-content-wrapper")
-        div = Div()
-        div.set_id("dialog-content-container")
-
-        div.append_child(CreateGameForm(model))
-        self.append_child(div)
+        self.append_child(CreateGameForm(model))
 
 
 class CreateGameForm(Form):

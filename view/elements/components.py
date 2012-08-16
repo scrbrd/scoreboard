@@ -119,20 +119,14 @@ class MenuButton(Button):
         self.append_class(COMPONENT_CLASS.MENU_BUTTON)
 
 
-class MainHeaderDiv(Div):
+class MainHeader(Header):
 
-    """ Main Header Div extends <div>.
-
-    The div is for the background image and anything external. The
-    inside h2 is for managing the font layout, specifically because
-    some fonts aren't centered correctly.
-
-    """
+    """ Main Header extends <header>."""
 
 
     def __init__(self, title):
         """ Construct Main Header tag. """
-        super(MainHeaderDiv, self).__init__()
+        super(MainHeader, self).__init__()
         self.append_class(COMPONENT_CLASS.MAIN_HEADER)
 
         # insert to separate text from background

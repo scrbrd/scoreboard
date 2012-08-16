@@ -188,8 +188,35 @@ class _FacebookAuthScope(object):
     def USER_INTERESTS(self):
         return "user_interests"
 
-
 FACEBOOK_AUTH_SCOPE = _FacebookAuthScope()
+
+
+class _FacebookParameter(object):
+
+    """ _FacebookParameter enumerates Facebook request and response parameters.
+
+    NOTE: these constants and the grabbing the big picture from facebook
+    probably shouldn't be happening in the handlers.
+
+    """
+
+    @constant
+    def ACCESS_TOKEN(self):
+        return "access_token"
+
+    @constant
+    def PICTURE(self):
+        return "picture"
+
+    @constant
+    def URL(self):
+        return "url"
+
+    @constant
+    def BIG_PICTURE(self):
+        return "big_picture"
+
+FACEBOOK_PARAMETER = _FacebookParameter()
 
 
 class _Version(object):

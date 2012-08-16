@@ -231,12 +231,13 @@ var DialogView = Backbone.View.extend({
     show: function () {
         // TODO: How can we make this 'fast' and not have the close button
         // automatically triggered...?
+        var that = this;
         this.$el.slideDown('slow', function () {
             // enabled close button once the dialog opens.
-            $(this).find(Const.CLASS.CLOSE_BUTTON).get(0).disabled = false;
+            that.$el.find(Const.CLASS.CLOSE_BUTTON).get(0).disabled = false;
 
             // the dialog has to be showing to add the scroller
-            this.scroller = Scroller.Scroller(
+            that.scroller = Scroller.Scroller(
                     DOMUtil.getIDFromSelector(Const.ID.DIALOG_CONTENT_WRAPPER));
 
             // TODO: auto-focus and make the keyboard come up.

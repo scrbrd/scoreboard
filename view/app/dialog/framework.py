@@ -7,15 +7,16 @@ positioning.
 """
 
 from view.elements.base import Div, Section
-from view.elements.components import MainHeaderDiv
+from view.elements.components import MainHeader
 from view.elements.components import PostButton, CloseButton
+from view.app.framework import ContentWrapper
 
 from constants import DIALOG_CLASS, DIALOG_ID
 
 
-class DialogHeader(MainHeaderDiv):
+class DialogHeader(MainHeader):
 
-    """ Dialog Header extending MainHeaderDiv <div>. """
+    """ Dialog Header extending MainHeader<header>. """
 
 
     def __init__(self, dialog_name):
@@ -29,6 +30,24 @@ class DialogHeader(MainHeaderDiv):
         # set close button to disabled to prevent accidental dialog closure.
         close_button.set_disabled()
         self.append_child(close_button)
+
+
+class DialogContentWrapper(ContentWrapper):
+
+    """ DialogContentWrapper adds a wrapper for a dialog scroller. """
+
+
+    def __init__(self, content_section):
+        """ Construct a wrapper for a scroller.
+
+        Required:
+        Element     content_section     the content that the scroller wraps
+
+        """
+        super(DialogContentWrapper, self).__init__(
+                DIALOG_ID.DIALOG_CONTENT_WRAPPER,
+                DIALOG_ID.DIALOG_CONTENT_CONTAINER,
+                content_section)
 
 
 # TODO: subclass this from an abstract app.page.frameworkAppPageContentSection

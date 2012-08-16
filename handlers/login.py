@@ -13,6 +13,7 @@ import tornado.auth
 from model.app.auth import FacebookAuthModel
 
 from constants import COOKIE_TYPE, COOKIE, ARGUMENT, SETTING
+from constants import FACEBOOK_PARAMETER
 from constants import FACEBOOK_AUTH, FACEBOOK_AUTH_SCOPE, VERSION
 
 from handlers.base import BaseHandler
@@ -110,10 +111,9 @@ class LoginHandler(BaseHandler, tornado.auth.FacebookGraphMixin):
             raise tornado.web.HTTPError(500, "Facebook auth failed.")
 
         # add a big picture field to the raw_user dictionary
-        # FIXME XXX add constants
-        raw_user["big_picture"] = self._get_big_picture(
-                raw_user["access_token"],
-                raw_user["id"])
+        raw_user[FACEBOOK_PARAMETER.BIG_PICTURE] = self._get_big_picture(
+                raw_user[FACEBOOK_PARAMETER.ACCESS_TOKEN],
+                raw_user[FACEBOOK_PARAMETER.ID])
 
         model = FacebookAuthModel(self.current_user, raw_user)
         model.set_ip(self.request.remote_ip)
@@ -143,10 +143,10 @@ class LoginHandler(BaseHandler, tornado.auth.FacebookGraphMixin):
         graph = facebook.GraphAPI(access_token)
         picture = graph.get_connections(
                 fb_id,
-                "picture",
+                FACEBOOK_PARAMETER.PICTURE,
                 width=150,
                 height=150)
-        return picture['url']
+        return picture[FACEBOOK_PARAMETER.URL]
 
 
 

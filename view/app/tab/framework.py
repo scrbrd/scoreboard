@@ -6,17 +6,18 @@ Element components that are for the tab framework.
 
 from view.constants import SQ_DATA
 from view.elements.base import Section, Div
-from view.elements.components import CreateButton, MenuButton, MainHeaderDiv
+from view.elements.components import CreateButton, MenuButton, MainHeader
 from view.app.components import CoverPhoto, Headline
 from view.app.copy import Copy
+from view.app.framework import ContentWrapper
 
 from constants import TAB_CLASS, TAB_ID
 from story import StoryFactory
 
 
-class TabHeader(MainHeaderDiv):
+class TabHeader(MainHeader):
 
-    """ TabHeader extending MainHeaderDiv <div>. """
+    """ TabHeader extending MainHeader <header>. """
 
 
     def __init__(self, context):
@@ -34,21 +35,23 @@ class TabHeader(MainHeaderDiv):
         self.append_child(CreateButton())
 
 
-# TODO: remove this class when removing [Rankings,Game]TabSection
-class TabSection(Section):
+class TabContentWrapper(ContentWrapper):
 
-    """ TabSection encapsulates generic tab attributes around <section>. """
+    """ TabContentWrapper allows a scroller object to wrap the tab's
+    content. """
 
 
-    def __init__(self, page_name):
-        """ Construct a tab section element tree.
+    def __init__(self, content_section):
+        """ Construct a wrapper for a scroller object to manipulate.
 
         Required:
-        string  page_name   the page name of this tab.
+        Element     content_section     the content that the scroller wrap.
 
         """
-        super(TabSection, self).__init__()
-        self.set_id(TAB_ID.CONTENT)
+        super(TabContentWrapper, self).__init__(
+                TAB_ID.TAB_CONTENT_WRAPPER,
+                TAB_ID.TAB_CONTENT_CONTAINER,
+                content_section)
 
 
 # TODO: subclass this from an abstract app.page.framework.AppPageContentSection
@@ -57,7 +60,7 @@ class TabContentSection(Section):
 
     """ TabContentSection encapsulates generic AppPage attributes.
 
-    Person  _current_person     the current User's Person
+    Person      _current_person     the current User's Person
 
     """
 
@@ -71,24 +74,24 @@ class TabContentSection(Section):
         # use PAGE_ID.CONTENT instead.
         self.set_id(TAB_ID.CONTENT)
 
-        self.set_properties_content(context)
-        self.set_summary_content(aggregations)
-        self.set_feed_content(objects)
+        self.append_child(self.construct_properties_content(context))
+        self.append_child(self.construct_summary_content(aggregations))
+        self.append_child(self.construct_feed_content(objects))
 
 
-    def set_properties_content(self, context):
+    def construct_properties_content(self, context):
         """ Construct and add properties to this content section. """
-        self.append_child(PropertiesDiv(context))
+        return PropertiesDiv(context)
 
 
-    def set_summary_content(self, aggregations):
+    def construct_summary_content(self, aggregations):
         """ Construct and add summary content to this content section. """
-        self.append_child(SummaryDiv(aggregations))
+        return SummaryDiv(aggregations)
 
 
-    def set_feed_content(self, objects):
+    def construct_feed_content(self, objects):
         """ Construct and add feed content to this content section. """
-        self.append_child(FeedDiv(self._current_person, objects))
+        return FeedDiv(self._current_person, objects)
 
 
 class PropertiesDiv(Div):

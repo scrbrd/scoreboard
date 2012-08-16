@@ -1,27 +1,15 @@
 {% extends body.html %}
 
 
-{% block header_section %}
-    <header>
-        {% block tab_header %}
-            {% include components/tab_header.html %}
-        {% end %} 
-        {% block context_model %}
-            {% include components/context_model.html %}
-        {% end %} 
-        {% block session %}
-            {% include components/session_model.html %}
-        {% end %}
-        {% block nav_header %}{% end %}
-    </header>
-{% end %}
-
-
-{% block content_section %}
-    <div id="content-container-wrapper">
-        <div id="content-container">
-            {% block content %} EMPTY CONTENT HEADER{% end %} 
-            {% block content_model %} EMPTY CONTENT MODEL{% end %} 
-        </div>
+{% block tab %}
+    <div id="tab">
+        {% block tab_page %} EMPTY CONTENT {% end %} 
     </div>
+    {% block context_model %}
+        {% include components/context_model.html %}
+    {% end %} 
+    {% block session %}
+        {% include components/session_model.html %}
+    {% end %}
+    {% block content_model %} EMPTY CONTENT MODEL{% end %} 
 {% end %}

@@ -55,7 +55,6 @@ class _TabClass(object):
     def SUMMARY_ITEM(self):
         return "summary-item"
 
-
 TAB_CLASS = _TabClass()
 
 
@@ -82,5 +81,15 @@ class _TabID(object):
     @constant
     def FEED(self):
         return "feed"
+
+    @constant
+    def TAB_CONTENT_WRAPPER(self):
+        """ Tab outer wrapper for iScroll. """
+        return "content-container-wrapper"
+
+    @constant
+    def TAB_CONTENT_CONTAINER(self):
+        """ Tab inner wrapper for iScroll. """
+        return "content-container"
 
 TAB_ID = _TabID()

@@ -1,15 +1,19 @@
 {% extends ../base.html %}
 
 
-{% block tab %}
-    <div id="tab">
-        {% block header_section %}{% end %}
-        {% block content_section %}{% end %}
-        {% block footer_section %}{% end %}
+{% block tab_container %}
+    <div id="tab_container">
+        {% block tab %}{% end %}
     </div>
 {% end %}
 
 
-{% block dialog %}
+{% block dialog_container %}
     <div id="dialog-container"></div>
 {% end %}
+
+
+{% block model_container %}
+    <div id="model-container"></div>
+{% end %}
+

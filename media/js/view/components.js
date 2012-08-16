@@ -335,7 +335,7 @@ var SportAutocomplete = TagAutocomplete.extend({
         @return {Object} A dictionary with keys 'label' and 'value'.
     */
     generateSourceData: function () {
-        // TODO FIXME XXX: make sure $.map is actually necessary
+        // TODO FIXME: make sure $.map is actually necessary
         // remap opponents to generic label/value autocomplete objects and sort
         var sourceItems = $.map(this.objects, remapObject);
         sourceItems.sort(sortByLabel);
@@ -350,7 +350,7 @@ var SportAutocomplete = TagAutocomplete.extend({
     @return {Object} An object keyed "label" and "value".
 */
 function remapObject(object) {
-    // TODO FIXME XXX: conform sport object to name/id/picture format
+    // TODO FIXME: conform sport object to name/id/picture format
     return {
         label: object[Const.DATA.NAME],
         value: object[Const.DATA.ID],

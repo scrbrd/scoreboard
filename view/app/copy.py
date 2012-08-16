@@ -18,6 +18,10 @@ class _Copy(object):
         return "Challenge"
 
     @property
+    def create_game_dialog_header(self):
+        return "Add Game"
+
+    @property
     def feed_title(self):
         return "Feed"
 

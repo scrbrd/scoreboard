@@ -64,7 +64,6 @@ class _HTMLTag(object):
         """ A is a type of HTML tag. """
         return "a"
 
-
     @constant
     def H1(self):
         """ H1 is a type of HTML tag. """

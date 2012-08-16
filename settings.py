@@ -7,10 +7,10 @@ from tornado.options import define, options
 import logconfig
 
 from view.modules.components import UITabHeader
-from view.modules.components import UILeaguePage, UILeagueModel
-from view.modules.components import UICreateGameDialog, UILandingPage
 from view.modules.components import UISessionModel, UIContextModel
-from view.modules.components import UIPageModel, UITabModel
+from view.modules.components import UIPageModel, UITabModel, UILeagueModel
+from view.modules.page import UILeaguePage, UICreateGameDialog, UILandingPage
+from view.modules.dictionary import UILeagueContent
 
 # Application constants
 
@@ -56,7 +56,8 @@ settings = {}
 settings['debug'] = DEPLOYMENT != DeploymentType.PRODUCTION or options.debug
 settings['static_path'] = MEDIA_ROOT
 
-settings['cookie_secret'] = "\xee\x0ec\x9bl\x02\xeb/.\xd4\xeb\xc2(\xb0\xb1\x8a\x0b\xb5[^Tq\xecy"
+settings['cookie_secret'] = (
+        "\xee\x0ec\x9bl\x02\xeb/.\xd4\xeb\xc2(\xb0\xb1\x8a\x0b\xb5[^Tq\xecy")
 settings['xsrf_cookies'] = True
 settings['login_url'] = "/"
 settings['facebook_api_key'] = FACEBOOK_APP_ID
@@ -64,16 +65,17 @@ settings['facebook_secret'] = FACEBOOK_SECRET
 
 settings['template_loader'] = tornado.template.Loader(TEMPLATE_ROOT)
 settings['ui_modules'] = {
-    'UIContextModel': UIContextModel,
-    'UICreateGameDialog': UICreateGameDialog,
-    'UILandingPage': UILandingPage,
-    'UILeagueModel': UILeagueModel,
-    'UILeaguePage': UILeaguePage,
-    'UIPageModel': UIPageModel,
-    'UISessionModel': UISessionModel,
-    'UITabHeader': UITabHeader,
-    'UITabModel': UITabModel,
-}
+        'UIContextModel': UIContextModel,
+        'UICreateGameDialog': UICreateGameDialog,
+        'UILandingPage': UILandingPage,
+        'UILeagueModel': UILeagueModel,
+        'UILeaguePage': UILeaguePage,
+        'UIPageModel': UIPageModel,
+        'UISessionModel': UISessionModel,
+        'UITabHeader': UITabHeader,
+        'UITabModel': UITabModel,
+        'UILeagueContent': UILeagueContent,
+        }
 
 settings['league_id'] = LEAGUE
 
@@ -86,7 +88,7 @@ SYSLOG_FACILITY = logging.handlers.SysLogHandler.LOG_LOCAL2
 # unless you set them here.  Messages will not propagate through a logger
 # unless propagate: True is set.
 LOGGERS = {
-   'loggers': {
+    'loggers': {
         'boilerplate': {},
     },
 }
@@ -97,8 +99,12 @@ else:
     LOG_LEVEL = logging.INFO
 USE_SYSLOG = DEPLOYMENT != DeploymentType.SOLO
 
-logconfig.initialize_logging(SYSLOG_TAG, SYSLOG_FACILITY, LOGGERS,
-        LOG_LEVEL, USE_SYSLOG)
+logconfig.initialize_logging(
+        SYSLOG_TAG,
+        SYSLOG_FACILITY,
+        LOGGERS,
+        LOG_LEVEL,
+        USE_SYSLOG)
 
 if options.config:
     tornado.options.parse_config_file(options.config)
