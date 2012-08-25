@@ -265,6 +265,13 @@ the same border. */
     -webkit-border-radius: @radius;
 }
 
+/* Cross browser backgorund-size */
+.background-size(@width, @height) {
+    background-size: @width @height;
+    -moz-background-size: @width @height;
+    -webkit-background-size: @width @height;
+}
+
 /* Hide the content when using the background image for function. */
 .hidden-content {
     line-height: 0px; 
@@ -290,9 +297,9 @@ the same border. */
         @repeat: no-repeat) {
     width: @width;
     height: @height;
-    -webkit-background-size: @width @height;
     background: url('/static/images/@{imageSource}') @backgroundColor @repeat;
-    // background-attachment: fixed;
+    // background size needs to be after the background it's sizing.
+    .background-size(@width, @height);
 }
 
 /* Center the background image in a consistent way. */
@@ -363,12 +370,12 @@ the same border. */
 body {
     .textText();
     @backgroundTileSize: 10px;
-    .background-image-wrapper( 
+    /*.background-image-wrapper( 
         @backgroundTileSize,
         @backgroundTileSize,
         'backgroundTile.jpg',
         transparent,
-        repeat);
+        repeat); */
     
     /* stops iPhone from readjusting text size for landscape orientation. */
     -webkit-text-size-adjust: none;
@@ -733,7 +740,10 @@ form input {
 }
 
 .cover-photo {
+    // TODO: this stretches the photo. make sure it's the correct height and
+    // width
     width: 100%;
+    height: 100%;
 }
 
 .icon {
@@ -831,6 +841,7 @@ form input {
 #content #feed {
     position: relative;
 
+    float: left;
     clear: both;
     width: 100%;
     padding-left: @pagePadding;

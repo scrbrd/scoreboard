@@ -29,6 +29,7 @@ from tornado import escape
 
 from view.elements import xsrf
 from view.elements.base import Element
+from view.app.components import CoverPhoto
 from view.app.tab.framework import TabHeader, TabContentWrapper
 from view.app.tab.league import LeagueContentSection
 from view.app.dialog.framework import DialogContentWrapper
@@ -45,19 +46,25 @@ class UIAppPage(tornado.web.UIModule):
 
         self._set_current_person(model)
 
+        background_tree = self._construct_background(model)
         main_header_tree = self._construct_main_header(model)
         content_section_tree = self._construct_content_section(model)
         content_wrapper_tree = self._construct_content_wrapper(
                 content_section_tree)
 
+        background_str = Element.to_string(background_tree)
         header_str = Element.to_string(main_header_tree)
         content_str = Element.to_string(content_wrapper_tree)
 
-        return header_str + content_str
+        return background_str + header_str + content_str
 
 
     def _set_current_person(self, model):
         raise NotImplementedError("MUST OVERRIDE")
+
+
+    def _construct_background(self, model):
+        pass
 
 
     def _construct_main_header(self, model):
@@ -80,6 +87,11 @@ class UITabPage(UIAppPage):
         for rival in model.rivals:
             if (rival.id == self.current_user.person_id):
                 self._current_person = rival
+
+
+    def _construct_background(self, model):
+        src = "/static/images/covers/throwPhoto.jpg"
+        return CoverPhoto(src, "Scoreboard")
 
 
     def _construct_main_header(self, model):

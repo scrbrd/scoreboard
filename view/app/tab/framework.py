@@ -7,7 +7,8 @@ Element components that are for the tab framework.
 from view.constants import SQ_DATA
 from view.elements.base import Section, Div
 from view.elements.components import CreateButton, MenuButton, MainHeader
-from view.app.components import CoverPhoto, Headline
+# from view.app.components import CoverPhoto, Headline
+from view.app.components import Headline
 from view.app.copy import Copy
 from view.app.framework import ContentWrapper
 
@@ -108,9 +109,10 @@ class PropertiesDiv(Div):
 
     def set_content(self, context):
         """ Construct and add content as a direct child. """
+        pass
         # Currently a static image
-        src = "/static/images/covers/baseballPhoto.jpg"
-        self.append_child(CoverPhoto(src, context.name))
+        # src = "/static/images/covers/baseballPhoto.jpg"
+        # self.append_child(CoverPhoto(src, context.name))
 
 
 class SummaryDiv(Div):

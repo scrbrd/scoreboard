@@ -518,10 +518,13 @@ class Element(object):
 
 
     @staticmethod
-    def to_string(element):
+    def to_string(element=None):
         """ Convenience wrapper to standardize on utf-8 and html. """
-        element.assert_valid_root()
-        return ET.tostring(element.element(), "utf-8", "html")
+        if element is not None:
+            element.assert_valid_root()
+            return ET.tostring(element.element(), "utf-8", "html")
+        else:
+            return ""
 
 
 class Div(Element):

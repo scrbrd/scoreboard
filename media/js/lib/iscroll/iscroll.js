@@ -113,7 +113,7 @@ function hide_address_bar() {
         }
         // Scroll after a timeout, since iOS will scroll to the top of the page
         // after it fires the onload event
-        setTimeout(scrollTo, 0, 0, 1);
+        setTimeout(scrollTo, 0, 1, 1);
 
         // rehide address bar on touch (UNNECESSARY, plus it makes
         // certain selection quirky)
