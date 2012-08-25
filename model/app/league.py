@@ -60,8 +60,8 @@ class LeagueModel(ReadModel):
         # multiload should have happened in the api.
         game_ids = [g.id for g in games_list]
 
-        # load opponents and commenters for each game {g_id: Game}
-        games_dict = Game.multiload_opponents_and_commenters(game_ids)
+        # load opponents and commenters and creator for each game {g_id: Game}
+        games_dict = Game.multiload_important_persons(game_ids)
 
         # load league with opponents and games into generic context
         league.set_games(games_dict)

@@ -31,6 +31,7 @@ class Game(SqNode):
     Variables:
     dict    _opponents      store loaded Opponents by id
     dict    _commenters     store loaded Commenters by id
+    Person  creator         store loaded Person
 
     """
 
@@ -70,7 +71,8 @@ class Game(SqNode):
         """  Return the Player who created the game. """
         return self.get_edges() \
             .get(API_EDGE_TYPE.CREATED_BY, {}) \
-            .iterkeys().next()
+            .values()[0] \
+            .to_node_id
 
 
     @property
@@ -165,6 +167,17 @@ class Game(SqNode):
         return bool(self.camaraderie_ids)
 
 
+    def get_creator(self):
+        """ Return the Person that created this Game. """
+        SqNode.assert_loaded(self._creator)
+        return self._creator
+
+
+    def set_creator(self, creator):
+        """ Set a Game's loaded Creator. """
+        self._creator = creator
+
+
     def get_opponent(self, opp_id):
         """ Return an Opponent by its id. """
         SqNode.assert_loaded(self._opponents)
@@ -236,9 +249,9 @@ class Game(SqNode):
 
 
     @staticmethod
-    def load_opponents_and_commenters(game_id):
-        """ Load the Game's Opponents and Commenters and attributes into a
-        Game.
+    def load_important_persons(game_id):
+        """ Load the Game's Opponents, Commenters, Creator and attributes into
+        a Game.
 
         Required:
         int game_id     the id of the Game
@@ -254,12 +267,13 @@ class Game(SqNode):
         edge_types = []
         edge_types.extend(API_CONSTANT.RESULT_EDGE_TYPES)
         edge_types.append(API_EDGE_TYPE.HAS_COMMENT_FROM)
+        edge_types.append(API_EDGE_TYPE.CREATED_BY)
 
         node_types = []
         node_types.extend(API_CONSTANT.OPPONENT_NODE_TYPES)
         # should include "PERSON_NODE_TYPES"
 
-        (game, opponents_and_commenters) = loader.load_neighbors(
+        (game, important_persons) = loader.load_neighbors(
                 game_id,
                 edge_types,
                 node_types)
@@ -274,14 +288,18 @@ class Game(SqNode):
 
         opponents = {}
         commenters = {}
-        for person in opponents_and_commenters.values():
+        creator = None
+        for person in important_persons.values():
             id = person.id
             if id in opponent_ids:
                 opponents[id] = person
             if id in commenter_ids:
                 commenters[id] = person
+            if id == game.creator_id:
+                creator = person
         game.set_opponents(opponents)
         game.set_commenters(commenters)
+        game.set_creator(creator)
 
         return game
 
@@ -309,8 +327,8 @@ class Game(SqNode):
 
     @staticmethod
     @print_timing
-    def multiload_opponents_and_commenters(game_ids):
-        """ Load multiple Games' Opponents, Commenters and attributes.
+    def multiload_important_persons(game_ids):
+        """ Load multiple Games' Opponents, Commenters, Creator and attributes.
 
         Required:
         list game_ids   the ids of the Games
@@ -323,7 +341,7 @@ class Game(SqNode):
         games = {}
 
         for id in game_ids:
-            games[id] = Game.load_opponents_and_commenters(id)
+            games[id] = Game.load_important_persons(id)
 
         return games
 

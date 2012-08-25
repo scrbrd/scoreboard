@@ -96,15 +96,19 @@ class CamaraderieHeadline(GameStoryHeadline):
         self.set_text(headline)
 
 
-class MainStorySection(Section):
+class HeadlineSection(Section):
 
-    """ MainStorySection is the main section of every story. """
+    """ HeadlineSection is the poster section of every story. """
 
 
-    def __init__(self):
-        """ Construct a main section for a story. """
-        super(MainStorySection, self).__init__()
-        self.append_class(COMPONENT_CLASS.MAIN_STORY_SECTION)
+    def __init__(self, person_thumbnail, headline, date_component):
+        """ Construct a headline section for a story. """
+        super(HeadlineSection, self).__init__()
+        self.append_class(COMPONENT_CLASS.HEADLINE_SECTION)
+
+        self.append_child(person_thumbnail)
+        self.append_child(date_component)
+        self.append_child(headline)
 
 
 class CommentsSection(Section):
@@ -197,7 +201,7 @@ class CommentsLI(MultiColumnLI):
         msg.set_text(comment.message)
         div.append_child(msg)
 
-        created_ts = RelativeDateComponent(comment.created_ts, False)
+        created_ts = RelativeDateComponent(comment.created_ts)
         div.append_child(created_ts)
 
         self.set_column(div)

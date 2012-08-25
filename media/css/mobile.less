@@ -15,6 +15,7 @@
 @navy: #053c75; // All Links and Clickable Tags
 @red: #b20808; // Highlights, Posts, Logo, Splash
 @white: #ffffff; // Statistics
+@transWhite: rgba(255, 255, 255, .85);
 
 @mysteryColor: #cccccc; // Marketing, Blog, Subtitle
 
@@ -726,10 +727,8 @@ form input {
 ************************************************************/
 .headline {
     .headerText;
-    clear: both;
     padding-top: @boxPadding;
     padding-bottom: @boxPadding;
-    border-bottom: 1px dotted @lightGrey;
 }
 
 .subheadline {
@@ -955,22 +954,37 @@ form input {
 
 .story {
     .drop-box-shadow();
+    
+    // make this browser independent
+    background-color: @transWhite;
+
     float: left;
     width: 100%;
-    background: @white;
    
     margin-top: @linePadding;
     margin-bottom: @linePadding;
     padding-bottom: @boxPadding;
 }
 
-.story .main-story-section {
+.story .headline-section {
     clear: both;
     margin-top: @boxPadding;
     margin-bottom: @boxPadding;
     padding-left: @boxPadding;
     padding-right: @boxPadding;
+}
 
+.headline-section .thumbnail {
+    float: left;
+}
+
+.headline-section .headline {
+    overflow: auto;
+    padding: 0px @columnPadding;
+}
+
+.headline-section .relative-date-component {
+    float: right;
 }
 
 // FIXME: this is terrible.
@@ -992,7 +1006,6 @@ form input {
     width: 100%;
     height: auto;
     line-height: @bodyLineHeight;
-    margin-bottom: @linePadding;
 
     text-align: top;
 }
@@ -1013,6 +1026,8 @@ form input {
 .comments-section .comment-form {
     clear: both;
     width: 100%;
+
+    margin-top: @linePadding;
 }
 
 // FIXME put classes here instead of div and input

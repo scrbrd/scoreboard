@@ -23,14 +23,15 @@ def current_ts():
     return datetime.now()
 
 
-def _get_relative_delta(datetime_first, datetime_second):
+def _calculate_relative_delta(datetime_first, datetime_second):
     """ Return the difference between the two timestamps. """
     return relativedelta.relativedelta(datetime_first, datetime_second)
 
 
-def get_simple_datetime_ago(ts):
-    """ Return the difference between the timestamp and today. """
-    rd = _get_relative_delta(current_ts(), datetime.fromtimestamp(ts))
+def _calculate_relative_datetime(ts):
+    """ Return the difference between the timestamp and today as a value
+    and unit tuple. """
+    rd = _calculate_relative_delta(current_ts(), datetime.fromtimestamp(ts))
 
     value = -1
     unit = "epoch"
@@ -54,8 +55,21 @@ def get_simple_datetime_ago(ts):
         value = rd.seconds
         unit = SECOND
 
-    plural = ""
     if value > 1:
-        plural = PLURAL
+        unit = unit + PLURAL
 
-    return "{0} {1}{2} ago".format(value, unit, plural)
+    return (value, unit)
+
+
+def format_to_long_relative_datetime(ts):
+    """ Return the difference between the timestamp and today in longform. """
+    (value, unit) = _calculate_relative_datetime(ts)
+
+    return "{0} {1} ago".format(value, unit)
+
+
+def format_to_short_relative_datetime(ts):
+    """ Return the difference between the timestamp and today in shortform. """
+    (value, unit) = _calculate_relative_datetime(ts)
+
+    return "{0}{1}".format(value, unit[0])

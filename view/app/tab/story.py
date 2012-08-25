@@ -8,10 +8,11 @@ FeedSection of a Tab.
 from view.elements.base import Div
 #from view.elements.base import Div, Button
 from view.app.components import OpponentGroupsSection, RelativeDateComponent
+from view.app.components import AppThumbnail
 
 from constants import COMPONENT_CLASS
-from components import CamaraderieHeadline, RivalryHeadline, MainStorySection
-from components import CommentsSection, SportComponent
+from components import CamaraderieHeadline, RivalryHeadline, HeadlineSection
+from components import CommentsSection
 
 
 # TODO: get this from handlers in production
@@ -86,16 +87,22 @@ class Story(Div):
         super(Story, self).__init__()
 
         self._photo_section = None
-        self._main_section = MainStorySection()
         self.append_class(COMPONENT_CLASS.STORY)
 
-        # FIXME: it is extremely confusing and misleading that this method
-        # opaquely sets self._photo_section without saying so.
-        self._construct_story_body(story_object)
+        # add creator photo
+        creator = story_object.get_creator()
+        creator_thumbnail = AppThumbnail(
+                creator.picture_url,
+                creator.name)
 
-        # add time icon
-        self._main_section.append_child(
-                RelativeDateComponent(story_object.created_ts))
+        # FIXME XXX: it is extremely confusing and misleading that this method
+        # opaquely sets self._photo_section without saying so.
+        story_headline = self._construct_story_headline(story_object)
+
+        headline_section = HeadlineSection(
+                creator_thumbnail,
+                story_headline,
+                RelativeDateComponent(story_object.created_ts, False))
 
         # add comments link to story
         # feedbackButton = Button()
@@ -103,15 +110,15 @@ class Story(Div):
         # self._main_section.append_child(feedbackButton)
 
         # add photo and main section to Story
+        self.append_child(headline_section)
         self.append_child(self._photo_section)
-        self.append_child(self._main_section)
 
         # add feedback section to story
         self.append_child(CommentsSection(current_person, story_object))
 
 
-    def _construct_story_body(self, story_object):
-        """ Construct the body of the story.
+    def _construct_story_headline(self, story_object):
+        """ Construct the headline for the story.
 
         Required:
         SqNode  story_object  Object to build story around
@@ -155,11 +162,13 @@ class RivalryGameStory(GameStory):
     """ RivalryGameStory extending GameStory. """
 
 
-    def _construct_story_body(self, game):
-        """ Construct the body of the GameStory.
+    def _construct_story_headline(self, game):
+        """ Construct the GameStory's Headline.
 
         Required:
         object  game    the Game that the story pulls data from
+
+        Return Headline
 
         """
         # FIXME: this all breaks the contract that the view doesnt get
@@ -171,9 +180,9 @@ class RivalryGameStory(GameStory):
 
         self._photo_section = OpponentGroupsSection(winners, losers)
 
-        self._main_section.append_child(RivalryHeadline(game))
+        return RivalryHeadline(game)
 
-        self._main_section.append_child(SportComponent(game.sport))
+        # self._main_section.append_child(SportComponent(game.sport))
 
 
 class CamaraderieGameStory(GameStory):
@@ -181,11 +190,13 @@ class CamaraderieGameStory(GameStory):
     """ CamaraderieGameStory extending GameStory. """
 
 
-    def _construct_story_body(self, game):
-        """ Construct the body of the GameStory.
+    def _construct_story_headline(self, game):
+        """ Construct the GameStory's Headline.
 
         Required:
         object  game    the Game that the story pulls data from
+
+        Return Headline
 
         """
         (main_players, other_players) = self._split_camaraderie_players(game)
@@ -195,9 +206,9 @@ class CamaraderieGameStory(GameStory):
                 other_players)
 
         # Create the Headline with all players.
-        self._main_section.append_child(CamaraderieHeadline(game))
+        return CamaraderieHeadline(game)
 
-        self._main_section.append_child(SportComponent(game.sport))
+        # self._main_section.append_child(SportComponent(game.sport))
 
 
     @staticmethod

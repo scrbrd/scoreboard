@@ -20,8 +20,8 @@ class _ComponentClass(object):
         return "game-story"
 
     @constant
-    def MAIN_STORY_SECTION(self):
-        return "main-story-section"
+    def HEADLINE_SECTION(self):
+        return "headline-section"
 
     @constant
     def SPORT_STORY_COMPONENT(self):

@@ -49,7 +49,7 @@ form input{border-radius:6px;-moz-border-radius:6px;-webkit-border-radius:6px;-w
 #content #properties{z-index:7;}
 #content-container-wrapper,#content-container{z-index:5;}
 #tab{z-index:2;}
-.headline{font-family:'AlternateGothic',sans-serif;font-size:1.9em;text-transform:uppercase;color:#000000;clear:both;padding-top:14px;padding-bottom:14px;border-bottom:1px dotted #989898;}
+.headline{font-family:'AlternateGothic',sans-serif;font-size:1.9em;text-transform:uppercase;color:#000000;padding-top:14px;padding-bottom:14px;}
 .subheadline{font-family:'Helvetica Neue','Helvetica',sans-serif;font-size:1.2em;font-weight:bold;color:#000000;padding-top:10px;padding-bottom:10px;border-bottom:1px dotted #989898;}
 .cover-photo{width:100%;height:100%;}
 .icon{width:15px;margin-right:7px;}
@@ -80,15 +80,18 @@ form input{border-radius:6px;-moz-border-radius:6px;-webkit-border-radius:6px;-w
 .rankings-list .list-header .list-column:nth-child(2){margin-left:65px;}
 .rankings-list li.headed-list-item{margin-top:0px;margin-bottom:0px;padding-top:4px;padding-bottom:4px;line-height:36px;}
 .rankings-list .numbered-list li:before{line-height:36px;float:left;width:15px;}
-.story{-webkit-box-shadow:0px 0px 2px 1px rgba(0, 0, 0, 0.4) ;-moz-box-shadow:0px 0px 2px 1px rgba(0, 0, 0, 0.4) ;box-shadow:0px 0px 2px 1px rgba(0, 0, 0, 0.4) ;float:left;width:100%;background:#ffffff;margin-top:10px;margin-bottom:10px;padding-bottom:14px;}
-.story .main-story-section{clear:both;margin-top:14px;margin-bottom:14px;padding-left:14px;padding-right:14px;}
+.story{-webkit-box-shadow:0px 0px 2px 1px rgba(0, 0, 0, 0.4) ;-moz-box-shadow:0px 0px 2px 1px rgba(0, 0, 0, 0.4) ;box-shadow:0px 0px 2px 1px rgba(0, 0, 0, 0.4) ;background-color:rgba(255, 255, 255, 0.85);float:left;width:100%;margin-top:10px;margin-bottom:10px;padding-bottom:14px;}
+.story .headline-section{clear:both;margin-top:14px;margin-bottom:14px;padding-left:14px;padding-right:14px;}
+.headline-section .thumbnail{float:left;}
+.headline-section .headline{overflow:auto;padding:0px 14px;}
+.headline-section .relative-date-component{float:right;}
 .story .sport-story-component{font-family:'Helvetica Neue','Helvetica',sans-serif;font-size:0.9em;color:#848484;margin-right:7px;}
 .story .comments-section{float:left;clear:both;width:100%;padding-left:14px;padding-right:14px;}
-.comments-section li{width:100%;height:auto;line-height:18px;margin-bottom:10px;text-align:top;}
+.comments-section li{width:100%;height:auto;line-height:18px;text-align:top;}
 .comments-section .list-column{overflow:auto;}
 .comments-section .thumbnail{float:left;margin-right:14px;}
 .comments-section .anchor{margin-right:7px;}
-.comments-section .comment-form{clear:both;width:100%;}
+.comments-section .comment-form{clear:both;width:100%;margin-top:10px;}
 .comments-section .comment-form div{overflow:auto;}
 .comments-section .comment-form input{width:100%;}
 .comments-section .submit-button{display:none;}
