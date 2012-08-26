@@ -103,6 +103,10 @@ class _Copy(object):
         return "Versus"
 
     @property
+    def final(self):
+        return "Final"
+
+    @property
     def comment(self):
         return "Comment"
 

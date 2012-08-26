@@ -5,7 +5,7 @@ Elements components that will be used in tabs but aren't part of the framework.
 """
 
 from view.constants import SQ_DATA, PAGE_NAME
-from view.elements.base import Span, Div, Section, UL, A
+from view.elements.base import Span, Div, Section, UL, A, LI
 from view.elements.base import Form, TextInput, HiddenInput, SubmitButton
 from view.elements.components import HeadedList, HeadedListItem, NumberedList
 from view.elements.components import MultiColumnLI
@@ -48,7 +48,7 @@ class SportComponent(Span):
     def __init__(self, sport):
         """ Construct a SportComponent extending Span. """
         super(SportComponent, self).__init__()
-        self.append_class(COMPONENT_CLASS.SPORT_STORY_COMPONENT)
+        self.append_class(COMPONENT_CLASS.SPORT_COMPONENT)
         self.set_text(sport)
 
 
@@ -150,7 +150,7 @@ class CommentsList(UL):
 
     def set_list_item(self, item, index):
         """ Construct and add a list item as a child of this list. """
-        self.append_child(CommentsLI(item, index))
+        self.append_child(CommentLI(item, index))
 
 
     # remove this function when the items can be more properly constructed
@@ -178,14 +178,14 @@ class CommentsList(UL):
 
 
 
-class CommentsLI(MultiColumnLI):
+class CommentLI(MultiColumnLI):
 
-    """ CommentsLI is a single comment in the CommentsList. """
+    """ CommentLI is a single comment in the CommentsList. """
 
 
     def set_content(self, item):
-        """ Set content for Rankings LI. """
-        comment = item
+        """ Set content for CommentLI. """
+        comment = item  # item must be a comment
 
         thumbnail = AppThumbnail(
                 comment.commenter_picture_url,
@@ -339,3 +339,39 @@ class RankingLI(HeadedListItem):
         win_count = Span()
         win_count.set_text(item.win_count)
         self.set_column(win_count)
+
+
+class OpponentsList(UL):
+
+    """ OpponentsList is a list of players for anything. """
+
+
+    def __init__(self, opponents):
+        """ Construct an OpponentsList.
+
+        Required:
+        list    opponents   a list of opponents to display
+
+        """
+        super(OpponentsList, self).__init__(opponents)
+        self.append_class(COMPONENT_CLASS.OPPONENTS_LIST)
+
+    def set_list_item(self, item, index):
+        """ Construct and add a list item as a child of this list. """
+        self.append_child(OpponentLI(item, index))
+
+
+class OpponentLI(LI):
+
+    """ OpponentLI is a single opponent with a thumbnail and name. """
+
+
+    def set_content(self, item):
+        """ Set content for OpponentLI. """
+        opponent = item  # item must be an opponent
+
+        thumbnail = AppThumbnail(opponent.picture_url, opponent.name)
+        name = A({"href": "#"}, opponent.name)
+
+        self.append_child(thumbnail)
+        self.append_child(name)

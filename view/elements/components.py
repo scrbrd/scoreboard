@@ -324,3 +324,23 @@ class SwitchInput(Div):
 
         """
         self._switch().set_checked(is_on)
+
+
+class FloatContainer(Div):
+
+    """ FloatContainer is used as an inner div to fix rendering quirks.
+
+    The quirk is that the height of the outer element won't extend to include
+    the inner floating elements. By creating this floatable div, which will
+    also float, and thus extend the box, we give it the properties that the
+    outer div would like to display (e.g. background color). The benefit is
+    that the outer shell can still be positioned based on its own container,
+    which won't happen correctly if it floats too.
+
+    """
+
+
+    def __init__(self):
+        """ Construct a <div> that floats. """
+        super(FloatContainer, self).__init__()
+        self.append_class(COMPONENT_CLASS.FLOAT_CONTAINER)

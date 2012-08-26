@@ -531,5 +531,8 @@ class _ComponentClass(object):
         """ SWITCH_CHECKBOX is a w3c class. """
         return "switch-checkbox"
 
+    @constant
+    def FLOAT_CONTAINER(self):
+        return "float-container"
 
 COMPONENT_CLASS = _ComponentClass()

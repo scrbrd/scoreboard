@@ -6,13 +6,13 @@ FeedSection of a Tab.
 """
 
 from view.elements.base import Div
-#from view.elements.base import Div, Button
-from view.app.components import OpponentGroupsSection, RelativeDateComponent
+from view.app.components import RelativeDateComponent
 from view.app.components import AppThumbnail
 
 from constants import COMPONENT_CLASS
 from components import CamaraderieHeadline, RivalryHeadline, HeadlineSection
 from components import CommentsSection
+from media import BoxscoreMedia
 
 
 # TODO: get this from handlers in production
@@ -86,7 +86,6 @@ class Story(Div):
         """
         super(Story, self).__init__()
 
-        self._photo_section = None
         self.append_class(COMPONENT_CLASS.STORY)
 
         # add creator photo
@@ -104,14 +103,15 @@ class Story(Div):
                 story_headline,
                 RelativeDateComponent(story_object.created_ts, False))
 
+        # add headline and media section to story
+        self.append_child(headline_section)
+        self.append_child(self._construct_media_section(story_object))
+
+
         # add comments link to story
         # feedbackButton = Button()
         # feedbackButton.append_class("feedback-button")
         # self._main_section.append_child(feedbackButton)
-
-        # add photo and main section to Story
-        self.append_child(headline_section)
-        self.append_child(self._photo_section)
 
         # add feedback section to story
         self.append_child(CommentsSection(current_person, story_object))
@@ -119,6 +119,16 @@ class Story(Div):
 
     def _construct_story_headline(self, story_object):
         """ Construct the headline for the story.
+
+        Required:
+        SqNode  story_object  Object to build story around
+
+        """
+        raise NotImplementedError("Abstract Method: SUBCLASS MUST OVERRIDE!")
+
+
+    def _construct_media_section(self, story_object):
+        """ Construct the media object for the the story.
 
         Required:
         SqNode  story_object  Object to build story around
@@ -144,6 +154,16 @@ class GameStory(Story):
         self.append_class(COMPONENT_CLASS.GAME_STORY)
 
 
+    def _construct_media_section(self, story_object):
+        """ Construct the media object for the the Game Story.
+
+        Required:
+        SqNode  story_object  Game to build story around
+
+        """
+        return BoxscoreMedia(story_object)
+
+
     @staticmethod
     def construct_story(current_person, game):
         """ Provide StoryFactory with GameStory subclass constructors. """
@@ -162,27 +182,16 @@ class RivalryGameStory(GameStory):
     """ RivalryGameStory extending GameStory. """
 
 
-    def _construct_story_headline(self, game):
+    def _construct_story_headline(self, story_object):
         """ Construct the GameStory's Headline.
 
         Required:
-        object  game    the Game that the story pulls data from
+        SqNode  story_object  Game to build story around
 
         Return Headline
 
         """
-        # FIXME: this all breaks the contract that the view doesnt get
-        # access to non-property methods in model.api.Game.
-
-        # display the Opponents, grouped by Result
-        winners = game.get_opponents(game.winner_ids)
-        losers = game.get_opponents(game.loser_ids)
-
-        self._photo_section = OpponentGroupsSection(winners, losers)
-
-        return RivalryHeadline(game)
-
-        # self._main_section.append_child(SportComponent(game.sport))
+        return RivalryHeadline(story_object)
 
 
 class CamaraderieGameStory(GameStory):
@@ -190,54 +199,13 @@ class CamaraderieGameStory(GameStory):
     """ CamaraderieGameStory extending GameStory. """
 
 
-    def _construct_story_headline(self, game):
+    def _construct_story_headline(self, story_object):
         """ Construct the GameStory's Headline.
 
         Required:
-        object  game    the Game that the story pulls data from
+        SqNode  story_object  Game to build story around
 
         Return Headline
 
         """
-        (main_players, other_players) = self._split_camaraderie_players(game)
-
-        self._photo_section = OpponentGroupsSection(
-                main_players,
-                other_players)
-
-        # Create the Headline with all players.
-        return CamaraderieHeadline(game)
-
-        # self._main_section.append_child(SportComponent(game.sport))
-
-
-    @staticmethod
-    def _split_camaraderie_players(game):
-        """ Split player_ids into two groups for processing.
-
-        Required:
-        Game game           the game that the player_ids come from
-
-        The first list of players is a single player that should be
-        highlighted. If the game has a creator, this is him. Otherwise it's a
-        random player.
-
-        """
-        # FIXME: this all breaks the contract that the view doesnt get
-        # access to non-property methods in model.api.Game.
-
-        # TODO: set the main player to be the user if possible.
-
-        # Highlight creator, but if none, then set as a random player
-        creator_id = game.creator_id
-        main_player_id = game.camaraderie_ids[0]
-        if creator_id in game.camaraderie_ids:
-            main_player_id = creator_id
-        other_player_ids = game.camaraderie_ids[:]
-        other_player_ids.remove(main_player_id)
-
-        # Create the photo section with two groups of players.
-        main_players = [game.get_opponent(main_player_id)]
-        other_players = game.get_opponents(other_player_ids)
-
-        return (main_players, other_players)
+        return CamaraderieHeadline(story_object)

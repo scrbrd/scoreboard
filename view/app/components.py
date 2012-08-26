@@ -5,7 +5,7 @@ App-specific reusable components that are building blocks.
 """
 
 from view.view_util import date
-from view.elements.base import Span, Img, Div, Section, Button
+from view.elements.base import Span, Img, Div, Button
 from view.elements.components import Thumbnail
 
 from constants import COMPONENT_CLASS, IMAGE
@@ -57,6 +57,10 @@ class AppThumbnail(Thumbnail):
 
     def _prepare_src(self, src):
         """ Distinguish None from "" when choosing the default thumbnail. """
+        # FIXME: model should send None instead of "" since "" is a valid
+        # src, but model doesn't yet distinguish/translate empty db values.
+        if src == "":
+            src = None
         return IMAGE.DEFAULT_THUMBNAIL if src is None else src
 
 
@@ -121,88 +125,3 @@ class RelativeDateComponent(Div):
             relative_date.set_text(date.format_to_short_relative_datetime(ts))
 
         self.append_child(relative_date)
-
-
-class OpponentGroupsSection(Section):
-
-    """ OpponentGroupsSection is a collection of OpponentGroups.
-
-    Required:
-    list first_group        a list of Opponents
-    list second_group       a different list of Opponents
-
-    """
-
-
-    def __init__(self, first_group, second_group):
-        """ Construct a section with OpponentGroups. """
-        super(OpponentGroupsSection, self).__init__()
-        self.append_class(COMPONENT_CLASS.OPPONENT_GROUP_SECTION)
-
-        opponent_groups = [first_group, second_group]
-        for group in opponent_groups:
-            if len(group) == 0:
-                pass
-            elif len(group) == 1:
-                self.append_child(SingleOpponentGroup(group[0]))
-            elif len(group) in range(2, 5):
-                self.append_child(MultiOpponentGroup(group))
-            else:
-                self.set_text("MAX 4 PLAYERS")
-
-
-class OpponentGroup(Div):
-
-    """ OpponentGroup is a section that contains one or more opponents. """
-
-
-    def __init__(self, opponents):
-        """ Construct an opponent section.
-
-        Required:
-        list    opponents   a list of Opponent objects.
-
-        """
-        super(OpponentGroup, self).__init__()
-        self.append_class(COMPONENT_CLASS.OPPONENT_GROUP)
-
-        for opponent in opponents:
-            # FIXME: model should send None instead of "" since "" is a valid
-            # src, but model doesn't yet distinguish/translate empty db values.
-            # big_picture_url is from Person, not Opponent
-            src = None
-            if opponent.big_picture_url:
-                src = opponent.big_picture_url
-            self.append_child(AppThumbnail(src, opponent.name))
-
-
-class SingleOpponentGroup(OpponentGroup):
-
-    """ SingleOpponentGroup is a section that contains one opponent. """
-
-
-    def __init__(self, opponent):
-        """ Construct a single oppponent in the group
-
-        Required:
-        Opponent opponent   a single opponent for the OpponentGroup
-
-        """
-        super(SingleOpponentGroup, self).__init__([opponent])
-        self.append_class(COMPONENT_CLASS.SINGLE_OPPONENT_GROUP)
-
-
-class MultiOpponentGroup(OpponentGroup):
-
-    """ MultiOpponentGroup is a section that contains two to four opponents.
-    """
-
-    def __init__(self, opponents):
-        """ Construct a two to four opponent OpponentGroup.
-
-        Required:
-        list    opponents   a list of Opponents
-
-        """
-        super(MultiOpponentGroup, self).__init__(opponents)
-        self.append_class(COMPONENT_CLASS.MULTI_OPPONENT_GROUP)

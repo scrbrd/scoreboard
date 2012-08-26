@@ -370,8 +370,8 @@ the same border. */
 
 body {
     .textText();
-    @backgroundTileSize: 10px;
-    /*.background-image-wrapper( 
+    /* @backgroundTileSize: 10px;
+    .background-image-wrapper( 
         @backgroundTileSize,
         @backgroundTileSize,
         'backgroundTile.jpg',
@@ -386,6 +386,9 @@ body {
     -webkit-tap-highlight-color: rgba(0,0,0,0);
     
     /* -webkit-user-select: none;*/
+
+    // for non-mobile testing
+    background: @mysteryColor;
 }
 
 span {
@@ -693,6 +696,10 @@ form input {
     top: 6px;
 }
 
+.float-container {
+    float: left;
+}
+
 
 /***********************************************************
 * Z-INDEX SECTION (Remember POSITION!!!)
@@ -748,24 +755,6 @@ form input {
 .icon {
     width: @iconSize;
     margin-right: @spanPadding;
-}
-
-.opponent-group-section {
-}
-
-.opponent-group {
-    float: left;
-    width: 50%;
-}
-
-.single-opponent-group .thumbnail {
-    float: left;
-    width: 100%;
-}
-
-.multi-opponent-group .thumbnail {
-    float: left;
-    width: 50%;
 }
 
 .relative-date-component {
@@ -987,12 +976,6 @@ form input {
     float: right;
 }
 
-// FIXME: this is terrible.
-.story .sport-story-component {
-    .altTextText();
-    margin-right: @spanPadding;
-}
-
 .story .comments-section {
     float: left;
     clear: both;
@@ -1043,6 +1026,54 @@ form input {
 .comments-section .submit-button {
     display: none;
 }
+
+.boxscore-media {
+    margin-left: -@pagePadding;
+    margin-right: -@pagePadding;
+}
+
+.boxscore-media .float-container {
+    // needed for inner floats
+    width: 100%;
+
+    background: @white;
+
+    padding-top: @boxPadding;
+    padding-bottom: @boxPadding;
+
+}
+
+.boxscore-media .sport-component {
+    .altTextText();
+    float: right;
+}
+
+.opponents-result-group {
+    position: relative; // required to center result
+
+    float: left;
+    clear: both;
+    width: 100%;
+    border-top: 1px @lightGrey solid;
+
+    @mediaPadding: @boxPadding + @pagePadding;
+    padding: 0px @mediaPadding;
+}
+
+.opponents-result-group div {
+    .vertically-centered-image(absolute, 1em);
+    right: @boxPadding + @pagePadding;
+}
+
+.opponents-list {
+    float: left;
+}
+
+.opponents-list .thumbnail {
+    margin-right: @boxPadding; 
+}
+
+
 
 
 /***********************************************************

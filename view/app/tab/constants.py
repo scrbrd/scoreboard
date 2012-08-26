@@ -24,8 +24,8 @@ class _ComponentClass(object):
         return "headline-section"
 
     @constant
-    def SPORT_STORY_COMPONENT(self):
-        return "sport-story-component"
+    def SPORT_COMPONENT(self):
+        return "sport-component"
 
     @constant
     def COMMENTS_SECTION(self):
@@ -39,6 +39,17 @@ class _ComponentClass(object):
     def COMMENT_FORM(self):
         return "comment-form"
 
+    @constant
+    def OPPONENTS_RESULT_GROUP(self):
+        return "opponents-result-group"
+
+    @constant
+    def OPPONENTS_LIST(self):
+        return "opponents-list"
+
+    @constant
+    def BOXSCORE_MEDIA(self):
+        return "boxscore-media"
 
 COMPONENT_CLASS = _ComponentClass()
 
