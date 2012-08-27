@@ -137,8 +137,6 @@
 /***********************************************************
 * TEXT STYLE SETS
 ************************************************************/
-@numOfNavColumns: 2;
-
 .headerText() {
     .headerFont();
     color: @black;
@@ -413,16 +411,10 @@ li {
 .anchor, .anchor:link, .anchor:visited {
     .clickableText();
     text-decoration: none;
-}
 
-.anchor:hover {
-    .clickableText();
+    &:hover { .clickableText(); }
+    &:active { .opacity(0.8); }
 }
-
-.anchor:active {
-    .opacity(0.8);
-}
-
 
 input, button, textarea, select {
     //vertical-align: middle;
@@ -443,17 +435,20 @@ form input {
 * ELEMENT COMPONENTS - NO POSITIONING!!!
 ************************************************************/
 @buttonImageSide: 37px;
-@submitButtonHeight: 38px;
-@submitButtonWidth: 132px;
 
 .thumbnail{
-    width: @smallLineHeight;
     .border-radius(@slightRound);
+
+    width: @smallLineHeight;
 }
 
 .submit-button {
+    @submitButtonHeight: 38px;
+    @submitButtonWidth: 132px;
+
     .mainHeaderText();
     .border-radius(@sharpRound);
+
     height: @submitButtonHeight;
     width: @submitButtonWidth;
     background-color: @red;
@@ -468,15 +463,16 @@ form input {
             @buttonImageSide,
             'createButton.png',
             transparent);
-    border: 0px; // to cancel generic button properties
-}
 
-.create-button:active {
-    .background-image-wrapper(
-            @buttonImageSide,
-            @buttonImageSide,
-            'createButtonPressed.png',
-            transparent);
+    border: 0px; // to cancel generic button properties
+
+    &:active {
+        .background-image-wrapper(
+                @buttonImageSide,
+                @buttonImageSide,
+                'createButtonPressed.png',
+                transparent);
+    }
 }
 
 .close-button {
@@ -486,15 +482,16 @@ form input {
             @buttonImageSide,
             'cancelButton.png',
             transparent);
-    border: 0px;
-}
 
-.close-button:active {
-    .background-image-wrapper(
-            @buttonImageSide,
-            @buttonImageSide,
-            'cancelButtonPressed.png',
-            transparent);
+    border: 0px;
+
+    &:active {
+        .background-image-wrapper(
+                @buttonImageSide,
+                @buttonImageSide,
+                'cancelButtonPressed.png',
+                transparent);
+    }
 }
 
 @menuButtonWidth: 36px;
@@ -510,8 +507,9 @@ form input {
     border: 0px;
 }
 
-@removeTagButtonSide: 19px;
 .remove-tag-button {
+    @removeTagButtonSide: 19px;
+
     .hidden-content;
     .background-image-wrapper(
             @removeTagButtonSide,
@@ -520,19 +518,20 @@ form input {
             transparent);
 
     border: 0px;
-
     visibility: hidden;
+
+    &:active {
+        .background-image-wrapper(
+                @removeTagButtonSide,
+                @removeTagButtonSide,
+                'removeTagButtonPressed.png',
+                transparent);
+    }
 }
 
-.remove-tag-button:active {
-    .background-image-wrapper(
-            @removeTagButtonSide,
-            @removeTagButtonSide,
-            'removeTagButtonPressed.png',
-            transparent);
-}
-
-.anchor.login-anchor {
+.anchor.login-anchor, 
+.anchor.login-anchor:active, 
+.anchor.login-anchor:hover {
     .hidden-content;
 
     display: inline-block;
@@ -544,14 +543,14 @@ form input {
             88px,
             'facebookLoginAnchor.png',
             transparent);
-}
 
-.anchor.facebook-login-anchor:active {
-    .background-image-wrapper(
-            280px,
-            88px,
-            'facebookLoginAnchorPressed.png',
-            transparent);
+    &:active {
+        .background-image-wrapper(
+                280px,
+                88px,
+                'facebookLoginAnchorPressed.png',
+                transparent);
+    }
 }
 
 .main-header {
@@ -568,56 +567,28 @@ form input {
 
 .numbered-list {
     .counter;
-}
 
-.numbered-list li:before {
-    .counter-li;
+    li:before {
+        .counter-li;
+    }
 }
 
 .headed-list {
     width: 100%;
     float: left;
+
+    .list-header {
+        .altTextText;
+        height: @smallLineHeight - 5px;
+        line-height: @smallLineHeight - 5px;
+    }
+
+    .headed-list-item {
+        float: left;
+        width: 100%;
+        border-bottom: 1px dotted @lightGrey;
+    }
 }
-
-.headed-list .list-header {
-    .altTextText;
-    height: @smallLineHeight - 5px;
-    line-height: @smallLineHeight - 5px;
-}
-
-.headed-list-item {
-    float: left;
-    width: 100%;
-    border-bottom: 1px dotted @lightGrey;
-
-}
-/* .headed-list-item:after {
-    content: '';
-    width: 100%;
-    float: left;
-    margin-left: @boxPadding;
-    height: 0px;
-    border-bottom: 1px dotted @lightGrey;
-}*/
-
-// PROBLEMS ABOUND - move to the dialog component if needed
-.headed-list-item input {
-    width: 100%;
-    height: 100%;
-}
-
-/* .headed-list-item .list-column:first-child {
-    float: left;
-    width: 75%;
-    text-align: left;
-}
-
-.headed-list-item .list-column:last-child {
-    float: left;
-    width: 20%;
-    margin-left: @linePadding;
-    text-align: left;
-} */
 
 .switch-control {
     height: 28px;
@@ -628,72 +599,74 @@ form input {
     box-shadow: inset 0px 1px 3px #BABABA, inset 0px 12px 3px 2px rgba(232, 232, 232, 0.5);
     cursor: pointer;
     overflow: hidden;
-}
 
-.switch-control input[type=checkbox] {
-    display: none;
-}
+    &::before {
+        content: "";
+        display: block;
+        height: 28px;
+        width: 0px;
+        position: absolute;
+        border-radius: 20px;
+        box-shadow: inset 0px 1px 2px #0063B7, inset 0px 12px 3px 2px rgba(0, 127, 234, 0.5);
+        background-color: #64B1F2;
+    }
 
-.switch-control::before {
-    content: "";
-    display: block;
-    height: 28px;
-    width: 0px;
-    position: absolute;
-    border-radius: 20px;
-    box-shadow: inset 0px 1px 2px #0063B7, inset 0px 12px 3px 2px rgba(0, 127, 234, 0.5);
-    background-color: #64B1F2;
-}
+    input[type=checkbox] {
+        display: none;
+    }
 
-.switch-control.switch-on::before {
-    width: 77px;
-}
+    .switch-knob {
+        display: block;
+        width: 26px;
+        height: 26px;
+        position: relative;
+        top: 0px;
+        z-index: 3;
+        border: solid 1px #919191;
+        border-radius: 28px;
+        box-shadow: inset 0px 2px 1px white, inset 0px -2px 1px white;
+        background-color: #CECECE;
+        background-image: linear-gradient(top, #CECECE, #FBFBFB);
+        transition: all 0.125s ease-in-out;
+        transform: translate3d(0px, 0px, 0px);
 
-.switch-control > .switch-knob {
-    display: block;
-    width: 26px;
-    height: 26px;
-    position: relative;
-    top: 0px;
-    z-index: 3;
-    border: solid 1px #919191;
-    border-radius: 28px;
-    box-shadow: inset 0px 2px 1px white, inset 0px -2px 1px white;
-    background-color: #CECECE;
-    background-image: linear-gradient(top, #CECECE, #FBFBFB);
-    transition: all 0.125s ease-in-out;
-    transform: translate3d(0px, 0px, 0px);
-}
+        &::before {
+            content: "";
+            display: block;
+            height: 14px;
+            width: 2px;
+            background-color: white;
+            box-shadow: 0px -1px 1px #666;
+            border: none;
+            position: absolute;
+            top: 6px;
+            left: -24px;
+        }
 
-.switch-control.switch-on > .switch-knob {
-    -webkit-transform: translate3d(50px, 0px, 0px);
-    -o-transform: translateX(50px);
-    -moz-transform: translateX(50px);
-}
+        &::after {
+            content: "";
+            display: block;
+            height: 10px;
+            width: 10px;
+            border-radius: 10px;
+            border: solid 2px #777;
+            position: absolute;
+            right: -32px;
+            top: 6px;
+        }
+    }
 
-.switch-control > .switch-knob::before {
-    content: "";
-    display: block;
-    height: 14px;
-    width: 2px;
-    background-color: white;
-    box-shadow: 0px -1px 1px #666;
-    border: none;
-    position: absolute;
-    top: 6px;
-    left: -24px;
-}
+    &.switch-on  {
+        &::before {
+            width: 77px;
+        }
 
-.switch-control > .switch-knob::after {
-    content: "";
-    display: block;
-    height: 10px;
-    width: 10px;
-    border-radius: 10px;
-    border: solid 2px #777;
-    position: absolute;
-    right: -32px;
-    top: 6px;
+        .switch-knob {
+            -webkit-transform: translate3d(50px, 0px, 0px);
+            -o-transform: translateX(50px);
+            -moz-transform: translateX(50px);
+        }
+    }
 }
 
 .float-container {
@@ -712,12 +685,15 @@ form input {
     z-index: 15;
 }
 
-#content #summary, #content #feed {
-    z-index: 10;    
-}
+#content {
+    
+    #summary, #feed {
+        z-index: 10;    
+    }
 
-#content #properties {
-    z-index: 7;
+    #properties {
+        z-index: 7;
+    }
 }
 
 #content-container-wrapper, #content-container {
@@ -794,290 +770,307 @@ form input {
 
 
 /***********************************************************
-* TAB FRAMEWORK
+* TABS
 ************************************************************/
-#tab {
-    /* for hiding address bar and pulling content above bottom navigation */
-    .textText();
-    position: absolute;
+#tab-container {
 
-    width: @screenWidth;
-    height: 100%; 
+    /***********************************************************
+    * FRAMEWORK
+    ************************************************************/
+    #tab {
+        /* for hiding address bar and pulling content above bottom navigation */
+        .textText();
+        position: absolute;
+
+        width: @screenWidth;
+        height: 100%; 
+
+        #content {
+            margin-top: @normalLineHeight * 4;
+
+            #properties {
+                position: absolute;
+                top: 0px;
+                left: 0px;
+
+                width: 100%;
+            }
+
+            #summary {
+                position: relative;
+                
+                float: left;
+                width: 100%;
+                padding-left: @pagePadding;
+                padding-right: @pagePadding;
+            }
+
+            #feed {
+                position: relative;
+
+                float: left;
+                clear: both;
+                width: 100%;
+                padding-left: @pagePadding;
+                padding-right: @pagePadding;
+            }
+        }
+
+        .loading {
+            padding-top: @linePadding;
+        }
+
+        /***********************************************************
+        * HEADER
+        ************************************************************/
+        .tab-header {
+            .background-image-wrapper(
+                    @screenWidth,
+                    @normalLineHeight,
+                    'tabHeaderBar.png',
+                    transparent);
+        }
+
+        #tab-header {
+            position: absolute;
+            top: 0px;
+            left: 0px;
+
+            div {
+                @logoWidth: 78px;
+                @logoHeight: 32px;
+
+                .hidden-content;
+                .background-image-wrapper(
+                    @logoWidth,
+                    @logoHeight,
+                    'logo.png',
+                    transparent);
+                .centered-image(relative, @logoWidth, @logoHeight);
+            }
+
+            .create-button {
+                .vertically-centered-image(absolute, @buttonImageSide);
+
+                right: @pagePadding;
+            }
+
+            .menu-button {
+                .vertically-centered-image(absolute, @menuButtonHeight);
+
+                left: @pagePadding;
+            }
+        }
+
+        /***********************************************************
+        * COMPONENTS
+        ************************************************************/
+        .summary-item {
+            .drop-box-shadow();
+            float: left;
+            width: 100%;
+            background: @white;
+            
+            padding-left: @boxPadding;
+            padding-right: @boxPadding;
+            padding-bottom: @boxPadding;
+        }
+
+        .rankings-list {
+            .list-column {
+                text-align: center;
+            }
+
+            .headed-list-item .list-column {
+                &:nth-child(1) {
+                    float: left;
+                    width: @smallLineHeight;
+                }
+
+                &:nth-child(2) {
+                    float: left;
+                    width: 25%;
+                    //overflow: auto;
+                    margin-left: @columnPadding;
+                    text-align: left;
+                }
+
+                &:nth-child(n+3) {
+                    float: right;
+                    width: 12%;
+                }
+            }
+
+            // only header
+            .list-header .list-column:nth-child(2) {
+                margin-left: @bigPadding + @smallLineHeight + @columnPadding;
+            }
+
+            // only non-header elements
+            .numbered-list {
+                .headed-list-item {
+                    margin-top: 0px;
+                    margin-bottom: 0px;
+                    padding-top: @tinyPadding;
+                    padding-bottom: @tinyPadding;
+
+                    line-height: @bodyLineHeight * 2;
+
+                    &:before {
+                        line-height: @bodyLineHeight * 2;
+                        float: left;
+                        width: @bigPadding;
+                    }
+                }
+            }
+        }
+
+        /***********************************************************
+        * STORY 
+        ************************************************************/
+        .story {
+            .drop-box-shadow();
+            
+            // make this browser independent
+            background-color: @transWhite;
+
+            float: left;
+            width: 100%;
+        
+            margin-top: @linePadding;
+            margin-bottom: @linePadding;
+            padding-bottom: @boxPadding;
+
+            .headline-section {
+                clear: both;
+                margin-top: @boxPadding;
+                margin-bottom: @boxPadding;
+                padding-left: @boxPadding;
+                padding-right: @boxPadding;
+
+                .thumbnail {
+                    float: left;
+                }
+
+                .headline {
+                    overflow: auto;
+                    padding: 0px @columnPadding;
+                }
+
+                .relative-date-component {
+                    float: right;
+                }
+            }
+
+            .comments-section {
+                float: left;
+                clear: both;
+
+                width: 100%;
+                padding-left: @boxPadding;
+                padding-right: @boxPadding;
+
+                .list-column {
+                    overflow: auto;
+                }
+
+                .thumbnail {
+                    float: left;
+                    margin-right: @columnPadding;
+                }
+
+                .anchor {
+                    margin-right: @spanPadding;
+                }
+
+                li {
+                    width: 100%;
+                    height: auto;
+                    line-height: @bodyLineHeight;
+
+                    text-align: top;
+                }
+
+                .comment-form {
+                    clear: both;
+                    width: 100%;
+
+                    margin-top: @linePadding;
+
+                    // FIXME put classes here instead of div and input
+                    div {
+                        overflow: auto;
+                    }
+
+                    input {
+                        width: 100%;
+                    }
+
+                    // hidden submit button (enter and 'Go' only
+                    .submit-button {
+                        display: none;
+                    }
+                }
+            }
+
+            /***********************************************************
+            * MEDIA 
+            ************************************************************/
+            .boxscore-media {
+                margin-left: -@pagePadding;
+                margin-right: -@pagePadding;
+
+                .float-container {
+                    // needed for inner floats
+                    width: 100%;
+
+                    background: @white;
+
+                    padding-top: @boxPadding;
+                    padding-bottom: @boxPadding;
+                }
+
+                .sport-component {
+                    .altTextText();
+                    float: right;
+                }
+
+                .opponents-result-group {
+                    position: relative; // required to center inside div
+
+                    float: left;
+                    clear: both;
+                    width: 100%;
+                    border-top: 1px @lightGrey solid;
+
+                    @mediaPadding: @boxPadding + @pagePadding;
+                    padding: 0px @mediaPadding;
+
+                    div {
+                        .vertically-centered-image(absolute, 1em);
+                        right: @boxPadding + @pagePadding;
+                    }
+                }
+
+                .opponents-list {
+                    float: left;
+
+                    .thumbnail {
+                        margin-right: @boxPadding; 
+                    }
+                }
+            }
+        }
+
+        /***********************************************************
+        * [EXAMPLE: LEAGUE] 
+        ************************************************************/
+    }
 }
-
-#content {
-    margin-top: @normalLineHeight * 4;
-}
-
-#content #properties {
-    position: absolute;
-    top: 0px;
-    left: 0px;
-
-    width: 100%;
-}
-
-#content #summary {
-    position: relative;
-    
-    float: left;
-    width: 100%;
-    padding-left: @pagePadding;
-    padding-right: @pagePadding;
-}
-
-#content #feed {
-    position: relative;
-
-    float: left;
-    clear: both;
-    width: 100%;
-    padding-left: @pagePadding;
-    padding-right: @pagePadding;
-}
-
-
-#tab .loading {
-    padding-top: @linePadding;
-}
-
 
 
 /***********************************************************
-* TAB HEADER
-************************************************************/
-.tab-header {
-   .background-image-wrapper(
-            @screenWidth,
-            @normalLineHeight,
-            'tabHeaderBar.png',
-            transparent);
-}
-
-#tab-header div {
-    @logoWidth: 78px;
-    @logoHeight: 32px;
-    .hidden-content;
-    .background-image-wrapper(
-        @logoWidth,
-        @logoHeight,
-        'logo.png',
-        transparent);
-
-    .centered-image(relative, @logoWidth, @logoHeight);
-}
-
-#tab-header {
-    position: absolute;
-    top: 0px;
-    left: 0px;
-}
-
-#tab-header .create-button {
-    .vertically-centered-image(absolute, @buttonImageSide);
-    right: @pagePadding;
-}
-
-#tab-header .menu-button {
-    .vertically-centered-image(absolute, @menuButtonHeight);
-
-    left: @pagePadding;
-}
-
-
-/***********************************************************
-* TAB COMPONENTS
-************************************************************/
-.summary-item {
-    .drop-box-shadow();
-    float: left;
-    width: 100%;
-    background: @white;
-    
-    padding-left: @boxPadding;
-    padding-right: @boxPadding;
-    padding-bottom: @boxPadding;
-}
-
-.rankings-list .list-column {
-    text-align: center;
-}
-
-.rankings-list .headed-list-item .list-column:nth-child(1) {
-    float: left;
-    width: @smallLineHeight;
-}
-.rankings-list .headed-list-item .list-column:nth-child(2) {
-    float: left;
-    width: 25%;
-    //overflow: auto;
-    margin-left: @columnPadding;
-    text-align: left;
-}
-
-.rankings-list .headed-list-item .list-column:nth-child(n+3) {
-    float: right;
-    width: 12%;
-}
-
-// only header
-.rankings-list .list-header .list-column:nth-child(2) {
-    margin-left: @bigPadding + @smallLineHeight + @columnPadding;
-}
-
-// only ranked li
-.rankings-list li.headed-list-item {
-    margin-top: 0px;
-    margin-bottom: 0px;
-    padding-top: @tinyPadding;
-    padding-bottom: @tinyPadding;
-
-    line-height: @bodyLineHeight * 2;
-}
-
-.rankings-list .numbered-list li:before {
-    line-height: @bodyLineHeight * 2;
-    float: left;
-    width: @bigPadding;
-}
-
-.story {
-    .drop-box-shadow();
-    
-    // make this browser independent
-    background-color: @transWhite;
-
-    float: left;
-    width: 100%;
-   
-    margin-top: @linePadding;
-    margin-bottom: @linePadding;
-    padding-bottom: @boxPadding;
-}
-
-.story .headline-section {
-    clear: both;
-    margin-top: @boxPadding;
-    margin-bottom: @boxPadding;
-    padding-left: @boxPadding;
-    padding-right: @boxPadding;
-}
-
-.headline-section .thumbnail {
-    float: left;
-}
-
-.headline-section .headline {
-    overflow: auto;
-    padding: 0px @columnPadding;
-}
-
-.headline-section .relative-date-component {
-    float: right;
-}
-
-.story .comments-section {
-    float: left;
-    clear: both;
-
-    width: 100%;
-    padding-left: @boxPadding;
-    padding-right: @boxPadding;
-}
-
-.comments-section li {
-    width: 100%;
-    height: auto;
-    line-height: @bodyLineHeight;
-
-    text-align: top;
-}
-
-.comments-section .list-column {
-    overflow: auto;
-}
-
-.comments-section .thumbnail {
-    float: left;
-    margin-right: @columnPadding;
-}
-
-.comments-section .anchor {
-    margin-right: @spanPadding;
-}
-
-.comments-section .comment-form {
-    clear: both;
-    width: 100%;
-
-    margin-top: @linePadding;
-}
-
-// FIXME put classes here instead of div and input
-.comments-section .comment-form div {
-    overflow: auto;
-}
-
-.comments-section .comment-form input {
-    width: 100%;
-}
-
-// hidden submit button (enter and 'Go' only
-.comments-section .submit-button {
-    display: none;
-}
-
-.boxscore-media {
-    margin-left: -@pagePadding;
-    margin-right: -@pagePadding;
-}
-
-.boxscore-media .float-container {
-    // needed for inner floats
-    width: 100%;
-
-    background: @white;
-
-    padding-top: @boxPadding;
-    padding-bottom: @boxPadding;
-
-}
-
-.boxscore-media .sport-component {
-    .altTextText();
-    float: right;
-}
-
-.opponents-result-group {
-    position: relative; // required to center result
-
-    float: left;
-    clear: both;
-    width: 100%;
-    border-top: 1px @lightGrey solid;
-
-    @mediaPadding: @boxPadding + @pagePadding;
-    padding: 0px @mediaPadding;
-}
-
-.opponents-result-group div {
-    .vertically-centered-image(absolute, 1em);
-    right: @boxPadding + @pagePadding;
-}
-
-.opponents-list {
-    float: left;
-}
-
-.opponents-list .thumbnail {
-    margin-right: @boxPadding; 
-}
-
-
-
-
-/***********************************************************
-* DIALOG
+* DIALOGS
 ************************************************************/
 #dialog-container {
     position: absolute;
@@ -1085,87 +1078,79 @@ form input {
 
     background-color: @white;
     
+    /***********************************************************
+    * FRAMEWORK
+    ************************************************************/
+    .dialog {
+        .textText();
+        height: 100%;
+        display: table;
+
+        .dialog-header {
+            background-color: @red;
+            // apply gradient
+
+            .close-button {
+                //.vertically-centered-image(absolute, @buttonImageSide);
+                //right: @pagePadding;
+                position: absolute;
+                right: 8px;
+                top: 4px;
+            }
+        }
+
+        .dialog-content {
+            height: 100%;
+            padding: @boxPadding;
+
+            text-align: center;
+        }
+
+        /***********************************************************
+        * COMPONENTS 
+        ************************************************************/
+        .autocomplete-tag {
+            text-align: center;
+
+            .thumbnail {
+                float: left;
+            }
+
+            div {
+                padding-left: @columnPadding;
+                padding-right: @columnPadding;
+                overflow: auto;
+
+                input {
+                    width: 100%;
+                }
+            }
+
+            .remove-tag-button {
+                margin-top: 8px;
+                float: right;
+            }
+
+            .ui-menu-item-with-thumbnail .thumbnail {
+                margin-right: @columnPadding;
+            }
+        }
+    }
+
+    /***********************************************************
+    * CREATE GAME
+    ************************************************************/
+    #create-game {
+        .game-type-subheader {
+            .subheaderText;
+        }
+
+        .opponent-tags-group {
+            display: none;
+        }
+    }
 }
 
-.dialog {
-    .textText();
-    height: 100%;
-    display: table;
-
-}
-
-.dialog-header {
-    background-color: @red;
-    // apply gradient
-}
-
-.dialog-header .close-button {
-    //.vertically-centered-image(absolute, @buttonImageSide);
-    //right: @pagePadding;
-    position: absolute;
-    right: 8px;
-    top: 4px;
-}
-
-.dialog-content {
-    height: 100%;
-    padding: @boxPadding;
-
-    text-align: center;
-}
-
-// needed?
-.post-button-wrapper {
-    position: absolute;
-    bottom: @boxPadding;
-    left: 0px;
-    width: 100%;
-}
-
-
-.autocomplete-tag {
-    text-align: center;
-}
-
-.autocomplete-tag .thumbnail {
-    float: left;
-}
-
-.autocomplete-tag div {
-    padding-left: @columnPadding;
-    padding-right: @columnPadding;
-    overflow: auto;
-}
-
-.autocomplete-tag input {
-    width: 100%;
-}
-
-.autocomplete-tag .remove-tag-button {
-    margin-top: 8px;
-    float: right;
-}
-
-.autocomplete-tag .ui-menu-item-with-thumbnail .thumbnail {
-    margin-right: @columnPadding;
-}
-
-/***********************************************************
-* CREATE GAME DIALOG
-************************************************************/
-.game-type-subheader {
-    .subheaderText;
-}
-
-.game-type-switch {
-}
-
-.opponent-tags-group {
-    display: none;
-}
-
-.sport-tag-subheader {
-}
 
 /***********************************************************
 * GENERIC PAGE
@@ -1176,6 +1161,7 @@ form input {
     top: 50%;
     width: 100%;
 }
+
 
 /***********************************************************
 * LANDING PAGE
@@ -1211,31 +1197,27 @@ form input {
     border: 1px solid @darkGrey;
     border-radius: @sharpRound;
     padding: @linePadding;
+
+    .ui-menu-item {
+        cursor: pointer;
+        border-top: 1px dotted @darkGrey;
+        margin-top: 0px;
+        margin-bottom: 0px;
+        padding-top: @tinyPadding;
+        padding-bottom: @tinyPadding;
+
+        line-height: @smallLineHeight;
+
+        &:hover, &active { background-color: @lightGrey; }
+
+        a {
+            .textText;
+            display: inline-block;
+
+            width: 100%;
+            height: @smallLineHeight;
+
+            line-height: @smallLineHeight;
+        }
+    }
 }
-
-.ui-menu-item {
-    cursor: pointer;
-    border-top: 1px dotted @darkGrey;
-    margin-top: 0px;
-    margin-bottom: 0px;
-    padding-top: @tinyPadding;
-    padding-bottom: @tinyPadding;
-
-    line-height: @smallLineHeight;
-}
-
-.ui-menu-item:hover, .ui-menu-item:active {
-    background-color: @lightGrey;
-}
-
-.ui-menu-item a {
-    .textText;
-    display: inline-block;
-
-    width: 100%;
-    height: @smallLineHeight;
-
-    line-height: @smallLineHeight;
-}
-
-

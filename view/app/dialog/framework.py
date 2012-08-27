@@ -70,5 +70,4 @@ class PostButtonSection(Div):
     def __init__(self):
         """ Construct a dialog component for a post button. """
         super(PostButtonSection, self).__init__()
-        # self.append_class(DIALOG_CLASS.POST_BUTTON_WRAPPER)
         self.append_child(PostButton())
