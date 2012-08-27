@@ -7,68 +7,6 @@ Provide constants for Tab package.
 from util.decorators import constant
 
 
-class _ComponentClass(object):
-
-    """ _ComponentClass holds all w3c classes for the tab components. """
-
-    @constant
-    def STORY(self):
-        return "story"
-
-    @constant
-    def GAME_STORY(self):
-        return "game-story"
-
-    @constant
-    def HEADLINE_SECTION(self):
-        return "headline-section"
-
-    @constant
-    def SPORT_COMPONENT(self):
-        return "sport-component"
-
-    @constant
-    def COMMENTS_SECTION(self):
-        return "comments-section"
-
-    @constant
-    def RANKINGS_LIST(self):
-        return "rankings-list"
-
-    @constant
-    def COMMENT_FORM(self):
-        return "comment-form"
-
-    @constant
-    def OPPONENTS_RESULT_GROUP(self):
-        return "opponents-result-group"
-
-    @constant
-    def OPPONENTS_LIST(self):
-        return "opponents-list"
-
-    @constant
-    def BOXSCORE_MEDIA(self):
-        return "boxscore-media"
-
-COMPONENT_CLASS = _ComponentClass()
-
-
-class _TabClass(object):
-
-    """ _TabClass holds all w3c classes for the tab package. """
-
-    @constant
-    def TAB_HEADER(self):
-        return "tab-header"
-
-    @constant
-    def SUMMARY_ITEM(self):
-        return "summary-item"
-
-TAB_CLASS = _TabClass()
-
-
 class _TabID(object):
 
     """ _TabID holds all w3c ids for the tab package. """

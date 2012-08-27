@@ -10,7 +10,7 @@ from view.elements.components import SwitchInput
 from view.app.copy import Copy
 from view.app.components import Headline, Subheadline
 
-from constants import DIALOG_CLASS
+from constants import DIALOG_ID
 from framework import DialogHeader, DialogContentSection, PostButtonSection
 from components import PlayerAutocomplete, SportAutocomplete
 
@@ -42,6 +42,8 @@ class CreateGameForm(Form):
 
     """ Create Game form extending <form>. """
 
+    # FIXME XXX CONTENT should be in a more generic place
+    DIALOG_CONTENT_CLASS = "dialog-content"
     MAX_TAGS = 2
 
 
@@ -56,8 +58,8 @@ class CreateGameForm(Form):
 
         # TODO: make this draw from view.url constants
         self.set_action("/create/game")
-        self.append_class(DIALOG_CLASS.DIALOG_CONTENT)
-        self.set_id(DIALOG_CLASS.DIALOG_CONTENT)
+        self.append_class(self.DIALOG_CONTENT_CLASS)
+        self.set_id(DIALOG_ID.DIALOG_CONTENT)
 
         # TODO: is there some mild abstraction needed here? or other info?
         # add some context to the form
@@ -100,31 +102,26 @@ class OpponentTagsHeadline(Headline):
 
     """ OpponentTagsHeadline extending Headline. """
 
+    OPPONENT_TAGS_HEADLINE_CLASS = "opponent-tags-headline"
+
 
     def __init__(self):
         """ Construct an OpponentTagsHeadline. """
         super(OpponentTagsHeadline, self).__init__(Copy.tag_headline)
-        self.append_class(DIALOG_CLASS.OPPONENT_TAGS_HEADLINE)
+        self.append_class(self.OPPONENT_TAGS_HEADLINE_CLASS)
 
 
 class GameTypeSubheader(Subheadline):
 
     """ GameTypeSubheader extending Subheadline. """
 
+    GAME_TYPE_SUBHEADER_CLASS = "game-type-subheader"
+
 
     def __init__(self):
         """ Construct a GameTypeSwitch toggling versus/with. """
         super(GameTypeSubheader, self).__init__(Copy.versus)
-        self.append_class(DIALOG_CLASS.GAME_TYPE_SUBHEADER)
-
-        #label = Label(Copy.versus, SQ_DATA.GAME_TYPE)
-        #label.append_class(DIALOG_CLASS.GAME_TYPE_LABEL)
-        #self.append_child(label)
-
-        #span = Span()
-        #span.set_text(Copy.versus)
-        #span.append_class(DIALOG_CLASS.GAME_TYPE_LABEL)
-        #self.append_child(span)
+        self.append_class(self.GAME_TYPE_SUBHEADER_CLASS)
 
         self.append_child(GameTypeSwitch())
 
@@ -133,13 +130,15 @@ class GameTypeSwitch(SwitchInput):
 
     """ GameTypeSwitch extending SwitchInput. """
 
+    GAME_TYPE_SWITCH_CLASS = "game-type-switch"
+
 
     def __init__(self):
         """ Construct a GameTypeSwitch toggling versus/with. """
         super(GameTypeSwitch, self).__init__(
                 SQ_DATA.GAME_TYPE,
                 SQ_VALUE.RIVALRY)
-        self.append_class(DIALOG_CLASS.GAME_TYPE_SWITCH)
+        self.append_class(self.GAME_TYPE_SWITCH_CLASS)
 
         # would be necessary if we associate a Label with the switch
         #self.set_id(SQ_DATA.GAME_TYPE)
@@ -149,6 +148,8 @@ class OpponentTagsGroup(Div):
 
     """ OpponentTagsGroup extending <div>, for grouping tags together with a
     Subheader. """
+
+    OPPONENT_TAGS_GROUP_CLASS = "opponent-tags-group"
 
 
     def __init__(self, game_type, result_type, number_of_tags, title=None):
@@ -164,7 +165,7 @@ class OpponentTagsGroup(Div):
 
         """
         super(OpponentTagsGroup, self).__init__()
-        self.append_class(DIALOG_CLASS.OPPONENT_TAGS_GROUP)
+        self.append_class(self.OPPONENT_TAGS_GROUP_CLASS)
         self.append_class(game_type)
         # subheader for the group.
         if title is not None:
@@ -179,22 +180,26 @@ class OpponentTagsSubheader(Subheadline):
 
     """ OpponentTagsSubheader extending Headline. """
 
+    OPPONENT_TAGS_SUBHEADER_CLASS = "opponent-tags-subheader"
+
 
     def __init__(self, text=""):
         """ Construct an OpponentTagsHeadline. """
         super(OpponentTagsSubheader, self).__init__(text)
-        self.append_class(DIALOG_CLASS.OPPONENT_TAGS_SUBHEADER)
+        self.append_class(self.OPPONENT_TAGS_SUBHEADER_CLASS)
 
 
 class OpponentTagsUL(UL):
 
     """ OpponentTagsUL extending <ul>. """
 
+    OPPONENT_TAGS_LIST_CLASS = "opponent-tags-list"
+
 
     def __init__(self, items):
         """ Construct an OpponentTagsUL. """
         super(OpponentTagsUL, self).__init__(items)
-        self.append_class(DIALOG_CLASS.OPPONENT_TAGS_LIST)
+        self.append_class(self.OPPONENT_TAGS_LIST_CLASS)
 
 
     def set_list_item(self, item, index):
@@ -206,11 +211,13 @@ class OpponentTagLI(LI):
 
     """ OpponentTagLI extending LI. """
 
+    OPPONENT_TAG_LIST_ITEM_CLASS = "opponent-tag-list-item"
+
 
     def __init__(self, item, index):
         """ Construct an OpponentTagLI. """
         super(OpponentTagLI, self).__init__(item, index)
-        self.append_class(DIALOG_CLASS.OPPONENT_TAG_LIST_ITEM)
+        self.append_class(self.OPPONENT_TAG_LIST_ITEM_CLASS)
 
 
     def set_content(self, item):
@@ -228,9 +235,11 @@ class SportTagSubheader(Subheadline):
 
     """ SportTagSubheader extending Subheadline. """
 
+    SPORT_TAG_SUBHEADER_CLASS = "sport-tag-subheader"
+
 
     def __init__(self):
         """ Construct a SportTagSubheader. """
         super(SportTagSubheader, self).__init__("")
-        self.append_class(DIALOG_CLASS.SPORT_TAG_SUBHEADER)
+        self.append_class(self.SPORT_TAG_SUBHEADER_CLASS)
         self.append_child(SportAutocomplete(SQ_DATA.SPORT_ID))

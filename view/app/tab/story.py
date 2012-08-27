@@ -9,7 +9,6 @@ from view.elements.base import Div
 from view.app.components import RelativeDateComponent
 from view.app.components import AppThumbnail
 
-from constants import COMPONENT_CLASS
 from components import CamaraderieHeadline, RivalryHeadline, HeadlineSection
 from components import CommentsSection
 from media import BoxscoreMedia
@@ -75,6 +74,8 @@ class Story(Div):
 
     """ Story is a single entry for the FeedDiv, extends <div>. """
 
+    STORY_CLASS = "story"
+
 
     def __init__(self, current_person, story_object):
         """ Construct a Story.
@@ -86,7 +87,7 @@ class Story(Div):
         """
         super(Story, self).__init__()
 
-        self.append_class(COMPONENT_CLASS.STORY)
+        self.append_class(self.STORY_CLASS)
 
         # add creator photo
         creator = story_object.get_creator()
@@ -141,6 +142,8 @@ class GameStory(Story):
 
     """ Game Story is a single entry for a played game. """
 
+    GAME_STORY_CLASS = "game-story"
+
 
     def __init__(self, current_person, game):
         """ Construct a GameStory.
@@ -151,7 +154,7 @@ class GameStory(Story):
 
         """
         super(GameStory, self).__init__(current_person, game)
-        self.append_class(COMPONENT_CLASS.GAME_STORY)
+        self.append_class(self.GAME_STORY_CLASS)
 
 
     def _construct_media_section(self, story_object):

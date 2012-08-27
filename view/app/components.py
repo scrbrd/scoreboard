@@ -8,7 +8,7 @@ from view.view_util import date
 from view.elements.base import Span, Img, Div, Button
 from view.elements.components import Thumbnail
 
-from constants import COMPONENT_CLASS, IMAGE
+from constants import IMAGE
 from copy import Copy
 
 
@@ -16,11 +16,13 @@ class Headline(Div):
 
     """ Headline is a title span. """
 
+    HEADLINE_CLASS = "headline"
+
 
     def __init__(self, text):
         """ Construct a headline tag. """
         super(Headline, self).__init__()
-        self.append_class(COMPONENT_CLASS.HEADLINE)
+        self.append_class(self.HEADLINE_CLASS)
 
         self.set_text(text)
 
@@ -29,11 +31,13 @@ class Subheadline(Div):
 
     """ Subheadline is a title span. """
 
+    SUBHEADLINE_CLASS = "subheadline-class"
+
 
     def __init__(self, text):
         """ Construct a headline tag. """
         super(Subheadline, self).__init__()
-        self.append_class(COMPONENT_CLASS.SUBHEADLINE)
+        self.append_class(self.SUBHEADLINE_CLASS)
 
         self.set_text(text)
 
@@ -68,40 +72,48 @@ class RemoveTagButton(Button):
 
     """ Remove Tag Button that extends <button>. """
 
+    REMOVE_TAG_BUTTON_CLASS = "remove-tag-button"
+
 
     def __init__(self):
         """ Construct a remove tag button tag. """
         super(RemoveTagButton, self).__init__(Copy.remove_tag_button)
 
-        self.append_class(COMPONENT_CLASS.REMOVE_TAG_BUTTON)
+        self.append_class(self.REMOVE_TAG_BUTTON_CLASS)
 
 
 class CoverPhoto(Img):
 
     """ CoverPhoto is the main image on a Page. """
 
+    COVER_PHOTO_CLASS = "cover-photo"
+
 
     def __init__(self, src, title):
         """ Construct a cover photo. """
         super(CoverPhoto, self).__init__(src, title)
-        self.append_class(COMPONENT_CLASS.COVER_PHOTO)
+        self.append_class(self.COVER_PHOTO_CLASS)
 
 
 class Icon(Img):
 
     """ Icon is a small image that is used as a symbol. """
 
+    ICON_CLASS = "icon"
+
 
     def __init__(self, src, alt):
         """ Construct an Icon. """
         super(Icon, self).__init__(src, alt)
-        self.append_class(COMPONENT_CLASS.ICON)
+        self.append_class(self.ICON_CLASS)
 
 
 class RelativeDateComponent(Div):
 
     """ RelativeDateComponent is a component that displays a date relative to
     the current date. (e.g., '4 days go') """
+
+    RELATIVE_DATE_COMPONENT_CLASS = "relative-date-component"
 
 
     def __init__(self, ts, is_expanded=True):
@@ -115,7 +127,7 @@ class RelativeDateComponent(Div):
 
         """
         super(RelativeDateComponent, self).__init__()
-        self.append_class(COMPONENT_CLASS.RELATIVE_DATE_COMPONENT)
+        self.append_class(self.RELATIVE_DATE_COMPONENT_CLASS)
 
         relative_date = Span()
         if is_expanded:

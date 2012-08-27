@@ -8,13 +8,14 @@ from view.elements.base import Section, Div, Span
 from view.elements.components import FloatContainer
 from view.app.copy import Copy
 
-from constants import COMPONENT_CLASS
 from components import SportComponent, OpponentsList
 
 
 class BoxscoreMedia(Section):
 
     """ BoxscoreMedia is the Boxscore object for a Game. """
+
+    BOXSCORE_MEDIA_CLASS = "boxscore-media"
 
 
     def __init__(self, game):
@@ -25,7 +26,7 @@ class BoxscoreMedia(Section):
 
         """
         super(BoxscoreMedia, self).__init__()
-        self.append_class(COMPONENT_CLASS.BOXSCORE_MEDIA)
+        self.append_class(self.BOXSCORE_MEDIA_CLASS)
 
         # to allow the outer object to fit the screen width and still
         # wrap the inner floats
@@ -63,6 +64,8 @@ class OpponentsResultGroup(Div):
     """ OpponentsResultGroup is a section that contains one or more
     opponents. """
 
+    OPPONENTS_RESULT_GROUP_CLASS = "opponents-result-group"
+
 
     def __init__(self, opponents, result_str):
         """ Construct an opponent section.
@@ -73,7 +76,7 @@ class OpponentsResultGroup(Div):
 
         """
         super(OpponentsResultGroup, self).__init__()
-        self.append_class(COMPONENT_CLASS.OPPONENTS_RESULT_GROUP)
+        self.append_class(self.OPPONENTS_RESULT_GROUP_CLASS)
 
         # each opponent with a thumbnail and name
         self.append_child(OpponentsList(opponents))

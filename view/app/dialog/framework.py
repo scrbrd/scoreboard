@@ -11,19 +11,21 @@ from view.elements.components import MainHeader
 from view.elements.components import PostButton, CloseButton
 from view.app.framework import ContentWrapper
 
-from constants import DIALOG_CLASS, DIALOG_ID
+from constants import DIALOG_ID
 
 
 class DialogHeader(MainHeader):
 
     """ Dialog Header extending MainHeader<header>. """
 
+    DIALOG_HEADER_CLASS = "dialog-header"
+
 
     def __init__(self, dialog_name):
         """ Construct a dialog header element tree. """
         super(DialogHeader, self).__init__(dialog_name)
 
-        self.append_class(DIALOG_CLASS.DIALOG_HEADER)
+        self.append_class(self.DIALOG_HEADER_CLASS)
         self.set_id(DIALOG_ID.DIALOG_HEADER)
 
         close_button = CloseButton()

@@ -9,8 +9,6 @@ from view.elements.base import Div, TextInput, HiddenInput
 from view.app.components import AppThumbnail, RemoveTagButton
 from view.app.constants import IMAGE
 
-from constants import DIALOG_CLASS
-
 
 class AutocompleteInput(Div):
 
@@ -20,6 +18,10 @@ class AutocompleteInput(Div):
     elements needed to handle autocomplete.
 
     """
+
+    AUTOCOMPLETE_CLASS = "autocomplete"
+    AUTOCOMPLETE_LABEL_CLASS = "autocomplete-label"
+    AUTOCOMPLETE_VALUE_CLASS = "autocomplete-value"
 
 
     def __init__(
@@ -38,19 +40,19 @@ class AutocompleteInput(Div):
 
         """
         super(AutocompleteInput, self).__init__()
-        self.append_class(DIALOG_CLASS.AUTOCOMPLETE)
+        self.append_class(self.AUTOCOMPLETE_CLASS)
 
         # textinput doesn't actually contain data but does autocomplete.
         input_div = Div()  # for overflow auto and automatic width
-        input = TextInput(name + "-" + DIALOG_CLASS.AUTOCOMPLETE_LABEL)
+        input = TextInput(name + "-" + self.AUTOCOMPLETE_LABEL_CLASS)
         input.set_placeholder(placeholder)
-        input.append_class(DIALOG_CLASS.AUTOCOMPLETE_LABEL)
+        input.append_class(self.AUTOCOMPLETE_LABEL_CLASS)
         input_div.append_child(input)
         self.append_child(input_div)
 
         # hiddeninput has actual data to submit.
         hidden = HiddenInput(name)
-        hidden.append_class(DIALOG_CLASS.AUTOCOMPLETE_VALUE)
+        hidden.append_class(self.AUTOCOMPLETE_VALUE_CLASS)
         self.append_child(hidden)
 
 
@@ -62,6 +64,9 @@ class TagAutocomplete(AutocompleteInput):
     button.
 
     """
+
+    AUTOCOMPLETE_TAG_CLASS = "autocomplete-tag"
+    AUTOCOMPLETE_THUMBNAIL_CLASS = "autocomplete-thumbnail"
 
 
     def __init__(self, name, placeholder=""):
@@ -75,10 +80,10 @@ class TagAutocomplete(AutocompleteInput):
 
         """
         super(TagAutocomplete, self).__init__(name, placeholder)
-        self.append_class(DIALOG_CLASS.AUTOCOMPLETE_TAG)
+        self.append_class(self.AUTOCOMPLETE_TAG_CLASS)
 
         thumbnail = AppThumbnail(None, Copy.app_name)
-        thumbnail.append_class(DIALOG_CLASS.AUTOCOMPLETE_THUMBNAIL)
+        thumbnail.append_class(self.AUTOCOMPLETE_THUMBNAIL_CLASS)
         self.insert_child(thumbnail)
 
         self.insert_child(RemoveTagButton())
@@ -93,6 +98,8 @@ class PlayerAutocomplete(TagAutocomplete):
 
     """ A PlayerAutocomplete extending TagAutocomplete. """
 
+    AUTOCOMPLETE_PLAYER_CLASS = "autocomplete-player"
+
 
     def __init__(self, name):
         """ Construct an Autocomplete for tagging an Opponent in a Game.
@@ -104,7 +111,7 @@ class PlayerAutocomplete(TagAutocomplete):
         super(PlayerAutocomplete, self).__init__(
                 name,
                 Copy.opponent_tag_placeholder)
-        self.append_class(DIALOG_CLASS.AUTOCOMPLETE_PLAYER)
+        self.append_class(self.AUTOCOMPLETE_PLAYER_CLASS)
 
 
     def set_thumbnail(self):
@@ -115,6 +122,8 @@ class PlayerAutocomplete(TagAutocomplete):
 class SportAutocomplete(TagAutocomplete):
 
     """ A SportAutocomplete extending TagAutocomplete. """
+
+    AUTOCOMPLETE_SPORT_CLASS = "autocomplete-sport"
 
 
     def __init__(self, name):
@@ -127,7 +136,7 @@ class SportAutocomplete(TagAutocomplete):
         super(SportAutocomplete, self).__init__(
                 name,
                 Copy.sport_tag_placeholder)
-        self.append_class(DIALOG_CLASS.AUTOCOMPLETE_SPORT)
+        self.append_class(self.AUTOCOMPLETE_SPORT_CLASS)
 
 
     def set_thumbnail(self):

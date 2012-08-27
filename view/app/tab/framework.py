@@ -7,12 +7,11 @@ Element components that are for the tab framework.
 from view.constants import SQ_DATA
 from view.elements.base import Section, Div
 from view.elements.components import CreateButton, MenuButton, MainHeader
-# from view.app.components import CoverPhoto, Headline
 from view.app.components import Headline
 from view.app.copy import Copy
 from view.app.framework import ContentWrapper
 
-from constants import TAB_CLASS, TAB_ID
+from constants import TAB_ID
 from story import StoryFactory
 
 
@@ -20,13 +19,15 @@ class TabHeader(MainHeader):
 
     """ TabHeader extending MainHeader <header>. """
 
+    TAB_HEADER_CLASS = "tab-header"
+
 
     def __init__(self, context):
         """ Construct a TabHeader element tree. """
         # TODO: remove context id bit, but put back the context.name
         super(TabHeader, self).__init__(Copy.app_name)
 
-        self.append_class(TAB_CLASS.TAB_HEADER)
+        self.append_class(self.TAB_HEADER_CLASS)
         self.set_id(TAB_ID.TAB_HEADER)
 
         # set context data
@@ -119,6 +120,8 @@ class SummaryDiv(Div):
 
     """ SummaryDiv encapsulates a tab's summary attribute <div>. """
 
+    SUMMARY_ITEM_CLASS = "summary-item"
+
 
     def __init__(self, aggregations):
         """ Construct a tab's summary content element tree. """
@@ -128,7 +131,7 @@ class SummaryDiv(Div):
 
         # add a summary item class to the children
         for child in self.children():
-            child.append_class(TAB_CLASS.SUMMARY_ITEM)
+            child.append_class(self.SUMMARY_ITEM_CLASS)
 
 
     def set_content(self, aggregations):

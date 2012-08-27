@@ -12,8 +12,6 @@ from view.elements.components import MultiColumnLI
 from view.app.copy import Copy
 from view.app.components import Headline, AppThumbnail, RelativeDateComponent
 
-from constants import COMPONENT_CLASS
-
 
 class GameStoryHeadline(Headline):
 
@@ -44,11 +42,13 @@ class SportComponent(Span):
 
     """ SportComponent is a subheader for the Sport of a Game. """
 
+    SPORT_COMPONENT_CLASS = "sport-component"
+
 
     def __init__(self, sport):
         """ Construct a SportComponent extending Span. """
         super(SportComponent, self).__init__()
-        self.append_class(COMPONENT_CLASS.SPORT_COMPONENT)
+        self.append_class(self.SPORT_COMPONENT_CLASS)
         self.set_text(sport)
 
 
@@ -100,11 +100,13 @@ class HeadlineSection(Section):
 
     """ HeadlineSection is the poster section of every story. """
 
+    HEADLINE_SECTION_CLASS = "headline-section"
+
 
     def __init__(self, person_thumbnail, headline, date_component):
         """ Construct a headline section for a story. """
         super(HeadlineSection, self).__init__()
-        self.append_class(COMPONENT_CLASS.HEADLINE_SECTION)
+        self.append_class(self.HEADLINE_SECTION_CLASS)
 
         self.append_child(person_thumbnail)
         self.append_child(date_component)
@@ -116,6 +118,8 @@ class CommentsSection(Section):
     """ Comments Section contains both the list of comments for a story and a
     form for inputting new comments. """
 
+    COMMENTS_SECTION_CLASS = "comments-section"
+
 
     def __init__(self, current_person, object_with_comments):
         """ Construct a CommentsBox.
@@ -126,7 +130,7 @@ class CommentsSection(Section):
 
         """
         super(CommentsSection, self).__init__()
-        self.append_class(COMPONENT_CLASS.COMMENTS_SECTION)
+        self.append_class(self.COMMENTS_SECTION_CLASS)
 
         self.append_child(CommentsList(object_with_comments))
         self.append_child(CommentForm(current_person, object_with_comments.id))
@@ -211,6 +215,8 @@ class CommentForm(Form):
 
     """ A Form for submitting a single comment to a Story. """
 
+    COMMENT_FORM_CLASS = "comment-form"
+
 
     def __init__(self, current_person, story_id):
         """ Construct a CommentForm.
@@ -225,7 +231,7 @@ class CommentForm(Form):
 
         # TODO: make this draw from view.url constants
         self.set_action("/comment")
-        self.append_class(COMPONENT_CLASS.COMMENT_FORM)
+        self.append_class(self.COMMENT_FORM_CLASS)
 
         self.append_child(HiddenInput(SQ_DATA.GAME_ID, story_id))
 
@@ -249,6 +255,8 @@ class RankingsList(HeadedList):
 
     """
 
+    RANKINGS_LIST_CLASS = "rankings-list"
+
     _headings = [
             " ",
             Copy.player,
@@ -263,7 +271,7 @@ class RankingsList(HeadedList):
         """ Construct Rankings List using HeadedList. """
         super(RankingsList, self).__init__(self._headings, standings)
 
-        self.append_class(COMPONENT_CLASS.RANKINGS_LIST)
+        self.append_class(self.RANKINGS_LIST_CLASS)
 
 
     def set_list(self, rows):
@@ -345,6 +353,8 @@ class OpponentsList(UL):
 
     """ OpponentsList is a list of players for anything. """
 
+    OPPONENTS_LIST_CLASS = "opponents-list"
+
 
     def __init__(self, opponents):
         """ Construct an OpponentsList.
@@ -354,7 +364,7 @@ class OpponentsList(UL):
 
         """
         super(OpponentsList, self).__init__(opponents)
-        self.append_class(COMPONENT_CLASS.OPPONENTS_LIST)
+        self.append_class(self.OPPONENTS_LIST_CLASS)
 
     def set_list_item(self, item, index):
         """ Construct and add a list item as a child of this list. """

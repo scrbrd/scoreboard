@@ -3,13 +3,10 @@
 Element components for Landing Page.
 
 """
-
 from view.constants import PAGE_NAME
 
 from view.elements.base import Section, Div
 from view.elements.components import FacebookLoginAnchor
-
-from constants import PAGE_CLASS
 
 
 class LandingPage(Section):
@@ -29,10 +26,13 @@ class LoginAnchorSection(Div):
 
     """ Component that has a login button in a <div> (for centering). """
 
+    LOGIN_ANCHOR_WRAPPER_CLASS = "login-anchor-wrapper"
+
+
     def __init__(self, login_url):
         """ Construct a dialog component for a login button. """
         super(LoginAnchorSection, self).__init__()
         # WRAPPER helps position button on page.
-        self.append_class(PAGE_CLASS.LOGIN_ANCHOR_WRAPPER)
+        self.append_class(self.LOGIN_ANCHOR_WRAPPER_CLASS)
 
         self.append_child(FacebookLoginAnchor(login_url))
