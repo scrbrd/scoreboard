@@ -200,20 +200,20 @@ the same border. */
 /* Add a light drop shadow below a box. */
 .drop-box-shadow(
         @hShadow: 0px, 
-        @vShadow: 0px, 
+        @vShadow: 2px, 
         @blur: 2px, 
-        @spread: 1px,
-        @alpha: .4) {
+        @spread: -1px,
+        @alpha: .8) {
     .box-shadow(@hShadow, @vShadow, @blur, @spread, @alpha);
 }
 
 /* Inner drop shadow. */
 .inner-box-shadow(
-        @hShadow: 1px,
+        @hShadow: 0px,
         @vShadow: 2px,
         @blur: 1px,
         @spread: 0px,
-        @alpha: .6) {
+        @alpha: 0.2) {
     .box-shadow(@hShadow, @vShadow, @blur, @spread, @alpha, inset);
 }
     
@@ -230,11 +230,11 @@ the same border. */
 
 .form-element {
     .border-radius(@sharpRound);
-    .inner-box-shadow(); 
+    .inner-box-shadow; 
     height: @smallLineHeight;
     padding: @columnPadding @pagePadding;
     background-color: @white;
-    border: 1px solid @lightGrey;
+    border: 0px @lightGrey solid;
 }
 
 
@@ -1017,34 +1017,41 @@ form input {
             * MEDIA 
             ************************************************************/
             .boxscore-media {
+                @mediaSidePadding: @boxPadding + @pagePadding;
+
                 margin-left: -@pagePadding;
                 margin-right: -@pagePadding;
-
+                
                 .float-container {
                     // needed for inner floats
                     width: 100%;
 
+                    // TODO: put this in 'media' class
+                    .drop-box-shadow();
+
                     background: @white;
-
-                    padding-top: @boxPadding;
-                    padding-bottom: @boxPadding;
                 }
+                
+                .game-overview {
+                    height: @smallLineHeight;
+                    line-height: @smallLineHeight;
 
-                .sport-component {
-                    .altTextText();
-                    float: right;
+                    padding: 0px @mediaSidePadding;
+
+                    .sport-component {
+                        .altTextText();
+                        float: right;
+                    }
                 }
 
                 .opponents-result-group {
                     position: relative; // required to center inside div
 
                     float: left;
-                    clear: both;
                     width: 100%;
                     border-top: 1px @lightGrey solid;
 
-                    @mediaPadding: @boxPadding + @pagePadding;
-                    padding: 0px @mediaPadding;
+                    padding: 0px @mediaSidePadding;
 
                     div {
                         .vertically-centered-image(absolute, 1em);

@@ -16,6 +16,7 @@ class BoxscoreMedia(Section):
     """ BoxscoreMedia is the Boxscore object for a Game. """
 
     BOXSCORE_MEDIA_CLASS = "boxscore-media"
+    GAME_OVERVIEW_CLASS = "game-overview"
 
 
     def __init__(self, game):
@@ -32,13 +33,13 @@ class BoxscoreMedia(Section):
         # wrap the inner floats
         floatable = FloatContainer()
 
-        # FIXME XXX: 2. Build layout for Opponent
-        # Groups (this might need a rivalry versus a camaraderie version. 3.
-        # Format OpponentGroup (maybe call it OpponentResultGroup)
+        game_overview = Div()
+        game_overview.append_class(self.GAME_OVERVIEW_CLASS)
         final = Span()
         final.set_text(Copy.final)
-        floatable.append_child(final)
-        floatable.append_child(SportComponent(game.sport))
+        game_overview.append_child(final)
+        game_overview.append_child(SportComponent(game.sport))
+        floatable.append_child(game_overview)
 
         # FIXME: get_opponents breaks the contract that the view doesnt get
         # access to non-property methods in model.api.Game.

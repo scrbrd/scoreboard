@@ -31,7 +31,7 @@ class _Copy(object):
 
     @property
     def played(self):
-        return "played"
+        return "Played"
 
     @property
     def player(self):
