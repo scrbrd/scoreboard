@@ -47,6 +47,8 @@ def generate_players(player_templates_list):
 
 def generate_league(league_name, players):
     player_ids = [p.id for p in players]
+    if not player_ids:
+        player_ids.append(95)
     league = League.create_league(
             league_name,
             random.choice(player_ids),

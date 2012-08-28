@@ -119,9 +119,9 @@ class Person(sqobject.SqNode):
 
 
     def get_leagues(self):
-        """ Return a list of Leagues. """
+        """ Return a dict of Leagues keyed on league_id. """
         Person.assert_loaded(self._leagues)
-        return self._leagues.values()
+        return self._leagues
 
 
     def set_leagues(self, leagues):

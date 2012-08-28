@@ -20,6 +20,9 @@ class QueryHandler(BaseHandler):
 
     Any read or write request handler should subclass from this handler.
 
+    Optional:
+    id      _id     id for the requested object
+
     """
 
 
@@ -49,8 +52,17 @@ class QueryHandler(BaseHandler):
 
 
     @tornado.web.authenticated
-    def get(self):
-        """ Overload BaseHandler's HTTP GET responder for reads. """
+    def get(self, id=None):
+        """ Overload BaseHandler's HTTP GET responder for reads.
+
+        Optional:
+        id  id      the handlers can accept an id as part of the url
+
+        """
+        if id is not None:
+            self._id = int(id)
+        else:
+            self._id = None
         self.process_request()
 
 
@@ -167,4 +179,8 @@ class QueryHandler(BaseHandler):
 
     def get_request_parameters(self):
         """ Return the request parameters argument. """
-        return json.loads(self.get_parameters_argument())
+        parameters = self.get_parameters_argument()
+        if parameters is not None:
+            return json.loads(parameters)
+        else:
+            return {}

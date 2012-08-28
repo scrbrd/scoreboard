@@ -18,13 +18,19 @@ from base import ReadModel
 
 class LeagueModel(ReadModel):
 
-    """ Load and prepare data for the View to render a League. """
+    """ Load and prepare data for the View to render a League.
+
+    Variables:
+    id  _league_id      optional league_id to request.
+
+    """
 
 
     def __init__(self, session):
         """ Construct a ReadModel. """
         super(LeagueModel, self).__init__(session)
 
+        self._league_id = None
         self._aggregations = {
                 "standings": None,
                 "activity": None,
@@ -42,8 +48,14 @@ class LeagueModel(ReadModel):
 
         person = Person.load_leagues(self.session.person_id)
 
-        # TODO: do better than simply getting someone's first league.
-        league = person.get_leagues()[0]
+        league = None
+        if self._league_id is None:
+            # if no league was requested than get the first league
+            league = person.get_leagues().values()[0]
+        else:
+            league = person.get_leagues().get(self._league_id)
+        # TODO: if league is None than throw some 'request invalid league
+        # error'
 
         # TODO: we don't need to load Games from League when they can be loaded
         # from Opponents [or the vice-versa] all at the same time. we should
@@ -101,3 +113,8 @@ class LeagueModel(ReadModel):
     def activity_aggregation(self):
         """ Return a dict of League stats demonstrating camaraderie. """
         return self._aggregations.get("activity")
+
+
+    def set_league_id(self, league_id):
+        """ Set league id for request. """
+        self._league_id = league_id

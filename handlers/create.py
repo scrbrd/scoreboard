@@ -6,9 +6,8 @@ Handle all incoming requests for object creation.
 
 from model.app.create_game import CreateGameModel
 
-from handlers.query import QueryHandler
-
 from constants import PARAMETER
+from query import QueryHandler
 
 
 class CreateGameHandler(QueryHandler):
@@ -27,7 +26,6 @@ class CreateGameHandler(QueryHandler):
         bool                            "is_success" from model.success
 
         """
-
         # get game parameters from request
         parameters = self.get_request_parameters()
         league_id = parameters.get(PARAMETER.LEAGUE_ID)

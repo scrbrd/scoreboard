@@ -8,7 +8,7 @@ serving outgoing responses to League Highlights.
 from util.dev import print_timing
 from model.app.league import LeagueModel
 
-from handlers.query import QueryHandler
+from query import QueryHandler
 
 
 class LeagueHandler(QueryHandler):
@@ -19,6 +19,7 @@ class LeagueHandler(QueryHandler):
     def get_model(self):
         """ Return a data model in response to a request for Games. """
         model = LeagueModel(self.current_user)
+        model.set_league_id(self._id)
         model.load()
         return model
 
