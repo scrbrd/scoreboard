@@ -42,8 +42,8 @@ class _Copy(object):
         return "x"
 
     @property
-    def tag_headline(self):
-        return "Who played?"
+    def headline(self):
+        return "What's your headline?"
 
     @property
     def opponent_tag_placeholder(self):

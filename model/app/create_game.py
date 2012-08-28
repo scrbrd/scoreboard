@@ -26,6 +26,7 @@ class CreateGameModel(WriteModel):
 
     Optional:
     int     _league_id              the league of the new Game
+    str     _message                the creator's posting message
 
     Return:
     SqObject    _object     the new comment
@@ -47,6 +48,7 @@ class CreateGameModel(WriteModel):
         self._metrics_by_opponent = {}
         self._sport_id = sport_id
         self._league_id = None
+        self._message = None
 
         # convert the results into API_EDGE_TYPEs
         for opponent_id, metrics in metrics_by_opponent.items():
@@ -59,6 +61,7 @@ class CreateGameModel(WriteModel):
         self._object = Game.create_game(
                 self._league_id,
                 self._session.person_id,
+                self._message,
                 self._metrics_by_opponent,
                 self._sport_id)
 
@@ -66,6 +69,11 @@ class CreateGameModel(WriteModel):
     def set_league_id(self, league_id):
         """ Set the League ID for the Game to be created. """
         self._league_id = league_id
+
+
+    def set_message(self, message):
+        """ Set the poster's message. """
+        self._message = message
 
 
     @property

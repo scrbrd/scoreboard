@@ -12,6 +12,7 @@
 @black: #000000; // Story Headlines, Story Date Divider, Story Description
 @darkGrey: #848484; // Comments, Text
 @lightGrey: #989898; // Likes, Text Field Prompts, Story Buttons
+@lightestGrey: #dddddd; // Input outline, borders.
 @navy: #053c75; // All Links and Clickable Tags
 @red: #b20808; // Highlights, Posts, Logo, Splash
 @white: #ffffff; // Statistics
@@ -234,7 +235,7 @@ the same border. */
     height: @smallLineHeight;
     padding: @columnPadding @pagePadding;
     background-color: @white;
-    border: 0px @lightGrey solid;
+    border: 1px @lightestGrey solid;
 }
 
 
@@ -953,7 +954,7 @@ form input {
                 }
 
                 .headline {
-                    overflow: auto;
+                    overflow-x: hidden;
                     padding: 0px @columnPadding;
                 }
 
@@ -1049,7 +1050,7 @@ form input {
 
                     float: left;
                     width: 100%;
-                    border-top: 1px @lightGrey solid;
+                    border-top: 1px @lightestGrey solid;
 
                     padding: 0px @mediaSidePadding;
 
@@ -1102,7 +1103,7 @@ form input {
                 //right: @pagePadding;
                 position: absolute;
                 right: 8px;
-                top: 4px;
+                top: 3px;
             }
         }
 
@@ -1154,6 +1155,12 @@ form input {
 
         .opponent-tags-group {
             display: none;
+        }
+
+        .headline-input {
+            .headerText();
+            width: 100%;
+
         }
     }
 }

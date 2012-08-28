@@ -5,12 +5,11 @@ Element components for Create Game dialog.
 """
 
 from view.constants import SQ_DATA, SQ_VALUE, PAGE_NAME
-from view.elements.base import Div, UL, Form, HiddenInput, LI
+from view.elements.base import Div, UL, Form, HiddenInput, LI, TextInput
 from view.elements.components import SwitchInput
 from view.app.copy import Copy
-from view.app.components import Headline, Subheadline
+from view.app.components import Subheadline
 
-from constants import DIALOG_ID
 from framework import DialogHeader, DialogContentSection, PostButtonSection
 from components import PlayerAutocomplete, SportAutocomplete
 
@@ -42,9 +41,9 @@ class CreateGameForm(Form):
 
     """ Create Game form extending <form>. """
 
-    # FIXME XXX CONTENT should be in a more generic place
-    DIALOG_CONTENT_CLASS = "dialog-content"
+    HEADLINE_INPUT_CLASS = "headline-input"
     MAX_TAGS = 2
+    HEADLINE_LENGTH = 21
 
 
     def __init__(self, data):
@@ -58,15 +57,17 @@ class CreateGameForm(Form):
 
         # TODO: make this draw from view.url constants
         self.set_action("/create/game")
-        self.append_class(self.DIALOG_CONTENT_CLASS)
-        self.set_id(DIALOG_ID.DIALOG_CONTENT)
 
         # TODO: is there some mild abstraction needed here? or other info?
         # add some context to the form
         self.append_child(HiddenInput(SQ_DATA.LEAGUE_ID))
 
         # tag header
-        self.append_child(OpponentTagsHeadline())
+        headline_input = TextInput(SQ_DATA.MESSAGE)
+        headline_input.set_maxlength(self.HEADLINE_LENGTH)
+        headline_input.set_placeholder(Copy.headline)
+        headline_input.append_class(self.HEADLINE_INPUT_CLASS)
+        self.append_child(headline_input)
 
         # versus/with checkbox
         # TODO: optionally set is_on based on some stored model/session value.
@@ -96,19 +97,6 @@ class CreateGameForm(Form):
 
         # add form submit and close buttons
         self.append_child(PostButtonSection())
-
-
-class OpponentTagsHeadline(Headline):
-
-    """ OpponentTagsHeadline extending Headline. """
-
-    OPPONENT_TAGS_HEADLINE_CLASS = "opponent-tags-headline"
-
-
-    def __init__(self):
-        """ Construct an OpponentTagsHeadline. """
-        super(OpponentTagsHeadline, self).__init__(Copy.tag_headline)
-        self.append_class(self.OPPONENT_TAGS_HEADLINE_CLASS)
 
 
 class GameTypeSubheader(Subheadline):

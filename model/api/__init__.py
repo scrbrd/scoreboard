@@ -11,6 +11,7 @@ import player
 import game
 import user
 import comment
+import created
 import sqfactory
 from constants import API_NODE_TYPE, API_EDGE_TYPE
 
@@ -25,6 +26,8 @@ node_mapping[API_NODE_TYPE.USER] = user.User
 edge_mapping = {}
 edge_mapping[API_EDGE_TYPE.COMMENTED_ON] = comment.Comment
 edge_mapping[API_EDGE_TYPE.HAS_COMMENT_FROM] = comment.Comment
+edge_mapping[API_EDGE_TYPE.CREATED] = created.Created
+edge_mapping[API_EDGE_TYPE.CREATED_BY] = created.Created
 
 # Construct the SqFactory singleton and pass it this dictionary.
 sqfactory.SqFactory(node_mapping, edge_mapping)

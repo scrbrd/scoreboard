@@ -48,7 +48,8 @@ def _prepare_game_creation(opponent_ids):
 
 def _create_game(league_id, creator_id, results, sport_id):
     # randomly select 2 opponents and set the score
-    return Game.create_game(league_id, creator_id, results, sport_id)
+    message = "Taking Numbers"
+    return Game.create_game(league_id, creator_id, message, results, sport_id)
 
 
 def _prepare_result(opponent_ids, type):

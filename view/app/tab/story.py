@@ -6,10 +6,9 @@ FeedSection of a Tab.
 """
 
 from view.elements.base import Div
-from view.app.components import RelativeDateComponent
-from view.app.components import AppThumbnail
+from view.app.components import RelativeDateComponent, Headline, AppThumbnail
 
-from components import CamaraderieHeadline, RivalryHeadline, HeadlineSection
+from components import HeadlineSection
 from components import CommentsSection
 from media import BoxscoreMedia
 
@@ -95,10 +94,8 @@ class Story(Div):
                 creator.picture_url,
                 creator.name)
 
-        # FIXME XXX: it is extremely confusing and misleading that this method
-        # opaquely sets self._photo_section without saying so.
+        # add story headline
         story_headline = self._construct_story_headline(story_object)
-
         headline_section = HeadlineSection(
                 creator_thumbnail,
                 story_headline,
@@ -167,48 +164,20 @@ class GameStory(Story):
         return BoxscoreMedia(story_object)
 
 
+    def _construct_story_headline(self, story_object):
+        """ Construct the GameStory's Headline.
+
+        Required:
+        SqNode  story_object  Game to build story around
+
+        Return Headline
+
+        """
+        game = story_object  # game methods required
+        return Headline(game.creators_message)
+
+
     @staticmethod
     def construct_story(current_person, game):
         """ Provide StoryFactory with GameStory subclass constructors. """
-        story = None
-
-        if game.is_rivalry:
-            story = RivalryGameStory(current_person, game)
-        else:
-            story = CamaraderieGameStory(current_person, game)
-
-        return story
-
-
-class RivalryGameStory(GameStory):
-
-    """ RivalryGameStory extending GameStory. """
-
-
-    def _construct_story_headline(self, story_object):
-        """ Construct the GameStory's Headline.
-
-        Required:
-        SqNode  story_object  Game to build story around
-
-        Return Headline
-
-        """
-        return RivalryHeadline(story_object)
-
-
-class CamaraderieGameStory(GameStory):
-
-    """ CamaraderieGameStory extending GameStory. """
-
-
-    def _construct_story_headline(self, story_object):
-        """ Construct the GameStory's Headline.
-
-        Required:
-        SqNode  story_object  Game to build story around
-
-        Return Headline
-
-        """
-        return CamaraderieHeadline(story_object)
+        return GameStory(current_person, game)

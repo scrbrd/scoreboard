@@ -344,6 +344,11 @@ class Element(object):
         self._set_attribute(HTML_ATTRIBUTE.SRC, url)
 
 
+    def set_maxlength(self, size):
+        """ Set the maxlength attribute for this element. """
+        self._set_attribute(HTML_ATTRIBUTE.MAXLENGTH, int(size))
+
+
     def set_type(self, type):
         """ Set the type attribute for this element.
 

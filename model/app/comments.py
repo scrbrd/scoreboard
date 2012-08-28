@@ -87,8 +87,8 @@ class CreateCommentModel(WriteModel):
     def dispatch(self):
         """ Create new Comment on facebook and return it. """
         self._object = Comment.create_comment(
-            self._object_id,
             self.session.person_id,
+            self._object_id,
             self._message)
 
 

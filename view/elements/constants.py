@@ -199,6 +199,11 @@ class _HTMLAttribute(object):
 
 
     @constant
+    def MAXLENGTH(self):
+        return "maxlength"
+
+
+    @constant
     def TYPE(self):
         """ TYPE is a type of HTML attribute. """
         return "type"
@@ -386,6 +391,7 @@ class _HTMLConstant(object):
         attributes[HTML_TAG.INPUT].append(HTML_ATTRIBUTE.AUTOFOCUS)
         attributes[HTML_TAG.INPUT].append(HTML_ATTRIBUTE.CHECKED)
         attributes[HTML_TAG.INPUT].append(HTML_ATTRIBUTE.DISABLED)
+        attributes[HTML_TAG.INPUT].append(HTML_ATTRIBUTE.MAXLENGTH)
         attributes[HTML_TAG.INPUT].append(HTML_ATTRIBUTE.NAME)
         attributes[HTML_TAG.INPUT].append(HTML_ATTRIBUTE.PLACEHOLDER)
         attributes[HTML_TAG.INPUT].append(HTML_ATTRIBUTE.TYPE)

@@ -58,10 +58,14 @@ class DialogContentSection(Section):
 
     """ DialogContentSection encapsulates generic Dialog Page attributes. """
 
+    DIALOG_CONTENT_CLASS = "dialog-content"
+
 
     def __init__(self):
         """ Construct a dialog's content section element tree. """
         super(DialogContentSection, self).__init__()
+        self.append_class(self.DIALOG_CONTENT_CLASS)
+        self.set_id(DIALOG_ID.DIALOG_CONTENT)
 
 
 class PostButtonSection(Div):

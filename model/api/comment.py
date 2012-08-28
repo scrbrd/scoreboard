@@ -3,7 +3,6 @@
 Represent a Person's Comment on an SqObject by subclassing SqEdge.
 
 """
-
 from constants import API_EDGE_TYPE, API_EDGE_PROPERTY
 from sqobject import SqEdge
 import editor
@@ -18,8 +17,6 @@ class Comment(SqEdge):
 
     """
 
-    # TODO: Comment is only being used for writing right now.
-
 
     @property
     def message(self):
@@ -30,7 +27,7 @@ class Comment(SqEdge):
     @property
     def commenter_id(self):
         """ Return the id of the commenter. """
-        # FIXME Make a comment class that has a generic system for accessing to
+        # FIXME Make a edge class that has a generic system for accessing to
         # and from node ids for bidirectional edges.
         if self.type == API_EDGE_TYPE.COMMENTED_ON:
             return self.from_node_id
@@ -41,7 +38,12 @@ class Comment(SqEdge):
     @property
     def object_id(self):
         """ Return the id of the object being commented on. """
-        return self.to_node_id
+        # FIXME Make a edge class that has a generic system for accessing to
+        # and from node ids for bidirectional edges.
+        if self.type == API_EDGE_TYPE.COMMENTED_ON:
+            return self.to_node_id
+        else:
+            return self.from_node_id
 
 
     """ Static loader wrappers. """
@@ -54,12 +56,12 @@ class Comment(SqEdge):
 
 
     @staticmethod
-    def create_comment(object_id, commenter_id, message):
+    def create_comment(commenter_id, object_id, message):
         """ Create a Comment and return it.
 
         Required:
-        id      object_id       the object that the comment was posted to
         id      commenter_id    the Person who posted the comment
+        id      object_id       the object that the comment was posted to
         str     message         the body of the Comment
 
         Return:

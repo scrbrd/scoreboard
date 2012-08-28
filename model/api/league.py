@@ -5,7 +5,7 @@ members aren't strictly members [they are pulled from properties].
 
 """
 from util.dev import print_timing
-from constants import API_NODE_TYPE, API_EDGE_TYPE
+from constants import API_NODE_TYPE, API_EDGE_TYPE, API_EDGE_PROPERTY
 from constants import API_NODE_PROPERTY, API_CONSTANT
 
 import sqobject
@@ -150,9 +150,10 @@ class League(sqobject.SqNode):
                 properties)
 
         # prepare edge prototypes for creator edges
+        # TODO: All creators to attach a message to league creation
         prototype_edges = editor.prototype_edge_and_complement(
             API_EDGE_TYPE.CREATED,
-            {},
+            {API_EDGE_PROPERTY.MESSAGE: None},
             creator_id)
 
         # prepare edge prototypes for default opponents

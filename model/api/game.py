@@ -5,7 +5,8 @@ members aren't strictly members [they are pulled from properties].
 
 """
 from util.dev import print_timing
-from constants import API_NODE_TYPE, API_EDGE_TYPE, API_NODE_PROPERTY
+from constants import API_NODE_TYPE, API_NODE_PROPERTY
+from constants import API_EDGE_TYPE, API_EDGE_PROPERTY
 from constants import API_CONSTANT
 from sports import SPORT
 
@@ -64,6 +65,15 @@ class Game(SqNode):
             .values()
         comments.sort(key=lambda x: x.created_ts)
         return comments
+
+
+    @property
+    def creators_message(self):
+        """ Return the creator's message. """
+        created = self.get_edges() \
+            .get(API_EDGE_TYPE.CREATED_BY, {}) \
+            .values()[0]
+        return created.message
 
 
     @property
@@ -347,12 +357,18 @@ class Game(SqNode):
 
 
     @staticmethod
-    def create_game(league_id, creator_id, metrics_by_opponent, sport_id):
+    def create_game(
+            league_id,
+            creator_id,
+            message,
+            metrics_by_opponent,
+            sport_id):
         """ Create a Game and return it.
 
         Required:
-        id      league_id           League id that Game belogs to
+        id      league_id           League id that Game belongs to
         id      creator_id          Player id of Game's creator
+        str     message             Creator's message (headline)
         dict    metrics_by_opponent Metrics keyed on Opponent id
         id      sport_id            Sport id for this Game
 
@@ -360,6 +376,10 @@ class Game(SqNode):
         Game                        newly created Game
 
         """
+
+        # FIXME: how do we handle None properties?
+        if message is None:
+            message = "Good Game."
 
         # TODO: when games have properties, fill these in!
         #
@@ -383,7 +403,7 @@ class Game(SqNode):
         # prepare edge prototypes for creator edges
         prototype_edges.extend(editor.prototype_edge_and_complement(
                 API_EDGE_TYPE.CREATED,
-                {},
+                {API_EDGE_PROPERTY.MESSAGE: message},
                 creator_id))
 
         # prepare edge prototypes for result edges
