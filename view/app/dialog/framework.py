@@ -39,16 +39,16 @@ class DialogContentWrapper(ContentWrapper):
     """ DialogContentWrapper adds a wrapper for a dialog scroller. """
 
 
-    def __init__(self, content_section):
+    def __init__(self, dialog_page_name, content_section):
         """ Construct a wrapper for a scroller.
 
         Required:
+        str         dialog_page_name    the unique name of the dialog
         Element     content_section     the content that the scroller wraps
 
         """
         super(DialogContentWrapper, self).__init__(
-                DIALOG_ID.DIALOG_CONTENT_WRAPPER,
-                DIALOG_ID.DIALOG_CONTENT_CONTAINER,
+                dialog_page_name,
                 content_section)
 
 

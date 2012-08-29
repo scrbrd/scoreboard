@@ -1,0 +1,21 @@
+{% extends page.html %}
+
+
+{% block page_container %}
+    <div id="tab-container">
+        {% block tab %}{% end %}
+    </div>
+
+    <div id="dialog-container">
+        {% block dialog %}
+            <div id="create-game" class="dialog">
+                {% module UICreateGameDialog() %}
+            </div>
+            {# UIInviteFriendsDialog(model) #}
+        {% end %}
+    </div>
+
+    <div id="model-container"></div>
+
+{% end %}
+

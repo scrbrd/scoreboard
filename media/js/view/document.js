@@ -20,6 +20,7 @@
     @requires EventDispatcher
     @requires DOMUtil
     @requires TabView
+    @requires DialogView
 */
 define(
         [
@@ -29,10 +30,10 @@ define(
             "js/event",
             "js/eventDispatcher",
             "util/dom",
-            "view/tab"
-            
+            "view/tab",
+            "view/dialog"
         ],
-        function ($, Backbone, Const, Event, EventDispatcher, DOMUtil, Tab) {
+        function ($, Backbone, Const, Event, EventDispatcher, DOMUtil, Tab, Dialog) {
 
 
 /**
@@ -42,11 +43,10 @@ define(
 */
 var DocView = Backbone.View.extend({
 
-    // the application's dialogView
-    dialog: null,
-
-    // the application's tabView
-    tab: null,
+    tab: null, // the application's tabView
+    dialog: null, // the application's dialogView
+    sessionModel: null,
+    pageStateModel: null,
 
     /**
         Initialize View, pull data for models, and setup page.
@@ -62,12 +62,18 @@ var DocView = Backbone.View.extend({
         this.updateSessionModel(sessionModel);
         this.updatePageStateModel(pageStateModel);
 
+        // if the page is a tab then create the tab and associated dialog js
+        // components.
         if (pageStateModel.pageType() === Const.PAGE_TYPE.TAB) {
             this.tab = Tab.construct(sessionModel, pageStateModel);
+
+            // setup dialog
+            this.dialog = this.setDialog(Dialog);
         } else {
             // TODO have this happen automatically.
             this.pageStateModel.setPageType(Const.PAGE_TYPE.LANDING);
         }
+
 
         console.log("initial load page type: ", pageStateModel.pageType());
         EventDispatcher.trigger(
@@ -114,32 +120,6 @@ var DocView = Backbone.View.extend({
     },
 
     /**
-        Initialize parts of page that aren't initially required.
-        Add DialogView and dialog's HTML to DOM
-        @param {Object} sessionModel
-        @param {Object} pageStateModel
-
-        @requires DialogView
-        @requires text:dialog.creategame
-    */
-    lazyInitialize: function (sessionModel, pageStateModel) {
-        var that = this;
-        require(
-                [
-                    "view/dialog",
-                    "text!/dialog/creategame"
-                ],
-                function (Dialog, dialogHTML) {
-            that.dialog = that.setDialog(
-                    Dialog,
-                    dialogHTML,
-                    sessionModel,
-                    pageStateModel);
-        });
-    },
-    
-
-    /**
         Setup View event triggers.
         Keep _events notation to allow event keys to be variables.
     */
@@ -156,21 +136,13 @@ var DocView = Backbone.View.extend({
     /**
         Add dialog html to the DOM and initialize DialogView.
         @param {Object} Dialog DialogView
-        @param {string} dialogHTML the html that makes up the dialog
-        @param {Object} sessionModel
-        @param {Object} pageStateModel
     */
-    setDialog: function (
-            Dialog,
-            dialogHTML,
-            sessionModel,
-            pageStateModel) {
+    setDialog: function (Dialog) {
         // make the dialog height = current page height
         var pageHeight = $(Const.ID.TAB).height();
         var createGameView = Dialog.construct(
-                dialogHTML,
-                sessionModel,
-                pageStateModel,
+                this.sessionModel,
+                this.pageStateModel,
                 pageHeight);
         return createGameView;
     },
@@ -213,7 +185,7 @@ var DocView = Backbone.View.extend({
         // the navigate method, to be processed by the router.  If
         // the link has a data-bypass attribute, bypass the
         // delegation completely.
-        var model = this.pageStateModel;
+        var pageStateModel = this.pageStateModel;
 
         // For Anchors that are being internally routed (internal page views),
         // disable default functionality, and set up view page trigger.
@@ -245,18 +217,20 @@ var DocView = Backbone.View.extend({
                             Event.CLIENT.VIEW_PAGE,
                             this,
                             href,
-                            model);
+                            pageStateModel);
                 }
             }
         });
 
         // Trigger RELOAD_PAGE when page is asked to be reloaded.
         this.reloadPage = function () {
-            var href = "/" + model.pageName();
+            var pageName = pageStateModel.pageName();
+            var contextID = pageStateModel.contextID();
+            var href = "/" + pageName + "/" + contextID;
             EventDispatcher.trigger(
                     Event.CLIENT.RELOAD_PAGE,
                     href,
-                    model);
+                    pageStateModel);
         };
 
         // Trigger Login Event before following link.

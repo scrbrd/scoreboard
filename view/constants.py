@@ -106,7 +106,8 @@ class _SqValue(object):
         """ CAMARADERIE is a value of the HTML attribute data-game-type. """
         return "camaraderie"
 
-    # FIXME: DialogModel should populate view.app.dialog with these values.
+    # FIXME: DialogModel (which was deleted for now)
+    # should populate view.app.dialog with these values.
     # when it does, remove these from here.
 
     @constant

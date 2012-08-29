@@ -71,8 +71,7 @@ function hide_address_bar() {
 
     // Third Party module that hide the Address Bar in iPhone and Droid
     // From: https://gist.github.com/1172490
-
-    var page = document.getElementById(Const.ID.TAB.substring(1)),
+    var page = $(Const.DOM.BODY)[0],
         ua = navigator.userAgent,
         iphone = ~ua.indexOf('iPhone') || ~ua.indexOf('iPod'),
         ipad = ~ua.indexOf('iPad'),
@@ -125,14 +124,14 @@ function hide_address_bar() {
 
     };
     (window.onresize = function() {
-    var pageWidth = page.offsetWidth;
-    // Android doesn't support orientation change, so check for when the width
-    // changes to figure out when the orientation changes
-    if (lastWidth === pageWidth) {
-        return;
-    }
-    lastWidth = pageWidth;
-    setupScroll();
+        var pageWidth = page.offsetWidth;
+        // Android doesn't support orientation change, so check for when the width
+        // changes to figure out when the orientation changes
+        if (lastWidth === pageWidth) {
+            return;
+        }
+        lastWidth = pageWidth;
+        setupScroll();
     })();
 
 }

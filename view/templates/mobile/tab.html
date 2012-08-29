@@ -1,10 +1,11 @@
-{% extends body.html %}
+{% extends app_page.html %}
 
 
 {% block tab %}
     <div id="tab">
         {% block tab_page %} EMPTY CONTENT {% end %} 
     </div>
+
     {% block context_model %}
         {% include components/context_model.html %}
     {% end %} 

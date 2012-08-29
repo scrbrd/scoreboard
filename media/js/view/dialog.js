@@ -62,23 +62,21 @@ var DialogView = Backbone.View.extend({
     /**
         Hide and stretch dialog, initialize its form, and bind change
         events from Models.
-        @param {string} html html that this View contains
         @param {Object} viewerContextModel
         @param {Object} pageStateModel
         @param {string} height height of the dialog
     */
     initialize: function (
-            html,
             sessionModel,
             pageStateModel,
             height) {
-        this.setElement(Const.ID.DIALOG_CONTAINER);
+
+        this.setElement(Const.ID.CREATE_GAME);
 
         this.sessionModel = sessionModel;
         this.pageStateModel = pageStateModel;
 
         this.$el.hide();
-        this.$el.append(html);
         this.$el.height(height);
         this.form = this.$(Const.NAME.CREATE_GAME);
 
@@ -237,8 +235,8 @@ var DialogView = Backbone.View.extend({
             that.$el.find(Const.CLASS.CLOSE_BUTTON).get(0).disabled = false;
 
             // the dialog has to be showing to add the scroller
-            that.scroller = Scroller.Scroller(
-                    DOMUtil.getIDFromSelector(Const.ID.DIALOG_CONTENT_WRAPPER));
+            that.scroller = Scroller.Scroller(DOMUtil.getIDFromSelector(
+                    Const.ID.DIALOG_OUTER_CONTENT_CONTAINER));
 
             // TODO: auto-focus and make the keyboard come up.
             //var a = this.$('.ui-autocomplete-input').first();
@@ -385,12 +383,10 @@ var DialogView = Backbone.View.extend({
 
 return {
     construct: function (
-            dialogHTML,
             sessionModel,
             pageStateModel,
             pageHeight) {
         return new DialogView(
-                dialogHTML,
                 sessionModel,
                 pageStateModel,
                 pageHeight);

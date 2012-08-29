@@ -1,4 +1,4 @@
-/******************************5*****************************
+/***********************************************************
 *
 *   App: Scoreboard Mobile
 *   Version: 00.02
@@ -388,6 +388,11 @@ body {
 
     // for non-mobile testing
     background: @mysteryColor;
+
+    // for hiding the address bar in iOS
+    position: absolute;
+    width: 100%;
+    height: 100%;
 }
 
 span {
@@ -697,7 +702,8 @@ form input {
     }
 }
 
-#content-container-wrapper, #content-container {
+#tab-outer-content-container, 
+#dialog-outer-content-container {
     z-index: 5;
 }
 
@@ -741,7 +747,7 @@ form input {
 /***********************************************************
 * ISCROLL
 ************************************************************/
-#content-container-wrapper {
+.outer-content-container {
     position: absolute; 
     width: 100%;
     top: 0px; 
@@ -750,23 +756,14 @@ form input {
     overflow: auto;
 }
 
-#content-container {
+.inner-content-container {
     position: absolute;
     width: 100%;
 }
 
-#dialog-content-wrapper {
-    position: absolute;
-    width: 100%;
+.dialog .outer-content-container {
+    // starts below main bar.
     top: @normalLineHeight;
-    bottom: 0px;
-    left: 0px;
-    overflow: auto;
-}
-
-#dialog-content-container {
-    position: absolute;
-    width: 100%;
 }
 
 
@@ -1082,17 +1079,17 @@ form input {
 ************************************************************/
 #dialog-container {
     position: absolute;
-    height: 100%;
 
-    background-color: @white;
-    
     /***********************************************************
     * FRAMEWORK
     ************************************************************/
     .dialog {
         .textText();
+    
+        display: none; // hide dialogs to start
+        position: absolute;
         height: 100%;
-        display: table;
+        background-color: @white;
 
         .dialog-header {
             background-color: @red;

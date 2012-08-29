@@ -27,6 +27,7 @@ Each class has a single requirement...override render.
 import tornado.web
 from tornado import escape
 
+from view.constants import PAGE_NAME
 from view.elements import xsrf
 from view.elements.base import Element
 from view.app.components import CoverPhoto
@@ -81,6 +82,8 @@ class UIAppPage(tornado.web.UIModule):
 
 class UITabPage(UIAppPage):
 
+    TAB_STR = "tab"
+
 
     def _set_current_person(self, model):
         self._current_person = None
@@ -99,7 +102,7 @@ class UITabPage(UIAppPage):
 
 
     def _construct_content_wrapper(self, content_section):
-        return TabContentWrapper(content_section)
+        return TabContentWrapper(self.TAB_STR, content_section)
 
 
 class UILeaguePage(UITabPage):
@@ -119,9 +122,6 @@ class UIDialogPage(UIAppPage):
     def _set_current_person(self, model):
         pass
 
-    def _construct_content_wrapper(self, content_section):
-        return DialogContentWrapper(content_section)
-
 
 class UICreateGameDialog(UIDialogPage):
 
@@ -130,6 +130,9 @@ class UICreateGameDialog(UIDialogPage):
 
     def _construct_main_header(self, model):
         return CreateGameDialogHeader()
+
+    def _construct_content_wrapper(self, content_section):
+        return DialogContentWrapper(PAGE_NAME.CREATE_GAME, content_section)
 
     def _construct_content_section(self, model):
         return CreateGameContentSection(model)

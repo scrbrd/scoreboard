@@ -43,16 +43,18 @@ class TabContentWrapper(ContentWrapper):
     content. """
 
 
-    def __init__(self, content_section):
+    def __init__(self, tab_str, content_section):
         """ Construct a wrapper for a scroller object to manipulate.
 
+        TODO: make tab_str unique to the individual tab
+
         Required:
+        str         tab_str             the tab identifier str
         Element     content_section     the content that the scroller wrap.
 
         """
         super(TabContentWrapper, self).__init__(
-                TAB_ID.TAB_CONTENT_WRAPPER,
-                TAB_ID.TAB_CONTENT_CONTAINER,
+                tab_str,
                 content_section)
 
 

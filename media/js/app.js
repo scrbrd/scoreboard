@@ -132,10 +132,6 @@ function initializeApp() {
         docView.initializePushStateDOM();
 
         initializeNewUser();
-                
-        // only load dialog after the User has access to the application.
-        // FIXME rearchitect how lazy load should work.
-        docView.lazyInitialize(sessionModel, pageStateModel);
     });
 }
 

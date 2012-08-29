@@ -62,6 +62,9 @@ var RESPONSE_KEY = {
     @param {Function} successFunction The function to run on success.
 */
 function create(object_url, type, objParams, successFunction) {
+    console.log(object_url);
+    console.log(type);
+    console.log(objParams);
     var escapedParams = JSON.stringify(objParams);
     var requestData = {};
     var xsrfToken;

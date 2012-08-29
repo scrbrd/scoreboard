@@ -44,9 +44,9 @@ var constants = {
         PROPERTIES:                 "#properties",
         SUMMARY:                    "#summary",
         FEED:                       "#feed",
-        DIALOG_CONTAINER:           "#dialog-container",
-        CONTENT_CONTAINER_WRAPPER:  "#content-container-wrapper",
-        DIALOG_CONTENT_WRAPPER:     "#dialog-content-wrapper"
+        TAB_OUTER_CONTENT_CONTAINER: "#tab-outer-content-container",
+        DIALOG_OUTER_CONTENT_CONTAINER: "#dialog-outer-content-container",
+        CREATE_GAME:                "#create-game"
     },
 
     /**

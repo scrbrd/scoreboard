@@ -178,8 +178,8 @@ var ContentView = Backbone.View.extend({
 
         this.commentForms = this.$el.find(Const.CLASS.COMMENT_FORM);
         this.initializeSections(this.pageStateModel);
-        this.scroller = Scroller.Scroller(
-                DOMUtil.getIDFromSelector(Const.ID.CONTENT_CONTAINER_WRAPPER));
+        this.scroller = Scroller.Scroller(DOMUtil.getIDFromSelector(
+                Const.ID.TAB_OUTER_CONTENT_CONTAINER));
     },
 
     /**
