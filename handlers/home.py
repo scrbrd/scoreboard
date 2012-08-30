@@ -40,6 +40,7 @@ class HomeHandler(LeagueHandler, LandingHandler):
 
         # if the user is logged in, go to the home page.
         if self.current_user is not None:
+            self._id = None
             LeagueHandler.process_request(self)
 
         # otherwise, go to the landing page.
